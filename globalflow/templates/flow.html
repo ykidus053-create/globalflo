@@ -143,6 +143,37 @@
         <p class="toolkit-note">Every action mirrors the automation+quality enforcement your extensions promise—type checks, formatting, containers, and notebook experiments.</p>
       </section>
 
+      <section class="connectors" id="connectors">
+        <div class="section-heading">
+          <h2>External connectors</h2>
+          <p>Push automation output to Slack, CRM, billing, or any webhook in one click.</p>
+        </div>
+        <div class="connectors-grid">
+          {% for connector in connectors %}
+          <article>
+            <h3>{{ connector.name }}</h3>
+            <p>{{ connector.description }}</p>
+            <form class="connector-form" data-connector-id="{{ connector.id }}">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.slack.com/..." value="{{ connector.default_url }}" />
+              </label>
+              <label>
+                {{ connector.sample_field | capitalize }}
+                <input name="{{ connector.sample_field }}" placeholder="{{ connector.sample_message }}" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="Published by GlobalFlow automation" />
+              </label>
+              <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
       <section class="checkout" id="checkout">
         <div class="section-heading">
           <h2>Subscription checkout</h2>

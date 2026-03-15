@@ -217,8 +217,10 @@ function pushModalHistory(modalId) {
 
 function updateHistoryOnClose() {
   if (!historySupported) return;
-  window.history.replaceState({ modalId: null }, "", window.location.pathname);
+     window.history.replaceState({ modalId: null }, "", window.location.pathname);
 }
+
+const connectorForms = document.querySelectorAll(".connector-form");
 
 function openModal(target) {
   if (target) {
@@ -456,6 +458,39 @@ if (loginForm) {
   });
   hydrateLoginForm();
 }
+
+connectorForms.forEach((form) => {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const connectorId = form.dataset.connectorId;
+    const statusEl = form.querySelector(".connector-status");
+    if (statusEl) {
+      statusEl.textContent = "Dispatching connector...";
+    }
+    const payload = Object.fromEntries(new FormData(form));
+    try {
+      const response = await fetch(`/api/connectors/${connectorId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        showToast(data.message);
+        if (statusEl) {
+          statusEl.textContent = data.message;
+        }
+      } else if (statusEl) {
+        statusEl.textContent = data.detail || "Connector failed.";
+      }
+    } catch (error) {
+      if (statusEl) {
+        statusEl.textContent = "Connector unreachable.";
+      }
+      showToast("Connector offline, try again.");
+    }
+  });
+});
 
 function showToast(text) {
   const toast = document.getElementById("toast");

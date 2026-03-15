@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
+import httpx
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -11,6 +12,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
 from .automations import FlowOrchestrator
+from .connectors import CONNECTOR_LOOKUP, CONNECTORS
 from .services import AutoPilot, Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
@@ -281,6 +283,7 @@ async def homepage(request: Request):
             "payment_methods": PAYMENT_METHODS,
             "toolkit": AUTOMATION_TOOLS,
             "autopilot": autopilot_status,
+            "connectors": CONNECTORS,
         },
     )
 
@@ -365,6 +368,32 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     return {
         "status": "ok",
         "message": f"{portal['name']} request received – expect a secure link in your inbox shortly.",
+    }
+
+
+@app.post("/api/connectors/{connector_id}", response_class=JSONResponse)
+async def trigger_connector(connector_id: str, payload: Dict[str, str]):
+    connector = CONNECTOR_LOOKUP.get(connector_id)
+    if not connector:
+        raise HTTPException(status_code=404, detail="Connector not available")
+    target_url = payload.get("target_url") or connector["default_url"]
+    field_name = connector.get("sample_field", "message")
+    body = {
+        field_name: payload.get(field_name) or connector.get("sample_message"),
+        "timestamp": datetime.utcnow().isoformat(),
+        "context": payload.get("context", "GlobalFlow automation"),
+    }
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            response = await client.post(target_url, json=body)
+    except httpx.HTTPError as exc:
+        logger.warning("Connector %s failed: %s", connector_id, exc)
+        raise HTTPException(status_code=502, detail="Connector endpoint unreachable")
+    monitoring.record("tasks_run")
+    return {
+        "status": "ok",
+        "message": f"{connector['name']} triggered – {response.status_code}",
+        "details": response.json() if response.headers.get("content-type", "").startswith("application/json") else {},
     }
 
 
