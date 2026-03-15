@@ -14,6 +14,10 @@ const subscribeModal = document.getElementById("subscribe-modal");
 const signupModal = document.getElementById("signup-modal");
 const subscribeForm = document.getElementById("subscribe-form");
 const signupForm = document.getElementById("signup-form");
+const sidebarSubscribeBtn = document.getElementById("sidebar-subscribe-btn");
+const sidebarSignupBtn = document.getElementById("sidebar-signup-btn");
+const sidebarWorkflowBtn = document.getElementById("sidebar-workflow-btn");
+const launchOrchestrationBtn = document.getElementById("launch-orchestration");
 
 async function fetchTasks() {
   const response = await fetch("/api/tasks");
@@ -218,6 +222,22 @@ paymentButtons.forEach((button) => {
 
 if (signupBtn) {
   signupBtn.addEventListener("click", () => openModal(signupModal));
+}
+
+if (sidebarSubscribeBtn) {
+  sidebarSubscribeBtn.addEventListener("click", () => openModal(subscribeModal));
+}
+
+if (sidebarSignupBtn) {
+  sidebarSignupBtn.addEventListener("click", () => openModal(signupModal));
+}
+
+if (sidebarWorkflowBtn) {
+  sidebarWorkflowBtn.addEventListener("click", () => scrollIntoView("#flowboard"));
+}
+
+if (launchOrchestrationBtn) {
+  launchOrchestrationBtn.addEventListener("click", () => triggerFlow());
 }
 
 if (subscribeModal) {

@@ -24,10 +24,10 @@
     </header>
 
     <aside class="sidebar">
-      <button class="sidebar-btn" onclick="openModal(subscribeModal)">Subscribe</button>
-      <button class="sidebar-btn" onclick="openModal(signupModal)">Sign Up</button>
+      <button class="sidebar-btn" id="sidebar-subscribe-btn">Subscribe</button>
+      <button class="sidebar-btn" id="sidebar-signup-btn">Sign Up</button>
       <a class="sidebar-link" href="/account">Account & Settings</a>
-      <button class="sidebar-btn special" onclick="scrollIntoView('#flowboard')">Workflow</button>
+      <button class="sidebar-btn special" id="sidebar-workflow-btn">Workflow</button>
     </aside>
 
     <main>
@@ -41,7 +41,7 @@
           </p>
           <div class="hero-actions">
             <button class="primary" id="inspect-flow">Inspect the live flow</button>
-            <button class="ghost" onclick="triggerFlow()">Launch orchestration</button>
+            <button class="ghost" id="launch-orchestration">Launch orchestration</button>
             <button class="pill" id="subscribe-btn">Subscribe for cadence</button>
             <button class="pill" id="signup-btn">Sign up for early access</button>
           </div>
