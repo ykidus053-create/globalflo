@@ -238,7 +238,6 @@ activity_log = ActivityLog()
 orchestrator = FlowOrchestrator(activity_log)
 task_manager = TaskManager(TASKS, monitoring, orchestrator)
 autopilot = AutoPilot(task_manager, monitoring, activity_log, interval_seconds=55)
-autopilot = AutoPilot(task_manager, monitoring, interval_seconds=55)
 
 
 def _tasks_list() -> List[Dict[str, str]]:
