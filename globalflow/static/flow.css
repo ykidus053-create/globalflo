@@ -360,6 +360,54 @@ main {
   font-size: 0.9rem;
 }
 
+.activity {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(3, 6, 20, 0.92);
+  backdrop-filter: blur(20px);
+}
+
+.activity-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.activity-entry {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 21, 48, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.activity-entry .activity-kind {
+  font-size: 0.7rem;
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  color: rgba(246, 251, 255, 0.6);
+}
+
+.activity-entry .activity-message {
+  font-weight: 600;
+}
+
+.activity-entry .activity-detail {
+  font-size: 0.85rem;
+  color: rgba(246, 251, 255, 0.65);
+  min-height: 2.4rem;
+}
+
+.activity-entry time {
+  font-size: 0.75rem;
+  letter-spacing: 0.2rem;
+  color: rgba(246, 251, 255, 0.5);
+}
+
 .section-heading {
   margin-bottom: 1rem;
 }

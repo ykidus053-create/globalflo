@@ -34,6 +34,8 @@ let autopilotState = {
   cycles: parseInt(autopilotData?.dataset?.cycles || "0", 10),
 };
 const toolkitButtons = document.querySelectorAll("[data-tool-action]");
+const connectorForms = document.querySelectorAll(".connector-form");
+const activityFeed = document.getElementById("activity-feed");
 
 async function fetchTasks() {
   const response = await fetch("/api/tasks");
@@ -116,6 +118,40 @@ async function refreshAutopilotStatus() {
     updateAutopilotDisplay(data);
   } catch (error) {
     console.warn("Autopilot status unavailable", error);
+  }
+}
+
+function renderActivity(events) {
+  if (!activityFeed) return;
+  if (!events || !events.length) {
+    activityFeed.innerHTML = `<div class="activity-entry"><p class="activity-message">No activity yet.</p></div>`;
+    return;
+  }
+  activityFeed.innerHTML = events
+    .map(
+      (event) => `
+      <article class="activity-entry">
+        <span class="activity-kind">${event.kind || "event"}</span>
+        <p class="activity-message">${event.message}</p>
+        <p class="activity-detail">${event.detail || ""}</p>
+        <time>${new Date(event.timestamp).toLocaleString()}</time>
+      </article>
+    `
+    )
+    .join("");
+}
+
+async function fetchActivity() {
+  if (!activityFeed) return;
+  try {
+    const response = await fetch("/api/activity");
+    if (!response.ok) {
+      return;
+    }
+    const body = await response.json();
+    renderActivity(body.events);
+  } catch (error) {
+    console.warn("Activity stream unavailable", error);
   }
 }
 
@@ -308,10 +344,12 @@ fetchTasks();
 fetchSummary();
 refreshMetrics();
 refreshAutopilotStatus();
+fetchActivity();
 setInterval(fetchTasks, 15000);
 setInterval(fetchSummary, 30000);
 setInterval(refreshMetrics, 45000);
 setInterval(refreshAutopilotStatus, 30000);
+setInterval(fetchActivity, 30000);
 animateRadiant();
 
 if (inspectButton) {

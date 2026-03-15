@@ -2,7 +2,7 @@ import asyncio
 import logging
 import random
 from datetime import datetime
-from typing import Awaitable, Callable, Dict, List
+from typing import Awaitable, Callable, Dict, List, Optional
 
 logger = logging.getLogger("globalflow.automations")
 if not logger.handlers:
@@ -86,8 +86,9 @@ FLOW_REGISTRY: Dict[str, FlowFn] = {
 
 
 class FlowOrchestrator:
-    def __init__(self):
+    def __init__(self, activity_log: Optional["ActivityLog"] = None):
         self.logger = logger
+        self.activity_log = activity_log
 
     async def run(self, task_id: str) -> None:
         flow_fn = FLOW_REGISTRY.get(task_id)
@@ -95,4 +96,12 @@ class FlowOrchestrator:
             self.logger.warning("No automation flow registered for %s", task_id)
             return
         self.logger.info("Executing automation flow for %s", task_id)
-        await flow_fn()
+        result = await flow_fn()
+        if self.activity_log:
+            summary = "; ".join(step["message"] for step in result.get("steps", []))
+            self.activity_log.record(
+                kind="automation",
+                source=task_id,
+                message=f"{task_id} flow completed",
+                detail=summary,
+            )

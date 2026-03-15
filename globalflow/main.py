@@ -11,10 +11,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
+from .activity import ActivityLog
 from .automations import FlowOrchestrator
 from .connectors import CONNECTOR_LOOKUP, CONNECTORS
 from .services import AutoPilot, Monitoring, TaskManager
 
+import httpx
 root = Path(__file__).resolve().parent
 
 logger = logging.getLogger("globalflow.app")
@@ -232,8 +234,10 @@ AUTOMATION_TOOLS = [
 AUTOMATION_TOOL_LOOKUP = {tool["id"]: tool for tool in AUTOMATION_TOOLS}
 
 monitoring = Monitoring()
-orchestrator = FlowOrchestrator()
+activity_log = ActivityLog()
+orchestrator = FlowOrchestrator(activity_log)
 task_manager = TaskManager(TASKS, monitoring, orchestrator)
+autopilot = AutoPilot(task_manager, monitoring, activity_log, interval_seconds=55)
 autopilot = AutoPilot(task_manager, monitoring, interval_seconds=55)
 
 
@@ -388,13 +392,33 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
             response = await client.post(target_url, json=body)
     except httpx.HTTPError as exc:
         logger.warning("Connector %s failed: %s", connector_id, exc)
+        activity_log.record(
+            kind="connector",
+            source=connector["name"],
+            message="Connector failed",
+            detail=str(exc),
+        )
         raise HTTPException(status_code=502, detail="Connector endpoint unreachable")
     monitoring.record("tasks_run")
+    activity_log.record(
+        kind="connector",
+        source=connector["name"],
+        message=f"Connector hit – {response.status_code}",
+        detail=response.text[:200],
+    )
+    details = {}
+    if response.headers.get("content-type", "").startswith("application/json"):
+        details = response.json()
     return {
         "status": "ok",
         "message": f"{connector['name']} triggered – {response.status_code}",
-        "details": response.json() if response.headers.get("content-type", "").startswith("application/json") else {},
+        "details": details,
     }
+
+
+@app.get("/api/activity", response_class=JSONResponse)
+async def activity_stream():
+    return {"events": activity_log.snapshot()}
 
 
 @app.get("/api/autopilot", response_class=JSONResponse)
