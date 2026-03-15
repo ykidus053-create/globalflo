@@ -170,6 +170,59 @@ USER_SETTINGS: Dict[str, str] = {
 
 SUBSCRIPTIONS: List[Dict[str, str]] = []
 
+AUTOMATION_TOOLS = [
+    {
+        "id": "ms-python.python",
+        "name": "Python Intelligence",
+        "short": "Full workspace linting + debugging",
+        "detail": "The official Python extension brings auto-complete, debugging overlays, and test runners that keep your workflows humming.",
+        "focus": "type-aware completion & live debugging",
+        "doc": "https://marketplace.visualstudio.com/items?itemName=ms-python.python",
+    },
+    {
+        "id": "ms-python.vscode-pylance",
+        "name": "Pylance",
+        "short": "Type checking and semantic analysis",
+        "detail": "Pylance adds lightning-speed type inference and in-editor hints so every automation script stays trustworthy before deployment.",
+        "focus": "type inference engine",
+        "doc": "https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance",
+    },
+    {
+        "id": "ms-python.black-formatter",
+        "name": "Black Formatter",
+        "short": "Deterministic formatting",
+        "detail": "Code that is automatically formatted before each CI run keeps automation specs consistent across every device.",
+        "focus": "automatic formatting",
+        "doc": "https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter",
+    },
+    {
+        "id": "ms-python.isort",
+        "name": "isort",
+        "short": "Organize imports automatically",
+        "detail": "isort keeps dependencies sorted, making build diffs easy to review and preventing accidental loops in orchestrated tasks.",
+        "focus": "import hygiene",
+        "doc": "https://marketplace.visualstudio.com/items?itemName=ms-python.isort",
+    },
+    {
+        "id": "ms-toolsai.jupyter",
+        "name": "Jupyter",
+        "short": "Notebook automation",
+        "detail": "Jupyter lets you craft data experiments that feed into the GlobalFlow analytics pipeline without leaving VS Code.",
+        "focus": "live data experiments",
+        "doc": "https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter",
+    },
+    {
+        "id": "ms-azuretools.vscode-docker",
+        "name": "Docker for VS Code",
+        "short": "Container-aware workflow",
+        "detail": "Build, debug, and push Docker images for GlobalFlow from a single interface, ensuring deployments match local expectations.",
+        "focus": "container builds & logs",
+        "doc": "https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker",
+    },
+]
+
+AUTOMATION_TOOL_LOOKUP = {tool["id"]: tool for tool in AUTOMATION_TOOLS}
+
 monitoring = Monitoring()
 task_manager = TaskManager(TASKS, monitoring)
 
@@ -210,6 +263,7 @@ async def homepage(request: Request):
             "stats": stats,
             "features": FEATURES,
             "payment_methods": PAYMENT_METHODS,
+            "toolkit": AUTOMATION_TOOLS,
         },
     )
 
@@ -294,6 +348,19 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     return {
         "status": "ok",
         "message": f"{portal['name']} request received – expect a secure link in your inbox shortly.",
+    }
+
+
+@app.get("/api/toolkit/{tool_id}", response_class=JSONResponse)
+async def toolkit_action(tool_id: str):
+    tool = AUTOMATION_TOOL_LOOKUP.get(tool_id)
+    if not tool:
+        raise HTTPException(status_code=404, detail="Automation tool unavailable")
+    monitoring.record("tasks_run")
+    return {
+        "status": "queued",
+        "message": f"{tool['name']} alignment requested – refreshing templates, enforcing formatting, and checking runtime hints.",
+        "focus": tool["focus"],
     }
 
 

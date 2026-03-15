@@ -234,6 +234,57 @@ main {
   backdrop-filter: blur(18px);
 }
 
+.toolkit {
+  background: rgba(5, 9, 22, 0.94);
+  border-radius: 1.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.toolkit-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.toolkit-grid article {
+  padding: 1.2rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(19, 27, 58, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toolkit-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25rem;
+  color: rgba(246, 251, 255, 0.65);
+}
+
+.toolkit-focus {
+  margin: 0;
+  color: rgba(246, 251, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+.toolkit-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.toolkit-note {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(246, 251, 255, 0.6);
+}
+
 .section-heading {
   margin-bottom: 1rem;
 }

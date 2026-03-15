@@ -18,6 +18,7 @@ const sidebarSubscribeBtn = document.getElementById("sidebar-subscribe-btn");
 const sidebarSignupBtn = document.getElementById("sidebar-signup-btn");
 const sidebarWorkflowBtn = document.getElementById("sidebar-workflow-btn");
 const launchOrchestrationBtn = document.getElementById("launch-orchestration");
+const toolkitButtons = document.querySelectorAll("[data-tool-action]");
 
 async function fetchTasks() {
   const response = await fetch("/api/tasks");
@@ -206,6 +207,20 @@ function scrollIntoView(selector) {
   }
 }
 
+async function summonToolkitTool(toolId) {
+  if (!toolId) return;
+  try {
+    const response = await fetch(`/api/toolkit/${toolId}`);
+    if (!response.ok) {
+      throw new Error("Toolkit action blocked");
+    }
+    const payload = await response.json();
+    showToast(payload.message);
+  } catch (error) {
+    showToast("Toolkit action failed. Try again.");
+  }
+}
+
 if (subscribeBtn) {
   subscribeBtn.addEventListener("click", () => openModal(subscribeModal));
 }
@@ -223,6 +238,14 @@ paymentButtons.forEach((button) => {
 if (signupBtn) {
   signupBtn.addEventListener("click", () => openModal(signupModal));
 }
+
+toolkitButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const toolId = button.dataset.toolAction;
+    showToast("Queuing automation toolset...");
+    summonToolkitTool(toolId);
+  });
+});
 
 if (sidebarSubscribeBtn) {
   sidebarSubscribeBtn.addEventListener("click", () => openModal(subscribeModal));

@@ -103,6 +103,28 @@
         </div>
       </section>
 
+      <section class="toolkit" id="toolkit">
+        <div class="section-heading">
+          <h2>Automation toolkit extensions</h2>
+          <p>Trigger the same AI-assisted guardrails that the elite VS Code extensions deliver.</p>
+        </div>
+        <div class="toolkit-grid">
+          {% for tool in toolkit %}
+          <article>
+            <div class="toolkit-badge">{{ tool.id }}</div>
+            <h3>{{ tool.name }}</h3>
+            <p>{{ tool.detail }}</p>
+            <p class="toolkit-focus"><strong>Focus:</strong> {{ tool.focus }}</p>
+            <div class="toolkit-actions">
+              <button class="primary small" data-tool-action="{{ tool.id }}">Run automation check</button>
+              <a class="ghost" href="{{ tool.doc }}" target="_blank" rel="noreferrer">Open docs</a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        <p class="toolkit-note">Every action mirrors the automation+quality enforcement your extensions promise—type checks, formatting, containers, and notebook experiments.</p>
+      </section>
+
       <section class="checkout" id="checkout">
         <div class="section-heading">
           <h2>Subscription checkout</h2>
