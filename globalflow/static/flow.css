@@ -486,6 +486,17 @@ main {
   margin: 0.2rem 0 0;
 }
 
+.payment-actions-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.payment-actions-links .ghost {
+  justify-content: center;
+}
+
 .checkout-hint {
   margin-top: 1rem;
   color: rgba(246, 251, 255, 0.65);

@@ -139,7 +139,12 @@
               <p>{{ method.description }}</p>
               <p class="payment-note">{{ method.note }}</p>
             </div>
-            <button class="ghost" data-payment-method="{{ method.id }}">{{ method.action }}</button>
+            <div class="payment-actions-links">
+              <button class="ghost" data-payment-method="{{ method.id }}">{{ method.action }}</button>
+              <a class="ghost" href="{{ method.portal_url }}" target="_blank" rel="noreferrer">
+                Open {{ method.name }} portal
+              </a>
+            </div>
           </article>
           {% endfor %}
         </div>
