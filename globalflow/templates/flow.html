@@ -153,6 +153,12 @@
           <article>
             <h3>{{ connector.name }}</h3>
             <p>{{ connector.description }}</p>
+            <p class="connector-meta">
+              <a href="{{ connector.doc }}" target="_blank" rel="noreferrer">Read setup guide</a>
+              {% if connector.env_key %}
+              <span>Env: {{ connector.env_key }}</span>
+              {% endif %}
+            </p>
             <form class="connector-form" data-connector-id="{{ connector.id }}">
               <label>
                 Endpoint
@@ -206,6 +212,36 @@
           {% endfor %}
         </div>
         <p class="checkout-hint">Need a bespoke plan? Our onboarding pod will send a secure invoice within minutes of your request.</p>
+      </section>
+
+      <section class="subscriptions" id="subscriptions">
+        <div class="section-heading">
+          <h2>Subscription tiers</h2>
+          <p>Pick the automation runway that matches your scale and payment runway.</p>
+        </div>
+        <div class="subscription-grid">
+          {% for tier in subscription_tiers %}
+          <article>
+            {% if tier.badge %}
+            <span class="tier-badge">{{ tier.badge }}</span>
+            {% endif %}
+            <div class="subscription-copy">
+              <h3>{{ tier.name }}</h3>
+              <p class="price">{{ tier.price }}</p>
+              <p>{{ tier.description }}</p>
+            </div>
+            <ul>
+              {% for feature in tier.features %}
+              <li>{{ feature }}</li>
+              {% endfor %}
+            </ul>
+            <div class="subscription-actions">
+              <button class="primary small" data-checkout-tier="{{ tier.id }}">Checkout {{ tier.name }}</button>
+              <button class="ghost small" data-checkout-tier="{{ tier.id }}">Request invoice</button>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
       </section>
 
       <section id="agents" class="agents">
@@ -302,6 +338,14 @@
             <label>
               Email
               <input name="email" type="email" placeholder="ops@futureco.com" required />
+            </label>
+            <label>
+              Pick a plan
+              <select name="tier" required>
+                {% for tier in subscription_tiers %}
+                <option value="{{ tier.id }}">{{ tier.name }} — {{ tier.price }}</option>
+                {% endfor %}
+              </select>
             </label>
             <button type="submit" class="primary small">Subscribe</button>
             <p class="modal-note" id="subscribe-status"></p>

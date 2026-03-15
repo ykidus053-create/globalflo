@@ -34,6 +34,7 @@ let autopilotState = {
   cycles: parseInt(autopilotData?.dataset?.cycles || "0", 10),
 };
 const toolkitButtons = document.querySelectorAll("[data-tool-action]");
+const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
 const connectorForms = document.querySelectorAll(".connector-form");
 const activityFeed = document.getElementById("activity-feed");
 
@@ -298,6 +299,9 @@ function submitSubscription(form, statusEl, modalEl) {
     }
     if (response.ok && modalEl) {
       setTimeout(() => closeModal(modalEl), 1500);
+      if (payload.checkout_url) {
+        window.open(payload.checkout_url, "_blank");
+      }
     }
   });
 }
@@ -487,6 +491,10 @@ if (loginModal) {
   });
 }
 
+subscriptionButtons.forEach((button) => {
+  button.addEventListener("click", () => openCheckoutForTier(button.dataset.checkoutTier));
+});
+
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -533,6 +541,12 @@ connectorForms.forEach((form) => {
     }
   });
 });
+
+function openCheckoutForTier(tierId) {
+  if (!tierId) return;
+  showToast("Opening subscription checkout…");
+  window.open(`/checkout/${tierId}`, "_blank");
+}
 
 function showToast(text) {
   const toast = document.getElementById("toast");

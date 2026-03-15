@@ -346,6 +346,21 @@ main {
   color: rgba(246, 251, 255, 0.7);
 }
 
+.connector-meta {
+  margin: 0.35rem 0 0;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(246, 251, 255, 0.7);
+  flex-wrap: wrap;
+}
+
+.connector-meta a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .connector-form input {
   border-radius: 0.6rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -800,4 +815,172 @@ main {
   font-size: 0.9rem;
   color: var(--accent);
   min-height: 1rem;
+}
+
+.subscriptions {
+  background: rgba(4, 7, 18, 0.9);
+  border-radius: 1.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(22px);
+}
+
+.subscription-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.subscriptions article {
+  padding: 1.25rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 32, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 280px;
+}
+
+.subscription-copy h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.subscription-copy .price {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.subscription-grid ul {
+  padding-left: 1rem;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.subscription-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tier-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 0.25rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.2rem;
+  color: var(--accent);
+  border: 1px solid rgba(47, 184, 255, 0.4);
+  text-transform: uppercase;
+}
+
+.checkout-body {
+  background: #010818;
+  min-height: 100vh;
+  color: #f6fbff;
+}
+
+.checkout-page {
+  padding: clamp(2rem, 5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto 4rem;
+}
+
+.checkout-tier {
+  padding: clamp(1.5rem, 4vw, 2.2rem);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(5, 10, 24, 0.95);
+  position: relative;
+}
+
+.checkout-tier .lead {
+  color: rgba(246, 251, 255, 0.75);
+  margin: 0.5rem 0;
+}
+
+.checkout-tier .price {
+  font-size: 2rem;
+  margin: 0.3rem 0;
+  font-weight: 700;
+}
+
+.checkout-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.checkout-offset {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.checkout-card,
+.checkout-panel {
+  padding: clamp(1.5rem, 4vw, 2.2rem);
+  border-radius: 1.25rem;
+  background: rgba(3, 7, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.checkout-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.checkout-card label {
+  font-size: 0.85rem;
+  color: rgba(246, 251, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.checkout-card input,
+.checkout-card textarea {
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.8rem 0.9rem;
+  color: #f6fbff;
+}
+
+.method-grid {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.method-grid li {
+  padding: 0.9rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.checkout-foot {
+  text-align: center;
+  color: rgba(246, 251, 255, 0.7);
+  font-size: 0.9rem;
+  padding-bottom: 3rem;
 }

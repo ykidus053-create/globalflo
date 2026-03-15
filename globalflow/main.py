@@ -4,7 +4,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
-import httpx
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -16,7 +15,6 @@ from .automations import FlowOrchestrator
 from .connectors import CONNECTOR_LOOKUP, CONNECTORS
 from .services import AutoPilot, Monitoring, TaskManager
 
-import httpx
 root = Path(__file__).resolve().parent
 
 logger = logging.getLogger("globalflow.app")
@@ -122,7 +120,7 @@ PAYMENT_METHODS = [
         "name": "PayPal",
         "description": "Instant digital invoices with multi-currency support.",
         "action": "Open the PayPal send page",
-        "portal_url": "https://www.paypal.com/sendmoney",
+        "portal_url": "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ops%40globalflow.ai&item_name=GlobalFlow+Automation&currency_code=USD",
         "note": "Send funds to ops@globalflow.ai and mention your subscription tier.",
         "instructions": [
             "Sign in to PayPal and choose the Send Money flow.",
@@ -136,7 +134,7 @@ PAYMENT_METHODS = [
         "name": "Mastercard",
         "description": "Recurring billing with enhanced reconciliation.",
         "action": "Launch the Mastercard billing desk",
-        "portal_url": "https://www.mastercard.us/en-us/business/accepting-payments.html",
+        "portal_url": "https://buy.stripe.com/test_4gwcOn7h3h7p5Dq6oo",
         "note": "Our finance desk will issue a secure Stripe invoice that accepts Mastercard.",
         "instructions": [
             "Click continue to visit the Mastercard payment resources.",
@@ -150,7 +148,7 @@ PAYMENT_METHODS = [
         "name": "American Express",
         "description": "Premium rewards plus CFO program controls.",
         "action": "Visit the American Express payments hub",
-        "portal_url": "https://www.americanexpress.com/en-us/business/accepting-payments/",
+        "portal_url": "https://buy.stripe.com/test_aEU8yMcgvhvE8cS4gj",
         "note": "AmEx cards get dedicated concierge onboarding and detailed receipts.",
         "instructions": [
             "Follow the AmEx guidance to understand the requirements.",
@@ -179,6 +177,69 @@ USER_SETTINGS: Dict[str, str] = {
 }
 
 SUBSCRIPTIONS: List[Dict[str, str]] = []
+
+SUBSCRIPTION_TIERS = [
+    {
+        "id": "pilot",
+        "name": "Pilot Tier",
+        "price": "$349 / month",
+        "amount": 349,
+        "currency": "USD",
+        "description": "High-trust automation with an AI concierge, weekly reviews, and live escalation routing.",
+        "features": [
+            "Dedicated AutoPilot queue + Slack signals",
+            "Prefect + Temporal retries with Prefect Cloud telemetry",
+            "Monthly strategy sync & audit log exports",
+        ],
+        "preferred_method": "paypal",
+        "payment_links": {
+            "paypal": "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ops%40globalflow.ai&item_name=GlobalFlow+Pilot&amount=349&currency_code=USD",
+            "mastercard": "https://buy.stripe.com/test_14kaHh0G87aF7gMdQT",
+            "amex": "https://buy.stripe.com/test_aEU8yMcgvhvE8cS4gj",
+        },
+        "badge": "Popular",
+    },
+    {
+        "id": "launch",
+        "name": "Launch Tier",
+        "price": "$549 / month",
+        "amount": 549,
+        "currency": "USD",
+        "description": "Automation for fast-growing teams needing multi-region governance, monthly check-ins, and compliance vaults.",
+        "features": [
+            "Multi-region Temporal + Prefect coverage",
+            "Dedicated AI agents for billing, taxes, and files",
+            "Enterprise-grade connectors (Slack, HubSpot, QuickBooks)",
+        ],
+        "preferred_method": "mastercard",
+        "payment_links": {
+            "paypal": "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ops%40globalflow.ai&item_name=GlobalFlow+Launch&amount=549&currency_code=USD",
+            "mastercard": "https://buy.stripe.com/test_4gwcOn7h3h7p5Dq6oo",
+            "amex": "https://buy.stripe.com/test_28ob24dMr1wk1G8cMR",
+        },
+    },
+    {
+        "id": "captain",
+        "name": "Captain Tier",
+        "price": "$899 / month",
+        "amount": 899,
+        "currency": "USD",
+        "description": "Fully autonomous ops desk that orchestrates billing, taxes, calls, files, and connectors with 24/7 coverage.",
+        "features": [
+            "Human-in-the-loop guardrails with AI suggestions",
+            "Instant connector wiring + custom API scaffolding",
+            "Quarterly automation readiness report",
+        ],
+        "preferred_method": "amex",
+        "payment_links": {
+            "paypal": "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ops%40globalflow.ai&item_name=GlobalFlow+Captain&amount=899&currency_code=USD",
+            "mastercard": "https://buy.stripe.com/test_5kAdUD4Hn9Qf0yQ4gK",
+            "amex": "https://buy.stripe.com/test_dR6hcS4Hf0Ee3zi7su",
+        },
+        "badge": "Elite",
+    },
+]
+SUBSCRIPTION_LOOKUP = {tier["id"]: tier for tier in SUBSCRIPTION_TIERS}
 
 AUTOMATION_TOOLS = [
     {
@@ -287,6 +348,7 @@ async def homepage(request: Request):
             "toolkit": AUTOMATION_TOOLS,
             "autopilot": autopilot_status,
             "connectors": CONNECTORS,
+            "subscription_tiers": SUBSCRIPTION_TIERS,
         },
     )
 
@@ -331,9 +393,27 @@ async def subscribe(payload: Dict[str, str]):
     name = payload.get("name", "Subscriber")
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
-    SUBSCRIPTIONS.append({"name": name, "email": email, "time": datetime.utcnow().isoformat()})
+    tier_id = payload.get("tier") or SUBSCRIPTION_TIERS[0]["id"]
+    tier = SUBSCRIPTION_LOOKUP.get(tier_id, SUBSCRIPTION_TIERS[0])
+    SUBSCRIPTIONS.append(
+        {
+            "name": name,
+            "email": email,
+            "tier": tier["name"],
+            "time": datetime.utcnow().isoformat(),
+        }
+    )
     monitoring.record("subscriptions")
-    return {"status": "ok", "message": f"Thanks {name}, your subscription is live."}
+    return {
+        "status": "ok",
+        "message": f"Thanks {name}, {tier['name']} is reserved. Follow the checkout link to complete payment.",
+        "checkout_url": tier["payment_links"].get(tier["preferred_method"]),
+    }
+
+
+@app.get("/api/subscriptions", response_class=JSONResponse)
+async def catalog_subscriptions():
+    return {"tiers": SUBSCRIPTION_TIERS}
 
 
 @app.get("/payment/{method}", response_class=HTMLResponse)
@@ -346,6 +426,21 @@ async def payment_portal(request: Request, method: str):
         {
             "request": request,
             "portal": portal,
+        },
+    )
+
+
+@app.get("/checkout/{tier_id}", response_class=HTMLResponse)
+async def checkout_page(request: Request, tier_id: str):
+    tier = SUBSCRIPTION_LOOKUP.get(tier_id)
+    if not tier:
+        raise HTTPException(status_code=404, detail="Subscription tier unavailable")
+    return templates.TemplateResponse(
+        "checkout.html",
+        {
+            "request": request,
+            "tier": tier,
+            "payment_methods": PAYMENT_METHODS,
         },
     )
 
@@ -379,7 +474,7 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     connector = CONNECTOR_LOOKUP.get(connector_id)
     if not connector:
         raise HTTPException(status_code=404, detail="Connector not available")
-    target_url = payload.get("target_url") or connector["default_url"]
+    target_url = payload.get("target_url") or connector.get("resolved_url") or connector["default_url"]
     field_name = connector.get("sample_field", "message")
     body = {
         field_name: payload.get(field_name) or connector.get("sample_message"),

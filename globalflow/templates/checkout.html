@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout · GlobalFlow</title>
+    <link rel="stylesheet" href="/static/flow.css" />
+  </head>
+  <body class="checkout-body">
+    <div class="aurora"></div>
+    <div class="grid-overlay"></div>
+    <header class="top">
+      <div class="brand">
+        <span>GlobalFlow Checkout</span>
+        <p>Complete automation payments</p>
+      </div>
+      <div class="nav">
+        <a href="/">Dashboard</a>
+        <a href="/account">Account center</a>
+        <a href="#invoice-form">Invoice request</a>
+      </div>
+    </header>
+
+    <main class="checkout-page">
+      <section class="checkout-tier">
+        {% if tier.badge %}
+        <span class="tier-badge">{{ tier.badge }}</span>
+        {% endif %}
+        <h1>{{ tier.name }}</h1>
+        <p class="lead">{{ tier.description }}</p>
+        <p class="price">{{ tier.price }}</p>
+        <ul class="tier-features">
+          {% for feature in tier.features %}
+          <li>{{ feature }}</li>
+          {% endfor %}
+        </ul>
+        <div class="checkout-links">
+          {% for method, url in tier.payment_links.items() %}
+          <a
+            class="primary"
+            href="{{ url }}"
+            target="_blank"
+            rel="noreferrer"
+            >Pay with {{ method.capitalize() }}</a
+          >
+          {% endfor %}
+        </div>
+        <p class="checkout-note">
+          Prefer a custom contract? Send a payment request to ops@globalflow.ai, mention {{ tier.name }}, and we will return a signed invoice within 2 hours.
+        </p>
+      </section>
+
+      <section class="checkout-offset">
+        <div class="checkout-card">
+          <h3>Invoice request</h3>
+          <p>Need a procurement ticket or PO? Let us issue the invoice for you.</p>
+          <form id="invoice-form" data-method="{{ tier.preferred_method }}" data-tier-id="{{ tier.id }}">
+            <label>
+              Business email
+              <input name="email" type="email" placeholder="ops@futureco.com" required />
+            </label>
+            <label>
+              Amount
+              <input name="amount" value="{{ tier.amount }}" />
+            </label>
+            <label>
+              Notes
+              <textarea name="notes" rows="3" placeholder="Match to a PO or mention your card preference"></textarea>
+            </label>
+            <button class="primary" type="submit">Send payment request</button>
+            <p class="payment-status" id="invoice-status"></p>
+          </form>
+        </div>
+        <div class="checkout-panel">
+          <h3>Accepted payment rails</h3>
+          <ul class="method-grid">
+            {% for method in payment_methods %}
+            <li>
+              <h4>{{ method.name }}</h4>
+              <p>{{ method.description }}</p>
+              <a class="ghost small" href="{{ method.portal_url }}" target="_blank" rel="noreferrer">Open {{ method.name }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="checkout-foot">
+      <p>Everything is recorded in GlobalFlow. Your automation workspace will show the completed run once payment clears.</p>
+    </footer>
+
+    <script type="module" src="/static/checkout.js"></script>
+  </body>
+</html>
