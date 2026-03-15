@@ -1,11 +1,8 @@
 import asyncio
 import logging
 import random
-import time
 from datetime import datetime
-from typing import Callable, Dict
-
-from prefect import flow, task
+from typing import Awaitable, Callable, Dict, List
 
 logger = logging.getLogger("globalflow.automations")
 if not logger.handlers:
@@ -15,74 +12,72 @@ if not logger.handlers:
 logger.setLevel(logging.INFO)
 
 
-def _simulate_step(name: str, duration: float) -> Dict[str, str]:
+async def _simulate_step(name: str, duration: float) -> Dict[str, str]:
     start = datetime.utcnow().isoformat()
-    time.sleep(duration)
+    await asyncio.sleep(duration)
     end = datetime.utcnow().isoformat()
-    result = {
+    message = f"{name} completed in {duration:.1f}s"
+    logger.info(message)
+    return {
         "name": name,
         "start": start,
         "end": end,
-        "message": f"{name} completed in {duration:.1f}s",
+        "message": message,
     }
-    logger.info(result["message"])
-    return result
 
 
-@task(name="Summarize support calls")
-def calls_summary() -> Dict[str, str]:
-    return _simulate_step("Call summaries", duration=random.uniform(0.3, 0.6))
+async def _calls_summary() -> Dict[str, str]:
+    return await _simulate_step("Call summary stream", random.uniform(0.3, 0.6))
 
 
-@task(name="CRM enrichment")
-def crm_enrichment() -> Dict[str, str]:
-    return _simulate_step("CRM enrichment", duration=random.uniform(0.2, 0.45))
+async def _crm_enrichment() -> Dict[str, str]:
+    return await _simulate_step("CRM enrichment", random.uniform(0.25, 0.5))
 
 
-@task(name="Billing reconciliation")
-def billing_reconciliation() -> Dict[str, str]:
-    return _simulate_step("Billing reconciliation", duration=random.uniform(0.4, 0.7))
+async def _billing_reconciliation() -> Dict[str, str]:
+    return await _simulate_step("Billing reconciliation", random.uniform(0.35, 0.7))
 
 
-@task(name="Tax check")
-def tax_check() -> Dict[str, str]:
-    return _simulate_step("Tax compliance snapshot", duration=random.uniform(0.3, 0.6))
+async def _tax_snapshot() -> Dict[str, str]:
+    return await _simulate_step("Tax snapshot", random.uniform(0.3, 0.6))
 
 
-@task(name="File intelligence")
-def file_intelligence() -> Dict[str, str]:
-    return _simulate_step("File classifier", duration=random.uniform(0.2, 0.5))
+async def _file_intelligence() -> Dict[str, str]:
+    return await _simulate_step("File intelligence", random.uniform(0.2, 0.45))
 
 
-@flow(name="Calls automation")
-def calls_flow() -> Dict[str, str]:
-    result1 = calls_summary()
-    result2 = crm_enrichment()
-    return {"steps": [result1, result2]}
+FlowFn = Callable[[], Awaitable[Dict[str, List[Dict[str, str]]]]]
 
 
-@flow(name="Billing automation")
-def billing_flow() -> Dict[str, str]:
-    step = billing_reconciliation()
-    summary = crm_enrichment()
-    return {"steps": [step, summary]}
+async def calls_flow() -> Dict[str, List[Dict[str, str]]]:
+    steps = []
+    steps.append(await _calls_summary())
+    steps.append(await _crm_enrichment())
+    return {"steps": steps}
 
 
-@flow(name="Tax automation")
-def taxes_flow() -> Dict[str, str]:
-    summary = tax_check()
-    compliance = crm_enrichment()
-    return {"steps": [summary, compliance]}
+async def billing_flow() -> Dict[str, List[Dict[str, str]]]:
+    steps = []
+    steps.append(await _billing_reconciliation())
+    steps.append(await _crm_enrichment())
+    return {"steps": steps}
 
 
-@flow(name="Files automation")
-def files_flow() -> Dict[str, str]:
-    intelligence = file_intelligence()
-    summary = calls_summary()
-    return {"steps": [intelligence, summary]}
+async def taxes_flow() -> Dict[str, List[Dict[str, str]]]:
+    steps = []
+    steps.append(await _tax_snapshot())
+    steps.append(await _crm_enrichment())
+    return {"steps": steps}
 
 
-FLOW_REGISTRY: Dict[str, Callable[[], Dict[str, str]]] = {
+async def files_flow() -> Dict[str, List[Dict[str, str]]]:
+    steps = []
+    steps.append(await _file_intelligence())
+    steps.append(await _calls_summary())
+    return {"steps": steps}
+
+
+FLOW_REGISTRY: Dict[str, FlowFn] = {
     "calls": calls_flow,
     "billing": billing_flow,
     "taxes": taxes_flow,
@@ -97,7 +92,7 @@ class FlowOrchestrator:
     async def run(self, task_id: str) -> None:
         flow_fn = FLOW_REGISTRY.get(task_id)
         if not flow_fn:
-            self.logger.warning("No flow linked for task %s", task_id)
+            self.logger.warning("No automation flow registered for %s", task_id)
             return
-        self.logger.info("Running automation flow for %s", task_id)
-        await asyncio.to_thread(flow_fn)
+        self.logger.info("Executing automation flow for %s", task_id)
+        await flow_fn()
