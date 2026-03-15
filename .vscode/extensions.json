@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-toolsai.jupyter",
+    "ms-python.black-formatter",
+    "ms-python.isort",
+    "ms-vscode.cpptools",
+    "eamodio.gitlens",
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "streetsidesoftware.code-spell-checker",
+    "hediet.vscode-drawio",
+    "ms-vscode.vscode-typescript-next",
+    "redhat.vscode-yaml"
+  ]
+}

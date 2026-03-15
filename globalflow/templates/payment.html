@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ portal.name }} payment portal</title>
+    <link rel="stylesheet" href="/static/flow.css" />
+  </head>
+  <body class="payment-body">
+    <main class="payment-page">
+      <header class="payment-header">
+        <p class="eyebrow">{{ portal.name }} concierge</p>
+        <h1>Secure {{ portal.name }} automation billing</h1>
+        <p>
+          {{ portal.description }} {{ portal.note }}
+        </p>
+      </header>
+
+      <section class="payment-panel">
+        <div class="payment-icon {{ portal.id }}"></div>
+        <div class="payment-details">
+          <p class="payment-note">{{ portal.note }}</p>
+          <ol>
+            {% for step in portal.instructions %}
+            <li>{{ step }}</li>
+            {% endfor %}
+          </ol>
+          <div class="payment-actions">
+            <a class="primary" href="{{ portal.portal_url }}" target="_blank" rel="noreferrer">{{ portal.action }}</a>
+            <button class="ghost" type="button" id="payment-form-trigger">Request invoice</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="payment-form-section">
+        <h3>Want a bespoke invoice? Send a request.</h3>
+        <form id="payment-form">
+          <label>
+            Business email
+            <input name="email" type="email" placeholder="ops@globalflow.ai" required />
+          </label>
+          <label>
+            Amount
+            <input name="amount" placeholder="$1,200" />
+          </label>
+          <label>
+            Notes for the finance team
+            <textarea name="notes" rows="3" placeholder="Add a project name, tiers, or billing cadence"></textarea>
+          </label>
+          <button class="primary" type="submit">Send payment request</button>
+          <p class="payment-status" id="payment-status"></p>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="/static/payment.js"></script>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+:root {
+  color: #f7f7ff;
+  background-color: #030712;
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --accent: #7df9ff;
+  --secondary: #6c78b7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, rgba(125, 249, 255, 0.25), transparent 55%), #030712;
+  min-height: 100vh;
+}
+
+.glow {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(125, 249, 255, 0.35), transparent 45%);
+  pointer-events: none;
+}
+
+.hero {
+  padding: 4rem clamp(1.5rem, 5vw, 4rem);
+  max-width: 900px;
+}
+
+.eyebrow {
+  letter-spacing: 0.3rem;
+  text-transform: uppercase;
+  color: var(--secondary);
+  margin-bottom: 0.7rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  margin: 0 0 0.75rem;
+}
+
+.lead {
+  color: rgba(247, 247, 255, 0.7);
+  font-size: 1.2rem;
+  max-width: 640px;
+}
+
+.hero-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.hero-actions .primary,
+.hero-actions .link {
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.hero-actions .primary {
+  background: linear-gradient(135deg, #2ce0ff, #4f73ff);
+  color: #030712;
+}
+
+.hero-actions .link {
+  color: #7df9ff;
+  border: 1px solid rgba(125, 249, 255, 0.5);
+}
+
+main {
+  padding: 2rem clamp(1.5rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.panel {
+  background: rgba(11, 16, 36, 0.9);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 1px solid rgba(125, 249, 255, 0.15);
+  box-shadow: 0 35px 65px rgba(3, 7, 18, 0.45);
+}
+
+.panel.alt {
+  border-color: rgba(198, 203, 255, 0.25);
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.panel-header p {
+  margin-top: 0.4rem;
+  color: rgba(247, 247, 255, 0.6);
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.task-grid article {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.task-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.task-head h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.status {
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+}
+
+.time {
+  margin-top: 0.6rem;
+  color: rgba(247, 247, 255, 0.6);
+}
+
+.tools ul {
+  list-style: none;
+  padding: 0;
+}
+
+.panel ul {
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.panel li {
+  padding: 0.75rem 1rem;
+  border-radius: 0.85rem;
+  background: rgba(127, 151, 255, 0.08);
+  border: 1px solid rgba(127, 151, 255, 0.2);
+  color: rgba(247, 247, 255, 0.85);
+}
+
+footer {
+  padding: 2rem;
+  text-align: center;
+  color: rgba(247, 247, 255, 0.7);
+}

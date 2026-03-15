@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ops Pulse | Small Business Automation</title>
+    <link rel="stylesheet" href="/static/ops.css" />
+  </head>
+  <body>
+    <div class="glow"></div>
+    <header class="hero">
+      <p class="eyebrow">Ops Pulse</p>
+      <h1>Automation night shift for small teams</h1>
+      <p class="lead">
+        Keep every task under observation—FastAPI dashboards, Prefect schedules, and Temporal workflows
+        run in sync so boring work disappears while you stay in control.
+      </p>
+      <div class="hero-actions">
+        <a class="primary" href="#tasks">View automation board</a>
+        <a class="link" href="#stack">See stack</a>
+      </div>
+    </header>
+
+    <main>
+      <section id="tasks" class="panel">
+        <div class="panel-header">
+          <h2>Live Task Board</h2>
+          <p>Each row is a FastAPI endpoint talking to background workers.</p>
+        </div>
+        <div class="task-grid">
+          {% for task in tasks %}
+          <article>
+            <div class="task-head">
+              <h3>{{ task.name }}</h3>
+              <span class="status">{{ task.status }}</span>
+            </div>
+            <p class="time">{{ task.time }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section id="stack" class="panel alt">
+        <div class="panel-header">
+          <h2>Automation Stack</h2>
+          <p>Every piece integrates into a single Ops Pulse control plane.</p>
+        </div>
+        <ul>
+          {% for point in automation_points %}
+          <li>{{ point }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <p>Powered by FastAPI, Prefect, Temporal, Streamlit, LangChain, and Polars.</p>
+    </footer>
+  </body>
+</html>

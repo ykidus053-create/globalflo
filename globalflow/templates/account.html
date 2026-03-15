@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlobalFlow Account Center</title>
+    <link rel="stylesheet" href="/static/flow.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <header class="top">
+      <div class="brand">
+        <span>GlobalFlow 3.0</span>
+        <p>Account center</p>
+      </div>
+      <div class="nav">
+        <a href="/">Dashboard</a>
+        <a href="/account">Account</a>
+      </div>
+    </header>
+    <main class="account-page">
+      <section class="account-panel">
+        <div class="panel-heading">
+          <h2>Your profile</h2>
+          <p>Edit personal details and automation preferences.</p>
+        </div>
+        <form id="account-form">
+          <div class="form-grid">
+            <label>
+              Full name
+              <input name="name" value="{{ profile.name }}" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" value="{{ profile.email }}" required />
+            </label>
+            <label>
+              Role
+              <input name="role" value="{{ profile.role }}" />
+            </label>
+            <label>
+              Timezone
+              <input name="timezone" value="{{ profile.timezone }}" />
+            </label>
+          </div>
+          <div class="form-grid">
+            <label>
+              Daily digest
+              <select name="daily_digest">
+                <option value="enabled" {% if settings.daily_digest == "enabled" %}selected{% endif %}>Enabled</option>
+                <option value="paused" {% if settings.daily_digest == "paused" %}selected{% endif %}>Paused</option>
+              </select>
+            </label>
+            <label>
+              Alert channel
+              <select name="alert_channel">
+                <option value="Slack" {% if settings.alert_channel == "Slack" %}selected{% endif %}>Slack</option>
+                <option value="Email" {% if settings.alert_channel == "Email" %}selected{% endif %}>Email</option>
+                <option value="SMS" {% if settings.alert_channel == "SMS" %}selected{% endif %}>SMS</option>
+              </select>
+            </label>
+            <label>
+              Automation tier
+              <select name="automation_tier">
+                <option value="High trust" {% if settings.automation_tier == "High trust" %}selected{% endif %}>
+                  High trust
+                </option>
+                <option value="Autonomous" {% if settings.automation_tier == "Autonomous" %}selected{% endif %}>
+                  Autonomous
+                </option>
+                <option value="Human review" {% if settings.automation_tier == "Human review" %}selected{% endif %}>
+                  Human review
+                </option>
+              </select>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary">Save everything</button>
+            <span id="account-status"></span>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="/static/account.js"></script>
+  </body>
+</html>

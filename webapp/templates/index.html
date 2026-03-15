@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elite Coding Console</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="hero">
+      <p class="eyebrow">Coding++ Philosophy</p>
+      <h1>Launch a production-ready control room</h1>
+      <p class="lead">
+        FastAPI + modern tooling deliver the fastest feedback loop—automation,
+        insight, and deployment in a single page.
+      </p>
+      <a class="primary" href="/docs">Explore the FastAPI docs</a>
+    </div>
+
+    <section class="metrics">
+      {% for metric in metrics %}
+      <article class="metric-card">
+        <p class="metric-value">{{ metric.value }}</p>
+        <h3>{{ metric.title }}</h3>
+        <p class="metric-detail">{{ metric.detail }}</p>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section class="highlights">
+      <h2>Architectural highlights</h2>
+      <ul>
+        {% for item in highlights %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <footer>
+      <p>Powered by FastAPI, Prefect/Temporal, Transformers, LangChain, and Polars.</p>
+    </footer>
+  </body>
+</html>

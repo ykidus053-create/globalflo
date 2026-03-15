@@ -1,0 +1,321 @@
+import asyncio
+import logging
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List
+
+from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from starlette.requests import Request
+
+from services import Monitoring, TaskManager
+
+root = Path(__file__).resolve().parent
+
+logger = logging.getLogger("globalflow.app")
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(message)s"))
+    logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
+app = FastAPI(title="Global Flow Automation")
+templates = Jinja2Templates(directory=root / "templates")
+app.mount("/static", StaticFiles(directory=root / "static"), name="static")
+
+
+@app.middleware("http")
+async def request_logger(request: Request, call_next):
+    logger.info("Processing %s %s", request.method, request.url.path)
+    try:
+        response = await call_next(request)
+        return response
+    except Exception:
+        monitoring.record("errors")
+        logger.exception("Unhandled error for %s %s", request.method, request.url.path)
+        raise
+
+WORLD_TASKS = [
+    {"domain": "Calls", "description": "Auto-summarize and tag every support/lead call with LangChain agents."},
+    {"domain": "Billing", "description": "Generate invoices, reconcile payments, and flag anomalies with Polars + SQLAlchemy."},
+    {"domain": "Taxes", "description": "Prefect flows keep jurisdictional filings ready, plus AI reminders for deadlines."},
+    {"domain": "Files", "description": "Auto-classify, version, and push contracts/documents to secure storage via Transformers."},
+    {"domain": "Ops", "description": "Temporal orchestrates pipelines across streams, Slack, email, and Zapier connectors."},
+]
+
+AI_AGENTS = [
+    {
+        "name": "Pulse",
+        "scope": "Global status",
+        "summary": "Streams reports from Prefect runs, highlights bottlenecks, and nudges CFOs via Slack.",
+    },
+    {
+        "name": "Clarity",
+        "scope": "Docs + billing",
+        "summary": "Reads invoices, validates against SAP/QuickBooks, uploads tax-ready ledgers, and pre-fills forms.",
+    },
+    {
+        "name": "Orbit",
+        "scope": "Engagement flows",
+        "summary": "Schedules follow-ups, transcribes calls, drafts proposals, and escalates to humans when needed.",
+    },
+]
+
+TASKS: Dict[str, Dict[str, str]] = {
+    "calls": {
+        "id": "calls",
+        "domain": "Global Calls",
+        "status": "ready",
+        "next_action": "Summarize recent calls",
+        "last_run": "—",
+        "note": "LangChain agent primed for CRM engine.",
+    },
+    "billing": {
+        "id": "billing",
+        "domain": "Billing Ops",
+        "status": "ready",
+        "next_action": "Match invoices to payments",
+        "last_run": "—",
+        "note": "Polars-led reconciliation queued.",
+    },
+    "taxes": {
+        "id": "taxes",
+        "domain": "Taxes & Compliance",
+        "status": "ready",
+        "next_action": "Prepare jurisdiction snapshot",
+        "last_run": "—",
+        "note": "Prefect job stands by for data.",
+    },
+    "files": {
+        "id": "files",
+        "domain": "Files + Documents",
+        "status": "ready",
+        "next_action": "Classify latest uploads",
+        "last_run": "—",
+        "note": "Transformer embeddings warming up.",
+    },
+}
+
+FEATURES = [
+    {"title": "AI Call Summaries", "detail": "LangChain + Whisper triage every conversation, tag CRM records, and surface anomalies."},
+    {"title": "Smart Billing Ops", "detail": "Polars + SQLAlchemy align invoices/payments, then Prefect auto-reminds finance."},
+    {"title": "Compliance Engine", "detail": "Temporal & Prefect dual-control flows ensure filing readiness across regions."},
+    {"title": "File Intelligence", "detail": "Transformer embeddings classify and secure sensitive documents instantly."},
+    {"title": "Workflow Studio", "detail": "Visualizing retries, SLAs, and audit logs alongside dashboards and APIs."},
+]
+
+PAYMENT_METHODS = [
+    {
+        "id": "paypal",
+        "name": "PayPal",
+        "description": "Instant digital invoices with multi-currency support.",
+        "action": "Open the PayPal send page",
+        "portal_url": "https://www.paypal.com/sendmoney",
+        "note": "Send funds to ops@globalflow.ai and mention your subscription tier.",
+        "instructions": [
+            "Sign in to PayPal and choose the Send Money flow.",
+            "Add ops@globalflow.ai as the recipient and set the amount.",
+            "Attach your automation tier or project name in the note field.",
+            "Forward the confirmation to ops@globalflow.ai so we can reconcile immediately.",
+        ],
+    },
+    {
+        "id": "mastercard",
+        "name": "Mastercard",
+        "description": "Recurring billing with enhanced reconciliation.",
+        "action": "Launch the Mastercard billing desk",
+        "portal_url": "https://www.mastercard.us/en-us/business/accepting-payments.html",
+        "note": "Our finance desk will issue a secure Stripe invoice that accepts Mastercard.",
+        "instructions": [
+            "Click continue to visit the Mastercard payment resources.",
+            "Email ops@globalflow.ai with the amount you want to charge.",
+            "We will return a secure link powered by Stripe that favors Mastercard.",
+            "Pay the invoice and the automation tier instantly unlocks.",
+        ],
+    },
+    {
+        "id": "amex",
+        "name": "American Express",
+        "description": "Premium rewards plus CFO program controls.",
+        "action": "Visit the American Express payments hub",
+        "portal_url": "https://www.americanexpress.com/en-us/business/accepting-payments/",
+        "note": "AmEx cards get dedicated concierge onboarding and detailed receipts.",
+        "instructions": [
+            "Follow the AmEx guidance to understand the requirements.",
+            "Send your desired billing amount and tier to ops@globalflow.ai.",
+            "We issue a secure invoice that accepts American Express via our gateway.",
+            "Complete the charge once you receive the encrypted payment link.",
+        ],
+    },
+]
+
+PAYMENT_LOOKUP = {entry["id"]: entry for entry in PAYMENT_METHODS}
+
+PAYMENT_HISTORY: List[Dict[str, str]] = []
+
+USER_PROFILE: Dict[str, str] = {
+    "name": "Nova Ops",
+    "email": "ops@globalflow.ai",
+    "role": "Automation Architect",
+    "timezone": "UTC",
+}
+
+USER_SETTINGS: Dict[str, str] = {
+    "daily_digest": "enabled",
+    "alert_channel": "Slack",
+    "automation_tier": "High trust",
+}
+
+SUBSCRIPTIONS: List[Dict[str, str]] = []
+
+monitoring = Monitoring()
+task_manager = TaskManager(TASKS, monitoring)
+
+
+def _tasks_list() -> List[Dict[str, str]]:
+    return task_manager.list_tasks()
+
+
+@app.get("/", response_class=HTMLResponse)
+async def homepage(request: Request):
+    metrics = monitoring.snapshot()
+    stats = [
+        {"label": "Minutes saved daily", "value": "4,260"},
+        {"label": "Countries orchestrated", "value": "23"},
+        {"label": "AI agents active", "value": "14"},
+        {
+            "label": "Automations kicked off",
+            "value": f'{metrics["tasks_run"]:,}',
+            "key": "tasks_run",
+        },
+        {
+            "label": "Subscriptions captured",
+            "value": f'{metrics["subscriptions"]:,}',
+            "key": "subscriptions",
+        },
+        {
+            "label": "Payment requests routed",
+            "value": f'{metrics["payment_requests"]:,}',
+            "key": "payment_requests",
+        },
+    ]
+    return templates.TemplateResponse(
+        "flow.html",
+        {
+            "request": request,
+            "world_tasks": WORLD_TASKS,
+            "agents": AI_AGENTS,
+            "stats": stats,
+            "features": FEATURES,
+            "payment_methods": PAYMENT_METHODS,
+        },
+    )
+
+
+@app.get("/api/flow", response_class=JSONResponse)
+async def flow_summary():
+    return {
+        "status": "operational",
+        "tasks": WORLD_TASKS,
+        "agents": AI_AGENTS,
+        "next_steps": [
+            "Spin up Temporal retry bus for billing recon.",
+            "Trigger LangChain assistant to follow up on late payments.",
+            "Push Prefect job to re-run compliance snapshot.",
+        ],
+    }
+
+
+@app.get("/api/tasks", response_class=JSONResponse)
+async def list_tasks():
+    return {"tasks": _tasks_list()}
+
+
+@app.get("/api/metrics", response_class=JSONResponse)
+async def metrics():
+    return monitoring.snapshot()
+
+
+@app.post("/api/tasks/{task_id}/run", response_class=JSONResponse)
+async def run_task(task_id: str, background_tasks: BackgroundTasks):
+    task = task_manager.get_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    background_tasks.add_task(task_manager.kickoff, task_id)
+    return {"task": task}
+
+
+@app.post("/api/subscribe", response_class=JSONResponse)
+async def subscribe(payload: Dict[str, str]):
+    email = payload.get("email")
+    name = payload.get("name", "Subscriber")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+    SUBSCRIPTIONS.append({"name": name, "email": email, "time": datetime.utcnow().isoformat()})
+    monitoring.record("subscriptions")
+    return {"status": "ok", "message": f"Thanks {name}, your subscription is live."}
+
+
+@app.get("/payment/{method}", response_class=HTMLResponse)
+async def payment_portal(request: Request, method: str):
+    portal = PAYMENT_LOOKUP.get(method)
+    if not portal:
+        raise HTTPException(status_code=404, detail="Payment method unavailable")
+    return templates.TemplateResponse(
+        "payment.html",
+        {
+            "request": request,
+            "portal": portal,
+        },
+    )
+
+
+@app.post("/api/payments/{method}", response_class=JSONResponse)
+async def submit_payment_request(method: str, payload: Dict[str, str]):
+    portal = PAYMENT_LOOKUP.get(method)
+    if not portal:
+        raise HTTPException(status_code=404, detail="Payment method unavailable")
+    email = payload.get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required to issue an invoice")
+    PAYMENT_HISTORY.append(
+        {
+            "method": method,
+            "email": email,
+            "amount": payload.get("amount", "TBD"),
+            "notes": payload.get("notes", ""),
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+    )
+    monitoring.record("payment_requests")
+    return {
+        "status": "ok",
+        "message": f"{portal['name']} request received – expect a secure link in your inbox shortly.",
+    }
+
+
+@app.get("/account", response_class=HTMLResponse)
+async def account_center(request: Request):
+    return templates.TemplateResponse(
+        "account.html",
+        {
+            "request": request,
+            "profile": USER_PROFILE,
+            "settings": USER_SETTINGS,
+        },
+    )
+
+
+@app.post("/api/account", response_class=JSONResponse)
+async def update_account(payload: Dict[str, str]):
+    USER_PROFILE["name"] = payload.get("name", USER_PROFILE["name"])
+    USER_PROFILE["email"] = payload.get("email", USER_PROFILE["email"])
+    USER_PROFILE["role"] = payload.get("role", USER_PROFILE["role"])
+    USER_PROFILE["timezone"] = payload.get("timezone", USER_PROFILE["timezone"])
+    USER_SETTINGS["daily_digest"] = payload.get("daily_digest", USER_SETTINGS["daily_digest"])
+    USER_SETTINGS["alert_channel"] = payload.get("alert_channel", USER_SETTINGS["alert_channel"])
+    USER_SETTINGS["automation_tier"] = payload.get("automation_tier", USER_SETTINGS["automation_tier"])
+    return {"status": "updated", "profile": USER_PROFILE, "settings": USER_SETTINGS}

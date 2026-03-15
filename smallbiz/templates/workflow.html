@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Automation Workflows for Small Business</title>
+    <link rel="stylesheet" href="/static/workflow.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="logo">AutomateHQ</div>
+      <nav>
+        <a href="#workflows">Workflows</a>
+        <a href="#tools">Tools</a>
+        <a href="#cta">Launch</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="cta">
+        <p class="eyebrow">AI Workflow Studio</p>
+        <h1>Turn boring daily tasks into hands-free automations</h1>
+        <p class="lead">
+          FastAPI + Prefect orchestrate every step while your team stays focused on high-leverage decisions.
+        </p>
+        <div class="actions">
+          <a class="primary" href="/docs">Open API docs</a>
+          <button class="ghost">Book a rollout call</button>
+        </div>
+      </section>
+
+      <section class="workflows" id="workflows">
+        <div class="section-heading">
+          <h2>Workflow playbooks</h2>
+          <p>Built with data-ready models, notification bots, and human review shortcuts.</p>
+        </div>
+        <div class="grid">
+          {% for wf in workflows %}
+          <article>
+            <div class="badge">{{ wf.impact }}</div>
+            <h3>{{ wf.name }}</h3>
+            <ul>
+              {% for step in wf.steps %}
+              <li>{{ step }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="tools" id="tools">
+        <div class="section-heading">
+          <h2>Automation stack</h2>
+          <p>Architected for small teams that need enterprise polish.</p>
+        </div>
+        <ul>
+          {% for tool in automation_tools %}
+          <li>{{ tool }}</li>
+          {% endfor %}
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Powered by FastAPI, Prefect, Transformative AI, and a small business focus.</p>
+    </footer>
+  </body>
+</html>
