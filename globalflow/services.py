@@ -3,6 +3,8 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
+from .automations import FlowOrchestrator
+
 logger = logging.getLogger("globalflow.services")
 if not logger.handlers:
     handler = logging.StreamHandler()
@@ -29,9 +31,15 @@ class Monitoring:
 
 
 class TaskManager:
-    def __init__(self, tasks: Dict[str, Dict[str, Any]], monitoring: Monitoring):
+    def __init__(
+        self,
+        tasks: Dict[str, Dict[str, Any]],
+        monitoring: Monitoring,
+        orchestrator: Optional[FlowOrchestrator] = None,
+    ):
         self._tasks = tasks
         self._monitoring = monitoring
+        self._orchestrator = orchestrator
 
     def list_tasks(self) -> List[Dict[str, Any]]:
         return list(self._tasks.values())
@@ -69,7 +77,10 @@ class TaskManager:
         )
         self._monitoring.record("tasks_run")
         try:
-            await asyncio.sleep(2)
+            if self._orchestrator:
+                await self._orchestrator.run(task_id)
+            else:
+                await asyncio.sleep(2)
             completed = self.update_task(
                 task_id,
                 status="ready",

@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
+from .automations import FlowOrchestrator
 from .services import AutoPilot, Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
@@ -229,7 +230,8 @@ AUTOMATION_TOOLS = [
 AUTOMATION_TOOL_LOOKUP = {tool["id"]: tool for tool in AUTOMATION_TOOLS}
 
 monitoring = Monitoring()
-task_manager = TaskManager(TASKS, monitoring)
+orchestrator = FlowOrchestrator()
+task_manager = TaskManager(TASKS, monitoring, orchestrator)
 autopilot = AutoPilot(task_manager, monitoring, interval_seconds=55)
 
 
