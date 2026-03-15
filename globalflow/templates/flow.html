@@ -45,6 +45,15 @@
             <button class="pill" id="subscribe-btn">Subscribe for cadence</button>
             <button class="pill" id="signup-btn">Sign up for early access</button>
           </div>
+          <div class="autopilot-panel">
+            <div class="autopilot-copy">
+              <p class="eyebrow">Autonomous control</p>
+              <h3 id="autopilot-status">Standing by</h3>
+              <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
+              <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
+            </div>
+            <button class="ghost" id="autopilot-toggle">Enable autonomous loops</button>
+          </div>
           <div class="stat-grid">
             {% for stat in stats %}
             <div class="stat-card">
@@ -65,6 +74,14 @@
           </div>
         </div>
       </section>
+
+      <div
+        id="autopilot-data"
+        data-enabled="{{ 'true' if autopilot.enabled else 'false' }}"
+        data-next-run="{{ autopilot.next_run or '' }}"
+        data-last-run="{{ autopilot.last_run or '' }}"
+        data-cycles="{{ autopilot.cycles }}"
+      ></div>
 
       <section id="tasks" class="tasks">
         <div class="section-heading">

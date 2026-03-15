@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger("globalflow.services")
@@ -17,6 +17,7 @@ class Monitoring:
             "tasks_run": 0,
             "subscriptions": 0,
             "payment_requests": 0,
+            "autopilot_cycles": 0,
             "errors": 0,
         }
 
@@ -81,3 +82,66 @@ class TaskManager:
             self.update_task(task_id, status="error", note=f"Error: {err}")
             logger.exception("Task %s failed", task_id)
             raise
+
+
+class AutoPilot:
+    def __init__(self, task_manager: TaskManager, monitoring: Monitoring, interval_seconds: int = 45):
+        self.task_manager = task_manager
+        self.monitoring = monitoring
+        self.interval_seconds = interval_seconds
+        self.enabled = False
+        self.cycle_count = 0
+        self.last_run: Optional[datetime] = None
+        self._loop_task: Optional[asyncio.Task] = None
+
+    def status(self) -> Dict[str, Optional[str]]:
+        next_run = None
+        if self.last_run:
+            next_eta = self.last_run + timedelta(seconds=self.interval_seconds)
+            next_run = next_eta.isoformat()
+        return {
+            "enabled": self.enabled,
+            "interval": self.interval_seconds,
+            "cycles": self.cycle_count,
+            "last_run": self.last_run.isoformat() if self.last_run else None,
+            "next_run": next_run,
+        }
+
+    async def enable(self) -> None:
+        if self.enabled:
+            return
+        self.enabled = True
+        self._loop_task = asyncio.create_task(self._loop())
+
+    async def disable(self) -> None:
+        if not self.enabled:
+            return
+        self.enabled = False
+        if self._loop_task:
+            self._loop_task.cancel()
+            try:
+                await self._loop_task
+            except asyncio.CancelledError:
+                pass
+            self._loop_task = None
+
+    async def _loop(self) -> None:
+        try:
+            while self.enabled:
+                await self._execute_cycle()
+                await asyncio.sleep(self.interval_seconds)
+        except asyncio.CancelledError:
+            pass
+
+    async def _execute_cycle(self) -> None:
+        tasks = list(self.task_manager.list_tasks())
+        for task in tasks:
+            if not self.enabled:
+                break
+            try:
+                await self.task_manager.kickoff(task["id"])
+            except KeyError:
+                continue
+        self.cycle_count += 1
+        self.last_run = datetime.utcnow()
+        self.monitoring.record("autopilot_cycles")

@@ -18,6 +18,17 @@ const sidebarSubscribeBtn = document.getElementById("sidebar-subscribe-btn");
 const sidebarSignupBtn = document.getElementById("sidebar-signup-btn");
 const sidebarWorkflowBtn = document.getElementById("sidebar-workflow-btn");
 const launchOrchestrationBtn = document.getElementById("launch-orchestration");
+const autopilotToggle = document.getElementById("autopilot-toggle");
+const autopilotStatusEl = document.getElementById("autopilot-status");
+const autopilotNextRunEl = document.getElementById("autopilot-next-run");
+const autopilotCycleCount = document.getElementById("autopilot-cycle-count");
+const autopilotData = document.getElementById("autopilot-data");
+let autopilotState = {
+  enabled: autopilotData?.dataset?.enabled === "true",
+  next_run: autopilotData?.dataset?.nextRun || null,
+  last_run: autopilotData?.dataset?.lastRun || null,
+  cycles: parseInt(autopilotData?.dataset?.cycles || "0", 10),
+};
 const toolkitButtons = document.querySelectorAll("[data-tool-action]");
 
 async function fetchTasks() {
@@ -56,6 +67,51 @@ async function refreshMetrics() {
     });
   } catch (error) {
     console.warn("Metrics refresh failed", error);
+  }
+}
+
+
+function formatCountdown(nextRunIso) {
+  if (!nextRunIso) return "Queued soon";
+  const next = new Date(nextRunIso);
+  const delta = next.getTime() - Date.now();
+  if (delta <= 0) return "Starting now";
+  const minutes = Math.floor(delta / 60000);
+  const seconds = Math.floor((delta % 60000) / 1000);
+  return `${minutes}m ${seconds}s`;
+}
+
+function updateAutopilotDisplay(data) {
+  if (!data) return;
+  autopilotState.enabled = data.enabled;
+  autopilotState.next_run = data.next_run || null;
+  autopilotState.cycles = Number(data.cycles ?? autopilotState.cycles);
+  if (autopilotStatusEl) {
+    autopilotStatusEl.textContent = data.enabled ? "Autopilot running" : "Autopilot idle";
+  }
+  if (autopilotNextRunEl) {
+    autopilotNextRunEl.textContent = data.next_run
+      ? `Next run in ${formatCountdown(data.next_run)}`
+      : "Next run queued soon";
+  }
+  if (autopilotCycleCount) {
+    autopilotCycleCount.textContent = `Cycles completed: ${autopilotState.cycles.toLocaleString()}`;
+  }
+  if (autopilotToggle) {
+    autopilotToggle.textContent = data.enabled ? "Pause autonomous loops" : "Enable autonomous loops";
+  }
+}
+
+async function refreshAutopilotStatus() {
+  try {
+    const response = await fetch("/api/autopilot");
+    if (!response.ok) {
+      return;
+    }
+    const data = await response.json();
+    updateAutopilotDisplay(data);
+  } catch (error) {
+    console.warn("Autopilot status unavailable", error);
   }
 }
 
@@ -179,9 +235,11 @@ function submitSubscription(form, statusEl, modalEl) {
 fetchTasks();
 fetchSummary();
 refreshMetrics();
+refreshAutopilotStatus();
 setInterval(fetchTasks, 15000);
 setInterval(fetchSummary, 30000);
 setInterval(refreshMetrics, 45000);
+setInterval(refreshAutopilotStatus, 30000);
 animateRadiant();
 
 if (inspectButton) {
@@ -261,6 +319,27 @@ if (sidebarWorkflowBtn) {
 
 if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", () => triggerFlow());
+}
+
+if (autopilotToggle) {
+  autopilotToggle.addEventListener("click", async () => {
+    const targetState = !autopilotState.enabled;
+    autopilotToggle.disabled = true;
+    try {
+      const response = await fetch("/api/autopilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enabled: targetState }),
+      });
+      const data = await response.json();
+      updateAutopilotDisplay(data);
+      showToast(data.enabled ? "Autopilot resumed" : "Autopilot paused");
+    } catch (error) {
+      showToast("Could not update autopilot.");
+    } finally {
+      autopilotToggle.disabled = false;
+    }
+  });
 }
 
 if (subscribeModal) {

@@ -2,7 +2,7 @@ import asyncio
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
-from .services import Monitoring, TaskManager
+from .services import AutoPilot, Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
 
@@ -24,6 +24,11 @@ logger.setLevel(logging.INFO)
 app = FastAPI(title="Global Flow Automation")
 templates = Jinja2Templates(directory=root / "templates")
 app.mount("/static", StaticFiles(directory=root / "static"), name="static")
+
+
+@app.on_event("startup")
+async def start_autopilot():
+    await autopilot.enable()
 
 
 @app.middleware("http")
@@ -225,6 +230,7 @@ AUTOMATION_TOOL_LOOKUP = {tool["id"]: tool for tool in AUTOMATION_TOOLS}
 
 monitoring = Monitoring()
 task_manager = TaskManager(TASKS, monitoring)
+autopilot = AutoPilot(task_manager, monitoring, interval_seconds=55)
 
 
 def _tasks_list() -> List[Dict[str, str]]:
@@ -254,6 +260,14 @@ async def homepage(request: Request):
             "key": "payment_requests",
         },
     ]
+    autopilot_status = autopilot.status()
+    stats.append(
+        {
+            "label": "Autonomous cycles",
+            "value": f'{autopilot_status["cycles"]:,}',
+            "key": "autopilot_cycles",
+        }
+    )
     return templates.TemplateResponse(
         "flow.html",
         {
@@ -264,6 +278,7 @@ async def homepage(request: Request):
             "features": FEATURES,
             "payment_methods": PAYMENT_METHODS,
             "toolkit": AUTOMATION_TOOLS,
+            "autopilot": autopilot_status,
         },
     )
 
@@ -349,6 +364,23 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
         "status": "ok",
         "message": f"{portal['name']} request received – expect a secure link in your inbox shortly.",
     }
+
+
+@app.get("/api/autopilot", response_class=JSONResponse)
+async def autopilot_status():
+    return autopilot.status()
+
+
+@app.post("/api/autopilot", response_class=JSONResponse)
+async def set_autopilot(payload: Dict[str, Any]):
+    enabled = payload.get("enabled")
+    if enabled is None:
+        raise HTTPException(status_code=400, detail="enabled field required")
+    if enabled:
+        await autopilot.enable()
+    else:
+        await autopilot.disable()
+    return autopilot.status()
 
 
 @app.get("/api/toolkit/{tool_id}", response_class=JSONResponse)
