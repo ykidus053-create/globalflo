@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
-from services import Monitoring, TaskManager
+from .services import Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
 
