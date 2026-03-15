@@ -20,6 +20,7 @@
         <a href="#tasks">Tasks</a>
         <a href="#agents">Agents</a>
         <a href="#timeline">Timeline</a>
+        <button class="ghost" id="open-login">Login</button>
       </div>
     </header>
 
@@ -298,7 +299,29 @@
       </div>
     </main>
 
-    <div class="toast" id="toast">Payment triggered. We’re routing to finance.</div>
+<div class="toast" id="toast">Payment triggered. We’re routing to finance.</div>
+    <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
+      <div class="flow-modal__content">
+        <button class="flow-modal__close" data-modal="login-modal">×</button>
+        <h3>Welcome back</h3>
+        <form id="login-form">
+          <label>
+            Email
+            <input name="email" type="email" placeholder="ops@globalflow.ai" required />
+          </label>
+          <label>
+            Name
+            <input name="name" placeholder="Automation architect" />
+          </label>
+          <label>
+            API key
+            <input name="api_key" placeholder="x-abc123" />
+          </label>
+          <button type="submit" class="primary small">Save session</button>
+          <p class="modal-note" id="login-status"></p>
+        </form>
+      </div>
+    </div>
 
     <footer>
       <p>

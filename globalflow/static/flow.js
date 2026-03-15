@@ -18,6 +18,10 @@ const sidebarSubscribeBtn = document.getElementById("sidebar-subscribe-btn");
 const sidebarSignupBtn = document.getElementById("sidebar-signup-btn");
 const sidebarWorkflowBtn = document.getElementById("sidebar-workflow-btn");
 const launchOrchestrationBtn = document.getElementById("launch-orchestration");
+const loginButton = document.getElementById("open-login");
+const loginModal = document.getElementById("login-modal");
+const loginForm = document.getElementById("login-form");
+const loginStatus = document.getElementById("login-status");
 const autopilotToggle = document.getElementById("autopilot-toggle");
 const autopilotStatusEl = document.getElementById("autopilot-status");
 const autopilotNextRunEl = document.getElementById("autopilot-next-run");
@@ -260,6 +264,44 @@ function submitSubscription(form, statusEl, modalEl) {
   });
 }
 
+const SESSION_KEY = "globalflow_session";
+
+function loadSession() {
+  const raw = window.localStorage.getItem(SESSION_KEY);
+  if (!raw) {
+    return;
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    window.localStorage.removeItem(SESSION_KEY);
+  }
+}
+
+function saveSession(payload) {
+  window.localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+}
+
+function hydrateLoginForm() {
+  if (!loginForm) {
+    return;
+  }
+  const saved = loadSession();
+  if (!saved) {
+    return;
+  }
+  Object.entries(saved).forEach(([key, value]) => {
+    const input = loginForm.querySelector(`[name="${key}"]`);
+    if (input) {
+      input.value = value;
+    }
+  });
+  if (loginStatus) {
+    loginStatus.textContent = `Session restored for ${saved.email || "you"}`;
+  }
+  showToast("Session restored from local storage");
+}
+
 fetchTasks();
 fetchSummary();
 refreshMetrics();
@@ -388,6 +430,32 @@ if (signupModal) {
 
 submitSubscription(subscribeForm, document.getElementById("subscribe-status"), subscribeModal);
 submitSubscription(signupForm, document.getElementById("signup-status"), signupModal);
+
+if (loginButton) {
+  loginButton.addEventListener("click", () => openModal(loginModal));
+}
+
+if (loginModal) {
+  loginModal.addEventListener("click", (event) => {
+    if (event.target === loginModal) {
+      closeModal(loginModal);
+    }
+  });
+}
+
+if (loginForm) {
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const payload = Object.fromEntries(new FormData(loginForm));
+    saveSession(payload);
+    if (loginStatus) {
+      loginStatus.textContent = `Saved for ${payload.email}`;
+    }
+    showToast("Login info saved locally for next visit");
+    closeModal(loginModal);
+  });
+  hydrateLoginForm();
+}
 
 function showToast(text) {
   const toast = document.getElementById("toast");
