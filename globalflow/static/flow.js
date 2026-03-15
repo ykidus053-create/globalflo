@@ -390,7 +390,11 @@ if (sidebarWorkflowBtn) {
 }
 
 if (launchOrchestrationBtn) {
-  launchOrchestrationBtn.addEventListener("click", () => triggerFlow());
+  launchOrchestrationBtn.addEventListener("click", async () => {
+    showToast("Launching automation flow…");
+    await fetchTasks();
+    triggerFlow();
+  });
 }
 
 if (autopilotToggle) {
