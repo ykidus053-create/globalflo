@@ -200,17 +200,45 @@ async function inspectFlow() {
   openModal(modal);
 }
 
+const historySupported = typeof window !== "undefined" && window.history && window.history.pushState;
+
+if (historySupported) {
+  window.history.replaceState({ modalId: null }, "", window.location.pathname);
+}
+
+function pushModalHistory(modalId) {
+  if (!historySupported) return;
+  window.history.pushState({ modalId }, "", `${window.location.pathname}#${modalId}`);
+}
+
+function updateHistoryOnClose() {
+  if (!historySupported) return;
+  window.history.replaceState({ modalId: null }, "", window.location.pathname);
+}
+
 function openModal(target) {
   if (target) {
     target.classList.add("flow-modal--open");
+    pushModalHistory(target.id);
   }
 }
 
-function closeModal(target) {
+function closeModal(target, { skipHistory = false } = {}) {
   if (target) {
     target.classList.remove("flow-modal--open");
+    if (!skipHistory) {
+      updateHistoryOnClose();
+    }
   }
 }
+
+window.addEventListener("popstate", (event) => {
+  const modalId = event.state?.modalId;
+  const openModalEl = document.querySelector(".flow-modal--open");
+  if (!modalId && openModalEl) {
+    closeModal(openModalEl, { skipHistory: true });
+  }
+});
 
 function submitSubscription(form, statusEl, modalEl) {
   if (!form) return;
