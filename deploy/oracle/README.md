@@ -23,13 +23,13 @@ This path is for an always-on Linux VM instead of a sleeping platform service.
 
 ## 4. Fast path
 
-If DNS already points `www.globalflow.com` to the VM, SSH in and run:
+If DNS already points `globalflow1.duckdns.org` to the VM, SSH in and run:
 
 ```bash
 git clone https://github.com/ykidus053-create/globalflo.git /opt/globalflow
 cd /opt/globalflow
 chmod +x deploy/oracle/bootstrap.sh
-./deploy/oracle/bootstrap.sh www.globalflow.com
+./deploy/oracle/bootstrap.sh globalflow1.duckdns.org
 ```
 
 That installs Docker, opens the firewall, writes `.env`, and starts the app.
@@ -61,7 +61,7 @@ nano .env
 Example:
 
 ```text
-DOMAIN=www.globalflow.com
+DOMAIN=globalflow1.duckdns.org
 GLOBALFLOW_AUTOPILOT_ENABLED=1
 WEB_CONCURRENCY=2
 ```

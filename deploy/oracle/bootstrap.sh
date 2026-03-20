@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOMAIN="${1:-www.globalflow.com}"
+DOMAIN="${1:-globalflow1.duckdns.org}"
 APP_DIR="${APP_DIR:-/opt/globalflow}"
 REPO_URL="${REPO_URL:-https://github.com/ykidus053-create/globalflo.git}"
 BRANCH="${BRANCH:-main}"
