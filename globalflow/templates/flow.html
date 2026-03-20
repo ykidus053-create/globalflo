@@ -14,47 +14,51 @@
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="aurora"></div>
     <div class="grid-overlay"></div>
 
     <header class="top">
       <div class="brand">
         <span>GlobalFlow 3.0</span>
-        <p>Automating boring global tasks with AI precision</p>
+        <p>AI workflow for admin-heavy operations teams</p>
       </div>
-      <div class="nav">
+      <nav class="nav" aria-label="Primary">
         <a href="#hero">Overview</a>
-        <a href="#tasks">Tasks</a>
-        <a href="#connectors">Connectors</a>
+        <a href="#tasks">Solutions</a>
+        <a href="#flowboard">Workflow</a>
         <a href="#subscriptions">Pricing</a>
-        <a href="#agents">Agents</a>
-        <a href="#timeline">Timeline</a>
-        <button class="ghost" id="open-login">Login</button>
-      </div>
+        <a href="#connectors">Connect</a>
+        <button class="ghost" id="open-login" type="button">Login</button>
+      </nav>
     </header>
 
-    <aside class="sidebar">
-      <button class="sidebar-btn" id="sidebar-subscribe-btn">Subscribe</button>
-      <button class="sidebar-btn" id="sidebar-signup-btn">Sign Up</button>
+    <aside class="sidebar" aria-label="Quick actions">
+      <button class="sidebar-btn" id="sidebar-subscribe-btn" type="button">Subscribe</button>
+      <button class="sidebar-btn" id="sidebar-signup-btn" type="button">Sign Up</button>
       <a class="sidebar-link" href="/account">Account & Settings</a>
-      <button class="sidebar-btn special" id="sidebar-workflow-btn">Workflow</button>
+      <button class="sidebar-btn special" id="sidebar-workflow-btn" type="button">Workflow</button>
     </aside>
 
-    <main>
+    <main id="main-content">
       <section id="hero" class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">AI Automation Command</p>
-          <h1>Every boring SMB task now routes through a resilient workflow with visible outcomes.</h1>
+          <p class="eyebrow">For teams losing time to admin work</p>
+          <h1>Automate calls, billing, taxes, and file follow-up from one clear dashboard.</h1>
           <p class="lead">
-            GlobalFlow turns scattered admin work into one operating system for calls, billing, taxes, files, and
-            follow-up. The dashboard shows what is running, what is blocked, and what value was created so teams can
-            move faster without losing control.
+            GlobalFlow is built for operators who need less manual work, faster turnaround, and proof that the workflow
+            is actually delivering results.
           </p>
+          <ul class="hero-checklist" aria-label="Key benefits">
+            <li>See the value proposition immediately: one system for repetitive operations work.</li>
+            <li>Launch workflows in a click and monitor each step without guessing.</li>
+            <li>Move from manual follow-up to measurable output with visible audit trails.</li>
+          </ul>
           <div class="hero-actions">
-            <button class="primary" id="inspect-flow">Inspect the live flow</button>
-            <button type="button" class="ghost" id="launch-orchestration">Launch orchestration</button>
-            <button class="pill" id="subscribe-btn">Subscribe for cadence</button>
-            <button class="pill" id="signup-btn">Sign up for early access</button>
+            <button class="primary" id="launch-orchestration" type="button">Launch the workflow</button>
+            <button class="ghost" id="inspect-flow" type="button">Inspect live telemetry</button>
+            <button class="pill" id="subscribe-btn" type="button">See plans</button>
+            <button class="pill" id="signup-btn" type="button">Request access</button>
           </div>
           <div class="proof-strip">
             <article>
@@ -90,11 +94,11 @@
           <div class="autopilot-panel">
             <div class="autopilot-copy">
               <p class="eyebrow">Autonomous control</p>
-              <h3 id="autopilot-status">Standing by</h3>
+              <h3 id="autopilot-status" aria-live="polite">Standing by</h3>
               <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
               <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
             </div>
-            <button class="ghost" id="autopilot-toggle">Enable autonomous loops</button>
+            <button class="ghost" id="autopilot-toggle" type="button">Enable autonomous loops</button>
           </div>
           <div class="stat-grid">
             {% for stat in stats %}
@@ -144,8 +148,8 @@
 
       <section id="tasks" class="tasks">
         <div class="section-heading">
-          <h2>Global automation nodes</h2>
-          <p>Cloud-native workflows and adaptive agents for every boring routine.</p>
+          <h2>What gets automated</h2>
+          <p>Scan the core workload categories in seconds and jump straight to the problem you want to remove.</p>
         </div>
         <div class="task-grid">
           {% for task in world_tasks %}
@@ -166,8 +170,8 @@
 
       <section class="features" id="features">
         <div class="section-heading">
-          <h2>Advanced automation features</h2>
-          <p>Inspired by the clarity, pace, and trust signals that make world-class software feel reliable.</p>
+          <h2>What you get</h2>
+          <p>Short, direct capabilities focused on speed, trust, and lower operator workload.</p>
         </div>
         <div class="feature-grid">
           {% for feature in features %}
@@ -182,7 +186,7 @@
       <section class="lanes" id="lanes">
         <div class="section-heading">
           <h2>How the workflow compounds value</h2>
-          <p>Each lane removes delay, proves impact, and hands off to the next system without manual drift.</p>
+          <p>Each lane is designed to reduce friction and keep the path from intake to proof easy to follow.</p>
         </div>
         <div class="lane-grid">
           <article>
@@ -211,7 +215,7 @@
       <section class="toolkit" id="toolkit">
         <div class="section-heading">
           <h2>Automation toolkit extensions</h2>
-          <p>Trigger the same AI-assisted guardrails that the elite VS Code extensions deliver.</p>
+          <p>Run quality checks and tooling shortcuts without leaving the product.</p>
         </div>
         <div class="toolkit-grid">
           {% for tool in toolkit %}
@@ -232,8 +236,8 @@
 
       <section class="connectors" id="connectors">
         <div class="section-heading">
-          <h2>External connectors</h2>
-          <p>Push automation output to Slack, CRM, billing, or any webhook in one click after the pain and cost of inaction are clear.</p>
+          <h2>Connect the tools you already use</h2>
+          <p>Slack, CRM, billing, and webhook destinations stay one click away with setup info right beside each form.</p>
         </div>
         <div class="connectors-grid">
           {% for connector in connectors %}
@@ -272,7 +276,7 @@
           <h2>Activity stream</h2>
           <p>Trace every automation cycle, connector call, and toolkit action in one feed.</p>
         </div>
-        <div id="activity-feed" class="activity-grid"></div>
+        <div id="activity-feed" class="activity-grid" aria-live="polite"></div>
       </section>
 
       <section class="checkout" id="checkout">
@@ -303,7 +307,7 @@
       <section class="subscriptions" id="subscriptions">
         <div class="section-heading">
           <h2>Subscription tiers</h2>
-          <p>Pick the automation runway that matches your scale and payment runway.</p>
+          <p>Pick a plan quickly with clear pricing, clear fit, and clear next steps.</p>
         </div>
         <div class="subscription-grid">
           {% for tier in subscription_tiers %}
@@ -473,7 +477,14 @@
       </div>
     </main>
 
-    <div class="toast" id="toast">Payment triggered. We are routing to finance.</div>
+    <nav class="mobile-dock" aria-label="Mobile actions">
+      <a href="#hero">Overview</a>
+      <a href="#flowboard">Workflow</a>
+      <a href="#subscriptions">Pricing</a>
+      <a href="/account">Account</a>
+    </nav>
+
+    <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
     <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
       <div class="flow-modal__content">
         <button class="flow-modal__close" data-modal="login-modal">&times;</button>

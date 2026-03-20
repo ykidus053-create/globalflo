@@ -36,6 +36,7 @@ const paymentButtons = document.querySelectorAll("[data-payment-method]");
 const activityFeed = document.getElementById("activity-feed");
 const numberFormatter = new Intl.NumberFormat("en-US");
 const SESSION_KEY = "globalflow_session";
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let metricsCache = {};
 let activityCount = 0;
@@ -256,6 +257,21 @@ function animateRadiant() {
   const width = radiant.width;
   const height = radiant.height;
 
+  if (prefersReducedMotion) {
+    ctx.clearRect(0, 0, width, height);
+    ctx.save();
+    ctx.translate(width / 2, height / 2);
+    for (let i = 0; i < 5; i += 1) {
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(59, 245, 213, ${0.18 + i * 0.08})`;
+      ctx.lineWidth = 1.2;
+      ctx.arc(0, 0, 42 + i * 18, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+    return;
+  }
+
   function draw() {
     ctx.clearRect(0, 0, width, height);
     ctx.save();
@@ -385,7 +401,7 @@ function hydrateLoginForm() {
 function scrollIntoView(selector) {
   const element = document.querySelector(selector);
   if (element) {
-    element.scrollIntoView({ behavior: "smooth", block: "center" });
+    element.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
   }
 }
 
