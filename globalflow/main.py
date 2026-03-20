@@ -216,10 +216,10 @@ TESTIMONIALS = [
 
 FOUNDERS = [
     {
-        "name": "Nova Karim",
+        "name": "kidus yared",
         "role": "Founder and workflow operator",
         "bio": "Built GlobalFlow after seeing small teams waste entire weeks on call notes, invoice follow-up, file cleanup, and compliance prep. The product is designed for operators who need calm visibility, not another noisy dashboard.",
-        "photo": "/static/founder-nova.svg",
+        "photo": "/static/founder-kidus.svg",
     }
 ]
 
