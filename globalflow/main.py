@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
+import httpx
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -402,6 +403,15 @@ async def list_tasks():
 @app.get("/api/metrics", response_class=JSONResponse)
 async def metrics():
     return monitoring.snapshot()
+
+
+@app.get("/health", response_class=JSONResponse)
+async def healthcheck():
+    return {
+        "status": "ok",
+        "autopilot_enabled": autopilot.enabled,
+        "tasks": len(_tasks_list()),
+    }
 
 
 @app.post("/api/tasks/{task_id}/run", response_class=JSONResponse)
