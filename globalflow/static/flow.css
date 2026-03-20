@@ -129,6 +129,35 @@ main {
   gap: 0.75rem;
 }
 
+.hero-playbook {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.hero-playbook article {
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background: rgba(7, 8, 22, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-playbook h4 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+}
+
+.hero-playbook p {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: rgba(246, 251, 255, 0.75);
+  line-height: 1.4;
+}
+
 .autopilot-panel {
   margin-top: 1rem;
   display: flex;
