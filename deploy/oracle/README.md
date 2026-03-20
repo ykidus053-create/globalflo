@@ -1,4 +1,4 @@
-# Oracle Cloud Always Free deployment
+# Oracle Cloud Always Free deployment with HTTPS
 
 This path is for an always-on Linux VM instead of a sleeping platform service.
 
@@ -9,13 +9,19 @@ This path is for an always-on Linux VM instead of a sleeping platform service.
 - OS: Ubuntu 24.04 or Ubuntu 22.04
 - Public IP: enabled
 
-## 2. Open the network
+## 2. Point your domain to the VM
+
+- Create an `A` record for your real domain, for example `app.yourdomain.com`
+- Point it to the VM public IPv4 address
+- Wait until DNS resolves to the VM before starting Caddy
+
+## 3. Open the network
 
 - In the OCI VCN security list, allow inbound TCP `80`
-- Allow inbound TCP `443` if you later add HTTPS
+- Allow inbound TCP `443`
 - Keep SSH open on TCP `22`
 
-## 3. Prepare the server
+## 4. Prepare the server
 
 SSH into the VM, then run:
 
@@ -26,7 +32,24 @@ chmod +x deploy/oracle/setup-vm.sh
 
 Log out once, then SSH back in so the `docker` group applies.
 
-## 4. Deploy the app
+## 5. Configure the app domain
+
+Inside `/opt/globalflow`, create `.env` from the template and set your real domain:
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Example:
+
+```text
+DOMAIN=app.yourdomain.com
+GLOBALFLOW_AUTOPILOT_ENABLED=1
+WEB_CONCURRENCY=2
+```
+
+## 6. Deploy the app
 
 ```bash
 chmod +x deploy/oracle/deploy.sh
@@ -36,10 +59,12 @@ chmod +x deploy/oracle/deploy.sh
 The app will be available at:
 
 ```text
-http://YOUR_VM_PUBLIC_IP
+https://YOUR_REAL_DOMAIN
 ```
 
-## 5. Update after a new commit
+TLS is automatic. Caddy requests and renews the certificate for the domain in `.env`.
+
+## 7. Update after a new commit
 
 ```bash
 cd /opt/globalflow
@@ -47,10 +72,11 @@ git pull --ff-only origin main
 docker compose up -d --build
 ```
 
-## 6. Useful checks
+## 8. Useful checks
 
 ```bash
 docker compose ps
 docker compose logs -f globalflow
-curl http://127.0.0.1/health
+docker compose logs -f caddy
+curl http://127.0.0.1:8000/health
 ```

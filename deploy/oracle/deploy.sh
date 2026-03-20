@@ -17,5 +17,18 @@ git fetch origin
 git checkout "$BRANCH"
 git pull --ff-only origin "$BRANCH"
 
+if [ ! -f .env ]; then
+  cp .env.example .env
+  echo "Created $APP_DIR/.env from template."
+  echo "Set DOMAIN in .env to your real domain, then rerun this script."
+  exit 1
+fi
+
+DOMAIN_VALUE="$(grep '^DOMAIN=' .env | cut -d'=' -f2- || true)"
+if [ -z "$DOMAIN_VALUE" ]; then
+  echo "DOMAIN is missing in $APP_DIR/.env"
+  exit 1
+fi
+
 docker compose up -d --build
 docker compose ps
