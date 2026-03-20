@@ -26,7 +26,7 @@
             {% endfor %}
           </ol>
           <div class="payment-actions">
-            <a class="primary" href="{{ portal.portal_url }}" target="_blank" rel="noreferrer">{{ portal.action }}</a>
+            <a class="ghost" href="{{ portal.help_url }}" target="_blank" rel="noreferrer">Open {{ portal.name }} reference</a>
             <button class="ghost" type="button" id="payment-form-trigger">Request invoice</button>
           </div>
         </div>
@@ -35,6 +35,10 @@
       <section class="payment-form-section">
         <h3>Want a bespoke invoice? Send a request.</h3>
         <form id="payment-form">
+          <label>
+            Selected tier
+            <input name="tier" placeholder="pilot / launch / captain" />
+          </label>
           <label>
             Business email
             <input name="email" type="email" placeholder="ops@globalflow.ai" required />

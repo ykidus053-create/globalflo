@@ -7,6 +7,24 @@ function currentMethod() {
   return segments.pop() || segments.pop();
 }
 
+function fillFromQuery() {
+  if (!form) {
+    return;
+  }
+  const params = new URLSearchParams(window.location.search);
+  const tier = params.get("tier");
+  const amount = params.get("amount");
+  const tierInput = form.querySelector('[name="tier"]');
+  const amountInput = form.querySelector('[name="amount"]');
+
+  if (tier && tierInput) {
+    tierInput.value = tier;
+  }
+  if (amount && amountInput) {
+    amountInput.value = amount;
+  }
+}
+
 if (trigger && form) {
   trigger.addEventListener("click", () => {
     form.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -14,9 +32,11 @@ if (trigger && form) {
 }
 
 if (form) {
+  fillFromQuery();
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    status.textContent = "Sending your finance request…";
+    status.textContent = "Sending your finance request...";
     const payload = Object.fromEntries(new FormData(form));
     try {
       const response = await fetch(`/api/payments/${currentMethod()}`, {
@@ -28,6 +48,7 @@ if (form) {
       if (response.ok) {
         status.textContent = body.message;
         form.reset();
+        fillFromQuery();
       } else {
         status.textContent = body.detail || "We could not submit it yet.";
       }
