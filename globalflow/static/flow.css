@@ -545,53 +545,6 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.sales-playbook {
-  background: linear-gradient(135deg, rgba(15, 20, 50, 0.9), rgba(7, 11, 28, 0.95));
-  border-radius: 1.5rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  margin-top: 1.5rem;
-  box-shadow: 0 15px 40px rgba(5, 9, 26, 0.7);
-}
-
-.sales-grid {
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.sales-grid article {
-  padding: 1rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(7, 12, 30, 0.85);
-  min-height: 160px;
-}
-
-.sales-grid h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.sales-grid p {
-  margin: 0.5rem 0 0;
-  color: rgba(246, 251, 255, 0.7);
-  font-size: 0.85rem;
-}
-
-.sales-formula {
-  margin-top: 1.5rem;
-  padding: 1rem 1.2rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(3, 6, 18, 0.95);
-  font-weight: 600;
-  letter-spacing: 0.1rem;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-}
-
 .sidebar {
   position: fixed;
   right: 1rem;
