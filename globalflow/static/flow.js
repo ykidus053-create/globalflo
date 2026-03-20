@@ -324,7 +324,9 @@ function animateRadiant() {
 }
 
 function initRevealObserver() {
-  const targets = document.querySelectorAll("main > section, .hero-panel, .proof-strip article, .hero-playbook article, .stat-card");
+  const targets = document.querySelectorAll(
+    "main > section, .hero-panel, .guide-card, .proof-strip article, .stat-card, .connector-card, .payment-chip"
+  );
   targets.forEach((target) => registerRevealTargets(target));
 
   if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
