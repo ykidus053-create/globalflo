@@ -4,12 +4,15 @@ const invoiceStatus = document.getElementById("invoice-status");
 if (invoiceForm) {
   invoiceForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
     if (!invoiceForm.dataset.method) {
       invoiceStatus.textContent = "Select a payment method before submitting.";
       return;
     }
-    invoiceStatus.textContent = "Creating your cart and routing to finance…";
+
+    invoiceStatus.textContent = "Creating your request and routing it to finance...";
     const payload = Object.fromEntries(new FormData(invoiceForm));
+
     try {
       const response = await fetch(`/api/payments/${invoiceForm.dataset.method}`, {
         method: "POST",
@@ -17,6 +20,7 @@ if (invoiceForm) {
         body: JSON.stringify(payload),
       });
       const body = await response.json();
+
       if (response.ok) {
         invoiceStatus.textContent = body.message;
         invoiceForm.reset();

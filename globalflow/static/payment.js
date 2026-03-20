@@ -1,6 +1,7 @@
 const form = document.getElementById("payment-form");
 const status = document.getElementById("payment-status");
 const trigger = document.getElementById("payment-form-trigger");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function currentMethod() {
   const segments = window.location.pathname.split("/");
@@ -11,6 +12,7 @@ function fillFromQuery() {
   if (!form) {
     return;
   }
+
   const params = new URLSearchParams(window.location.search);
   const tier = params.get("tier");
   const amount = params.get("amount");
@@ -20,6 +22,7 @@ function fillFromQuery() {
   if (tier && tierInput) {
     tierInput.value = tier;
   }
+
   if (amount && amountInput) {
     amountInput.value = amount;
   }
@@ -27,7 +30,7 @@ function fillFromQuery() {
 
 if (trigger && form) {
   trigger.addEventListener("click", () => {
-    form.scrollIntoView({ behavior: "smooth", block: "center" });
+    form.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
   });
 }
 
@@ -38,6 +41,7 @@ if (form) {
     event.preventDefault();
     status.textContent = "Sending your finance request...";
     const payload = Object.fromEntries(new FormData(form));
+
     try {
       const response = await fetch(`/api/payments/${currentMethod()}`, {
         method: "POST",
@@ -45,6 +49,7 @@ if (form) {
         body: JSON.stringify(payload),
       });
       const body = await response.json();
+
       if (response.ok) {
         status.textContent = body.message;
         form.reset();

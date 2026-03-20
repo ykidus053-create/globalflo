@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#04112b" />
+    <meta name="theme-color" content="#1f2421" />
     <title>Checkout | GlobalFlow</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,56 +13,56 @@
     />
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
-  <body class="checkout-body">
+  <body class="checkout-body checkout-body--minimal">
     <div class="aurora"></div>
-    <div class="grid-overlay"></div>
-    <header class="top">
+    <header class="top top--minimal">
       <div class="brand">
-        <span>GlobalFlow Checkout</span>
-        <p>Complete automation payments</p>
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow Checkout</span>
+          <p>Clear payment flow for automation plans</p>
+        </div>
       </div>
-      <div class="nav">
+      <nav class="nav" aria-label="Checkout navigation">
         <a href="/">Dashboard</a>
-        <a href="/account">Account center</a>
-        <a href="#invoice-form">Invoice request</a>
-      </div>
+        <a href="/account">Account</a>
+        <a href="#invoice-form">Invoice</a>
+      </nav>
     </header>
 
-    <main class="checkout-page">
-      <section class="checkout-tier">
-        {% if tier.badge %}
-        <span class="tier-badge">{{ tier.badge }}</span>
-        {% endif %}
-        <h1>{{ tier.name }}</h1>
-        <p class="lead">{{ tier.description }}</p>
-        <p class="price">{{ tier.price }}</p>
-        <div class="checkout-sales-meta">
-          <p><strong>Qualification:</strong> {{ tier.qualification }}</p>
-          <p><strong>Pain diagnosed:</strong> {{ tier.pain }}</p>
+    <main class="checkout-page checkout-page--minimal">
+      <section class="checkout-hero">
+        <div class="checkout-hero-copy">
+          {% if tier.badge %}
+          <span class="tier-badge">{{ tier.badge }}</span>
+          {% endif %}
+          <p class="eyebrow">Minimal checkout</p>
+          <h1>{{ tier.name }}</h1>
+          <p class="lead">{{ tier.description }}</p>
+          <p class="price">{{ tier.price }}</p>
+          <div class="checkout-links">
+            {% for method, url in tier.payment_links.items() %}
+            <a class="primary" href="{{ url }}" rel="noreferrer">Pay with {{ method.capitalize() }}</a>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="checkout-hero-panel">
+          <p><strong>Best fit:</strong> {{ tier.qualification }}</p>
+          <p><strong>Pain:</strong> {{ tier.pain }}</p>
           <p><strong>Cost of inaction:</strong> {{ tier.inaction_cost }}</p>
           <p><strong>Low-risk path:</strong> {{ tier.risk_reversal }}</p>
           <p><strong>Certainty:</strong> {{ tier.certainty_line }}</p>
         </div>
-        <ul class="tier-features">
-          {% for feature in tier.features %}
-          <li>{{ feature }}</li>
-          {% endfor %}
-        </ul>
-        <div class="checkout-links">
-          {% for method, url in tier.payment_links.items() %}
-          <a class="primary" href="{{ url }}" rel="noreferrer">Pay with {{ method.capitalize() }}</a>
-          {% endfor %}
-        </div>
-        <p class="checkout-note">
-          Prefer a custom contract? Send a payment request to ops@globalflow.ai, mention {{ tier.name }}, and we will
-          return a signed invoice within 2 hours.
-        </p>
       </section>
 
-      <section class="checkout-offset">
+      <section class="checkout-offset checkout-offset--minimal">
         <div class="checkout-card">
-          <h3>Invoice request</h3>
-          <p>Need a procurement ticket or PO? Let us issue the invoice for you.</p>
+          <h2>Invoice request</h2>
+          <p>Use this if you need a finance ticket, PO reference, or manual invoice.</p>
           <form id="invoice-form" data-method="{{ tier.preferred_method }}" data-tier-id="{{ tier.id }}">
             <label>
               Business email
@@ -74,29 +74,44 @@
             </label>
             <label>
               Notes
-              <textarea name="notes" rows="3" placeholder="Match to a PO or mention your card preference"></textarea>
+              <textarea name="notes" rows="3" placeholder="Add a PO, billing cadence, or card preference"></textarea>
             </label>
             <button class="primary" type="submit">Send payment request</button>
             <p class="payment-status" id="invoice-status"></p>
           </form>
         </div>
-        <div class="checkout-panel">
-          <h3>Accepted payment rails</h3>
+
+        <div class="checkout-panel checkout-panel--minimal">
+          <h2>Included in this tier</h2>
           <ul class="method-grid">
-            {% for method in payment_methods %}
+            {% for feature in tier.features %}
             <li>
-              <h4>{{ method.name }}</h4>
-              <p>{{ method.description }}</p>
-              <a class="ghost small" href="{{ method.portal_url }}" rel="noreferrer">Open {{ method.name }}</a>
+              <h4>{{ feature }}</h4>
+              <p>Included in {{ tier.name }} from day one.</p>
             </li>
             {% endfor %}
           </ul>
         </div>
       </section>
+
+      <section class="payment-strip payment-strip--checkout">
+        {% for method in payment_methods %}
+        <article class="payment-chip">
+          <div class="payment-icon {{ method.id }}"></div>
+          <div>
+            <h3>{{ method.name }}</h3>
+            <p>{{ method.description }}</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="{{ method.portal_url }}" rel="noreferrer">Open {{ method.name }}</a>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
     </main>
 
     <footer class="checkout-foot">
-      <p>Everything is recorded in GlobalFlow. Your automation workspace will show the completed run once payment clears.</p>
+      <p>Your automation workspace updates as soon as the payment request is confirmed.</p>
     </footer>
 
     <script type="module" src="/static/checkout.js"></script>

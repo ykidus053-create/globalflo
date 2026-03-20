@@ -3,38 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ portal.name }} payment portal</title>
+    <meta name="theme-color" content="#1f2421" />
+    <title>{{ portal.name }} | GlobalFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
-  <body class="payment-body">
-    <main class="payment-page">
-      <header class="payment-header">
-        <p class="eyebrow">{{ portal.name }} concierge</p>
-        <h1>Secure {{ portal.name }} automation billing</h1>
-        <p>
-          {{ portal.description }} {{ portal.note }}
-        </p>
-      </header>
+  <body class="payment-body payment-body--minimal">
+    <div class="aurora"></div>
+    <header class="top top--minimal">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-copy">
+          <span>{{ portal.name }}</span>
+          <p>Minimal payment desk</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Payment navigation">
+        <a href="/">Dashboard</a>
+        <a href="/account">Account</a>
+        <a href="#payment-form">Request invoice</a>
+      </nav>
+    </header>
 
-      <section class="payment-panel">
-        <div class="payment-icon {{ portal.id }}"></div>
-        <div class="payment-details">
-          <p class="payment-note">{{ portal.note }}</p>
-          <ol>
-            {% for step in portal.instructions %}
-            <li>{{ step }}</li>
-            {% endfor %}
-          </ol>
+    <main class="payment-page payment-page--minimal">
+      <section class="payment-hero">
+        <div class="payment-header">
+          <p class="eyebrow">{{ portal.name }} concierge</p>
+          <h1>Secure {{ portal.name }} automation billing</h1>
+          <p>{{ portal.description }} {{ portal.note }}</p>
           <div class="payment-actions">
+            <button class="primary" type="button" id="payment-form-trigger">Request invoice</button>
             <a class="ghost" href="{{ portal.help_url }}" target="_blank" rel="noreferrer">Open {{ portal.name }} reference</a>
-            <button class="ghost" type="button" id="payment-form-trigger">Request invoice</button>
           </div>
         </div>
+
+        <section class="payment-panel payment-panel--minimal">
+          <div class="payment-icon {{ portal.id }}"></div>
+          <div class="payment-details">
+            <p class="payment-note">{{ portal.note }}</p>
+            <ol>
+              {% for step in portal.instructions %}
+              <li>{{ step }}</li>
+              {% endfor %}
+            </ol>
+          </div>
+        </section>
       </section>
 
-      <section class="payment-form-section">
-        <h3>Want a bespoke invoice? Send a request.</h3>
-        <form id="payment-form">
+      <section class="payment-form-section payment-form-section--minimal">
+        <h2>Send a payment request</h2>
+        <p>Keep the process simple. Add the tier, email, amount, and any finance notes.</p>
+        <form id="payment-form" class="payment-form">
           <label>
             Selected tier
             <input name="tier" placeholder="pilot / launch / captain" />
@@ -49,13 +77,14 @@
           </label>
           <label>
             Notes for the finance team
-            <textarea name="notes" rows="3" placeholder="Add a project name, tiers, or billing cadence"></textarea>
+            <textarea name="notes" rows="3" placeholder="Project name, billing cadence, or card preference"></textarea>
           </label>
           <button class="primary" type="submit">Send payment request</button>
           <p class="payment-status" id="payment-status"></p>
         </form>
       </section>
     </main>
+
     <script type="module" src="/static/payment.js"></script>
   </body>
 </html>
