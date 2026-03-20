@@ -2,10 +2,20 @@ import asyncio
 import logging
 import random
 import time
-from datetime import datetime
-from typing import Callable, Dict
+from datetime import datetime, timezone
+from typing import Any, Callable, Dict
 
-from prefect import flow, task
+try:
+    from prefect import flow, task
+except Exception:  # pragma: no cover - fallback for unsupported runtimes
+    def _identity_decorator(*_args: Any, **_kwargs: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+        def decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
+            return fn
+
+        return decorator
+
+    task = _identity_decorator
+    flow = _identity_decorator
 
 logger = logging.getLogger("globalflow.automations")
 if not logger.handlers:
@@ -16,9 +26,9 @@ logger.setLevel(logging.INFO)
 
 
 def _simulate_step(name: str, duration: float) -> Dict[str, str]:
-    start = datetime.utcnow().isoformat()
+    start = datetime.now(timezone.utc).isoformat()
     time.sleep(duration)
-    end = datetime.utcnow().isoformat()
+    end = datetime.now(timezone.utc).isoformat()
     result = {
         "name": name,
         "start": start,
@@ -55,34 +65,34 @@ def file_intelligence() -> Dict[str, str]:
 
 
 @flow(name="Calls automation")
-def calls_flow() -> Dict[str, str]:
+def calls_flow() -> Dict[str, Any]:
     result1 = calls_summary()
     result2 = crm_enrichment()
     return {"steps": [result1, result2]}
 
 
 @flow(name="Billing automation")
-def billing_flow() -> Dict[str, str]:
+def billing_flow() -> Dict[str, Any]:
     step = billing_reconciliation()
     summary = crm_enrichment()
     return {"steps": [step, summary]}
 
 
 @flow(name="Tax automation")
-def taxes_flow() -> Dict[str, str]:
+def taxes_flow() -> Dict[str, Any]:
     summary = tax_check()
     compliance = crm_enrichment()
     return {"steps": [summary, compliance]}
 
 
 @flow(name="Files automation")
-def files_flow() -> Dict[str, str]:
+def files_flow() -> Dict[str, Any]:
     intelligence = file_intelligence()
     summary = calls_summary()
     return {"steps": [intelligence, summary]}
 
 
-FLOW_REGISTRY: Dict[str, Callable[[], Dict[str, str]]] = {
+FLOW_REGISTRY: Dict[str, Callable[[], Dict[str, Any]]] = {
     "calls": calls_flow,
     "billing": billing_flow,
     "taxes": taxes_flow,

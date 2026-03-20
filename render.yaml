@@ -3,6 +3,9 @@ services:
     name: globalflo
     env: python
     plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn globalflow.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /
