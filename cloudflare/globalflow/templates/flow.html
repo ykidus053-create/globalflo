@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GlobalFlow | AI Automation Workflow</title>
+    <link rel="stylesheet" href="/static/flow.css" />
+  </head>
+  <body>
+    <div class="aurora"></div>
+    <div class="grid-overlay"></div>
+
+    <header class="top">
+      <div class="brand">
+        <span>GlobalFlow 3.0</span>
+        <p>Automating boring global tasks with AI precision</p>
+      </div>
+      <div class="nav">
+        <a href="#hero">Overview</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#agents">Agents</a>
+        <a href="#timeline">Timeline</a>
+        <button class="ghost" id="open-login">Login</button>
+      </div>
+    </header>
+
+    <aside class="sidebar">
+      <button class="sidebar-btn" id="sidebar-subscribe-btn">Subscribe</button>
+      <button class="sidebar-btn" id="sidebar-signup-btn">Sign Up</button>
+      <a class="sidebar-link" href="/account">Account & Settings</a>
+      <button class="sidebar-btn special" id="sidebar-workflow-btn">Workflow</button>
+    </aside>
+
+    <main>
+      <section id="hero" class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">AI Automation Command</p>
+          <h1>Every boring SMB task now roots in a resilient workflow, observed globally.</h1>
+          <p class="lead">
+            FastAPI, Prefect, Temporal, LangChain, and Transformer agents span calls, billing, taxes, files, and
+            governance. Streamline, orchestrate, and audit a single dashboard that actually works.
+          </p>
+          <div class="hero-actions">
+            <button class="primary" id="inspect-flow">Inspect the live flow</button>
+            <button type="button" class="ghost" id="launch-orchestration">Launch orchestration</button>
+            <button class="pill" id="subscribe-btn">Subscribe for cadence</button>
+            <button class="pill" id="signup-btn">Sign up for early access</button>
+          </div>
+          <div class="hero-playbook">
+            <article>
+              <h4>Filter ruthlessly</h4>
+              <p>We automate only the problems that bleed time or revenue so every conversation hits real pain and real urgency.</p>
+            </article>
+            <article>
+              <h4>Diagnose deeply</h4>
+              <p>Every task is framed with the cost of doing nothing and the specific metrics that prove the need.</p>
+            </article>
+            <article>
+              <h4>Present the obvious solution</h4>
+              <p>AutoPilot plus our connectors deliver a simple, low-risk finish with calm authority and undeniable proof—making the decision feel inevitable.</p>
+            </article>
+          </div>
+          <div class="autopilot-panel">
+            <div class="autopilot-copy">
+              <p class="eyebrow">Autonomous control</p>
+              <h3 id="autopilot-status">Standing by</h3>
+              <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
+              <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
+            </div>
+            <button class="ghost" id="autopilot-toggle">Enable autonomous loops</button>
+          </div>
+          <div class="stat-grid">
+            {% for stat in stats %}
+            <div class="stat-card">
+              <p class="value" {% if stat.key %}data-stat-key="{{ stat.key }}"{% endif %}>{{ stat.value }}</p>
+              <p class="label">{{ stat.label }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-header">
+            <p>Realtime telemetry</p>
+            <span>🌐 23 countries · 14 agents</span>
+          </div>
+          <div class="panel-body">
+            <canvas id="radiant" width="320" height="240"></canvas>
+            <p class="panel-note">Waveforms feed Prefect schedules, LangChain alerts, and Temporal retries.</p>
+          </div>
+        </div>
+      </section>
+
+      <div
+        id="autopilot-data"
+        data-enabled="{{ 'true' if autopilot.enabled else 'false' }}"
+        data-next-run="{{ autopilot.next_run or '' }}"
+        data-last-run="{{ autopilot.last_run or '' }}"
+        data-cycles="{{ autopilot.cycles }}"
+      ></div>
+
+      <section id="tasks" class="tasks">
+        <div class="section-heading">
+          <h2>Global automation nodes</h2>
+          <p>Cloud-native workflows and adaptive agents for every boring routine.</p>
+        </div>
+        <div class="task-grid">
+          {% for task in world_tasks %}
+          <article>
+            <header>
+              <h3>{{ task.domain }}</h3>
+              <span class="status">Live sync</span>
+            </header>
+            <p>{{ task.description }}</p>
+            <footer>
+              <span>AI+Prefect</span>
+              <span>Monitored 24/7</span>
+            </footer>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="features" id="features">
+        <div class="section-heading">
+          <h2>Advanced automation features</h2>
+          <p>Inspired by the clarity, pace, and trust signals that make Microsoft/Apple/Google shine.</p>
+        </div>
+        <div class="feature-grid">
+          {% for feature in features %}
+          <article>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.detail }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="toolkit" id="toolkit">
+        <div class="section-heading">
+          <h2>Automation toolkit extensions</h2>
+          <p>Trigger the same AI-assisted guardrails that the elite VS Code extensions deliver.</p>
+        </div>
+        <div class="toolkit-grid">
+          {% for tool in toolkit %}
+          <article>
+            <div class="toolkit-badge">{{ tool.id }}</div>
+            <h3>{{ tool.name }}</h3>
+            <p>{{ tool.detail }}</p>
+            <p class="toolkit-focus"><strong>Focus:</strong> {{ tool.focus }}</p>
+            <div class="toolkit-actions">
+              <button class="primary small" data-tool-action="{{ tool.id }}">Run automation check</button>
+              <a class="ghost" href="{{ tool.doc }}" target="_blank" rel="noreferrer">Open docs</a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        <p class="toolkit-note">Every action mirrors the automation+quality enforcement your extensions promise—type checks, formatting, containers, and notebook experiments.</p>
+      </section>
+
+      <section class="connectors" id="connectors">
+        <div class="section-heading">
+          <h2>External connectors</h2>
+          <p>Push automation output to Slack, CRM, billing, or any webhook in one click, after the pain and cost of inaction are undeniably clear.</p>
+        </div>
+        <div class="connectors-grid">
+          {% for connector in connectors %}
+          <article>
+            <h3>{{ connector.name }}</h3>
+            <p>{{ connector.description }}</p>
+            <p class="connector-meta">
+              <a href="{{ connector.doc }}" target="_blank" rel="noreferrer">Read setup guide</a>
+              {% if connector.env_key %}
+              <span>Env: {{ connector.env_key }}</span>
+              {% endif %}
+            </p>
+            <form class="connector-form" data-connector-id="{{ connector.id }}">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.slack.com/..." value="{{ connector.default_url }}" />
+              </label>
+              <label>
+                {{ connector.sample_field | capitalize }}
+                <input name="{{ connector.sample_field }}" placeholder="{{ connector.sample_message }}" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="Published by GlobalFlow automation" />
+              </label>
+              <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="activity" id="activity">
+        <div class="section-heading">
+          <h2>Activity stream</h2>
+          <p>Trace every automation cycle, connector call, and toolkit action in one feed.</p>
+        </div>
+        <div id="activity-feed" class="activity-grid"></div>
+      </section>
+
+      <section class="checkout" id="checkout">
+        <div class="section-heading">
+          <h2>Subscription checkout</h2>
+          <p>Pay securely with the card you trust and let GlobalFlow run nightly.</p>
+          <p>Every tier lays out the cost of staying manual versus the low-risk automation path, so the solution feels inevitable.</p>
+        </div>
+        <div class="payment-grid">
+          {% for method in payment_methods %}
+          <article class="payment-card">
+            <div class="payment-icon {{ method.id }}"></div>
+            <div class="payment-copy">
+              <h3>{{ method.name }}</h3>
+              <p>{{ method.description }}</p>
+              <p class="payment-note">{{ method.note }}</p>
+            </div>
+            <div class="payment-actions-links">
+              <button class="ghost" data-payment-method="{{ method.id }}">{{ method.action }}</button>
+              <a class="ghost" href="{{ method.portal_url }}" target="_blank" rel="noreferrer">
+                Open {{ method.name }} portal
+              </a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        <p class="checkout-hint">Need a bespoke plan? Our onboarding pod will send a secure invoice within minutes of your request.</p>
+      </section>
+
+      <section class="subscriptions" id="subscriptions">
+        <div class="section-heading">
+          <h2>Subscription tiers</h2>
+          <p>Pick the automation runway that matches your scale and payment runway.</p>
+        </div>
+        <div class="subscription-grid">
+          {% for tier in subscription_tiers %}
+          <article>
+            {% if tier.badge %}
+            <span class="tier-badge">{{ tier.badge }}</span>
+            {% endif %}
+            <div class="subscription-copy">
+              <h3>{{ tier.name }}</h3>
+              <p class="price">{{ tier.price }}</p>
+              <p>{{ tier.description }}</p>
+            </div>
+            <div class="tier-qualification">{{ tier.qualification }}</div>
+            <p class="tier-pain"><strong>Pain:</strong> {{ tier.pain }}</p>
+            <p class="tier-inaction"><strong>Cost of inaction:</strong> {{ tier.inaction_cost }}</p>
+            <p class="tier-risk"><strong>Low-risk path:</strong> {{ tier.risk_reversal }}</p>
+            <ul>
+              {% for feature in tier.features %}
+              <li>{{ feature }}</li>
+              {% endfor %}
+            </ul>
+            <p class="tier-certainty">{{ tier.certainty_line }}</p>
+            <div class="subscription-actions">
+              <button class="primary small" data-checkout-tier="{{ tier.id }}">Checkout {{ tier.name }}</button>
+              <button class="ghost small" data-checkout-tier="{{ tier.id }}">Request invoice</button>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section id="agents" class="agents">
+        <div class="section-heading">
+          <h2>AI agents on watch</h2>
+          <p>Each agent owns a lane, remediates errors, and escalates only when humans must intervene.</p>
+        </div>
+        <div class="agent-grid">
+          {% for agent in agents %}
+          <article>
+            <h3>{{ agent.name }}</h3>
+            <p class="scope">{{ agent.scope }}</p>
+            <p>{{ agent.summary }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section id="timeline" class="timeline">
+        <div class="section-heading">
+          <h2>Orchestration timeline</h2>
+          <p>Prefect + Temporal jobs keep every node accountable.</p>
+        </div>
+        <div class="timeline-grid">
+          <div>
+            <span>0s</span>
+            <p>Prefect triggers billing reconciliation.</p>
+          </div>
+          <div>
+            <span>30s</span>
+            <p>LangChain reviews support call transcripts.</p>
+          </div>
+          <div>
+            <span>90s</span>
+            <p>Temporal nails retries for tax filings and stores audit logs.</p>
+          </div>
+          <div>
+            <span>180s</span>
+            <p>Streamlit + FastAPI surfaces summaries and CSV exports.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow" id="flowboard">
+        <div class="section-heading">
+          <h2>Workflow control</h2>
+          <p>Trigger AI flows, monitor status, and see what’s next in real time.</p>
+        </div>
+        <div id="workflow-grid" class="workflow-grid"></div>
+        <div class="summary">
+          <h3>Next steps</h3>
+          <ul id="flow-next-steps"></ul>
+        </div>
+      </section>
+
+      <section class="principles">
+        <div class="section-heading">
+          <h2>Elite playbook</h2>
+          <p>We borrowed the clarity, polish, and trust-first UX cues that power Microsoft, Apple, and Google.</p>
+        </div>
+        <div class="principle-grid">
+          <article>
+            <h3>Clarity first</h3>
+            <p>Every automation run is transparent with structured logs, so humans trust what AI does.</p>
+          </article>
+          <article>
+            <h3>Minimal friction</h3>
+            <p>A single control plane unifies global tasks; zero toggles, just meaningful action.</p>
+          </article>
+          <article>
+            <h3>Scale securely</h3>
+            <p>Enterprise-grade observability, Prefect/Temporal retries, and strict AI guardrails.</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="flow-modal" role="dialog" aria-modal="true" id="flow-modal">
+        <div class="flow-modal__content">
+          <button class="flow-modal__close" id="flow-modal-close">×</button>
+          <h3>Live workflow summary</h3>
+          <pre id="flow-modal-body">Fetching…</pre>
+        </div>
+      </div>
+
+      <div class="flow-modal" role="dialog" aria-modal="true" id="subscribe-modal">
+        <div class="flow-modal__content">
+          <button class="flow-modal__close" data-modal="subscribe-modal">×</button>
+          <h3>Subscribe to cadence</h3>
+          <form id="subscribe-form">
+            <label>
+              Name
+              <input name="name" placeholder="Amina from Nairobi" />
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" placeholder="ops@futureco.com" required />
+            </label>
+            <label>
+              Pick a plan
+              <select name="tier" required>
+                {% for tier in subscription_tiers %}
+                <option value="{{ tier.id }}">{{ tier.name }} — {{ tier.price }}</option>
+                {% endfor %}
+              </select>
+            </label>
+            <button type="submit" class="primary small">Subscribe</button>
+            <p class="modal-note" id="subscribe-status"></p>
+          </form>
+        </div>
+      </div>
+
+      <div class="flow-modal" role="dialog" aria-modal="true" id="signup-modal">
+        <div class="flow-modal__content">
+          <button class="flow-modal__close" data-modal="signup-modal">×</button>
+          <h3>Sign up for GlobalFlow Labs</h3>
+          <form id="signup-form">
+            <label>
+              Full name
+              <input name="name" placeholder="Jordan Patel" required />
+            </label>
+            <label>
+              Business email
+              <input name="email" type="email" placeholder="ops@scale.co" required />
+            </label>
+            <label>
+              Focus area
+              <select name="focus">
+                <option>Billing automation</option>
+                <option>Customer follow-up</option>
+                <option>Tax compliance</option>
+                <option>Files & contracts</option>
+              </select>
+            </label>
+            <button type="submit" class="primary small">Request access</button>
+            <p class="modal-note" id="signup-status"></p>
+          </form>
+        </div>
+      </div>
+    </main>
+
+<div class="toast" id="toast">Payment triggered. We’re routing to finance.</div>
+    <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
+      <div class="flow-modal__content">
+        <button class="flow-modal__close" data-modal="login-modal">×</button>
+        <h3>Welcome back</h3>
+        <form id="login-form">
+          <label>
+            Email
+            <input name="email" type="email" placeholder="ops@globalflow.ai" required />
+          </label>
+          <label>
+            Name
+            <input name="name" placeholder="Automation architect" />
+          </label>
+          <label>
+            API key
+            <input name="api_key" placeholder="x-abc123" />
+          </label>
+          <button type="submit" class="primary small">Save session</button>
+          <p class="modal-note" id="login-status"></p>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        GlobalFlow 3.0 is a damn-near fully autonomous operations desk for SMBs. Scales to enterprise round-the-clock
+        safeguards with human oversight callbacks.
+      </p>
+    </footer>
+
+    <script type="module" src="/static/flow.js"></script>
+  </body>
+</html>
