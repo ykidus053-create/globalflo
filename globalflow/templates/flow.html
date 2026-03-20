@@ -20,8 +20,15 @@
 
     <header class="top">
       <div class="brand">
-        <span>GlobalFlow 3.0</span>
-        <p>AI workflow for admin-heavy operations teams</p>
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow 3.0</span>
+          <p>AI workflow for admin-heavy operations teams</p>
+        </div>
       </div>
       <nav class="nav" aria-label="Primary">
         <a href="#hero">Overview</a>
@@ -43,6 +50,13 @@
     <main id="main-content">
       <section id="hero" class="hero">
         <div class="hero-copy">
+          <div class="signal-bar" aria-live="polite">
+            <div class="signal-pill">
+              <span class="signal-dot" id="signal-dot"></span>
+              <span id="reliability-state">System healthy</span>
+            </div>
+            <span class="signal-meta" id="last-sync">Waiting for first sync</span>
+          </div>
           <p class="eyebrow">For teams losing time to admin work</p>
           <h1>Automate calls, billing, taxes, and file follow-up from one clear dashboard.</h1>
           <p class="lead">
@@ -112,7 +126,7 @@
         <div class="hero-panel">
           <div class="panel-header">
             <p>Realtime telemetry</p>
-            <span>23 countries &middot; 14 agents</span>
+            <span id="panel-health">Live tracking active</span>
           </div>
           <div class="panel-body">
             <canvas id="radiant" width="320" height="240"></canvas>

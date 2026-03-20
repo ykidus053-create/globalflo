@@ -28,7 +28,12 @@ const autopilotPosture = document.getElementById("autopilot-posture");
 const systemConfidence = document.getElementById("system-confidence");
 const queuePressure = document.getElementById("queue-pressure");
 const activityTotal = document.getElementById("activity-total");
+const reliabilityState = document.getElementById("reliability-state");
+const lastSync = document.getElementById("last-sync");
+const signalDot = document.getElementById("signal-dot");
+const panelHealth = document.getElementById("panel-health");
 const autopilotData = document.getElementById("autopilot-data");
+const navLinks = document.querySelectorAll(".nav a[href^='#']");
 const toolkitButtons = document.querySelectorAll("[data-tool-action]");
 const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
 const connectorForms = document.querySelectorAll(".connector-form");
@@ -40,6 +45,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 let metricsCache = {};
 let activityCount = 0;
+let revealObserver = null;
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
@@ -53,7 +59,26 @@ async function fetchJson(url, options = {}) {
   if (!response.ok) {
     throw new Error(payload.detail || payload.message || "Request failed");
   }
+  stampSync();
+  setReliabilityState("healthy", "System healthy");
   return payload;
+}
+
+function stampSync() {
+  if (!lastSync) return;
+  lastSync.textContent = `Last sync ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
+}
+
+function setReliabilityState(mode, label) {
+  if (reliabilityState) {
+    reliabilityState.textContent = label;
+  }
+  if (panelHealth) {
+    panelHealth.textContent = mode === "healthy" ? "Live tracking active" : "Monitoring attention";
+  }
+  if (signalDot) {
+    signalDot.classList.toggle("is-warning", mode !== "healthy");
+  }
 }
 
 function formatCountdown(nextRunIso) {
@@ -154,6 +179,7 @@ function renderTasks(tasks) {
       }
     });
     workflowGrid.appendChild(card);
+    registerRevealTargets(card);
   });
 }
 
@@ -189,6 +215,7 @@ function renderActivity(events) {
     `
     )
     .join("");
+  activityFeed.querySelectorAll(".activity-entry").forEach((entry) => registerRevealTargets(entry));
 }
 
 async function fetchTasks() {
@@ -213,6 +240,7 @@ async function refreshMetrics() {
     });
     refreshControlReadout();
   } catch (error) {
+    setReliabilityState("warning", "Waiting on system response");
     console.warn("Metrics refresh failed", error);
   }
 }
@@ -222,6 +250,7 @@ async function refreshAutopilotStatus() {
     const data = await fetchJson("/api/autopilot");
     updateAutopilotDisplay(data);
   } catch (error) {
+    setReliabilityState("warning", "Autopilot signal delayed");
     console.warn("Autopilot status unavailable", error);
   }
 }
@@ -232,6 +261,7 @@ async function fetchActivity() {
     const body = await fetchJson("/api/activity");
     renderActivity(body.events);
   } catch (error) {
+    setReliabilityState("warning", "Activity stream delayed");
     console.warn("Activity stream unavailable", error);
   }
 }
@@ -291,6 +321,63 @@ function animateRadiant() {
   }
 
   draw();
+}
+
+function initRevealObserver() {
+  const targets = document.querySelectorAll("main > section, .hero-panel, .proof-strip article, .hero-playbook article, .stat-card");
+  targets.forEach((target) => registerRevealTargets(target));
+
+  if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+    document.querySelectorAll(".reveal-ready").forEach((target) => target.classList.add("is-visible"));
+    return;
+  }
+
+  revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  document.querySelectorAll(".reveal-ready").forEach((target) => revealObserver.observe(target));
+}
+
+function registerRevealTargets(target) {
+  if (!target || target.classList.contains("reveal-ready")) return;
+  target.classList.add("reveal-ready");
+  if (prefersReducedMotion) {
+    target.classList.add("is-visible");
+    return;
+  }
+  if (revealObserver) {
+    revealObserver.observe(target);
+  }
+}
+
+function initActiveNav() {
+  if (!navLinks.length || typeof IntersectionObserver === "undefined") return;
+  const sections = [...navLinks]
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach((link) => {
+          link.classList.toggle("is-active", link.getAttribute("href") === `#${entry.target.id}`);
+        });
+      });
+    },
+    { threshold: 0.45 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
 }
 
 async function inspectFlow() {
@@ -428,7 +515,9 @@ function showToast(text) {
   if (!toast) return;
   toast.textContent = text;
   toast.style.display = "block";
-  toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
+  if (!prefersReducedMotion) {
+    toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
+  }
   window.setTimeout(() => {
     toast.style.display = "none";
   }, 2200);
@@ -583,11 +672,14 @@ connectorForms.forEach((form) => {
       if (statusEl) {
         statusEl.textContent = error.message || "Connector failed.";
       }
+      setReliabilityState("warning", "Connector retry needed");
       showToast(error.message || "Connector offline");
     }
   });
 });
 
+initRevealObserver();
+initActiveNav();
 fetchTasks();
 fetchSummary();
 refreshMetrics();
