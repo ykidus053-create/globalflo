@@ -883,6 +883,36 @@ main {
   font-weight: 700;
 }
 
+.tier-qualification {
+  font-size: 0.78rem;
+  letter-spacing: 0.07rem;
+  text-transform: uppercase;
+  color: rgba(246, 251, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  width: fit-content;
+}
+
+.tier-pain,
+.tier-inaction,
+.tier-risk {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: rgba(246, 251, 255, 0.78);
+}
+
+.tier-inaction {
+  color: rgba(255, 188, 122, 0.95);
+}
+
+.tier-certainty {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: rgba(150, 255, 214, 0.95);
+}
+
 .subscription-grid ul {
   padding-left: 1rem;
   margin: 0;
@@ -943,6 +973,21 @@ main {
   font-size: 2rem;
   margin: 0.3rem 0;
   font-weight: 700;
+}
+
+.checkout-sales-meta {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.checkout-sales-meta p {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.86rem;
 }
 
 .checkout-links {

@@ -245,11 +245,16 @@
               <p class="price">{{ tier.price }}</p>
               <p>{{ tier.description }}</p>
             </div>
+            <div class="tier-qualification">{{ tier.qualification }}</div>
+            <p class="tier-pain"><strong>Pain:</strong> {{ tier.pain }}</p>
+            <p class="tier-inaction"><strong>Cost of inaction:</strong> {{ tier.inaction_cost }}</p>
+            <p class="tier-risk"><strong>Low-risk path:</strong> {{ tier.risk_reversal }}</p>
             <ul>
               {% for feature in tier.features %}
               <li>{{ feature }}</li>
               {% endfor %}
             </ul>
+            <p class="tier-certainty">{{ tier.certainty_line }}</p>
             <div class="subscription-actions">
               <button class="primary small" data-checkout-tier="{{ tier.id }}">Checkout {{ tier.name }}</button>
               <button class="ghost small" data-checkout-tier="{{ tier.id }}">Request invoice</button>

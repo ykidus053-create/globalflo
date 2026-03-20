@@ -29,6 +29,13 @@
         <h1>{{ tier.name }}</h1>
         <p class="lead">{{ tier.description }}</p>
         <p class="price">{{ tier.price }}</p>
+        <div class="checkout-sales-meta">
+          <p><strong>Qualification:</strong> {{ tier.qualification }}</p>
+          <p><strong>Pain diagnosed:</strong> {{ tier.pain }}</p>
+          <p><strong>Cost of inaction:</strong> {{ tier.inaction_cost }}</p>
+          <p><strong>Low-risk path:</strong> {{ tier.risk_reversal }}</p>
+          <p><strong>Certainty:</strong> {{ tier.certainty_line }}</p>
+        </div>
         <ul class="tier-features">
           {% for feature in tier.features %}
           <li>{{ feature }}</li>
