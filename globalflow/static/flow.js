@@ -2,8 +2,6 @@ const workflowGrid = document.getElementById("workflow-grid");
 const nextSteps = document.getElementById("flow-next-steps");
 const radiant = document.getElementById("radiant");
 const statCells = document.querySelectorAll("[data-stat-key]");
-const numberFormatter = new Intl.NumberFormat("en-US");
-
 const inspectButton = document.getElementById("inspect-flow");
 const modal = document.getElementById("flow-modal");
 const modalClose = document.getElementById("flow-modal-close");
@@ -26,57 +24,36 @@ const autopilotToggle = document.getElementById("autopilot-toggle");
 const autopilotStatusEl = document.getElementById("autopilot-status");
 const autopilotNextRunEl = document.getElementById("autopilot-next-run");
 const autopilotCycleCount = document.getElementById("autopilot-cycle-count");
+const autopilotPosture = document.getElementById("autopilot-posture");
+const systemConfidence = document.getElementById("system-confidence");
+const queuePressure = document.getElementById("queue-pressure");
+const activityTotal = document.getElementById("activity-total");
 const autopilotData = document.getElementById("autopilot-data");
+const toolkitButtons = document.querySelectorAll("[data-tool-action]");
+const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
+const connectorForms = document.querySelectorAll(".connector-form");
+const paymentButtons = document.querySelectorAll("[data-payment-method]");
+const activityFeed = document.getElementById("activity-feed");
+const numberFormatter = new Intl.NumberFormat("en-US");
+const SESSION_KEY = "globalflow_session";
+
+let metricsCache = {};
+let activityCount = 0;
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
   last_run: autopilotData?.dataset?.lastRun || null,
   cycles: parseInt(autopilotData?.dataset?.cycles || "0", 10),
 };
-const toolkitButtons = document.querySelectorAll("[data-tool-action]");
-const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
-const connectorForms = document.querySelectorAll(".connector-form");
-const activityFeed = document.getElementById("activity-feed");
 
-async function fetchTasks() {
-  const response = await fetch("/api/tasks");
-  const data = await response.json();
-  renderTasks(data.tasks);
-}
-
-async function fetchSummary() {
-  const response = await fetch("/api/flow");
-  const data = await response.json();
-  renderSummary(data.next_steps);
-  return data;
-}
-
-async function refreshMetrics() {
-  if (!statCells.length) {
-    return;
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, options);
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload.detail || payload.message || "Request failed");
   }
-  try {
-    const response = await fetch("/api/metrics");
-    if (!response.ok) {
-      return;
-    }
-    const data = await response.json();
-    statCells.forEach((cell) => {
-      const key = cell.dataset.statKey;
-      if (!key) {
-        return;
-      }
-      const value = data[key];
-      if (value === undefined) {
-        return;
-      }
-      cell.textContent = numberFormatter.format(value);
-    });
-  } catch (error) {
-    console.warn("Metrics refresh failed", error);
-  }
+  return payload;
 }
-
 
 function formatCountdown(nextRunIso) {
   if (!nextRunIso) return "Queued soon";
@@ -88,72 +65,64 @@ function formatCountdown(nextRunIso) {
   return `${minutes}m ${seconds}s`;
 }
 
+function refreshControlReadout() {
+  if (systemConfidence) {
+    const errors = Number(metricsCache.errors || 0);
+    const pressurePenalty = Math.min(activityCount, 12) * 0.08;
+    const errorPenalty = Math.min(errors, 8) * 0.6;
+    const score = Math.max(91.4, 99.4 - errorPenalty - pressurePenalty);
+    systemConfidence.textContent = `${score.toFixed(1)}%`;
+  }
+
+  if (queuePressure) {
+    const tasksRun = Number(metricsCache.tasks_run || 0);
+    const errors = Number(metricsCache.errors || 0);
+    const signal = tasksRun + activityCount;
+    let label = "Stable";
+    if (errors > 0) {
+      label = "Attention";
+    } else if (signal > 18) {
+      label = "High flow";
+    } else if (signal > 8) {
+      label = "Rising";
+    }
+    queuePressure.textContent = label;
+  }
+
+  if (activityTotal) {
+    activityTotal.textContent = `${activityCount} event${activityCount === 1 ? "" : "s"}`;
+  }
+
+  if (autopilotPosture) {
+    autopilotPosture.textContent = autopilotState.enabled ? "Autonomous live" : "Manual ready";
+  }
+}
+
 function updateAutopilotDisplay(data) {
   if (!data) return;
-  autopilotState.enabled = data.enabled;
-  autopilotState.next_run = data.next_run || null;
-  autopilotState.cycles = Number(data.cycles ?? autopilotState.cycles);
+  autopilotState = {
+    ...autopilotState,
+    enabled: Boolean(data.enabled),
+    next_run: data.next_run || null,
+    last_run: data.last_run || null,
+    cycles: Number(data.cycles ?? autopilotState.cycles),
+  };
+
   if (autopilotStatusEl) {
-    autopilotStatusEl.textContent = data.enabled ? "Autopilot running" : "Autopilot idle";
+    autopilotStatusEl.textContent = autopilotState.enabled ? "Autopilot running" : "Autopilot idle";
   }
   if (autopilotNextRunEl) {
-    autopilotNextRunEl.textContent = data.next_run
-      ? `Next run in ${formatCountdown(data.next_run)}`
+    autopilotNextRunEl.textContent = autopilotState.next_run
+      ? `Next run in ${formatCountdown(autopilotState.next_run)}`
       : "Next run queued soon";
   }
   if (autopilotCycleCount) {
-    autopilotCycleCount.textContent = `Cycles completed: ${autopilotState.cycles.toLocaleString()}`;
+    autopilotCycleCount.textContent = `Cycles completed: ${numberFormatter.format(autopilotState.cycles)}`;
   }
   if (autopilotToggle) {
-    autopilotToggle.textContent = data.enabled ? "Pause autonomous loops" : "Enable autonomous loops";
+    autopilotToggle.textContent = autopilotState.enabled ? "Pause autonomous loops" : "Enable autonomous loops";
   }
-}
-
-async function refreshAutopilotStatus() {
-  try {
-    const response = await fetch("/api/autopilot");
-    if (!response.ok) {
-      return;
-    }
-    const data = await response.json();
-    updateAutopilotDisplay(data);
-  } catch (error) {
-    console.warn("Autopilot status unavailable", error);
-  }
-}
-
-function renderActivity(events) {
-  if (!activityFeed) return;
-  if (!events || !events.length) {
-    activityFeed.innerHTML = `<div class="activity-entry"><p class="activity-message">No activity yet.</p></div>`;
-    return;
-  }
-  activityFeed.innerHTML = events
-    .map(
-      (event) => `
-      <article class="activity-entry">
-        <span class="activity-kind">${event.kind || "event"}</span>
-        <p class="activity-message">${event.message}</p>
-        <p class="activity-detail">${event.detail || ""}</p>
-        <time>${new Date(event.timestamp).toLocaleString()}</time>
-      </article>
-    `
-    )
-    .join("");
-}
-
-async function fetchActivity() {
-  if (!activityFeed) return;
-  try {
-    const response = await fetch("/api/activity");
-    if (!response.ok) {
-      return;
-    }
-    const body = await response.json();
-    renderActivity(body.events);
-  } catch (error) {
-    console.warn("Activity stream unavailable", error);
-  }
+  refreshControlReadout();
 }
 
 function renderTasks(tasks) {
@@ -173,9 +142,15 @@ function renderTasks(tasks) {
     button.addEventListener("click", async () => {
       button.disabled = true;
       button.textContent = "Running...";
-      await runTask(task.id);
-      button.disabled = false;
-      button.textContent = "Kick off";
+      try {
+        await runTask(task.id);
+        showToast(`${task.domain} queued`);
+      } catch (error) {
+        showToast(error.message || "Task failed to queue");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Kick off";
+      }
     });
     workflowGrid.appendChild(card);
   });
@@ -191,12 +166,80 @@ function renderSummary(steps) {
   });
 }
 
-async function runTask(taskId) {
-  const response = await fetch(`/api/tasks/${taskId}/run`, { method: "POST" });
-  if (!response.ok) {
+function renderActivity(events) {
+  if (!activityFeed) return;
+  activityCount = Array.isArray(events) ? events.length : 0;
+  refreshControlReadout();
+
+  if (!events || !events.length) {
+    activityFeed.innerHTML = `<div class="activity-entry"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div>`;
     return;
   }
+
+  activityFeed.innerHTML = events
+    .map(
+      (event) => `
+      <article class="activity-entry">
+        <span class="activity-kind">${event.kind || "event"}</span>
+        <p class="activity-message">${event.message}</p>
+        <p class="activity-detail">${event.detail || ""}</p>
+        <time>${new Date(event.timestamp).toLocaleString()}</time>
+      </article>
+    `
+    )
+    .join("");
+}
+
+async function fetchTasks() {
+  const data = await fetchJson("/api/tasks");
+  renderTasks(data.tasks);
+}
+
+async function fetchSummary() {
+  const data = await fetchJson("/api/flow");
+  renderSummary(data.next_steps);
+  return data;
+}
+
+async function refreshMetrics() {
+  if (!statCells.length) return;
+  try {
+    metricsCache = await fetchJson("/api/metrics");
+    statCells.forEach((cell) => {
+      const key = cell.dataset.statKey;
+      if (!key || metricsCache[key] === undefined) return;
+      cell.textContent = numberFormatter.format(metricsCache[key]);
+    });
+    refreshControlReadout();
+  } catch (error) {
+    console.warn("Metrics refresh failed", error);
+  }
+}
+
+async function refreshAutopilotStatus() {
+  try {
+    const data = await fetchJson("/api/autopilot");
+    updateAutopilotDisplay(data);
+  } catch (error) {
+    console.warn("Autopilot status unavailable", error);
+  }
+}
+
+async function fetchActivity() {
+  if (!activityFeed) return;
+  try {
+    const body = await fetchJson("/api/activity");
+    renderActivity(body.events);
+  } catch (error) {
+    console.warn("Activity stream unavailable", error);
+  }
+}
+
+async function runTask(taskId) {
+  await fetchJson(`/api/tasks/${taskId}/run`, { method: "POST" });
   await fetchTasks();
+  await refreshMetrics();
+  await fetchActivity();
 }
 
 function triggerFlow() {
@@ -218,7 +261,7 @@ function animateRadiant() {
     ctx.save();
     ctx.translate(width / 2, height / 2);
     const now = Date.now() / 100;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i += 1) {
       ctx.beginPath();
       const radius = 30 + i * 12 + Math.sin(now + i) * 5;
       ctx.strokeStyle = `rgba(59, 245, 213, ${0.15 + i * 0.05})`;
@@ -228,17 +271,22 @@ function animateRadiant() {
       ctx.closePath();
     }
     ctx.restore();
-    requestAnimationFrame(draw);
+    window.requestAnimationFrame(draw);
   }
+
   draw();
 }
 
 async function inspectFlow() {
-  const data = await fetchSummary();
-  if (modalBody) {
-    modalBody.textContent = JSON.stringify(data, null, 2);
+  try {
+    const data = await fetchSummary();
+    if (modalBody) {
+      modalBody.textContent = JSON.stringify(data, null, 2);
+    }
+    openModal(modal);
+  } catch (error) {
+    showToast("Could not load flow summary");
   }
-  openModal(modal);
 }
 
 const historySupported = typeof window !== "undefined" && window.history && window.history.pushState;
@@ -258,18 +306,16 @@ function updateHistoryOnClose() {
 }
 
 function openModal(target) {
-  if (target) {
-    target.classList.add("flow-modal--open");
-    pushModalHistory(target.id);
-  }
+  if (!target) return;
+  target.classList.add("flow-modal--open");
+  pushModalHistory(target.id);
 }
 
 function closeModal(target, { skipHistory = false } = {}) {
-  if (target) {
-    target.classList.remove("flow-modal--open");
-    if (!skipHistory) {
-      updateHistoryOnClose();
-    }
+  if (!target) return;
+  target.classList.remove("flow-modal--open");
+  if (!skipHistory) {
+    updateHistoryOnClose();
   }
 }
 
@@ -281,40 +327,39 @@ window.addEventListener("popstate", (event) => {
   }
 });
 
-function submitSubscription(form, statusEl, modalEl) {
-  if (!form) return;
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const data = Object.fromEntries(new FormData(form));
-    const response = await fetch("/api/subscribe", {
+async function handleLeadCapture(form, statusEl, modalEl) {
+  const payload = Object.fromEntries(new FormData(form));
+  try {
+    const data = await fetchJson("/api/subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
-    const payload = await response.json();
     if (statusEl) {
-      statusEl.textContent = payload.message || payload.detail || "Thanks! We'll stay in touch.";
+      statusEl.textContent = data.message || "Request received.";
     }
-    if (response.ok && modalEl) {
-      setTimeout(() => closeModal(modalEl), 1500);
-      if (payload.checkout_url) {
-        window.open(payload.checkout_url, "_blank");
-      }
+    showToast(data.message || "Request received");
+    await refreshMetrics();
+    closeModal(modalEl);
+    if (data.checkout_url) {
+      window.location.assign(data.checkout_url);
     }
-  });
+  } catch (error) {
+    if (statusEl) {
+      statusEl.textContent = error.message || "Submission failed.";
+    }
+    showToast(error.message || "Submission failed");
+  }
 }
-
-const SESSION_KEY = "globalflow_session";
 
 function loadSession() {
   const raw = window.localStorage.getItem(SESSION_KEY);
-  if (!raw) {
-    return;
-  }
+  if (!raw) return null;
   try {
     return JSON.parse(raw);
   } catch (error) {
     window.localStorage.removeItem(SESSION_KEY);
+    return null;
   }
 }
 
@@ -323,13 +368,9 @@ function saveSession(payload) {
 }
 
 function hydrateLoginForm() {
-  if (!loginForm) {
-    return;
-  }
+  if (!loginForm) return;
   const saved = loadSession();
-  if (!saved) {
-    return;
-  }
+  if (!saved) return;
   Object.entries(saved).forEach(([key, value]) => {
     const input = loginForm.querySelector(`[name="${key}"]`);
     if (input) {
@@ -339,20 +380,43 @@ function hydrateLoginForm() {
   if (loginStatus) {
     loginStatus.textContent = `Session restored for ${saved.email || "you"}`;
   }
-  showToast("Session restored from local storage");
 }
 
-fetchTasks();
-fetchSummary();
-refreshMetrics();
-refreshAutopilotStatus();
-fetchActivity();
-setInterval(fetchTasks, 15000);
-setInterval(fetchSummary, 30000);
-setInterval(refreshMetrics, 45000);
-setInterval(refreshAutopilotStatus, 30000);
-setInterval(fetchActivity, 30000);
-animateRadiant();
+function scrollIntoView(selector) {
+  const element = document.querySelector(selector);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+async function summonToolkitTool(toolId) {
+  if (!toolId) return;
+  try {
+    const payload = await fetchJson(`/api/toolkit/${toolId}`);
+    showToast(payload.message);
+    await refreshMetrics();
+    await fetchActivity();
+  } catch (error) {
+    showToast(error.message || "Toolkit action failed");
+  }
+}
+
+function openCheckoutForTier(tierId) {
+  if (!tierId) return;
+  showToast("Opening subscription checkout...");
+  window.location.assign(`/checkout/${tierId}`);
+}
+
+function showToast(text) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = text;
+  toast.style.display = "block";
+  toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
+  window.setTimeout(() => {
+    toast.style.display = "none";
+  }, 2200);
+}
 
 if (inspectButton) {
   inspectButton.addEventListener("click", inspectFlow);
@@ -363,66 +427,25 @@ if (modalClose) {
 }
 
 document.querySelectorAll("[data-modal]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const target = document.getElementById(button.dataset.modal);
-    closeModal(target);
-  });
+  button.addEventListener("click", () => closeModal(document.getElementById(button.dataset.modal)));
 });
 
-if (modal) {
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeModal(modal);
+[modal, subscribeModal, signupModal, loginModal].forEach((modalEl) => {
+  if (!modalEl) return;
+  modalEl.addEventListener("click", (event) => {
+    if (event.target === modalEl) {
+      closeModal(modalEl);
     }
   });
-}
-
-function scrollIntoView(selector) {
-  const el = document.querySelector(selector);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-}
-
-async function summonToolkitTool(toolId) {
-  if (!toolId) return;
-  try {
-    const response = await fetch(`/api/toolkit/${toolId}`);
-    if (!response.ok) {
-      throw new Error("Toolkit action blocked");
-    }
-    const payload = await response.json();
-    showToast(payload.message);
-  } catch (error) {
-    showToast("Toolkit action failed. Try again.");
-  }
-}
+});
 
 if (subscribeBtn) {
   subscribeBtn.addEventListener("click", () => openModal(subscribeModal));
 }
 
-const paymentButtons = document.querySelectorAll("[data-payment-method]");
-paymentButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const method = button.dataset.paymentMethod;
-    if (!method) return;
-    showToast(`Opening ${method} portal…`);
-    window.open(`/payment/${method}`, "_blank");
-  });
-});
-
 if (signupBtn) {
   signupBtn.addEventListener("click", () => openModal(signupModal));
 }
-
-toolkitButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const toolId = button.dataset.toolAction;
-    showToast("Queuing automation toolset...");
-    summonToolkitTool(toolId);
-  });
-});
 
 if (sidebarSubscribeBtn) {
   sidebarSubscribeBtn.addEventListener("click", () => openModal(subscribeModal));
@@ -438,8 +461,9 @@ if (sidebarWorkflowBtn) {
 
 if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", async () => {
-    showToast("Launching automation flow…");
+    showToast("Launching automation flow...");
     await fetchTasks();
+    scrollIntoView("#flowboard");
     triggerFlow();
   });
 }
@@ -449,56 +473,40 @@ if (autopilotToggle) {
     const targetState = !autopilotState.enabled;
     autopilotToggle.disabled = true;
     try {
-      const response = await fetch("/api/autopilot", {
+      const data = await fetchJson("/api/autopilot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ enabled: targetState }),
       });
-      const data = await response.json();
       updateAutopilotDisplay(data);
       showToast(data.enabled ? "Autopilot resumed" : "Autopilot paused");
+      await fetchActivity();
+      await refreshMetrics();
     } catch (error) {
-      showToast("Could not update autopilot.");
+      showToast(error.message || "Could not update autopilot");
     } finally {
       autopilotToggle.disabled = false;
     }
   });
 }
 
-if (subscribeModal) {
-  subscribeModal.addEventListener("click", (event) => {
-    if (event.target === subscribeModal) {
-      closeModal(subscribeModal);
-    }
+if (subscribeForm) {
+  subscribeForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await handleLeadCapture(subscribeForm, document.getElementById("subscribe-status"), subscribeModal);
   });
 }
 
-if (signupModal) {
-  signupModal.addEventListener("click", (event) => {
-    if (event.target === signupModal) {
-      closeModal(signupModal);
-    }
+if (signupForm) {
+  signupForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await handleLeadCapture(signupForm, document.getElementById("signup-status"), signupModal);
   });
 }
-
-submitSubscription(subscribeForm, document.getElementById("subscribe-status"), subscribeModal);
-submitSubscription(signupForm, document.getElementById("signup-status"), signupModal);
 
 if (loginButton) {
   loginButton.addEventListener("click", () => openModal(loginModal));
 }
-
-if (loginModal) {
-  loginModal.addEventListener("click", (event) => {
-    if (event.target === loginModal) {
-      closeModal(loginModal);
-    }
-  });
-}
-
-subscriptionButtons.forEach((button) => {
-  button.addEventListener("click", () => openCheckoutForTier(button.dataset.checkoutTier));
-});
 
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
@@ -514,6 +522,26 @@ if (loginForm) {
   hydrateLoginForm();
 }
 
+toolkitButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    showToast("Queuing automation toolset...");
+    summonToolkitTool(button.dataset.toolAction);
+  });
+});
+
+paymentButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const method = button.dataset.paymentMethod;
+    if (!method) return;
+    showToast(`Opening ${method} portal...`);
+    window.location.assign(`/payment/${method}`);
+  });
+});
+
+subscriptionButtons.forEach((button) => {
+  button.addEventListener("click", () => openCheckoutForTier(button.dataset.checkoutTier));
+});
+
 connectorForms.forEach((form) => {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -524,42 +552,35 @@ connectorForms.forEach((form) => {
     }
     const payload = Object.fromEntries(new FormData(form));
     try {
-      const response = await fetch(`/api/connectors/${connectorId}`, {
+      const data = await fetchJson(`/api/connectors/${connectorId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await response.json();
-      if (response.ok) {
-        showToast(data.message);
-        if (statusEl) {
-          statusEl.textContent = data.message;
-        }
-      } else if (statusEl) {
-        statusEl.textContent = data.detail || "Connector failed.";
+      if (statusEl) {
+        statusEl.textContent = data.message;
       }
+      showToast(data.message);
+      await refreshMetrics();
+      await fetchActivity();
     } catch (error) {
       if (statusEl) {
-        statusEl.textContent = "Connector unreachable.";
+        statusEl.textContent = error.message || "Connector failed.";
       }
-      showToast("Connector offline, try again.");
+      showToast(error.message || "Connector offline");
     }
   });
 });
 
-function openCheckoutForTier(tierId) {
-  if (!tierId) return;
-  showToast("Opening subscription checkout…");
-  window.open(`/checkout/${tierId}`, "_blank");
-}
+fetchTasks();
+fetchSummary();
+refreshMetrics();
+refreshAutopilotStatus();
+fetchActivity();
+animateRadiant();
 
-function showToast(text) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-  toast.textContent = text;
-  toast.style.display = "block";
-  toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
-  setTimeout(() => {
-    toast.style.display = "none";
-  }, 2200);
-}
+window.setInterval(fetchTasks, 15000);
+window.setInterval(fetchSummary, 30000);
+window.setInterval(refreshMetrics, 45000);
+window.setInterval(refreshAutopilotStatus, 30000);
+window.setInterval(fetchActivity, 30000);

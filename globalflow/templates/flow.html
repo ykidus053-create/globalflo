@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#04112b" />
     <title>GlobalFlow | AI Automation Workflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
   <body>
@@ -18,6 +25,8 @@
       <div class="nav">
         <a href="#hero">Overview</a>
         <a href="#tasks">Tasks</a>
+        <a href="#connectors">Connectors</a>
+        <a href="#subscriptions">Pricing</a>
         <a href="#agents">Agents</a>
         <a href="#timeline">Timeline</a>
         <button class="ghost" id="open-login">Login</button>
@@ -35,16 +44,34 @@
       <section id="hero" class="hero">
         <div class="hero-copy">
           <p class="eyebrow">AI Automation Command</p>
-          <h1>Every boring SMB task now roots in a resilient workflow, observed globally.</h1>
+          <h1>Every boring SMB task now routes through a resilient workflow with visible outcomes.</h1>
           <p class="lead">
-            FastAPI, Prefect, Temporal, LangChain, and Transformer agents span calls, billing, taxes, files, and
-            governance. Streamline, orchestrate, and audit a single dashboard that actually works.
+            GlobalFlow turns scattered admin work into one operating system for calls, billing, taxes, files, and
+            follow-up. The dashboard shows what is running, what is blocked, and what value was created so teams can
+            move faster without losing control.
           </p>
           <div class="hero-actions">
             <button class="primary" id="inspect-flow">Inspect the live flow</button>
             <button type="button" class="ghost" id="launch-orchestration">Launch orchestration</button>
             <button class="pill" id="subscribe-btn">Subscribe for cadence</button>
             <button class="pill" id="signup-btn">Sign up for early access</button>
+          </div>
+          <div class="proof-strip">
+            <article>
+              <span>Admin drag removed</span>
+              <strong>4,260 min/day</strong>
+              <p>Automations are aimed at backlog, billing lag, and slow follow-up.</p>
+            </article>
+            <article>
+              <span>Operator confidence</span>
+              <strong id="system-confidence">99.2%</strong>
+              <p>Live telemetry, audit logs, and guardrails keep humans in control.</p>
+            </article>
+            <article>
+              <span>Workflow pressure</span>
+              <strong id="queue-pressure">Stable</strong>
+              <p>Signal quality updates as tasks, connectors, and autopilot cycles move.</p>
+            </article>
           </div>
           <div class="hero-playbook">
             <article>
@@ -57,7 +84,7 @@
             </article>
             <article>
               <h4>Present the obvious solution</h4>
-              <p>AutoPilot plus our connectors deliver a simple, low-risk finish with calm authority and undeniable proof—making the decision feel inevitable.</p>
+              <p>AutoPilot plus our connectors deliver a simple, low-risk finish with calm authority and undeniable proof.</p>
             </article>
           </div>
           <div class="autopilot-panel">
@@ -81,11 +108,28 @@
         <div class="hero-panel">
           <div class="panel-header">
             <p>Realtime telemetry</p>
-            <span>🌐 23 countries · 14 agents</span>
+            <span>23 countries &middot; 14 agents</span>
           </div>
           <div class="panel-body">
             <canvas id="radiant" width="320" height="240"></canvas>
             <p class="panel-note">Waveforms feed Prefect schedules, LangChain alerts, and Temporal retries.</p>
+            <div class="control-stack">
+              <article>
+                <span>Activity logged</span>
+                <strong id="activity-total">0 events</strong>
+                <p>One stream for automation, connectors, and billing actions.</p>
+              </article>
+              <article>
+                <span>Autopilot posture</span>
+                <strong id="autopilot-posture">Manual ready</strong>
+                <p>Loops stay visible, reversible, and easy to override.</p>
+              </article>
+              <article>
+                <span>Launch window</span>
+                <strong>72 hours</strong>
+                <p>Most teams can move from manual drag to active orchestration in days.</p>
+              </article>
+            </div>
           </div>
         </div>
       </section>
@@ -123,7 +167,7 @@
       <section class="features" id="features">
         <div class="section-heading">
           <h2>Advanced automation features</h2>
-          <p>Inspired by the clarity, pace, and trust signals that make Microsoft/Apple/Google shine.</p>
+          <p>Inspired by the clarity, pace, and trust signals that make world-class software feel reliable.</p>
         </div>
         <div class="feature-grid">
           {% for feature in features %}
@@ -132,6 +176,35 @@
             <p>{{ feature.detail }}</p>
           </article>
           {% endfor %}
+        </div>
+      </section>
+
+      <section class="lanes" id="lanes">
+        <div class="section-heading">
+          <h2>How the workflow compounds value</h2>
+          <p>Each lane removes delay, proves impact, and hands off to the next system without manual drift.</p>
+        </div>
+        <div class="lane-grid">
+          <article>
+            <span>01</span>
+            <h3>Capture</h3>
+            <p>Calls, invoices, documents, and inbound requests land in one intake layer with consistent context.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Decide</h3>
+            <p>Rules, agents, and orchestration logic decide what should run now, what needs review, and what can wait.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Execute</h3>
+            <p>Connectors push actions into CRM, billing, and collaboration tools while retries keep work moving.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Prove</h3>
+            <p>Activity logs, payment requests, and cycle metrics make the ROI visible enough for operators and finance.</p>
+          </article>
         </div>
       </section>
 
@@ -154,13 +227,13 @@
           </article>
           {% endfor %}
         </div>
-        <p class="toolkit-note">Every action mirrors the automation+quality enforcement your extensions promise—type checks, formatting, containers, and notebook experiments.</p>
+        <p class="toolkit-note">Every action mirrors the automation and quality enforcement your extensions promise: type checks, formatting, containers, and notebook experiments.</p>
       </section>
 
       <section class="connectors" id="connectors">
         <div class="section-heading">
           <h2>External connectors</h2>
-          <p>Push automation output to Slack, CRM, billing, or any webhook in one click, after the pain and cost of inaction are undeniably clear.</p>
+          <p>Push automation output to Slack, CRM, billing, or any webhook in one click after the pain and cost of inaction are clear.</p>
         </div>
         <div class="connectors-grid">
           {% for connector in connectors %}
@@ -206,7 +279,7 @@
         <div class="section-heading">
           <h2>Subscription checkout</h2>
           <p>Pay securely with the card you trust and let GlobalFlow run nightly.</p>
-          <p>Every tier lays out the cost of staying manual versus the low-risk automation path, so the solution feels inevitable.</p>
+          <p>Every tier lays out the cost of staying manual versus the low-risk automation path so the solution feels obvious.</p>
         </div>
         <div class="payment-grid">
           {% for method in payment_methods %}
@@ -219,9 +292,7 @@
             </div>
             <div class="payment-actions-links">
               <button class="ghost" data-payment-method="{{ method.id }}">{{ method.action }}</button>
-              <a class="ghost" href="{{ method.portal_url }}" target="_blank" rel="noreferrer">
-                Open {{ method.name }} portal
-              </a>
+              <a class="ghost" href="{{ method.portal_url }}" rel="noreferrer">Open {{ method.name }} portal</a>
             </div>
           </article>
           {% endfor %}
@@ -296,11 +367,11 @@
           </div>
           <div>
             <span>90s</span>
-            <p>Temporal nails retries for tax filings and stores audit logs.</p>
+            <p>Temporal handles retries for tax filings and stores audit logs.</p>
           </div>
           <div>
             <span>180s</span>
-            <p>Streamlit + FastAPI surfaces summaries and CSV exports.</p>
+            <p>FastAPI surfaces summaries, decisions, and export-ready records.</p>
           </div>
         </div>
       </section>
@@ -308,7 +379,7 @@
       <section class="workflow" id="flowboard">
         <div class="section-heading">
           <h2>Workflow control</h2>
-          <p>Trigger AI flows, monitor status, and see what’s next in real time.</p>
+          <p>Trigger AI flows, monitor status, and see what is next in real time.</p>
         </div>
         <div id="workflow-grid" class="workflow-grid"></div>
         <div class="summary">
@@ -319,8 +390,8 @@
 
       <section class="principles">
         <div class="section-heading">
-          <h2>Elite playbook</h2>
-          <p>We borrowed the clarity, polish, and trust-first UX cues that power Microsoft, Apple, and Google.</p>
+          <h2>Operating principles</h2>
+          <p>Every screen is tuned for clarity, trust, and fast operator decisions.</p>
         </div>
         <div class="principle-grid">
           <article>
@@ -329,26 +400,26 @@
           </article>
           <article>
             <h3>Minimal friction</h3>
-            <p>A single control plane unifies global tasks; zero toggles, just meaningful action.</p>
+            <p>A single control plane unifies global tasks so operators can move from review to execution quickly.</p>
           </article>
           <article>
             <h3>Scale securely</h3>
-            <p>Enterprise-grade observability, Prefect/Temporal retries, and strict AI guardrails.</p>
+            <p>Enterprise-grade observability, retry logic, and guardrails keep the system useful under load.</p>
           </article>
         </div>
       </section>
 
       <div class="flow-modal" role="dialog" aria-modal="true" id="flow-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" id="flow-modal-close">×</button>
+          <button class="flow-modal__close" id="flow-modal-close">&times;</button>
           <h3>Live workflow summary</h3>
-          <pre id="flow-modal-body">Fetching…</pre>
+          <pre id="flow-modal-body">Fetching...</pre>
         </div>
       </div>
 
       <div class="flow-modal" role="dialog" aria-modal="true" id="subscribe-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="subscribe-modal">×</button>
+          <button class="flow-modal__close" data-modal="subscribe-modal">&times;</button>
           <h3>Subscribe to cadence</h3>
           <form id="subscribe-form">
             <label>
@@ -363,7 +434,7 @@
               Pick a plan
               <select name="tier" required>
                 {% for tier in subscription_tiers %}
-                <option value="{{ tier.id }}">{{ tier.name }} — {{ tier.price }}</option>
+                <option value="{{ tier.id }}">{{ tier.name }} - {{ tier.price }}</option>
                 {% endfor %}
               </select>
             </label>
@@ -375,7 +446,7 @@
 
       <div class="flow-modal" role="dialog" aria-modal="true" id="signup-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="signup-modal">×</button>
+          <button class="flow-modal__close" data-modal="signup-modal">&times;</button>
           <h3>Sign up for GlobalFlow Labs</h3>
           <form id="signup-form">
             <label>
@@ -402,10 +473,10 @@
       </div>
     </main>
 
-<div class="toast" id="toast">Payment triggered. We’re routing to finance.</div>
+    <div class="toast" id="toast">Payment triggered. We are routing to finance.</div>
     <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
       <div class="flow-modal__content">
-        <button class="flow-modal__close" data-modal="login-modal">×</button>
+        <button class="flow-modal__close" data-modal="login-modal">&times;</button>
         <h3>Welcome back</h3>
         <form id="login-form">
           <label>
@@ -428,8 +499,8 @@
 
     <footer>
       <p>
-        GlobalFlow 3.0 is a damn-near fully autonomous operations desk for SMBs. Scales to enterprise round-the-clock
-        safeguards with human oversight callbacks.
+        GlobalFlow 3.0 is an AI operations desk for SMBs that want measurable throughput, clear auditability, and less
+        admin friction without surrendering human oversight.
       </p>
     </footer>
 
