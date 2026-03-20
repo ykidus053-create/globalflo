@@ -21,7 +21,24 @@ This path is for an always-on Linux VM instead of a sleeping platform service.
 - Allow inbound TCP `443`
 - Keep SSH open on TCP `22`
 
-## 4. Prepare the server
+## 4. Fast path
+
+If DNS already points `www.globalflow.com` to the VM, SSH in and run:
+
+```bash
+git clone https://github.com/ykidus053-create/globalflo.git /opt/globalflow
+cd /opt/globalflow
+chmod +x deploy/oracle/bootstrap.sh
+./deploy/oracle/bootstrap.sh www.globalflow.com
+```
+
+That installs Docker, opens the firewall, writes `.env`, and starts the app.
+
+## 5. Manual path
+
+If you want the steps separately:
+
+### Prepare the server
 
 SSH into the VM, then run:
 
@@ -32,7 +49,7 @@ chmod +x deploy/oracle/setup-vm.sh
 
 Log out once, then SSH back in so the `docker` group applies.
 
-## 5. Configure the app domain
+### Configure the app domain
 
 Inside `/opt/globalflow`, create `.env` from the template and set your real domain:
 
@@ -44,12 +61,12 @@ nano .env
 Example:
 
 ```text
-DOMAIN=app.yourdomain.com
+DOMAIN=www.globalflow.com
 GLOBALFLOW_AUTOPILOT_ENABLED=1
 WEB_CONCURRENCY=2
 ```
 
-## 6. Deploy the app
+### Deploy the app
 
 ```bash
 chmod +x deploy/oracle/deploy.sh
@@ -64,7 +81,7 @@ https://YOUR_REAL_DOMAIN
 
 TLS is automatic. Caddy requests and renews the certificate for the domain in `.env`.
 
-## 7. Update after a new commit
+## 6. Update after a new commit
 
 ```bash
 cd /opt/globalflow
@@ -72,7 +89,7 @@ git pull --ff-only origin main
 docker compose up -d --build
 ```
 
-## 8. Useful checks
+## 7. Useful checks
 
 ```bash
 docker compose ps
