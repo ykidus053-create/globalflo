@@ -1,51 +1,53 @@
 const workflowGrid = document.getElementById("workflow-grid");
 const nextSteps = document.getElementById("flow-next-steps");
-const radiant = document.getElementById("radiant");
-const statCells = document.querySelectorAll("[data-stat-key]");
 const inspectButton = document.getElementById("inspect-flow");
-const modal = document.getElementById("flow-modal");
-const modalClose = document.getElementById("flow-modal-close");
-const modalBody = document.getElementById("flow-modal-body");
-const subscribeBtn = document.getElementById("subscribe-btn");
-const signupBtn = document.getElementById("signup-btn");
+const flowModal = document.getElementById("flow-modal");
+const flowModalClose = document.getElementById("flow-modal-close");
+const flowModalBody = document.getElementById("flow-modal-body");
 const subscribeModal = document.getElementById("subscribe-modal");
-const signupModal = document.getElementById("signup-modal");
 const subscribeForm = document.getElementById("subscribe-form");
-const signupForm = document.getElementById("signup-form");
-const sidebarSubscribeBtn = document.getElementById("sidebar-subscribe-btn");
-const sidebarSignupBtn = document.getElementById("sidebar-signup-btn");
-const sidebarWorkflowBtn = document.getElementById("sidebar-workflow-btn");
-const launchOrchestrationBtn = document.getElementById("launch-orchestration");
+const heroLeadForm = document.getElementById("hero-lead-form");
 const loginButton = document.getElementById("open-login");
 const loginModal = document.getElementById("login-modal");
 const loginForm = document.getElementById("login-form");
 const loginStatus = document.getElementById("login-status");
+const launchOrchestrationBtn = document.getElementById("launch-orchestration");
+const watchDemoBtn = document.getElementById("watch-demo");
+const demoVideo = document.getElementById("demo-video");
+const demoSection = document.getElementById("demo");
+
 const autopilotToggle = document.getElementById("autopilot-toggle");
 const autopilotStatusEl = document.getElementById("autopilot-status");
 const autopilotNextRunEl = document.getElementById("autopilot-next-run");
 const autopilotCycleCount = document.getElementById("autopilot-cycle-count");
-const autopilotPosture = document.getElementById("autopilot-posture");
+const autopilotData = document.getElementById("autopilot-data");
+
 const systemConfidence = document.getElementById("system-confidence");
 const queuePressure = document.getElementById("queue-pressure");
 const activityTotal = document.getElementById("activity-total");
 const reliabilityState = document.getElementById("reliability-state");
-const lastSync = document.getElementById("last-sync");
 const signalDot = document.getElementById("signal-dot");
 const panelHealth = document.getElementById("panel-health");
-const autopilotData = document.getElementById("autopilot-data");
-const navLinks = document.querySelectorAll(".nav a[href^='#']");
-const toolkitButtons = document.querySelectorAll("[data-tool-action]");
-const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
+const lastSync = document.getElementById("last-sync");
+
 const connectorForms = document.querySelectorAll(".connector-form");
 const paymentButtons = document.querySelectorAll("[data-payment-method]");
+const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
+const subscribeOpenButtons = document.querySelectorAll("[data-subscribe-open='true']");
 const activityFeed = document.getElementById("activity-feed");
-const numberFormatter = new Intl.NumberFormat("en-US");
+const navLinks = document.querySelectorAll(".nav a[href^='#']");
+const priceCells = document.querySelectorAll(".price[data-monthly][data-annual]");
+const monthlyToggle = document.getElementById("billing-monthly");
+const annualToggle = document.getElementById("billing-annual");
+
 const SESSION_KEY = "globalflow_session";
+const numberFormatter = new Intl.NumberFormat("en-US");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 let metricsCache = {};
 let activityCount = 0;
 let revealObserver = null;
+let billingMode = "monthly";
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
@@ -105,22 +107,14 @@ function refreshControlReadout() {
     const errors = Number(metricsCache.errors || 0);
     const signal = tasksRun + activityCount;
     let label = "Stable";
-    if (errors > 0) {
-      label = "Attention";
-    } else if (signal > 18) {
-      label = "High flow";
-    } else if (signal > 8) {
-      label = "Rising";
-    }
+    if (errors > 0) label = "Attention";
+    else if (signal > 18) label = "High flow";
+    else if (signal > 8) label = "Rising";
     queuePressure.textContent = label;
   }
 
   if (activityTotal) {
     activityTotal.textContent = `${activityCount} event${activityCount === 1 ? "" : "s"}`;
-  }
-
-  if (autopilotPosture) {
-    autopilotPosture.textContent = autopilotState.enabled ? "Autonomous live" : "Manual ready";
   }
 }
 
@@ -148,7 +142,6 @@ function updateAutopilotDisplay(data) {
   if (autopilotToggle) {
     autopilotToggle.textContent = autopilotState.enabled ? "Pause autonomous loops" : "Enable autonomous loops";
   }
-  refreshControlReadout();
 }
 
 function renderTasks(tasks) {
@@ -162,7 +155,7 @@ function renderTasks(tasks) {
       <h4>${task.domain}</h4>
       <p>${task.next_action}</p>
       <p class="note">${task.note}</p>
-      <button data-task-id="${task.id}">Kick off</button>
+      <button class="primary small" type="button">Kick off</button>
     `;
     const button = card.querySelector("button");
     button.addEventListener("click", async () => {
@@ -199,7 +192,8 @@ function renderActivity(events) {
   refreshControlReadout();
 
   if (!events || !events.length) {
-    activityFeed.innerHTML = `<div class="activity-entry"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div>`;
+    activityFeed.innerHTML =
+      '<div class="activity-entry"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div>';
     return;
   }
 
@@ -215,10 +209,12 @@ function renderActivity(events) {
     `
     )
     .join("");
+
   activityFeed.querySelectorAll(".activity-entry").forEach((entry) => registerRevealTargets(entry));
 }
 
 async function fetchTasks() {
+  if (!workflowGrid) return;
   const data = await fetchJson("/api/tasks");
   renderTasks(data.tasks);
 }
@@ -230,14 +226,8 @@ async function fetchSummary() {
 }
 
 async function refreshMetrics() {
-  if (!statCells.length) return;
   try {
     metricsCache = await fetchJson("/api/metrics");
-    statCells.forEach((cell) => {
-      const key = cell.dataset.statKey;
-      if (!key || metricsCache[key] === undefined) return;
-      cell.textContent = numberFormatter.format(metricsCache[key]);
-    });
     refreshControlReadout();
   } catch (error) {
     setReliabilityState("warning", "Waiting on system response");
@@ -246,6 +236,7 @@ async function refreshMetrics() {
 }
 
 async function refreshAutopilotStatus() {
+  if (!autopilotToggle) return;
   try {
     const data = await fetchJson("/api/autopilot");
     updateAutopilotDisplay(data);
@@ -276,56 +267,12 @@ async function runTask(taskId) {
 function triggerFlow() {
   if (!workflowGrid) return;
   const firstButton = workflowGrid.querySelector("button");
-  if (firstButton) {
-    firstButton.click();
-  }
-}
-
-function animateRadiant() {
-  if (!radiant) return;
-  const ctx = radiant.getContext("2d");
-  const width = radiant.width;
-  const height = radiant.height;
-
-  if (prefersReducedMotion) {
-    ctx.clearRect(0, 0, width, height);
-    ctx.save();
-    ctx.translate(width / 2, height / 2);
-    for (let i = 0; i < 5; i += 1) {
-      ctx.beginPath();
-      ctx.strokeStyle = `rgba(59, 245, 213, ${0.18 + i * 0.08})`;
-      ctx.lineWidth = 1.2;
-      ctx.arc(0, 0, 42 + i * 18, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-    ctx.restore();
-    return;
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.save();
-    ctx.translate(width / 2, height / 2);
-    const now = Date.now() / 100;
-    for (let i = 0; i < 10; i += 1) {
-      ctx.beginPath();
-      const radius = 30 + i * 12 + Math.sin(now + i) * 5;
-      ctx.strokeStyle = `rgba(59, 245, 213, ${0.15 + i * 0.05})`;
-      ctx.lineWidth = 1.2;
-      ctx.arc(0, 0, radius, now * 0.5 + i, now * 0.5 + i + Math.PI * 1.2);
-      ctx.stroke();
-      ctx.closePath();
-    }
-    ctx.restore();
-    window.requestAnimationFrame(draw);
-  }
-
-  draw();
+  if (firstButton) firstButton.click();
 }
 
 function initRevealObserver() {
   const targets = document.querySelectorAll(
-    "main > section, .hero-panel, .guide-card, .proof-strip article, .stat-card, .connector-card, .payment-chip"
+    "main > section, .hero-video-card, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card"
   );
   targets.forEach((target) => registerRevealTargets(target));
 
@@ -356,9 +303,7 @@ function registerRevealTargets(target) {
     target.classList.add("is-visible");
     return;
   }
-  if (revealObserver) {
-    revealObserver.observe(target);
-  }
+  if (revealObserver) revealObserver.observe(target);
 }
 
 function initActiveNav() {
@@ -385,17 +330,14 @@ function initActiveNav() {
 async function inspectFlow() {
   try {
     const data = await fetchSummary();
-    if (modalBody) {
-      modalBody.textContent = JSON.stringify(data, null, 2);
-    }
-    openModal(modal);
-  } catch (error) {
+    if (flowModalBody) flowModalBody.textContent = JSON.stringify(data, null, 2);
+    openModal(flowModal);
+  } catch {
     showToast("Could not load flow summary");
   }
 }
 
 const historySupported = typeof window !== "undefined" && window.history && window.history.pushState;
-
 if (historySupported) {
   window.history.replaceState({ modalId: null }, "", window.location.pathname);
 }
@@ -405,7 +347,7 @@ function pushModalHistory(modalId) {
   window.history.pushState({ modalId }, "", `${window.location.pathname}#${modalId}`);
 }
 
-function updateHistoryOnClose() {
+function resetModalHistory() {
   if (!historySupported) return;
   window.history.replaceState({ modalId: null }, "", window.location.pathname);
 }
@@ -416,20 +358,16 @@ function openModal(target) {
   pushModalHistory(target.id);
 }
 
-function closeModal(target, { skipHistory = false } = {}) {
+function closeModal(target, skipHistory = false) {
   if (!target) return;
   target.classList.remove("flow-modal--open");
-  if (!skipHistory) {
-    updateHistoryOnClose();
-  }
+  if (!skipHistory) resetModalHistory();
 }
 
 window.addEventListener("popstate", (event) => {
   const modalId = event.state?.modalId;
   const openModalEl = document.querySelector(".flow-modal--open");
-  if (!modalId && openModalEl) {
-    closeModal(openModalEl, { skipHistory: true });
-  }
+  if (!modalId && openModalEl) closeModal(openModalEl, true);
 });
 
 async function handleLeadCapture(form, statusEl, modalEl) {
@@ -440,19 +378,13 @@ async function handleLeadCapture(form, statusEl, modalEl) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (statusEl) {
-      statusEl.textContent = data.message || "Request received.";
-    }
+    if (statusEl) statusEl.textContent = data.message || "Request received.";
     showToast(data.message || "Request received");
     await refreshMetrics();
-    closeModal(modalEl);
-    if (data.checkout_url) {
-      window.location.assign(data.checkout_url);
-    }
+    if (modalEl) closeModal(modalEl);
+    if (data.checkout_url) window.location.assign(data.checkout_url);
   } catch (error) {
-    if (statusEl) {
-      statusEl.textContent = error.message || "Submission failed.";
-    }
+    if (statusEl) statusEl.textContent = error.message || "Submission failed.";
     showToast(error.message || "Submission failed");
   }
 }
@@ -462,7 +394,7 @@ function loadSession() {
   if (!raw) return null;
   try {
     return JSON.parse(raw);
-  } catch (error) {
+  } catch {
     window.localStorage.removeItem(SESSION_KEY);
     return null;
   }
@@ -478,38 +410,30 @@ function hydrateLoginForm() {
   if (!saved) return;
   Object.entries(saved).forEach(([key, value]) => {
     const input = loginForm.querySelector(`[name="${key}"]`);
-    if (input) {
-      input.value = value;
-    }
+    if (input) input.value = value;
   });
-  if (loginStatus) {
-    loginStatus.textContent = `Session restored for ${saved.email || "you"}`;
-  }
+  if (loginStatus) loginStatus.textContent = `Session restored for ${saved.email || "you"}`;
 }
 
-function scrollIntoView(selector) {
+function scrollToSelector(selector) {
   const element = document.querySelector(selector);
-  if (element) {
-    element.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
-  }
-}
-
-async function summonToolkitTool(toolId) {
-  if (!toolId) return;
-  try {
-    const payload = await fetchJson(`/api/toolkit/${toolId}`);
-    showToast(payload.message);
-    await refreshMetrics();
-    await fetchActivity();
-  } catch (error) {
-    showToast(error.message || "Toolkit action failed");
-  }
+  if (!element) return;
+  element.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
 }
 
 function openCheckoutForTier(tierId) {
   if (!tierId) return;
   showToast("Opening subscription checkout...");
   window.location.assign(`/checkout/${tierId}`);
+}
+
+function setBillingMode(mode) {
+  billingMode = mode;
+  priceCells.forEach((cell) => {
+    cell.textContent = cell.dataset[mode] || cell.textContent;
+  });
+  if (monthlyToggle) monthlyToggle.classList.toggle("is-active", mode === "monthly");
+  if (annualToggle) annualToggle.classList.toggle("is-active", mode === "annual");
 }
 
 function showToast(text) {
@@ -525,52 +449,36 @@ function showToast(text) {
   }, 2200);
 }
 
-if (inspectButton) {
-  inspectButton.addEventListener("click", inspectFlow);
-}
-
-if (modalClose) {
-  modalClose.addEventListener("click", () => closeModal(modal));
-}
+if (inspectButton) inspectButton.addEventListener("click", inspectFlow);
+if (flowModalClose) flowModalClose.addEventListener("click", () => closeModal(flowModal));
 
 document.querySelectorAll("[data-modal]").forEach((button) => {
   button.addEventListener("click", () => closeModal(document.getElementById(button.dataset.modal)));
 });
 
-[modal, subscribeModal, signupModal, loginModal].forEach((modalEl) => {
+[flowModal, subscribeModal, loginModal].forEach((modalEl) => {
   if (!modalEl) return;
   modalEl.addEventListener("click", (event) => {
-    if (event.target === modalEl) {
-      closeModal(modalEl);
-    }
+    if (event.target === modalEl) closeModal(modalEl);
   });
 });
 
-if (subscribeBtn) {
-  subscribeBtn.addEventListener("click", () => openModal(subscribeModal));
-}
-
-if (signupBtn) {
-  signupBtn.addEventListener("click", () => openModal(signupModal));
-}
-
-if (sidebarSubscribeBtn) {
-  sidebarSubscribeBtn.addEventListener("click", () => openModal(subscribeModal));
-}
-
-if (sidebarSignupBtn) {
-  sidebarSignupBtn.addEventListener("click", () => openModal(signupModal));
-}
-
-if (sidebarWorkflowBtn) {
-  sidebarWorkflowBtn.addEventListener("click", () => scrollIntoView("#flowboard"));
+if (watchDemoBtn) {
+  watchDemoBtn.addEventListener("click", () => {
+    if (demoSection) scrollToSelector("#demo");
+    if (demoVideo && typeof demoVideo.play === "function") {
+      demoVideo.play().catch(() => {
+        // user gesture or media policy may block autoplay after scroll
+      });
+    }
+  });
 }
 
 if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", async () => {
     showToast("Launching automation flow...");
     await fetchTasks();
-    scrollIntoView("#flowboard");
+    scrollToSelector("#flowboard");
     triggerFlow();
   });
 }
@@ -597,6 +505,13 @@ if (autopilotToggle) {
   });
 }
 
+if (heroLeadForm) {
+  heroLeadForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await handleLeadCapture(heroLeadForm);
+  });
+}
+
 if (subscribeForm) {
   subscribeForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -604,37 +519,30 @@ if (subscribeForm) {
   });
 }
 
-if (signupForm) {
-  signupForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    await handleLeadCapture(signupForm, document.getElementById("signup-status"), signupModal);
+subscribeOpenButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    if (!subscribeModal) return;
+    const tierId = button.dataset.tier;
+    if (tierId && subscribeForm) {
+      const tierSelect = subscribeForm.querySelector("select[name='tier']");
+      if (tierSelect) tierSelect.value = tierId;
+    }
+    openModal(subscribeModal);
   });
-}
+});
 
-if (loginButton) {
-  loginButton.addEventListener("click", () => openModal(loginModal));
-}
-
+if (loginButton) loginButton.addEventListener("click", () => openModal(loginModal));
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const payload = Object.fromEntries(new FormData(loginForm));
     saveSession(payload);
-    if (loginStatus) {
-      loginStatus.textContent = `Saved for ${payload.email}`;
-    }
+    if (loginStatus) loginStatus.textContent = `Saved for ${payload.email}`;
     showToast("Login info saved locally for next visit");
     closeModal(loginModal);
   });
   hydrateLoginForm();
 }
-
-toolkitButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    showToast("Queuing automation toolset...");
-    summonToolkitTool(button.dataset.toolAction);
-  });
-});
 
 paymentButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -654,9 +562,7 @@ connectorForms.forEach((form) => {
     event.preventDefault();
     const connectorId = form.dataset.connectorId;
     const statusEl = form.querySelector(".connector-status");
-    if (statusEl) {
-      statusEl.textContent = "Dispatching connector...";
-    }
+    if (statusEl) statusEl.textContent = "Dispatching connector...";
     const payload = Object.fromEntries(new FormData(form));
     try {
       const data = await fetchJson(`/api/connectors/${connectorId}`, {
@@ -664,30 +570,29 @@ connectorForms.forEach((form) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (statusEl) {
-        statusEl.textContent = data.message;
-      }
+      if (statusEl) statusEl.textContent = data.message;
       showToast(data.message);
       await refreshMetrics();
       await fetchActivity();
     } catch (error) {
-      if (statusEl) {
-        statusEl.textContent = error.message || "Connector failed.";
-      }
+      if (statusEl) statusEl.textContent = error.message || "Connector failed.";
       setReliabilityState("warning", "Connector retry needed");
       showToast(error.message || "Connector offline");
     }
   });
 });
 
+if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode("monthly"));
+if (annualToggle) annualToggle.addEventListener("click", () => setBillingMode("annual"));
+
 initRevealObserver();
 initActiveNav();
+setBillingMode(billingMode);
 fetchTasks();
 fetchSummary();
 refreshMetrics();
 refreshAutopilotStatus();
 fetchActivity();
-animateRadiant();
 
 window.setInterval(fetchTasks, 15000);
 window.setInterval(fetchSummary, 30000);

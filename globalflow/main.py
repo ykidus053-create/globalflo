@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import os
 from datetime import datetime
@@ -7,7 +6,7 @@ from typing import Any, Dict, List
 
 import httpx
 from fastapi import BackgroundTasks, FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
@@ -55,73 +54,199 @@ async def request_logger(request: Request, call_next):
         logger.exception("Unhandled error for %s %s", request.method, request.url.path)
         raise
 
+
 WORLD_TASKS = [
-    {"domain": "Calls", "description": "Auto-summarize and tag every support/lead call with LangChain agents."},
-    {"domain": "Billing", "description": "Generate invoices, reconcile payments, and flag anomalies with Polars + SQLAlchemy."},
-    {"domain": "Taxes", "description": "Prefect flows keep jurisdictional filings ready, plus AI reminders for deadlines."},
-    {"domain": "Files", "description": "Auto-classify, version, and push contracts/documents to secure storage via Transformers."},
-    {"domain": "Ops", "description": "Temporal orchestrates pipelines across streams, Slack, email, and Zapier connectors."},
+    {
+        "icon": "phone",
+        "domain": "Call follow-up",
+        "headline": "Close the loop after every customer conversation.",
+        "description": "Summaries, action items, and next steps land in the right system without a coordinator chasing people.",
+    },
+    {
+        "icon": "receipt",
+        "domain": "Billing recovery",
+        "headline": "Keep invoices, approvals, and collections moving.",
+        "description": "GlobalFlow routes invoice work automatically so finance teams recover revenue faster with less manual admin.",
+    },
+    {
+        "icon": "shield",
+        "domain": "Tax readiness",
+        "headline": "Stay prepared for deadlines instead of scrambling late.",
+        "description": "Compliance tasks, supporting docs, and reminders stay visible in one workflow before they become urgent.",
+    },
+    {
+        "icon": "folder",
+        "domain": "Document control",
+        "headline": "Organize contracts and files without creating another inbox.",
+        "description": "Files are classified, routed, and attached to the right workflow so teams stop losing time to document hunts.",
+    },
+    {
+        "icon": "spark",
+        "domain": "Ops orchestration",
+        "headline": "Run repetitive back-office work from one calm dashboard.",
+        "description": "Approvals, retries, audits, and handoffs stay coordinated across billing, files, calls, and follow-up.",
+    },
 ]
 
 AI_AGENTS = [
     {
         "name": "Pulse",
         "scope": "Global status",
-        "summary": "Streams reports from Prefect runs, highlights bottlenecks, and nudges CFOs via Slack.",
+        "summary": "Streams reports from Prefect runs, highlights bottlenecks, and nudges finance and operations teams when action is needed.",
     },
     {
         "name": "Clarity",
         "scope": "Docs + billing",
-        "summary": "Reads invoices, validates against SAP/QuickBooks, uploads tax-ready ledgers, and pre-fills forms.",
+        "summary": "Reads invoices, validates records, uploads tax-ready ledgers, and pre-fills the next finance step.",
     },
     {
         "name": "Orbit",
         "scope": "Engagement flows",
-        "summary": "Schedules follow-ups, transcribes calls, drafts proposals, and escalates to humans when needed.",
+        "summary": "Schedules follow-ups, drafts handoffs, and escalates to humans when a workflow needs review.",
     },
 ]
 
 TASKS: Dict[str, Dict[str, str]] = {
     "calls": {
         "id": "calls",
-        "domain": "Global Calls",
+        "domain": "Call follow-up",
         "status": "ready",
         "next_action": "Summarize recent calls",
-        "last_run": "—",
-        "note": "LangChain agent primed for CRM engine.",
+        "last_run": "-",
+        "note": "Ready to capture call notes, assign follow-up, and sync outcomes.",
     },
     "billing": {
         "id": "billing",
         "domain": "Billing Ops",
         "status": "ready",
         "next_action": "Match invoices to payments",
-        "last_run": "—",
-        "note": "Polars-led reconciliation queued.",
+        "last_run": "-",
+        "note": "Prepared to route approvals, issue invoices, and flag exceptions.",
     },
     "taxes": {
         "id": "taxes",
         "domain": "Taxes & Compliance",
         "status": "ready",
         "next_action": "Prepare jurisdiction snapshot",
-        "last_run": "—",
-        "note": "Prefect job stands by for data.",
+        "last_run": "-",
+        "note": "Standing by to assemble filing readiness and compliance evidence.",
     },
     "files": {
         "id": "files",
         "domain": "Files + Documents",
         "status": "ready",
         "next_action": "Classify latest uploads",
-        "last_run": "—",
-        "note": "Transformer embeddings warming up.",
+        "last_run": "-",
+        "note": "Queued to organize contracts, receipts, and supporting documents.",
     },
 }
 
 FEATURES = [
-    {"title": "AI Call Summaries", "detail": "LangChain + Whisper triage every conversation, tag CRM records, and surface anomalies."},
-    {"title": "Smart Billing Ops", "detail": "Polars + SQLAlchemy align invoices/payments, then Prefect auto-reminds finance."},
-    {"title": "Compliance Engine", "detail": "Temporal & Prefect dual-control flows ensure filing readiness across regions."},
-    {"title": "File Intelligence", "detail": "Transformer embeddings classify and secure sensitive documents instantly."},
-    {"title": "Workflow Studio", "detail": "Visualizing retries, SLAs, and audit logs alongside dashboards and APIs."},
+    {
+        "icon": "phone",
+        "title": "Call summaries that drive action",
+        "headline": "Every customer call ends with the next step already assigned.",
+        "detail": "GlobalFlow turns conversations into summaries, owners, and follow-up tasks so nothing important gets lost after the call.",
+        "href": "#demo",
+    },
+    {
+        "icon": "receipt",
+        "title": "Billing that keeps moving",
+        "headline": "Invoices, approvals, and reminders move without manual chasing.",
+        "detail": "Finance teams can route invoice work automatically, spot bottlenecks early, and keep collections on schedule.",
+        "href": "#pricing",
+    },
+    {
+        "icon": "shield",
+        "title": "Compliance that feels manageable",
+        "headline": "Important tax and compliance work stays visible before deadlines hit.",
+        "detail": "The workflow collects documents, tracks status, and keeps operations teams ahead of filing and review pressure.",
+        "href": "#why-globalflow",
+    },
+    {
+        "icon": "folder",
+        "title": "Files that stay organized",
+        "headline": "Documents reach the right place without extra admin work.",
+        "detail": "Contracts, receipts, and records are classified and routed so teams stop digging through shared drives and inboxes.",
+        "href": "#integrations",
+    },
+    {
+        "icon": "spark",
+        "title": "Orchestration with clear oversight",
+        "headline": "Automation runs fast, but people still stay in control.",
+        "detail": "Operators can launch workflows, inspect every step, and intervene when needed from a single control room.",
+        "href": "#flowboard",
+    },
+]
+
+TRUSTED_LOGOS = [
+    {"name": "Northwind Ops", "label": "Placeholder partner"},
+    {"name": "Atlas Freight", "label": "Placeholder partner"},
+    {"name": "Cedar Accounting", "label": "Placeholder partner"},
+    {"name": "FieldMint Health", "label": "Placeholder partner"},
+    {"name": "Harbor Services", "label": "Placeholder partner"},
+]
+
+TESTIMONIALS = [
+    {
+        "name": "Maya Chen",
+        "role": "Operations Director",
+        "company": "Northwind Ops",
+        "quote": "We stopped stitching billing, follow-up, and file work together by hand. GlobalFlow gave the team one place to run the week.",
+        "result": "Recovered 23 hours each week in the first month.",
+        "photo": "/static/avatar-maya.svg",
+    },
+    {
+        "name": "Daniel Brooks",
+        "role": "Finance Lead",
+        "company": "Cedar Accounting",
+        "quote": "The biggest win was visibility. We can see every handoff, every invoice request, and every exception without checking three tools.",
+        "result": "Cut invoice turnaround from 4 days to under 1 day.",
+        "photo": "/static/avatar-daniel.svg",
+    },
+    {
+        "name": "Leila Hassan",
+        "role": "Client Services Manager",
+        "company": "FieldMint Health",
+        "quote": "Call notes, documents, and follow-up tasks now show up together. The team spends more time responding and less time reorganizing work.",
+        "result": "Removed 80+ hours of admin work each month.",
+        "photo": "/static/avatar-leila.svg",
+    },
+]
+
+FOUNDERS = [
+    {
+        "name": "Nova Karim",
+        "role": "Founder and workflow operator",
+        "bio": "Built GlobalFlow after seeing small teams waste entire weeks on call notes, invoice follow-up, file cleanup, and compliance prep. The product is designed for operators who need calm visibility, not another noisy dashboard.",
+        "photo": "/static/founder-nova.svg",
+    }
+]
+
+TRUST_SIGNALS = [
+    {
+        "title": "256-bit encryption",
+        "detail": "Sensitive billing, document, and workflow data is protected in transit and at rest.",
+    },
+    {
+        "title": "Human override built in",
+        "detail": "Autonomous runs remain inspectable, reversible, and easy to pause when a team wants manual review.",
+    },
+    {
+        "title": "Data stays traceable",
+        "detail": "Activity feeds, audit trails, and connector logs make workflow decisions easy to verify.",
+    },
+]
+
+BUILT_WITH = [
+    "FastAPI",
+    "Temporal",
+    "Prefect",
+    "LangChain",
+    "Whisper",
+    "Polars",
+    "SQLAlchemy",
+    "Jinja",
 ]
 
 PAYMENT_METHODS = [
@@ -173,7 +298,6 @@ PAYMENT_METHODS = [
 ]
 
 PAYMENT_LOOKUP = {entry["id"]: entry for entry in PAYMENT_METHODS}
-
 PAYMENT_HISTORY: List[Dict[str, str]] = []
 
 USER_PROFILE: Dict[str, str] = {
@@ -193,21 +317,57 @@ SUBSCRIPTIONS: List[Dict[str, str]] = []
 
 SUBSCRIPTION_TIERS = [
     {
+        "id": "starter",
+        "name": "Starter",
+        "price": "Free",
+        "monthly_price": "Free",
+        "annual_price": "Free",
+        "amount": 0,
+        "currency": "USD",
+        "annual_amount": 0,
+        "description": "For teams testing one workflow before rolling automation out more broadly.",
+        "qualification": "Best for first pilots and evaluation teams.",
+        "pain": "You need to prove one workflow can run cleanly before replacing your current process.",
+        "roi": "Most starter teams validate one automation path and remove 6 to 10 hours of admin work each week.",
+        "risk_reversal": "No payment required. Start with 1 workflow and 100 runs each month.",
+        "certainty_line": "A clean way to test fit before expanding into a larger rollout.",
+        "features": [
+            "1 live workflow",
+            "100 workflow runs per month",
+            "2 app connections",
+            "Email support",
+        ],
+        "preferred_method": "paypal",
+        "payment_links": {
+            "paypal": "/payment/paypal?tier=starter&amount=0",
+            "mastercard": "/payment/mastercard?tier=starter&amount=0",
+            "amex": "/payment/amex?tier=starter&amount=0",
+        },
+        "badge": "Free trial",
+        "annual_badge": "",
+        "cta": "Start free",
+        "comparison_key": "starter",
+    },
+    {
         "id": "pilot",
-        "name": "Pilot Tier",
+        "name": "Pilot",
         "price": "$349 / month",
+        "monthly_price": "$349 / month",
+        "annual_price": "$290 / month billed annually",
         "amount": 349,
         "currency": "USD",
-        "description": "For small teams with urgent admin drag and direct owner oversight.",
-        "qualification": "Best fit: teams with active operations pain, budget approval, and immediate urgency.",
+        "annual_amount": 3490,
+        "description": "For small teams ready to automate the first set of back-office bottlenecks.",
+        "qualification": "Best for teams with recurring billing, file, and follow-up work every week.",
         "pain": "Manual billing and follow-up work consume 20+ hours each week.",
-        "inaction_cost": "Doing nothing typically leaks about $2,400 per month in delays and missed follow-through.",
+        "roi": "Pilot teams typically recover 80+ hours each month in the first 30 days.",
         "risk_reversal": "Guided launch with weekly proof reports and a 30-day optimization pass.",
-        "certainty_line": "If measurable admin hours do not drop in month one, we rework the workflow at no extra charge.",
+        "certainty_line": "Shielded rework guarantee: if month-one outcomes miss the agreed target, we rework the workflow at no extra charge.",
         "features": [
-            "Dedicated AutoPilot queue with Slack signals",
-            "Prefect + Temporal retries and live telemetry",
+            "Dedicated AutoPilot queue with live telemetry",
+            "4 production integrations",
             "Weekly outcomes brief tied to time-saved metrics",
+            "Rework guarantee",
         ],
         "preferred_method": "paypal",
         "payment_links": {
@@ -216,23 +376,30 @@ SUBSCRIPTION_TIERS = [
             "amex": "/payment/amex?tier=pilot&amount=349",
         },
         "badge": "Popular",
+        "annual_badge": "Save 17%",
+        "cta": "Start Pilot",
+        "comparison_key": "pilot",
     },
     {
         "id": "launch",
-        "name": "Launch Tier",
+        "name": "Launch",
         "price": "$549 / month",
+        "monthly_price": "$549 / month",
+        "annual_price": "$458 / month billed annually",
         "amount": 549,
         "currency": "USD",
-        "description": "For growing operations teams where process delays now cost revenue.",
-        "qualification": "Best fit: teams with high-volume workflows, cross-team handoffs, and decision authority in place.",
+        "annual_amount": 5490,
+        "description": "For operations teams running multiple workflows across billing, files, and customer handoffs.",
+        "qualification": "Best for growing teams with clear process ownership and active cross-team coordination.",
         "pain": "Leads, invoices, and compliance tasks stall across disconnected systems.",
-        "inaction_cost": "Staying manual can burn $5,000+ monthly in cycle-time loss and uncollected opportunities.",
+        "roi": "Launch teams usually recover 120+ hours each month while improving response and billing speed.",
         "risk_reversal": "Structured onboarding with connector validation and milestone-based rollout.",
         "certainty_line": "You get a clear KPI baseline and verified automation gains before expansion.",
         "features": [
-            "Multi-region Temporal + Prefect coverage",
-            "Dedicated AI agents for billing, taxes, and files",
-            "Enterprise connectors for Slack, HubSpot, and QuickBooks",
+            "8 production integrations",
+            "Dedicated automations for billing, taxes, and files",
+            "Live dashboards and team approvals",
+            "Slack implementation channel",
         ],
         "preferred_method": "mastercard",
         "payment_links": {
@@ -240,23 +407,30 @@ SUBSCRIPTION_TIERS = [
             "mastercard": "/payment/mastercard?tier=launch&amount=549",
             "amex": "/payment/amex?tier=launch&amount=549",
         },
+        "annual_badge": "Save 17%",
+        "cta": "Talk to sales",
+        "comparison_key": "launch",
     },
     {
         "id": "captain",
-        "name": "Captain Tier",
+        "name": "Captain",
         "price": "$899 / month",
+        "monthly_price": "$899 / month",
+        "annual_price": "$749 / month billed annually",
         "amount": 899,
         "currency": "USD",
-        "description": "For high-stakes operators who need autonomous execution with executive certainty.",
-        "qualification": "Best fit: teams with global process load, clear budget ownership, and mission-critical urgency.",
+        "annual_amount": 8990,
+        "description": "For teams that need wide automation coverage, executive reporting, and white-glove rollout support.",
+        "qualification": "Best for high-volume operators with global process load and tighter reliability requirements.",
         "pain": "Fragmented workflows create compounding risk across billing, taxes, files, and call handling.",
-        "inaction_cost": "Without automation orchestration, loss exposure can exceed $10,000+ monthly in preventable overhead and delay.",
-        "risk_reversal": "Priority deployment lane, advanced guardrails, and executive workflow reviews.",
-        "certainty_line": "This tier is built for teams ready to execute now, not evaluate forever.",
+        "roi": "Captain teams centralize the highest-volume workflows and usually free up 200+ hours each month.",
+        "risk_reversal": "Priority deployment lane, executive workflow reviews, and custom connector support.",
+        "certainty_line": "Built for teams that want automation depth with clear executive oversight.",
         "features": [
-            "Human-in-the-loop guardrails with AI suggestions",
-            "Instant connector wiring + custom API scaffolding",
-            "Quarterly automation readiness report",
+            "Unlimited workflow runs",
+            "Custom API and ERP connector support",
+            "Executive readiness reviews",
+            "White-glove onboarding",
         ],
         "preferred_method": "amex",
         "payment_links": {
@@ -264,10 +438,37 @@ SUBSCRIPTION_TIERS = [
             "mastercard": "/payment/mastercard?tier=captain&amount=899",
             "amex": "/payment/amex?tier=captain&amount=899",
         },
-        "badge": "Elite",
+        "badge": "Scale",
+        "annual_badge": "Save 17%",
+        "cta": "Book a rollout call",
+        "comparison_key": "captain",
     },
 ]
 SUBSCRIPTION_LOOKUP = {tier["id"]: tier for tier in SUBSCRIPTION_TIERS}
+
+PRICING_COMPARISON = [
+    {"label": "Workflow runs / month", "starter": "100", "pilot": "2,000", "launch": "10,000", "captain": "Unlimited"},
+    {"label": "Connected apps", "starter": "2", "pilot": "4", "launch": "8", "captain": "Custom"},
+    {"label": "Human approvals", "starter": "Basic", "pilot": "Advanced", "launch": "Advanced", "captain": "Executive guardrails"},
+    {"label": "Reporting", "starter": "Weekly digest", "pilot": "Weekly proof report", "launch": "Live dashboards", "captain": "Executive reviews"},
+    {"label": "Support", "starter": "Community", "pilot": "Priority email", "launch": "Slack channel", "captain": "White-glove"},
+]
+
+FOOTER_LINKS = [
+    {"label": "About", "href": "#why-globalflow"},
+    {"label": "Blog", "href": "#founder"},
+    {"label": "Changelog", "href": "https://github.com/ykidus053-create/globalflo/commits/main"},
+    {"label": "Docs", "href": "#under-the-hood"},
+    {"label": "Privacy Policy", "href": "#privacy-note"},
+    {"label": "Terms of Service", "href": "#terms-note"},
+    {"label": "Contact", "href": "mailto:hello@globalflow.ai"},
+]
+
+SOCIAL_LINKS = [
+    {"label": "GitHub", "href": "https://github.com/ykidus053-create/globalflo"},
+    {"label": "Roadmap", "href": "https://github.com/ykidus053-create/globalflo/issues"},
+    {"label": "Founder inbox", "href": "mailto:hello@globalflow.ai?subject=Talk%20to%20the%20founder"},
+]
 
 AUTOMATION_TOOLS = [
     {
@@ -332,42 +533,21 @@ autopilot = AutoPilot(task_manager, monitoring, activity_log, interval_seconds=5
 def _tasks_list() -> List[Dict[str, str]]:
     return task_manager.list_tasks()
 
-
 @app.get("/", response_class=HTMLResponse)
 async def homepage(request: Request):
-    metrics = monitoring.snapshot()
-    stats = [
-        {"label": "Minutes saved daily", "value": "4,260"},
-        {"label": "Countries orchestrated", "value": "23"},
-        {"label": "AI agents active", "value": "14"},
-        {
-            "label": "Automations kicked off",
-            "value": f'{metrics["tasks_run"]:,}',
-            "key": "tasks_run",
-        },
-        {
-            "label": "Subscriptions captured",
-            "value": f'{metrics["subscriptions"]:,}',
-            "key": "subscriptions",
-        },
-        {
-            "label": "Payment requests routed",
-            "value": f'{metrics["payment_requests"]:,}',
-            "key": "payment_requests",
-        },
-    ]
     autopilot_status = autopilot.status()
-    stats.append(
-        {
-            "label": "Autonomous cycles",
-            "value": f'{autopilot_status["cycles"]:,}',
-            "key": "autopilot_cycles",
-        }
-    )
+    execution_status = "Active" if autopilot_status["enabled"] else "Human-in-the-loop"
+    stats = [
+        {"label": "Recovered in most pilot teams", "value": "20+ hours / week"},
+        {"label": "Operator confidence", "value": "99.2%"},
+        {"label": "Time to first live workflow", "value": "72 hours"},
+        {"label": "Autonomous execution", "value": execution_status},
+    ]
     return templates.TemplateResponse(
         "flow.html",
         {
             "request": request,
+            "page_url": str(request.url),
             "world_tasks": WORLD_TASKS,
             "agents": AI_AGENTS,
             "stats": stats,
@@ -377,8 +557,21 @@ async def homepage(request: Request):
             "autopilot": autopilot_status,
             "connectors": CONNECTORS,
             "subscription_tiers": SUBSCRIPTION_TIERS,
+            "trusted_logos": TRUSTED_LOGOS,
+            "testimonials": TESTIMONIALS,
+            "founders": FOUNDERS,
+            "trust_signals": TRUST_SIGNALS,
+            "built_with": BUILT_WITH,
+            "pricing_comparison": PRICING_COMPARISON,
+            "footer_links": FOOTER_LINKS,
+            "social_links": SOCIAL_LINKS,
         },
     )
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return RedirectResponse(url="/static/favicon.svg")
 
 
 @app.get("/api/flow", response_class=JSONResponse)
@@ -388,9 +581,9 @@ async def flow_summary():
         "tasks": WORLD_TASKS,
         "agents": AI_AGENTS,
         "next_steps": [
-            "Spin up Temporal retry bus for billing recon.",
-            "Trigger LangChain assistant to follow up on late payments.",
-            "Push Prefect job to re-run compliance snapshot.",
+            "Spin up billing follow-up for overdue invoices.",
+            "Trigger the call summary agent to assign owners.",
+            "Refresh the compliance snapshot before the next deadline.",
         ],
     }
 
@@ -502,7 +695,7 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     monitoring.record("payment_requests")
     return {
         "status": "ok",
-        "message": f"{portal['name']} request received – expect a secure link in your inbox shortly.",
+        "message": f"{portal['name']} request received - expect a secure link in your inbox shortly.",
     }
 
 
@@ -534,7 +727,7 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     activity_log.record(
         kind="connector",
         source=connector["name"],
-        message=f"Connector hit – {response.status_code}",
+        message=f"Connector hit - {response.status_code}",
         detail=response.text[:200],
     )
     details = {}
@@ -542,7 +735,7 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
         details = response.json()
     return {
         "status": "ok",
-        "message": f"{connector['name']} triggered – {response.status_code}",
+        "message": f"{connector['name']} triggered - {response.status_code}",
         "details": details,
     }
 
@@ -577,7 +770,7 @@ async def toolkit_action(tool_id: str):
     monitoring.record("tasks_run")
     return {
         "status": "queued",
-        "message": f"{tool['name']} alignment requested – refreshing templates, enforcing formatting, and checking runtime hints.",
+        "message": f"{tool['name']} alignment requested - refreshing templates, enforcing formatting, and checking runtime hints.",
         "focus": tool["focus"],
     }
 

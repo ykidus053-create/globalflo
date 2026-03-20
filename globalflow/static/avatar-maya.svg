@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect width="96" height="96" rx="48" fill="#26342d"/>
+  <circle cx="48" cy="38" r="18" fill="#d9e7de"/>
+  <path d="M16 84c4-16 18-24 32-24s28 8 32 24" fill="#8db39a"/>
+  <text x="48" y="90" text-anchor="middle" fill="#eaf2ee" font-family="Arial, sans-serif" font-size="10">MC</text>
+</svg>

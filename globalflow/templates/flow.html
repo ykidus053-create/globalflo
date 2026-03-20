@@ -3,8 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#04112b" />
-    <title>GlobalFlow | AI Automation Workflow</title>
+    <meta name="theme-color" content="#161b18" />
+    <meta
+      name="description"
+      content="Automate billing, call follow-up, compliance tracking, and document routing from one calm control room."
+    />
+    <meta property="og:title" content="GlobalFlow | One calm control room for operations" />
+    <meta
+      property="og:description"
+      content="Automate billing, call follow-up, and compliance tracking. Most pilot teams cut 20+ hours of admin work each week."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ page_url }}" />
+    <meta property="og:image" content="/static/og-card.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:description"
+      content="Automate billing, call follow-up, and compliance tracking from one calm control room."
+    />
+    <title>GlobalFlow | AI automation workflow</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,23 +44,24 @@
           <span></span>
         </div>
         <div class="brand-copy">
-          <span>GlobalFlow 3.0</span>
-          <p>AI workflow for admin-heavy operations teams</p>
+          <span>GlobalFlow</span>
+          <p>Calm automation for admin-heavy teams</p>
         </div>
       </div>
       <nav class="nav" aria-label="Primary">
         <a href="#hero">Overview</a>
-        <a href="#tasks">Solutions</a>
-        <a href="#flowboard">Workflow</a>
-        <a href="#subscriptions">Pricing</a>
-        <a href="#connectors">Connect</a>
+        <a href="#demo">Demo</a>
+        <a href="#features">Features</a>
+        <a href="#integrations">Integrations</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#founder">Founder</a>
         <a href="/account">Account</a>
-        <button class="ghost" id="open-login" type="button">Login</button>
+        <button class="ghost small" id="open-login" type="button">Login</button>
       </nav>
     </header>
 
     <main id="main-content">
-      <section id="hero" class="hero hero--minimal">
+      <section id="hero" class="hero hero--landing">
         <div class="hero-copy">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
@@ -51,94 +70,63 @@
             </div>
             <span class="signal-meta" id="last-sync">Waiting for first sync</span>
           </div>
-          <p class="eyebrow">For teams losing time to repetitive admin work</p>
+          <p class="eyebrow">Built for operators, finance teams, and service businesses</p>
           <h1>One calm control room for calls, billing, taxes, files, and follow-up.</h1>
           <p class="lead">
-            GlobalFlow helps operators remove boring work fast. Launch workflows, track every step, and trust the live
-            signal without digging through clutter.
+            Automate billing, call follow-up, and compliance tracking from one place. Most pilot teams cut 20+ hours
+            of admin work each week in the first month.
           </p>
-          <ul class="hero-checklist" aria-label="Key benefits">
-            <li>Start with the jobs that waste the most time.</li>
-            <li>See what is running, blocked, or complete in one glance.</li>
-            <li>Keep proof, payment requests, and activity history in the same place.</li>
-          </ul>
           <div class="hero-actions">
-            <button class="primary" id="launch-orchestration" type="button">Launch the workflow</button>
-            <button class="ghost" id="inspect-flow" type="button">Inspect live telemetry</button>
-            <button class="pill" id="subscribe-btn" type="button">See plans</button>
-            <button class="pill" id="signup-btn" type="button">Request access</button>
+            <button class="primary" id="watch-demo" type="button">Watch the demo</button>
           </div>
-          <div class="proof-strip">
-            <article>
-              <span>Admin drag removed</span>
-              <strong>4,260 min/day</strong>
-              <p>Focused on backlog, billing lag, and slow follow-up.</p>
-            </article>
-            <article>
-              <span>Operator confidence</span>
-              <strong id="system-confidence">99.2%</strong>
-              <p>Live telemetry and audit logs make the work easy to trust.</p>
-            </article>
-            <article>
-              <span>Workflow pressure</span>
-              <strong id="queue-pressure">Stable</strong>
-              <p>Reliability updates shift as automations and connectors move.</p>
-            </article>
-          </div>
+          <p class="hero-meta">
+            <a class="text-link" href="#pricing">See plans</a>
+            <a class="text-link" href="#founder">Talk to the founder</a>
+          </p>
+
+          <form id="hero-lead-form" class="lead-capture">
+            <label class="sr-only" for="hero-email">Business email</label>
+            <input id="hero-email" name="email" type="email" placeholder="you@company.com" required />
+            <input name="name" type="hidden" value="Landing page visitor" />
+            <input name="tier" type="hidden" value="starter" />
+            <button class="ghost" type="submit">Get early access</button>
+          </form>
+          <p class="form-note">Start free with one workflow and 100 runs each month.</p>
         </div>
 
         <div class="hero-stage">
-          <article class="guide-card">
-            <div class="guide-avatar" aria-hidden="true">
-              <div class="guide-face">
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-            <div class="guide-copy">
-              <p class="guide-label">Flow guide</p>
-              <h3>Quiet when healthy. Clear when something needs you.</h3>
-              <p>GlobalFlow is designed to feel light, calm, and reliable even when the system is doing a lot.</p>
-            </div>
-          </article>
-
-          <article class="hero-panel">
-            <div class="panel-header">
-              <p>Realtime reliability</p>
+          <div class="hero-video-card" id="demo">
+            <div class="video-card-top">
+              <p>Product walkthrough</p>
               <span id="panel-health">Live tracking active</span>
             </div>
-            <div class="panel-body">
-              <canvas id="radiant" width="320" height="240" aria-label="Live workflow signal"></canvas>
-              <p class="panel-note">Telemetry stays visible so the workflow feels dependable, not mysterious.</p>
-              <div class="control-stack">
-                <article>
-                  <span>Activity logged</span>
-                  <strong id="activity-total">0 events</strong>
-                  <p>Automation, connectors, and billing actions stay on one timeline.</p>
-                </article>
-                <article>
-                  <span>Autopilot posture</span>
-                  <strong id="autopilot-posture">Manual ready</strong>
-                  <p>Loops stay reversible, visible, and easy to override.</p>
-                </article>
-                <article>
-                  <span>Launch window</span>
-                  <strong>72 hours</strong>
-                  <p>Most teams can move from manual drag to active orchestration in days.</p>
-                </article>
-              </div>
+            <video
+              id="demo-video"
+              class="hero-video"
+              controls
+              preload="none"
+              poster="/static/og-card.svg"
+              aria-label="GlobalFlow demo placeholder"
+            ></video>
+            <p class="video-note">
+              Replace this placeholder with a real walkthrough. The rest of the section is production-ready.
+            </p>
+          </div>
+
+          <article class="hero-status-card">
+            <div>
+              <span>Operator confidence</span>
+              <strong id="system-confidence">99.2%</strong>
+            </div>
+            <div>
+              <span>Workflow pressure</span>
+              <strong id="queue-pressure">Stable</strong>
+            </div>
+            <div>
+              <span>Activity logged</span>
+              <strong id="activity-total">0 events</strong>
             </div>
           </article>
-
-          <div class="autopilot-panel">
-            <div class="autopilot-copy">
-              <p class="eyebrow">Autonomous control</p>
-              <h3 id="autopilot-status" aria-live="polite">Standing by</h3>
-              <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
-              <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
-            </div>
-            <button class="ghost" id="autopilot-toggle" type="button">Enable autonomous loops</button>
-          </div>
         </div>
       </section>
 
@@ -150,34 +138,73 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <section class="metric-band">
-        <div class="stat-grid">
-          {% for stat in stats %}
-          <div class="stat-card">
-            <p class="value" {% if stat.key %}data-stat-key="{{ stat.key }}"{% endif %}>{{ stat.value }}</p>
-            <p class="label">{{ stat.label }}</p>
-          </div>
+      <section class="proof proof--logos">
+        <div class="section-heading">
+          <h2>Trusted by early operators and finance-led teams</h2>
+          <p>Replace the placeholders below with customer logos as soon as approvals are ready.</p>
+        </div>
+        <div class="logo-bar">
+          {% for logo in trusted_logos %}
+          <article class="logo-pill">
+            <strong>{{ logo.name }}</strong>
+            <span>{{ logo.label }}</span>
+          </article>
           {% endfor %}
         </div>
       </section>
 
-      <section id="tasks" class="tasks">
+      <section class="proof proof--testimonials">
         <div class="section-heading">
-          <h2>Solve the highest-friction work first</h2>
-          <p>Everything below exists to get a team from repetitive admin work to a visible, running workflow quickly.</p>
+          <h2>Results teams talk about</h2>
+          <p>Short proof beats vague claims. These are structured placeholders until approved customer quotes are ready.</p>
         </div>
-        <div class="task-grid">
-          {% for task in world_tasks %}
-          <article>
-            <header>
-              <h3>{{ task.domain }}</h3>
-              <span class="status">Live sync</span>
-            </header>
-            <p>{{ task.description }}</p>
-            <footer>
-              <span>AI workflow</span>
-              <span>Fast to launch</span>
-            </footer>
+        <!-- REPLACE WITH REAL TESTIMONIALS -->
+        <div class="testimonial-grid">
+          {% for testimonial in testimonials %}
+          <article class="testimonial-card">
+            <img src="{{ testimonial.photo }}" alt="{{ testimonial.name }} placeholder portrait" loading="lazy" />
+            <p class="testimonial-quote">"{{ testimonial.quote }}"</p>
+            <strong>{{ testimonial.result }}</strong>
+            <div class="testimonial-meta">
+              <span>{{ testimonial.name }}</span>
+              <p>{{ testimonial.role }} - {{ testimonial.company }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="metrics metrics--credibility">
+        <div class="section-heading">
+          <h2>Credibility without inflated counters</h2>
+          <p>Only the proof that helps a buyer decide stays on the page.</p>
+        </div>
+        <div class="stat-grid">
+          {% for stat in stats %}
+          <article class="stat-card">
+            <p class="value">{{ stat.value }}</p>
+            <p class="label">{{ stat.label }}</p>
+          </article>
+          {% endfor %}
+        </div>
+        <p class="metrics-footnote">
+          Time-saved benchmarks are based on average admin task time measured across pilot-team workflow reviews.
+        </p>
+      </section>
+
+      <section id="features" class="features">
+        <div class="section-heading">
+          <h2>What GlobalFlow actually improves</h2>
+          <p>Lead with business outcomes first. The technical stack sits lower on the page for technical buyers.</p>
+        </div>
+        <div class="feature-grid">
+          {% for feature in features %}
+          <article class="feature-card">
+            <div class="feature-icon feature-icon--{{ feature.icon }}" aria-hidden="true"></div>
+            <h3>{{ feature.title }}</h3>
+            <p class="feature-headline">{{ feature.headline }}</p>
+            <p>{{ feature.detail }}</p>
+            <a class="feature-link" href="{{ feature.href }}">Learn more -></a>
           </article>
           {% endfor %}
         </div>
@@ -186,8 +213,12 @@
       <section class="workflow workflow--split" id="flowboard">
         <div class="workflow-main">
           <div class="section-heading">
-            <h2>Run the workflow without hunting through menus</h2>
-            <p>Kick off a job, monitor status, and see the next step on the same screen.</p>
+            <h2>See the workflow running</h2>
+            <p>Launch a sample run, inspect the next step, and verify the system state without leaving the page.</p>
+          </div>
+          <div class="workflow-actions">
+            <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
+            <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
           </div>
           <div id="workflow-grid" class="workflow-grid"></div>
           <div class="summary">
@@ -198,55 +229,51 @@
         <div class="workflow-side">
           <div class="section-heading">
             <h2>Live activity</h2>
-            <p>Reliability is visible through the feed, not implied through marketing copy.</p>
+            <p>Reliability is visible through the feed instead of buried in a back-office screen.</p>
+          </div>
+          <div class="autopilot-panel">
+            <div class="autopilot-copy">
+              <p class="eyebrow">Autonomous control</p>
+              <h3 id="autopilot-status" aria-live="polite">Standing by</h3>
+              <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
+              <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
+            </div>
+            <button class="ghost small" id="autopilot-toggle" type="button">Enable autonomous loops</button>
           </div>
           <div id="activity-feed" class="activity-grid activity-grid--single" aria-live="polite"></div>
         </div>
       </section>
 
-      <section class="support-strip">
-        <article>
-          <p class="eyebrow">Built for focus</p>
-          <h3>{{ features[0].title }}</h3>
-          <p>{{ features[0].detail }}</p>
-        </article>
-        <article>
-          <p class="eyebrow">Guided by agents</p>
-          <h3>{{ agents[0].name }} + {{ agents[1].name }}</h3>
-          <p>Specialized agents monitor status, handle routine decisions, and escalate only when needed.</p>
-        </article>
-        <article>
-          <p class="eyebrow">Quality included</p>
-          <h3>{{ toolkit|length }} built-in tooling actions</h3>
-          <p>Formatting, checks, notebooks, and container workflows stay close to the product instead of scattered.</p>
-        </article>
-      </section>
-
-      <section class="connectors connectors--minimal" id="connectors">
+      <section id="integrations" class="integrations">
         <div class="section-heading">
-          <h2>Connect the tools you already use</h2>
-          <p>Setup stays simple: expand a card, paste the endpoint, trigger the workflow, and watch the result show up in the feed.</p>
+          <h2>Connect the tools you already run</h2>
+          <p>Slack, HubSpot, QuickBooks, and Airtable stay easy to connect. No developer-facing environment variable copy belongs here.</p>
+        </div>
+        <div class="integration-intro">
+          <span>Connect in 2 clicks</span>
+          <p>More integrations coming soon - request yours.</p>
         </div>
         <div class="connectors-grid">
           {% for connector in connectors %}
           <details class="connector-card" {% if loop.first %}open{% endif %}>
             <summary>
-              <div>
-                <h3>{{ connector.name }}</h3>
-                <p>{{ connector.description }}</p>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--{{ connector.icon }}" aria-hidden="true"></div>
+                <div>
+                  <h3>{{ connector.name }}</h3>
+                  <p>{{ connector.description }}</p>
+                </div>
               </div>
-              <span class="connector-toggle">Configure</span>
+              <span class="connector-toggle">Connect</span>
             </summary>
             <p class="connector-meta">
               <a href="{{ connector.doc }}" target="_blank" rel="noreferrer">Read setup guide</a>
-              {% if connector.env_key %}
-              <span>Env: {{ connector.env_key }}</span>
-              {% endif %}
+              <span>Connect in 2 clicks</span>
             </p>
             <form class="connector-form" data-connector-id="{{ connector.id }}">
               <label>
                 Endpoint
-                <input name="target_url" type="url" placeholder="https://hooks.slack.com/..." value="{{ connector.default_url }}" />
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="{{ connector.default_url }}" />
               </label>
               <label>
                 {{ connector.sample_field | capitalize }}
@@ -264,34 +291,87 @@
         </div>
       </section>
 
-      <section class="subscriptions" id="subscriptions">
+      <section id="under-the-hood" class="under-the-hood">
         <div class="section-heading">
-          <h2>Pricing that stays clear</h2>
-          <p>Short plans, direct fit, and smooth next steps. No hidden journey, no clutter.</p>
+          <h2>Under the hood</h2>
+          <p>Technical buyers still get the stack detail. It just does not lead the buying story.</p>
+        </div>
+        <div class="built-with">
+          {% for tool in built_with %}
+          <span>{{ tool }}</span>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="pricing" id="pricing">
+        <div class="section-heading">
+          <h2>Pricing designed to reduce friction</h2>
+          <p>Start free, upgrade when the workflow proves itself, and choose monthly or annual billing when the rollout expands.</p>
+        </div>
+        <div class="pricing-toggle" role="tablist" aria-label="Billing period">
+          <button class="toggle-option is-active" id="billing-monthly" type="button">Monthly</button>
+          <button class="toggle-option" id="billing-annual" type="button">Annual <span>Save 17%</span></button>
         </div>
         <div class="subscription-grid">
           {% for tier in subscription_tiers %}
-          <article>
-            {% if tier.badge %}
-            <span class="tier-badge">{{ tier.badge }}</span>
-            {% endif %}
-            <div class="subscription-copy">
+          <article class="pricing-card">
+            <div class="pricing-top">
+              {% if tier.badge %}
+              <span class="tier-badge">{{ tier.badge }}</span>
+              {% endif %}
               <h3>{{ tier.name }}</h3>
-              <p class="price">{{ tier.price }}</p>
-              <p>{{ tier.description }}</p>
+              <p class="price" data-monthly="{{ tier.monthly_price }}" data-annual="{{ tier.annual_price }}">{{ tier.monthly_price }}</p>
+              <p class="tier-copy">{{ tier.description }}</p>
             </div>
-            <div class="tier-qualification">{{ tier.qualification }}</div>
-            <p class="tier-pain"><strong>Pain:</strong> {{ tier.pain }}</p>
-            <p class="tier-inaction"><strong>Cost of inaction:</strong> {{ tier.inaction_cost }}</p>
-            <p class="tier-risk"><strong>Low-risk path:</strong> {{ tier.risk_reversal }}</p>
-            <p class="tier-certainty">{{ tier.certainty_line }}</p>
+            <div class="pricing-proof">
+              <p><strong>Best fit:</strong> {{ tier.qualification }}</p>
+              <p><strong>Typical outcome:</strong> {{ tier.roi }}</p>
+              <p><strong>Low-risk rollout:</strong> {{ tier.risk_reversal }}</p>
+              <p class="certainty-line">
+                {% if 'guarantee' in tier.certainty_line|lower %}
+                <span class="shield-pill">Shield guarantee</span>
+                {% endif %}
+                {{ tier.certainty_line }}
+              </p>
+            </div>
+            <ul class="pricing-list">
+              {% for feature in tier.features %}
+              <li>{{ feature }}</li>
+              {% endfor %}
+            </ul>
             <div class="subscription-actions">
-              <button class="primary small" data-checkout-tier="{{ tier.id }}">Checkout {{ tier.name }}</button>
-              <button class="ghost small" data-checkout-tier="{{ tier.id }}">Request invoice</button>
+              <button class="primary small" data-checkout-tier="{{ tier.id }}">{{ tier.cta }}</button>
+              <button class="ghost small" data-tier="{{ tier.id }}" data-subscribe-open="true">Request access</button>
             </div>
           </article>
           {% endfor %}
         </div>
+
+        <div class="comparison-table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Included</th>
+                <th>Starter</th>
+                <th>Pilot</th>
+                <th>Launch</th>
+                <th>Captain</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in pricing_comparison %}
+              <tr>
+                <td>{{ row.label }}</td>
+                <td>{{ row.starter }}</td>
+                <td>{{ row.pilot }}</td>
+                <td>{{ row.launch }}</td>
+                <td>{{ row.captain }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
         <div class="payment-strip">
           {% for method in payment_methods %}
           <article class="payment-chip">
@@ -300,17 +380,45 @@
               <h3>{{ method.name }}</h3>
               <p>{{ method.description }}</p>
             </div>
-            <div class="payment-actions-links">
-              <button class="ghost small" data-payment-method="{{ method.id }}">{{ method.action }}</button>
-            </div>
+            <button class="ghost small" data-payment-method="{{ method.id }}">{{ method.action }}</button>
           </article>
           {% endfor %}
         </div>
       </section>
 
+      <section id="why-globalflow" class="trust">
+        <div class="section-heading">
+          <h2>Why GlobalFlow</h2>
+          <p>Built for operators who need reliability, clear ownership, and visible automation instead of more software noise.</p>
+        </div>
+        <div class="trust-grid">
+          <article class="founder-card" id="founder">
+            <img src="{{ founders[0].photo }}" alt="{{ founders[0].name }} placeholder portrait" loading="lazy" />
+            <div>
+              <p class="eyebrow">Founder</p>
+              <h3>{{ founders[0].name }}</h3>
+              <p class="founder-role">{{ founders[0].role }}</p>
+              <p>{{ founders[0].bio }}</p>
+              <div class="founder-actions">
+                <a class="ghost small" href="mailto:hello@globalflow.ai?subject=GlobalFlow%20founder%20chat">Talk to the founder</a>
+                <a class="ghost small" href="https://github.com/ykidus053-create/globalflo/issues" target="_blank" rel="noreferrer">View roadmap</a>
+              </div>
+            </div>
+          </article>
+          <div class="trust-signal-grid">
+            {% for signal in trust_signals %}
+            <article class="trust-card">
+              <h3>{{ signal.title }}</h3>
+              <p>{{ signal.detail }}</p>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
       <div class="flow-modal" role="dialog" aria-modal="true" id="flow-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" id="flow-modal-close">&times;</button>
+          <button class="flow-modal__close" id="flow-modal-close" type="button">&times;</button>
           <h3>Live workflow summary</h3>
           <pre id="flow-modal-body">Fetching...</pre>
         </div>
@@ -318,98 +426,86 @@
 
       <div class="flow-modal" role="dialog" aria-modal="true" id="subscribe-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="subscribe-modal">&times;</button>
-          <h3>Subscribe to cadence</h3>
+          <button class="flow-modal__close" data-modal="subscribe-modal" type="button">&times;</button>
+          <h3>Get access to GlobalFlow</h3>
           <form id="subscribe-form">
             <label>
               Name
-              <input name="name" placeholder="Amina from Nairobi" />
+              <input name="name" placeholder="Alex Rivera" />
             </label>
             <label>
-              Email
-              <input name="email" type="email" placeholder="ops@futureco.com" required />
+              Business email
+              <input name="email" type="email" placeholder="ops@company.com" required />
             </label>
             <label>
-              Pick a plan
+              Plan
               <select name="tier" required>
                 {% for tier in subscription_tiers %}
-                <option value="{{ tier.id }}">{{ tier.name }} - {{ tier.price }}</option>
+                <option value="{{ tier.id }}">{{ tier.name }} - {{ tier.monthly_price }}</option>
                 {% endfor %}
               </select>
             </label>
-            <button type="submit" class="primary small">Subscribe</button>
+            <button type="submit" class="primary small">Continue</button>
             <p class="modal-note" id="subscribe-status"></p>
           </form>
         </div>
       </div>
 
-      <div class="flow-modal" role="dialog" aria-modal="true" id="signup-modal">
+      <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="signup-modal">&times;</button>
-          <h3>Sign up for GlobalFlow Labs</h3>
-          <form id="signup-form">
+          <button class="flow-modal__close" data-modal="login-modal" type="button">&times;</button>
+          <h3>Welcome back</h3>
+          <form id="login-form">
             <label>
-              Full name
-              <input name="name" placeholder="Jordan Patel" required />
+              Email
+              <input name="email" type="email" placeholder="ops@globalflow.ai" required />
             </label>
             <label>
-              Business email
-              <input name="email" type="email" placeholder="ops@scale.co" required />
+              Name
+              <input name="name" placeholder="Operations lead" />
             </label>
             <label>
-              Focus area
-              <select name="focus">
-                <option>Billing automation</option>
-                <option>Customer follow-up</option>
-                <option>Tax compliance</option>
-                <option>Files & contracts</option>
-              </select>
+              API key
+              <input name="api_key" placeholder="x-abc123" />
             </label>
-            <button type="submit" class="primary small">Request access</button>
-            <p class="modal-note" id="signup-status"></p>
+            <button type="submit" class="primary small">Save session</button>
+            <p class="modal-note" id="login-status"></p>
           </form>
         </div>
       </div>
     </main>
 
     <nav class="mobile-dock" aria-label="Mobile actions">
-      <a href="#hero">Overview</a>
-      <a href="#flowboard">Workflow</a>
-      <a href="#subscriptions">Pricing</a>
-      <a href="/account">Account</a>
+      <a href="#demo">Demo</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#founder">Founder</a>
     </nav>
 
-    <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
-    <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
-      <div class="flow-modal__content">
-        <button class="flow-modal__close" data-modal="login-modal">&times;</button>
-        <h3>Welcome back</h3>
-        <form id="login-form">
-          <label>
-            Email
-            <input name="email" type="email" placeholder="ops@globalflow.ai" required />
-          </label>
-          <label>
-            Name
-            <input name="name" placeholder="Automation architect" />
-          </label>
-          <label>
-            API key
-            <input name="api_key" placeholder="x-abc123" />
-          </label>
-          <button type="submit" class="primary small">Save session</button>
-          <p class="modal-note" id="login-status"></p>
-        </form>
+    <footer class="site-footer">
+      <div class="footer-top">
+        <div>
+          <h2>GlobalFlow</h2>
+          <p>Automation for billing, calls, taxes, files, and follow-up that stays calm, inspectable, and easy to trust.</p>
+        </div>
+        <div class="footer-links">
+          {% for link in footer_links %}
+          <a href="{{ link.href }}"{% if link.href.startswith('http') %} target="_blank" rel="noreferrer"{% endif %}>{{ link.label }}</a>
+          {% endfor %}
+        </div>
+        <div class="footer-links">
+          {% for link in social_links %}
+          <a href="{{ link.href }}"{% if link.href.startswith('http') or link.href.startswith('mailto:') %} target="_blank" rel="noreferrer"{% endif %}>{{ link.label }}</a>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-
-    <footer>
-      <p>
-        GlobalFlow 3.0 is an AI operations desk for SMBs that want measurable throughput, clear auditability, and less
-        admin friction without surrendering human oversight.
-      </p>
+      <div class="footer-notes">
+        <p id="privacy-note">Privacy: customer data is processed with encryption and activity-level traceability.</p>
+        <p id="terms-note">Terms: rollout scope, guarantees, and billing terms are confirmed during activation.</p>
+      </div>
     </footer>
 
+    <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
     <script type="module" src="/static/flow.js"></script>
   </body>
 </html>

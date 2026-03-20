@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1f2421" />
+    <meta name="theme-color" content="#161b18" />
     <title>{{ portal.name }} | GlobalFlow</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -13,9 +14,9 @@
     />
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
-  <body class="payment-body payment-body--minimal">
+  <body class="payment-body">
     <div class="aurora"></div>
-    <header class="top top--minimal">
+    <header class="top">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span>
@@ -24,29 +25,29 @@
         </div>
         <div class="brand-copy">
           <span>{{ portal.name }}</span>
-          <p>Minimal payment desk</p>
+          <p>Billing desk</p>
         </div>
       </div>
       <nav class="nav" aria-label="Payment navigation">
-        <a href="/">Dashboard</a>
+        <a href="/">Home</a>
         <a href="/account">Account</a>
-        <a href="#payment-form">Request invoice</a>
+        <a href="#payment-form">Invoice request</a>
       </nav>
     </header>
 
-    <main class="payment-page payment-page--minimal">
+    <main class="payment-page">
       <section class="payment-hero">
         <div class="payment-header">
-          <p class="eyebrow">{{ portal.name }} concierge</p>
-          <h1>Secure {{ portal.name }} automation billing</h1>
+          <p class="eyebrow">{{ portal.name }} billing</p>
+          <h1>Secure {{ portal.name }} payment handoff</h1>
           <p>{{ portal.description }} {{ portal.note }}</p>
           <div class="payment-actions">
-            <button class="primary" type="button" id="payment-form-trigger">Request invoice</button>
-            <a class="ghost" href="{{ portal.help_url }}" target="_blank" rel="noreferrer">Open {{ portal.name }} reference</a>
+            <button class="primary small" type="button" id="payment-form-trigger">Request invoice</button>
+            <a class="ghost small" href="{{ portal.help_url }}" target="_blank" rel="noreferrer">Open {{ portal.name }} reference</a>
           </div>
         </div>
 
-        <section class="payment-panel payment-panel--minimal">
+        <section class="payment-panel">
           <div class="payment-icon {{ portal.id }}"></div>
           <div class="payment-details">
             <p class="payment-note">{{ portal.note }}</p>
@@ -59,13 +60,13 @@
         </section>
       </section>
 
-      <section class="payment-form-section payment-form-section--minimal">
+      <section class="payment-form-section">
         <h2>Send a payment request</h2>
-        <p>Keep the process simple. Add the tier, email, amount, and any finance notes.</p>
+        <p>Enter the tier, business email, amount, and finance notes.</p>
         <form id="payment-form" class="payment-form">
           <label>
             Selected tier
-            <input name="tier" placeholder="pilot / launch / captain" />
+            <input name="tier" placeholder="starter / pilot / launch / captain" />
           </label>
           <label>
             Business email
@@ -73,11 +74,11 @@
           </label>
           <label>
             Amount
-            <input name="amount" placeholder="$1,200" />
+            <input name="amount" placeholder="$549" />
           </label>
           <label>
-            Notes for the finance team
-            <textarea name="notes" rows="3" placeholder="Project name, billing cadence, or card preference"></textarea>
+            Notes for finance
+            <textarea name="notes" rows="3" placeholder="PO number, billing schedule, or payment details"></textarea>
           </label>
           <button class="primary" type="submit">Send payment request</button>
           <p class="payment-status" id="payment-status"></p>
