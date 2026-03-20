@@ -706,3 +706,253 @@ main {
   color: var(--accent);
   min-height: 1rem;
 }
+
+/* Minimalist UI refresh overrides */
+:root {
+  --bg-min: #f7f8fb;
+  --surface-min: #ffffff;
+  --surface-soft-min: #f1f3f8;
+  --text-min: #141824;
+  --muted-min: #636b7a;
+  --border-min: #e3e7ef;
+  --brand-min: #2d5bff;
+}
+
+body,
+.payment-body {
+  background: var(--bg-min);
+  color: var(--text-min);
+}
+
+.backdrop,
+.aurora,
+.grid-overlay {
+  display: none;
+}
+
+.top {
+  background: rgba(247, 248, 251, 0.92);
+  border-bottom: 1px solid var(--border-min);
+  backdrop-filter: blur(10px);
+}
+
+.brand span,
+.brand p,
+.nav a {
+  color: var(--text-min);
+}
+
+.brand p,
+.nav a {
+  opacity: 0.72;
+}
+
+main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  gap: 1.5rem;
+}
+
+.hero,
+.tasks,
+.agents,
+.workflow,
+.timeline,
+.features,
+.checkout,
+.toolkit,
+.account-panel,
+.payment-panel,
+.payment-form-section,
+.principles {
+  background: var(--surface-min);
+  border: 1px solid var(--border-min);
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(21, 28, 40, 0.04);
+  backdrop-filter: none;
+}
+
+.hero {
+  min-height: auto;
+  align-items: stretch;
+  padding-top: 0;
+}
+
+.hero h1 {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  color: var(--text-min);
+  line-height: 1.2;
+}
+
+.lead,
+.section-heading p,
+.panel-note,
+.checkout-hint,
+.toolkit-note,
+.task-grid article p,
+.agent-grid article p,
+.timeline-grid p,
+.principle-grid article p,
+.payment-note,
+.autopilot-next,
+.autopilot-cycles {
+  color: var(--muted-min);
+}
+
+.eyebrow,
+.status,
+.agent-grid .scope,
+.toolkit-badge {
+  color: var(--brand-min);
+  letter-spacing: 0.08em;
+}
+
+.hero-panel,
+.stat-card,
+.task-grid article,
+.agent-grid article,
+.workflow-card,
+.feature-grid article,
+.payment-grid article,
+.toolkit-grid article,
+.principle-grid article,
+.summary li {
+  background: var(--surface-soft-min);
+  border: 1px solid var(--border-min);
+  box-shadow: none;
+  min-height: 0;
+}
+
+.panel-header {
+  color: var(--muted-min);
+}
+
+#radiant {
+  background: #fbfcff;
+  border: 1px solid var(--border-min);
+}
+
+.primary,
+.workflow-card button {
+  background: var(--brand-min);
+  color: #fff;
+  border: 1px solid var(--brand-min);
+  box-shadow: none;
+}
+
+.ghost,
+.pill,
+.sidebar-btn,
+.sidebar-link {
+  background: #fff;
+  color: var(--text-min);
+  border: 1px solid var(--border-min);
+}
+
+.primary:hover,
+.ghost:hover,
+.pill:hover,
+.workflow-card button:hover {
+  transform: translateY(-1px);
+}
+
+.sidebar {
+  position: static;
+  flex-direction: row;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  margin: 0 auto 0.5rem;
+  max-width: 1120px;
+}
+
+.sidebar-btn.special {
+  background: var(--brand-min);
+  color: #fff;
+  border-color: var(--brand-min);
+}
+
+.timeline-grid div {
+  border-radius: 12px;
+  border: 1px solid var(--border-min);
+  background: var(--surface-soft-min);
+}
+
+.flow-modal {
+  background: rgba(13, 18, 30, 0.45);
+}
+
+.flow-modal__content {
+  background: #fff;
+  border: 1px solid var(--border-min);
+  box-shadow: 0 14px 40px rgba(14, 20, 33, 0.15);
+}
+
+.flow-modal__content,
+.flow-modal__close,
+.flow-modal label {
+  color: var(--text-min);
+}
+
+.flow-modal pre,
+.flow-modal input,
+.flow-modal select {
+  background: var(--surface-soft-min);
+  border: 1px solid var(--border-min);
+  color: var(--text-min);
+}
+
+.toast {
+  background: #121826;
+  color: #fff;
+  border: 1px solid #121826;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(18, 24, 38, 0.35);
+}
+
+footer {
+  max-width: 1120px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+  color: var(--muted-min);
+}
+
+.account-page,
+.payment-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  color: var(--text-min);
+}
+
+.form-grid,
+.payment-form {
+  gap: 0.8rem;
+}
+
+.account-panel input,
+.account-panel select,
+.payment-form input,
+.payment-form textarea {
+  border: 1px solid var(--border-min);
+  background: var(--surface-soft-min);
+  color: var(--text-min);
+}
+
+.form-actions #account-status,
+.payment-status {
+  color: var(--brand-min);
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    display: flex;
+    overflow: auto;
+    white-space: nowrap;
+  }
+
+  .payment-card {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}

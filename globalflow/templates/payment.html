@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ portal.name }} payment portal</title>
+    <title>{{ portal.name }} | Payment</title>
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
   <body class="payment-body">
     <main class="payment-page">
       <header class="payment-header">
-        <p class="eyebrow">{{ portal.name }} concierge</p>
-        <h1>Secure {{ portal.name }} automation billing</h1>
+        <p class="eyebrow">{{ portal.name }} payment</p>
+        <h1>Secure {{ portal.name }} billing</h1>
         <p>
           {{ portal.description }} {{ portal.note }}
         </p>
@@ -33,7 +33,7 @@
       </section>
 
       <section class="payment-form-section">
-        <h3>Want a bespoke invoice? Send a request.</h3>
+        <h3>Need a custom invoice?</h3>
         <form id="payment-form">
           <label>
             Business email
@@ -47,7 +47,7 @@
             Notes for the finance team
             <textarea name="notes" rows="3" placeholder="Add a project name, tiers, or billing cadence"></textarea>
           </label>
-          <button class="primary" type="submit">Send payment request</button>
+            <button class="primary" type="submit">Send request</button>
           <p class="payment-status" id="payment-status"></p>
         </form>
       </section>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GlobalFlow | AI Automation Workflow</title>
+    <title>GlobalFlow | Operations Dashboard</title>
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
   <body>
@@ -12,8 +12,8 @@
 
     <header class="top">
       <div class="brand">
-        <span>GlobalFlow 3.0</span>
-        <p>Automating boring global tasks with AI precision</p>
+        <span>GlobalFlow</span>
+        <p>Operations automation dashboard</p>
       </div>
       <div class="nav">
         <a href="#hero">Overview</a>
@@ -33,22 +33,22 @@
     <main>
       <section id="hero" class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">AI Automation Command</p>
-          <h1>Every boring SMB task now roots in a resilient workflow, observed globally.</h1>
+          <p class="eyebrow">Automation Control</p>
+          <h1>Run global operations from one calm, reliable dashboard.</h1>
           <p class="lead">
-            FastAPI, Prefect, Temporal, LangChain, and Transformer agents span calls, billing, taxes, files, and
-            governance. Streamline, orchestrate, and audit a single dashboard that actually works.
+            Monitor workflows, trigger tasks, and review outcomes across billing, support, compliance, and finance.
+            Built to keep teams fast, focused, and in control.
           </p>
           <div class="hero-actions">
-            <button class="primary" id="inspect-flow">Inspect the live flow</button>
-            <button class="ghost" id="launch-orchestration">Launch orchestration</button>
-            <button class="pill" id="subscribe-btn">Subscribe for cadence</button>
-            <button class="pill" id="signup-btn">Sign up for early access</button>
+            <button class="primary" id="inspect-flow">Inspect workflow</button>
+            <button class="ghost" id="launch-orchestration">Run orchestration</button>
+            <button class="pill" id="subscribe-btn">Subscribe</button>
+            <button class="pill" id="signup-btn">Request access</button>
           </div>
           <div class="autopilot-panel">
             <div class="autopilot-copy">
               <p class="eyebrow">Autonomous control</p>
-              <h3 id="autopilot-status">Standing by</h3>
+              <h3 id="autopilot-status">Ready</h3>
               <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
               <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
             </div>
@@ -65,12 +65,12 @@
         </div>
         <div class="hero-panel">
           <div class="panel-header">
-            <p>Realtime telemetry</p>
-            <span>🌐 23 countries · 14 agents</span>
+            <p>Live telemetry</p>
+            <span>23 regions · 14 agents</span>
           </div>
           <div class="panel-body">
             <canvas id="radiant" width="320" height="240"></canvas>
-            <p class="panel-note">Waveforms feed Prefect schedules, LangChain alerts, and Temporal retries.</p>
+            <p class="panel-note">Telemetry feeds orchestration, retries, and alerts.</p>
           </div>
         </div>
       </section>
@@ -85,8 +85,8 @@
 
       <section id="tasks" class="tasks">
         <div class="section-heading">
-          <h2>Global automation nodes</h2>
-          <p>Cloud-native workflows and adaptive agents for every boring routine.</p>
+          <h2>Automation nodes</h2>
+          <p>Critical workflows, continuously monitored.</p>
         </div>
         <div class="task-grid">
           {% for task in world_tasks %}
@@ -107,8 +107,8 @@
 
       <section class="features" id="features">
         <div class="section-heading">
-          <h2>Advanced automation features</h2>
-          <p>Inspired by the clarity, pace, and trust signals that make Microsoft/Apple/Google shine.</p>
+          <h2>Core features</h2>
+          <p>Focused tools for reliable day-to-day execution.</p>
         </div>
         <div class="feature-grid">
           {% for feature in features %}
@@ -122,8 +122,8 @@
 
       <section class="toolkit" id="toolkit">
         <div class="section-heading">
-          <h2>Automation toolkit extensions</h2>
-          <p>Trigger the same AI-assisted guardrails that the elite VS Code extensions deliver.</p>
+          <h2>Toolkit</h2>
+          <p>Run guided checks and open supporting docs.</p>
         </div>
         <div class="toolkit-grid">
           {% for tool in toolkit %}
@@ -139,13 +139,13 @@
           </article>
           {% endfor %}
         </div>
-        <p class="toolkit-note">Every action mirrors the automation+quality enforcement your extensions promise—type checks, formatting, containers, and notebook experiments.</p>
+        <p class="toolkit-note">Use toolkit actions to validate quality, infra health, and workflow readiness.</p>
       </section>
 
       <section class="checkout" id="checkout">
         <div class="section-heading">
-          <h2>Subscription checkout</h2>
-          <p>Pay securely with the card you trust and let GlobalFlow run nightly.</p>
+          <h2>Checkout</h2>
+          <p>Choose your payment method and activate automation.</p>
         </div>
         <div class="payment-grid">
           {% for method in payment_methods %}
@@ -165,13 +165,13 @@
           </article>
           {% endfor %}
         </div>
-        <p class="checkout-hint">Need a bespoke plan? Our onboarding pod will send a secure invoice within minutes of your request.</p>
+        <p class="checkout-hint">Need a custom plan? Request an invoice and we will follow up quickly.</p>
       </section>
 
       <section id="agents" class="agents">
         <div class="section-heading">
-          <h2>AI agents on watch</h2>
-          <p>Each agent owns a lane, remediates errors, and escalates only when humans must intervene.</p>
+          <h2>Active agents</h2>
+          <p>Each agent manages a lane and escalates when needed.</p>
         </div>
         <div class="agent-grid">
           {% for agent in agents %}
@@ -186,8 +186,8 @@
 
       <section id="timeline" class="timeline">
         <div class="section-heading">
-          <h2>Orchestration timeline</h2>
-          <p>Prefect + Temporal jobs keep every node accountable.</p>
+          <h2>Timeline</h2>
+          <p>Execution stages from trigger to summary.</p>
         </div>
         <div class="timeline-grid">
           <div>
@@ -212,7 +212,7 @@
       <section class="workflow" id="flowboard">
         <div class="section-heading">
           <h2>Workflow control</h2>
-          <p>Trigger AI flows, monitor status, and see what’s next in real time.</p>
+          <p>Trigger jobs, monitor status, and review next steps.</p>
         </div>
         <div id="workflow-grid" class="workflow-grid"></div>
         <div class="summary">
@@ -223,8 +223,8 @@
 
       <section class="principles">
         <div class="section-heading">
-          <h2>Elite playbook</h2>
-          <p>We borrowed the clarity, polish, and trust-first UX cues that power Microsoft, Apple, and Google.</p>
+          <h2>Design principles</h2>
+          <p>Simple controls, clear status, and transparent automation.</p>
         </div>
         <div class="principle-grid">
           <article>
@@ -301,10 +301,7 @@
     <div class="toast" id="toast">Payment triggered. We’re routing to finance.</div>
 
     <footer>
-      <p>
-        GlobalFlow 3.0 is a damn-near fully autonomous operations desk for SMBs. Scales to enterprise round-the-clock
-        safeguards with human oversight callbacks.
-      </p>
+      <p>GlobalFlow helps teams run automated operations with clarity, control, and human oversight.</p>
     </footer>
 
     <script type="module" src="/static/flow.js"></script>
