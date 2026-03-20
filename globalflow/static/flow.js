@@ -254,10 +254,8 @@ function pushModalHistory(modalId) {
 
 function updateHistoryOnClose() {
   if (!historySupported) return;
-     window.history.replaceState({ modalId: null }, "", window.location.pathname);
+  window.history.replaceState({ modalId: null }, "", window.location.pathname);
 }
-
-const connectorForms = document.querySelectorAll(".connector-form");
 
 function openModal(target) {
   if (target) {
@@ -363,6 +361,13 @@ if (inspectButton) {
 if (modalClose) {
   modalClose.addEventListener("click", () => closeModal(modal));
 }
+
+document.querySelectorAll("[data-modal]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const target = document.getElementById(button.dataset.modal);
+    closeModal(target);
+  });
+});
 
 if (modal) {
   modal.addEventListener("click", (event) => {
