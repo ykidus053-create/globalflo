@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -28,10 +29,15 @@ app = FastAPI(title="Global Flow Automation")
 templates = Jinja2Templates(directory=root / "templates")
 app.mount("/static", StaticFiles(directory=root / "static"), name="static")
 
+AUTOPILOT_BOOT_ENABLED = os.getenv("GLOBALFLOW_AUTOPILOT_ENABLED", "1").lower() not in {"0", "false", "no"}
+
 
 @app.on_event("startup")
 async def start_autopilot():
-    await autopilot.enable()
+    if AUTOPILOT_BOOT_ENABLED:
+        await autopilot.enable()
+    else:
+        logger.info("Autopilot startup disabled by environment")
 
 
 @app.middleware("http")
