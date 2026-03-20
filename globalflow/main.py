@@ -459,8 +459,8 @@ FOOTER_LINKS = [
     {"label": "Blog", "href": "#founder"},
     {"label": "Changelog", "href": "https://github.com/ykidus053-create/globalflo/commits/main"},
     {"label": "Docs", "href": "#under-the-hood"},
-    {"label": "Privacy Policy", "href": "#privacy-note"},
-    {"label": "Terms of Service", "href": "#terms-note"},
+    {"label": "Privacy Policy", "href": "/privacy"},
+    {"label": "Terms of Service", "href": "/terms"},
     {"label": "Contact", "href": "mailto:hello@globalflow.ai"},
 ]
 
@@ -773,6 +773,28 @@ async def toolkit_action(tool_id: str):
         "message": f"{tool['name']} alignment requested - refreshing templates, enforcing formatting, and checking runtime hints.",
         "focus": tool["focus"],
     }
+
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def privacy_policy(request: Request):
+    return templates.TemplateResponse(
+        "privacy.html",
+        {
+            "request": request,
+            "updated_on": "March 20, 2026",
+        },
+    )
+
+
+@app.get("/terms", response_class=HTMLResponse)
+async def terms_of_service(request: Request):
+    return templates.TemplateResponse(
+        "terms.html",
+        {
+            "request": request,
+            "updated_on": "March 20, 2026",
+        },
+    )
 
 
 @app.get("/account", response_class=HTMLResponse)
