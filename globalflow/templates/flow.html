@@ -21,6 +21,16 @@
       name="twitter:description"
       content="Automate billing, call follow-up, and compliance tracking from one calm control room."
     />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("globalflow_theme");
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+        } catch (error) {}
+      })();
+    </script>
     <title>GlobalFlow | AI automation workflow</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

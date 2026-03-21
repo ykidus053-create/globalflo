@@ -1,7 +1,31 @@
 const form = document.getElementById("account-form");
 const status = document.getElementById("account-status");
+const THEME_KEY = "globalflow_theme";
+
+function applyTheme(theme) {
+  if (theme !== "light" && theme !== "dark") return;
+  document.documentElement.setAttribute("data-theme", theme);
+  try {
+    window.localStorage.setItem(THEME_KEY, theme);
+  } catch {
+    // no-op when storage is unavailable
+  }
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) {
+    themeMeta.setAttribute("content", theme === "dark" ? "#0f172a" : "#f7f8fa");
+  }
+}
 
 if (form) {
+  const themeSelect = form.querySelector('select[name="theme"]');
+  if (themeSelect) {
+    const activeTheme = document.documentElement.getAttribute("data-theme");
+    if (activeTheme === "light" || activeTheme === "dark") {
+      themeSelect.value = activeTheme;
+    }
+    themeSelect.addEventListener("change", () => applyTheme(themeSelect.value));
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const submitButton = form.querySelector('button[type="submit"]');
@@ -22,9 +46,7 @@ if (form) {
         if (response.ok) {
           status.textContent = "Profile updated.";
           const theme = body?.settings?.theme;
-          if (theme === "light" || theme === "dark") {
-            document.documentElement.setAttribute("data-theme", theme);
-          }
+          applyTheme(theme);
         } else {
           status.textContent = body.detail || "Could not update yet.";
         }
