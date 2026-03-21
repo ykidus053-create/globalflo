@@ -82,7 +82,7 @@
             <span class="signal-meta" id="last-sync">Waiting for first sync</span>
           </div>
 
-          <p class="eyebrow">Built for operators, finance teams, and service businesses</p>
+          <p class="eyebrow">Operations automation</p>
           <h1>One calm control room for calls, billing, taxes, files, and follow-up.</h1>
           <p class="lead">Automate billing, follow-up, files, and compliance. Most pilot teams recover 20+ hours each week.</p>
 
@@ -234,7 +234,6 @@
           </article>
           {% endfor %}
         </div>
-        <p class="metrics-footnote">Pilot-team average.</p>
       </section>
 
       <section class="workflow workflow--split workflow--airbnb" id="flowboard">
@@ -330,7 +329,6 @@
               {% endif %}
               <h3>{{ tier.name }}</h3>
               <p class="price" data-monthly="{{ tier.monthly_price }}" data-annual="{{ tier.annual_price }}">{{ tier.monthly_price }}</p>
-              <p class="tier-copy">{{ tier.description }}</p>
             </div>
             <ul class="pricing-list">
               {% for feature in tier.features %}
@@ -440,7 +438,7 @@
       <div class="footer-top">
         <div>
           <h2>GlobalFlow</h2>
-          <p>Automation for billing, files, follow-up, and compliance.</p>
+          <p>Billing, files, follow-up, compliance.</p>
         </div>
         <div class="footer-links">
           {% for link in footer_links %}
@@ -452,10 +450,6 @@
           <a href="{{ link.href }}"{% if link.href.startswith('http') or link.href.startswith('mailto:') %} target="_blank" rel="noreferrer"{% endif %}>{{ link.label }}</a>
           {% endfor %}
         </div>
-      </div>
-      <div class="footer-notes">
-        <p id="privacy-note">Privacy: customer data is processed with encryption and activity-level traceability.</p>
-        <p id="terms-note">Terms: rollout scope, guarantees, and billing terms are confirmed during activation.</p>
       </div>
     </footer>
 
