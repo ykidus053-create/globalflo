@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#161b18"/>
+      <stop offset="100%" stop-color="#24322b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="120" cy="110" r="180" fill="#8db39a" opacity="0.18"/>
+  <circle cx="1030" cy="140" r="220" fill="#ffffff" opacity="0.06"/>
+  <g transform="translate(110 130)">
+    <rect width="980" height="370" rx="28" fill="#202a25" stroke="#8db39a" stroke-opacity="0.6"/>
+    <text x="56" y="120" fill="#e8f0eb" font-family="Arial, sans-serif" font-size="62" font-weight="700">
+      GlobalFlow
+    </text>
+    <text x="56" y="188" fill="#c8d4cd" font-family="Arial, sans-serif" font-size="36">
+      One calm control room for calls, billing, taxes,
+    </text>
+    <text x="56" y="236" fill="#c8d4cd" font-family="Arial, sans-serif" font-size="36">
+      files, and follow-up.
+    </text>
+    <text x="56" y="306" fill="#9ab8a4" font-family="Arial, sans-serif" font-size="26">
+      Automate repetitive admin work with reliable, visible workflows.
+    </text>
+  </g>
+</svg>

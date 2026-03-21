@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#161b18" />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("globalflow_theme");
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+        } catch (error) {}
+      })();
+    </script>
+    <title>Checkout | GlobalFlow</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/flow.css" />
+      <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
+  </head>
+  <body class="checkout-body">
+    <div class="aurora"></div>
+    <header class="top">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow Checkout</span>
+          <p>Simple activation for automation plans</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Checkout navigation">
+        <a href="/">Home</a>
+        <a href="/automation">Automation</a>
+        <a href="/account">Account</a>
+        <a href="#invoice-form">Invoice</a>
+      </nav>
+    </header>
+
+    <main class="checkout-page">
+      <section class="checkout-hero">
+        <div class="checkout-hero-copy">
+          
+          <span class="tier-badge">Popular</span>
+          
+          <p class="eyebrow">Checkout</p>
+          <h1>Pilot</h1>
+          <p class="lead">For small teams ready to automate the first set of back-office bottlenecks.</p>
+          <p class="price">$349 / month</p>
+          <div class="checkout-links">
+            
+            <a class="primary small" href="/payment/paypal?tier=pilot&amp;amount=349" rel="noreferrer">Pay with Paypal</a>
+            
+            <a class="primary small" href="/payment/mastercard?tier=pilot&amp;amount=349" rel="noreferrer">Pay with Mastercard</a>
+            
+            <a class="primary small" href="/payment/amex?tier=pilot&amp;amount=349" rel="noreferrer">Pay with Amex</a>
+            
+          </div>
+        </div>
+        <div class="checkout-hero-panel">
+          <p><strong>Best fit:</strong> Best for teams with recurring billing, file, and follow-up work every week.</p>
+          <p><strong>Typical outcome:</strong> Pilot teams typically recover 80+ hours each month in the first 30 days.</p>
+          <p><strong>Low-risk rollout:</strong> Guided launch with weekly proof reports and a 30-day optimization pass.</p>
+          <p><strong>Certainty:</strong> Shielded rework guarantee: if month-one outcomes miss the agreed target, we rework the workflow at no extra charge.</p>
+        </div>
+      </section>
+
+      <section class="checkout-offset">
+        <div class="checkout-card">
+          <h2>Request an invoice</h2>
+          <p>Use this flow when procurement or finance needs a manual ticket.</p>
+          <form id="invoice-form" data-method="paypal" data-tier-id="pilot">
+            <label>
+              Business email
+              <input name="email" type="email" placeholder="ops@company.com" required />
+            </label>
+            <label>
+              Amount
+              <input name="amount" value="349" />
+            </label>
+            <label>
+              Notes
+              <textarea name="notes" rows="3" placeholder="PO number, billing cadence, or payment notes"></textarea>
+            </label>
+            <button class="primary" type="submit">Send payment request</button>
+            <p class="payment-status" id="invoice-status"></p>
+          </form>
+        </div>
+
+        <div class="checkout-panel">
+          <h2>Included in Pilot</h2>
+          <ul class="method-grid">
+            
+            <li>
+              <h4>Dedicated AutoPilot queue with live telemetry</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+            <li>
+              <h4>4 production integrations</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+            <li>
+              <h4>Weekly outcomes brief tied to time-saved metrics</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+            <li>
+              <h4>Rework guarantee</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+          </ul>
+        </div>
+      </section>
+
+      <section class="payment-strip">
+        
+        <article class="payment-chip">
+          <div class="payment-icon paypal"></div>
+          <div>
+            <h3>PayPal</h3>
+            <p>Instant digital invoices with multi-currency support.</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="/payment/paypal" rel="noreferrer">Open PayPal</a>
+          </div>
+        </article>
+        
+        <article class="payment-chip">
+          <div class="payment-icon mastercard"></div>
+          <div>
+            <h3>Mastercard</h3>
+            <p>Recurring billing with enhanced reconciliation.</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="/payment/mastercard" rel="noreferrer">Open Mastercard</a>
+          </div>
+        </article>
+        
+        <article class="payment-chip">
+          <div class="payment-icon amex"></div>
+          <div>
+            <h3>American Express</h3>
+            <p>Premium rewards plus CFO program controls.</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="/payment/amex" rel="noreferrer">Open American Express</a>
+          </div>
+        </article>
+        
+      </section>
+    </main>
+
+    <footer class="checkout-foot">
+      <p>Your workspace unlocks after billing confirmation and connector validation.</p>
+    </footer>
+
+    <script type="module" src="/static/checkout.js"></script>
+  </body>
+</html>

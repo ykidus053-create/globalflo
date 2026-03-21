@@ -1,0 +1,2879 @@
+:root {
+  --bg: #161b18;
+  --bg-soft: #1d2521;
+  --panel: #202a25;
+  --panel-strong: #27332d;
+  --text: #edf2ef;
+  --muted: #aeb8b2;
+  --accent: #8db39a;
+  --accent-strong: #b8d0bf;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --warning: #f2c287;
+  --radius: 18px;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background: radial-gradient(circle at 12% 8%, rgba(141, 179, 154, 0.22), transparent 30%),
+    radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.05), transparent 36%), var(--bg);
+}
+
+.aurora,
+.grid-overlay,
+.backdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora,
+.backdrop {
+  background: radial-gradient(circle at 0% 10%, rgba(141, 179, 154, 0.18), transparent 38%),
+    radial-gradient(circle at 100% 20%, rgba(255, 255, 255, 0.05), transparent 40%);
+}
+
+.grid-overlay {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 120px 120px;
+  opacity: 0.35;
+}
+
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: -44px;
+  z-index: 30;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f1512;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px clamp(16px, 3.5vw, 48px);
+  background: rgba(17, 22, 20, 0.82);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-mark {
+  display: grid;
+  grid-template-columns: repeat(3, 7px);
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.brand-mark span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.brand-copy span {
+  display: block;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.brand-copy p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nav a {
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #d8e1dc;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav a:hover,
+.nav a.is-active {
+  background: rgba(141, 179, 154, 0.22);
+  color: #f5f8f6;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  padding: 0 clamp(16px, 3.5vw, 48px) 36px;
+  display: grid;
+  gap: 22px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+  gap: 18px;
+  padding-top: 18px;
+}
+
+.hero-copy,
+.hero-stage {
+  display: grid;
+  gap: 12px;
+}
+
+.signal-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.signal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.signal-meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.signal-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: #67dfa8;
+  box-shadow: 0 0 0 0 rgba(103, 223, 168, 0.4);
+  animation: pulse-dot 2s infinite;
+}
+
+.signal-dot.is-warning {
+  background: var(--warning);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--accent);
+  letter-spacing: 0.18rem;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  line-height: 1.05;
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+}
+
+.lead {
+  margin: 0;
+  color: #d4ddd8;
+  line-height: 1.65;
+  max-width: 66ch;
+}
+
+.hero-actions,
+.workflow-actions,
+.subscription-actions,
+.checkout-links,
+.payment-actions,
+.founder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-meta {
+  margin: 0;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.text-link {
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.lead-capture {
+  display: flex;
+  gap: 8px;
+  max-width: 520px;
+}
+
+.lead-capture input {
+  flex: 1;
+}
+
+.form-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.hero-video-card,
+.hero-status-card,
+.workflow,
+.proof,
+.metrics,
+.features,
+.integrations,
+.under-the-hood,
+.pricing,
+.trust,
+.checkout-hero-copy,
+.checkout-hero-panel,
+.checkout-card,
+.checkout-panel,
+.payment-panel,
+.payment-form-section,
+.account-panel {
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(32, 42, 37, 0.96), rgba(24, 31, 28, 0.95));
+}
+
+.hero-video-card {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.video-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.video-card-top p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12rem;
+}
+
+.video-card-top span {
+  font-size: 0.76rem;
+  color: #c9d5cf;
+}
+
+.hero-video {
+  width: 100%;
+  min-height: 220px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #0f1512;
+}
+
+.video-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.hero-status-card {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hero-status-card div {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hero-status-card span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+}
+
+.hero-status-card strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.18rem;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.section-heading {
+  margin-bottom: 10px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+}
+
+.section-heading p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 72ch;
+}
+
+.proof,
+.metrics,
+.features,
+.integrations,
+.under-the-hood,
+.pricing,
+.trust,
+.workflow {
+  padding: clamp(14px, 2.5vw, 24px);
+}
+
+.logo-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.logo-pill {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.logo-pill strong {
+  display: block;
+  font-size: 0.92rem;
+}
+
+.logo-pill span {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.testimonial-card {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  gap: 8px;
+}
+
+.testimonial-card img,
+.founder-card img {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid var(--line-strong);
+}
+
+.testimonial-quote {
+  margin: 0;
+  color: #d8e1dc;
+  line-height: 1.52;
+}
+
+.testimonial-meta span {
+  font-weight: 700;
+}
+
+.testimonial-meta p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 8px;
+}
+
+.stat-card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.stat-card .value {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.22rem;
+}
+
+.stat-card .label {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.metrics-footnote {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.feature-grid,
+.workflow-grid,
+.connectors-grid,
+.subscription-grid,
+.trust-signal-grid,
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.feature-card,
+.workflow-card,
+.connector-card,
+.pricing-card,
+.trust-card {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.feature-card {
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.feature-card h3 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.feature-headline {
+  margin: 0;
+  font-weight: 600;
+  color: #dce6e0;
+}
+
+.feature-link {
+  margin-top: auto;
+  text-decoration: none;
+  color: var(--accent-strong);
+  font-size: 0.86rem;
+}
+
+.feature-link:hover {
+  text-decoration: underline;
+}
+
+.feature-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, rgba(141, 179, 154, 0.23), rgba(255, 255, 255, 0.03));
+  position: relative;
+}
+
+.feature-icon::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.feature-icon--phone::after {
+  border-radius: 999px;
+}
+
+.feature-icon--receipt::after {
+  inset: 7px 9px;
+  border-radius: 3px;
+}
+
+.feature-icon--shield::after {
+  inset: 7px 8px 6px;
+  border-radius: 6px 6px 10px 10px;
+}
+
+.feature-icon--folder::after {
+  inset: 10px 7px 8px;
+}
+
+.feature-icon--spark::after {
+  inset: 8px;
+  transform: rotate(45deg);
+}
+
+.workflow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.9fr);
+  gap: 10px;
+}
+
+.workflow-main,
+.workflow-side {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.workflow-card {
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.workflow-status {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  border: 1px solid rgba(141, 179, 154, 0.4);
+  background: rgba(141, 179, 154, 0.12);
+  color: #d8e8dd;
+}
+
+.summary ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.summary li {
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.9rem;
+}
+
+.activity-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.activity-grid--single {
+  grid-template-columns: 1fr;
+}
+
+.activity-entry {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  gap: 4px;
+}
+
+.activity-kind {
+  text-transform: uppercase;
+  letter-spacing: 0.12rem;
+  font-size: 0.66rem;
+  color: var(--muted);
+}
+
+.activity-message {
+  margin: 0;
+  font-weight: 700;
+}
+
+.activity-detail,
+.activity-entry time {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.integration-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.integration-intro span {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.integration-intro p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.connector-card {
+  overflow: hidden;
+}
+
+.connector-card summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.connector-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.connector-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.connector-heading h3 {
+  margin: 0;
+}
+
+.connector-heading p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.connector-toggle {
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+}
+
+.connector-meta {
+  margin: 0 12px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.connector-meta a {
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+.connector-form {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.connector-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.connector-form input,
+.flow-modal input,
+.flow-modal select,
+.checkout-card input,
+.checkout-card textarea,
+.payment-form input,
+.payment-form textarea,
+.lead-capture input,
+.form-grid input,
+.form-grid select {
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: rgba(0, 0, 0, 0.15);
+  color: var(--text);
+  padding: 10px 11px;
+  font: inherit;
+}
+
+.under-the-hood .built-with {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.built-with span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.78rem;
+  color: #d7e2dc;
+}
+
+.pricing-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.toggle-option {
+  border: none;
+  background: transparent;
+  color: #d9e2dd;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 7px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.toggle-option span {
+  font-size: 0.7rem;
+  color: var(--accent-strong);
+  margin-left: 4px;
+}
+
+.toggle-option.is-active {
+  background: rgba(141, 179, 154, 0.28);
+}
+
+.pricing-card {
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.pricing-top h3,
+.pricing-top .price {
+  margin: 0;
+}
+
+.pricing-top .price {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.22rem;
+}
+
+.tier-copy,
+.pricing-proof p,
+.pricing-list {
+  margin: 0;
+  color: #d7e0db;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.pricing-proof {
+  display: grid;
+  gap: 4px;
+}
+
+.pricing-list {
+  padding-left: 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.shield-pill {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(141, 179, 154, 0.5);
+  background: rgba(141, 179, 154, 0.16);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08rem;
+  margin-right: 6px;
+}
+
+.comparison-table-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  font-size: 0.82rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.comparison-table th {
+  color: #dfe8e2;
+  font-weight: 700;
+}
+
+.comparison-table td {
+  color: #cfdad3;
+}
+
+.payment-strip {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.payment-chip {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.payment-chip h3 {
+  margin: 0;
+  font-size: 0.94rem;
+}
+
+.payment-chip p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.payment-icon {
+  width: 46px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.payment-icon.paypal {
+  background: linear-gradient(145deg, #003087, #0070e0);
+}
+
+.payment-icon.mastercard {
+  background: linear-gradient(90deg, #eb001b 0%, #f79e1b 55%, #111 55%);
+}
+
+.payment-icon.amex {
+  background: linear-gradient(145deg, #0e8ed1, #0f75c4);
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 10px;
+}
+
+.founder-card {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 10px;
+}
+
+.founder-card h3 {
+  margin: 0;
+}
+
+.founder-role {
+  margin: 2px 0 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.founder-card p {
+  margin: 0;
+  color: #d7dfda;
+  line-height: 1.55;
+}
+
+.trust-signal-grid {
+  align-content: start;
+}
+
+.trust-card {
+  padding: 12px;
+}
+
+.trust-card h3 {
+  margin: 0;
+  font-size: 0.94rem;
+}
+
+.trust-card p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.site-footer {
+  margin: 0 clamp(16px, 3.5vw, 48px) 26px;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: rgba(20, 27, 24, 0.95);
+  position: relative;
+  z-index: 1;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.footer-top h2 {
+  margin: 0 0 4px;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.footer-top p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.footer-links {
+  display: grid;
+  gap: 5px;
+}
+
+.footer-links a {
+  color: #d7e1db;
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-notes {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 4px;
+}
+
+.footer-notes p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.flow-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.flow-modal--open {
+  display: flex;
+}
+
+.flow-modal__content {
+  width: min(92vw, 620px);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #19211d;
+  padding: 16px;
+  position: relative;
+}
+
+.flow-modal__close {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.flow-modal pre {
+  margin: 10px 0 0;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #111613;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.flow-modal form {
+  display: grid;
+  gap: 8px;
+}
+
+.flow-modal label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.modal-note {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+}
+
+.toast {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 50;
+  display: none;
+  max-width: 340px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #0f1512;
+  color: #e8f1ec;
+  font-size: 0.84rem;
+}
+
+.mobile-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: none;
+  padding: 6px;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(18, 25, 22, 0.95);
+}
+
+.mobile-dock a {
+  color: #d7dfda;
+  text-decoration: none;
+  font-size: 0.76rem;
+  padding: 6px 8px;
+  border-radius: 999px;
+}
+
+.mobile-dock a:hover {
+  background: rgba(141, 179, 154, 0.24);
+}
+
+.reveal-ready {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.reveal-ready.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.primary,
+.ghost,
+.pill {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  color: #f6faf7;
+  background: rgba(255, 255, 255, 0.04);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 10px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.small {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+}
+
+.primary {
+  border-color: rgba(141, 179, 154, 0.6);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #162019;
+}
+
+.ghost {
+  border-color: var(--line-strong);
+  background: transparent;
+}
+
+.primary:hover,
+.ghost:hover,
+.pill:hover {
+  transform: translateY(-1px);
+}
+
+.primary:focus-visible,
+.ghost:focus-visible,
+.pill:focus-visible,
+.nav a:focus-visible,
+.text-link:focus-visible,
+.footer-links a:focus-visible,
+.flow-modal__close:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid rgba(184, 208, 191, 0.56);
+  outline-offset: 2px;
+}
+
+.payment-body,
+.checkout-body {
+  background: radial-gradient(circle at 12% 8%, rgba(141, 179, 154, 0.2), transparent 34%), var(--bg);
+}
+
+.payment-page,
+.checkout-page,
+.account-page {
+  position: relative;
+  z-index: 1;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 34px);
+  display: grid;
+  gap: 12px;
+}
+
+.payment-hero,
+.checkout-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(290px, 0.9fr);
+  gap: 10px;
+}
+
+.payment-header h1 {
+  margin: 0 0 6px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+}
+
+.payment-header p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.payment-panel,
+.checkout-hero-copy,
+.checkout-hero-panel,
+.checkout-card,
+.checkout-panel,
+.payment-form-section,
+.account-panel {
+  padding: clamp(14px, 2.6vw, 22px);
+}
+
+.payment-panel {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.payment-panel ol {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.payment-panel li {
+  margin-bottom: 4px;
+  line-height: 1.45;
+}
+
+.payment-form {
+  display: grid;
+  gap: 8px;
+}
+
+.payment-form label,
+.checkout-card label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.payment-status {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+}
+
+.checkout-hero-copy h1 {
+  margin: 0;
+}
+
+.checkout-hero-copy .price {
+  margin: 6px 0 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.4rem;
+}
+
+.checkout-hero-copy .lead {
+  margin-top: 6px;
+}
+
+.checkout-hero-panel {
+  display: grid;
+  gap: 6px;
+}
+
+.checkout-hero-panel p {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #d5dfd9;
+}
+
+.checkout-offset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.method-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.method-grid li {
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.method-grid h4 {
+  margin: 0;
+}
+
+.method-grid p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.checkout-foot {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.account-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.panel-heading h2 {
+  margin: 0;
+}
+
+.panel-heading p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.form-grid label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+#account-status {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+}
+
+@keyframes pulse-dot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(103, 223, 168, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(103, 223, 168, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(103, 223, 168, 0);
+  }
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .workflow,
+  .trust-grid,
+  .checkout-offset {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-hero,
+  .checkout-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    width: 100%;
+  }
+
+  .hero-status-card {
+    grid-template-columns: 1fr;
+  }
+
+  .lead-capture {
+    flex-direction: column;
+  }
+
+  .mobile-dock {
+    display: inline-flex;
+  }
+
+  body {
+    padding-bottom: 58px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .reveal-ready {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Minimalist, professional theme pass */
+:root {
+  --bg: #f7f8fa;
+  --bg-soft: #f1f3f6;
+  --panel: #ffffff;
+  --panel-strong: #ffffff;
+  --text: #111827;
+  --muted: #5b6473;
+  --accent: #0a66ff;
+  --accent-strong: #0048b0;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --warning: #a16207;
+}
+
+body,
+.payment-body,
+.checkout-body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.aurora,
+.grid-overlay,
+.backdrop {
+  display: none;
+}
+
+.top {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-mark {
+  background: #fff;
+}
+
+.brand-mark span {
+  background: var(--accent);
+}
+
+.brand-copy p,
+.lead,
+.section-heading p,
+.video-note,
+.metrics-footnote,
+.testimonial-meta p,
+.payment-chip p,
+.founder-role,
+.founder-card p,
+.trust-card p,
+.checkout-foot,
+.modal-note,
+.payment-status,
+#account-status {
+  color: var(--muted);
+}
+
+.nav {
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.nav a {
+  color: #374151;
+}
+
+.nav a:hover,
+.nav a.is-active {
+  background: #eef4ff;
+  color: #0f172a;
+}
+
+.hero-video-card,
+.hero-status-card,
+.workflow,
+.proof,
+.metrics,
+.features,
+.integrations,
+.under-the-hood,
+.pricing,
+.trust,
+.checkout-hero-copy,
+.checkout-hero-panel,
+.checkout-card,
+.checkout-panel,
+.payment-panel,
+.payment-form-section,
+.account-panel,
+.site-footer,
+.flow-modal__content {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 6px 18px rgba(16, 24, 40, 0.06);
+}
+
+.logo-pill,
+.testimonial-card,
+.stat-card,
+.feature-card,
+.workflow-card,
+.connector-card,
+.pricing-card,
+.trust-card,
+.payment-chip,
+.summary li,
+.hero-status-card div,
+.activity-entry,
+.method-grid li,
+.built-with span {
+  background: #fafafa;
+  border: 1px solid var(--line);
+}
+
+.feature-headline,
+.tier-copy,
+.pricing-proof p,
+.pricing-list,
+.checkout-hero-panel p,
+.activity-detail,
+.activity-entry time {
+  color: #4b5563;
+}
+
+.text-link,
+.feature-link,
+.connector-meta a {
+  color: var(--accent-strong);
+}
+
+.primary,
+.ghost,
+.pill {
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.primary:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.ghost,
+.pill {
+  background: #ffffff;
+  border-color: var(--line-strong);
+  color: #111827;
+}
+
+.ghost:hover,
+.pill:hover {
+  background: #f8fafc;
+}
+
+.connector-form input,
+.flow-modal input,
+.flow-modal select,
+.checkout-card input,
+.checkout-card textarea,
+.payment-form input,
+.payment-form textarea,
+.lead-capture input,
+.form-grid input,
+.form-grid select {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+}
+
+.signal-pill,
+.integration-intro span,
+.pricing-toggle,
+.toggle-option.is-active,
+.workflow-status,
+.shield-pill {
+  background: #eef4ff;
+  color: #1e3a8a;
+  border-color: #cfe0ff;
+}
+
+.flow-modal {
+  background: rgba(17, 24, 39, 0.36);
+}
+
+.flow-modal pre {
+  background: #f8fafc;
+  color: #111827;
+  border: 1px solid var(--line);
+}
+
+.flow-modal__close {
+  color: #4b5563;
+}
+
+.toast {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
+}
+
+.mobile-dock {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--line);
+}
+
+.mobile-dock a {
+  color: #374151;
+}
+
+.mobile-dock a:hover {
+  background: #eef4ff;
+}
+
+html[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-soft: #111827;
+  --panel: #111827;
+  --panel-strong: #111827;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --accent: #60a5fa;
+  --accent-strong: #93c5fd;
+  --line: #273449;
+  --line-strong: #334155;
+  --warning: #f59e0b;
+}
+
+html[data-theme="dark"] .top {
+  background: rgba(17, 24, 39, 0.92);
+}
+
+html[data-theme="dark"] .nav {
+  background: #111827;
+}
+
+html[data-theme="dark"] .nav a {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .nav a:hover,
+html[data-theme="dark"] .nav a.is-active {
+  background: rgba(96, 165, 250, 0.16);
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .logo-pill,
+html[data-theme="dark"] .testimonial-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .feature-card,
+html[data-theme="dark"] .workflow-card,
+html[data-theme="dark"] .connector-card,
+html[data-theme="dark"] .pricing-card,
+html[data-theme="dark"] .trust-card,
+html[data-theme="dark"] .payment-chip,
+html[data-theme="dark"] .summary li,
+html[data-theme="dark"] .hero-status-card div,
+html[data-theme="dark"] .activity-entry,
+html[data-theme="dark"] .method-grid li,
+html[data-theme="dark"] .built-with span {
+  background: #0b1220;
+}
+
+html[data-theme="dark"] .ghost,
+html[data-theme="dark"] .pill {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .ghost:hover,
+html[data-theme="dark"] .pill:hover {
+  background: #1f2937;
+}
+
+html[data-theme="dark"] .connector-form input,
+html[data-theme="dark"] .flow-modal input,
+html[data-theme="dark"] .flow-modal select,
+html[data-theme="dark"] .checkout-card input,
+html[data-theme="dark"] .checkout-card textarea,
+html[data-theme="dark"] .payment-form input,
+html[data-theme="dark"] .payment-form textarea,
+html[data-theme="dark"] .lead-capture input,
+html[data-theme="dark"] .form-grid input,
+html[data-theme="dark"] .form-grid select {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .flow-modal {
+  background: rgba(2, 6, 23, 0.7);
+}
+
+html[data-theme="dark"] .flow-modal pre {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .toast {
+  background: #020617;
+  border-color: #0f172a;
+}
+
+/* Airbnb-inspired landing redesign */
+:root {
+  --bg: #f7f4ef;
+  --bg-soft: #f1ece5;
+  --panel: #ffffff;
+  --panel-strong: #fffdf9;
+  --text: #1f2937;
+  --muted: #667085;
+  --accent: #ff5a5f;
+  --accent-strong: #d9424c;
+  --accent-soft: #fff0f1;
+  --line: #e9e2d8;
+  --line-strong: #d8cec1;
+  --warning: #b45309;
+  --shadow: 0 12px 34px rgba(31, 41, 55, 0.08);
+  --radius: 28px;
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+body,
+.payment-body,
+.checkout-body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 90, 95, 0.08), transparent 28%),
+    radial-gradient(circle at 85% 10%, rgba(255, 255, 255, 0.72), transparent 24%),
+    var(--bg);
+  color: var(--text);
+}
+
+.aurora,
+.grid-overlay,
+.backdrop {
+  display: none;
+}
+
+h1,
+.section-heading h2,
+.footer-top h2,
+.payment-header h1,
+.checkout-hero-copy h1 {
+  font-family: "Newsreader", serif;
+  letter-spacing: -0.03em;
+}
+
+.top--airbnb {
+  gap: 20px;
+  padding: 18px clamp(18px, 4vw, 52px);
+  background: rgba(247, 244, 239, 0.86);
+  border-bottom: 1px solid rgba(233, 226, 216, 0.88);
+  backdrop-filter: blur(22px);
+}
+
+.brand-mark {
+  padding: 7px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 90, 95, 0.18);
+  background: #fff8f7;
+}
+
+.brand-mark span {
+  background: linear-gradient(135deg, var(--accent), #ff8a70);
+}
+
+.brand-copy span {
+  font-size: 1.08rem;
+}
+
+.brand-copy p {
+  color: var(--muted);
+}
+
+.nav {
+  gap: 6px;
+  padding: 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(233, 226, 216, 0.96);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.nav a {
+  padding: 8px 13px;
+  color: #435063;
+  font-size: 0.84rem;
+}
+
+.nav a:hover,
+.nav a.is-active {
+  background: var(--accent-soft);
+  color: #101828;
+}
+
+main.landing-main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 18px clamp(18px, 4vw, 52px) 52px;
+  gap: 34px;
+}
+
+.hero--airbnb {
+  grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+  gap: 28px;
+  padding-top: 20px;
+  align-items: stretch;
+}
+
+.hero-copy--airbnb,
+.hero-stage--airbnb,
+.hero-side-stack {
+  gap: 18px;
+}
+
+.hero-copy--airbnb {
+  align-content: center;
+  padding: 20px 0;
+}
+
+.signal-pill {
+  border: 1px solid rgba(255, 90, 95, 0.16);
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--text);
+}
+
+.signal-meta {
+  color: var(--muted);
+}
+
+.eyebrow {
+  color: var(--accent-strong);
+  letter-spacing: 0.16rem;
+  font-size: 0.7rem;
+}
+
+h1 {
+  font-size: clamp(3rem, 5vw, 5.35rem);
+  line-height: 0.96;
+  max-width: 11ch;
+}
+
+.lead {
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: 1.04rem;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  margin-top: 6px;
+}
+
+.primary--hero {
+  min-width: 170px;
+  padding-inline: 18px;
+}
+
+.hero-meta {
+  gap: 18px;
+}
+
+.text-link {
+  color: #344054;
+  font-weight: 600;
+}
+
+.text-link:hover {
+  color: var(--accent-strong);
+}
+
+.explore-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.explore-rail article,
+.hero-trust-card,
+.hero-media-card,
+.hero-status-card--airbnb,
+.proof--quiet,
+.explore-section,
+.features--airbnb,
+.workflow--airbnb,
+.integrations--airbnb,
+.under-the-hood--airbnb,
+.pricing--airbnb,
+.trust--airbnb,
+.site-footer--airbnb {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 252, 247, 0.96));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.explore-rail article {
+  padding: 16px 18px;
+  border-radius: 22px;
+}
+
+.explore-rail span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.explore-rail strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.lead-capture--airbnb {
+  max-width: 560px;
+  padding: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+}
+
+.lead-capture--airbnb input {
+  border: none;
+  background: transparent;
+  padding-left: 14px;
+}
+
+.lead-capture--airbnb input:focus-visible {
+  outline: none;
+}
+
+.hero-media-card {
+  position: relative;
+  padding: 18px;
+  border-radius: 32px;
+  overflow: hidden;
+}
+
+.hero-video {
+  min-height: 430px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: linear-gradient(135deg, #d6c0b0, #f3ebe2 40%, #e9f0f8);
+  object-fit: cover;
+}
+
+.hero-media-caption {
+  display: grid;
+  gap: 12px;
+}
+
+.hero-media-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-media-points span,
+.logo-mark,
+.tier-badge,
+.workflow-status,
+.connector-toggle,
+.integration-intro--airbnb span,
+.shield-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 90, 95, 0.15);
+  background: var(--accent-soft);
+  color: #8f2430;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hero-status-card--airbnb {
+  padding: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: 24px;
+}
+
+.hero-status-card--airbnb div {
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(233, 226, 216, 0.96);
+  background: rgba(255, 250, 245, 0.88);
+}
+
+.hero-status-card--airbnb strong {
+  margin-top: 8px;
+  font-size: 1.35rem;
+  color: var(--text);
+}
+
+.hero-trust-card {
+  padding: 22px;
+  border-radius: 28px;
+}
+
+.hero-trust-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.hero-trust-list strong,
+.testimonial-card--airbnb strong,
+.explore-card__body h3,
+.feature-card--airbnb h3,
+.payment-chip--airbnb h3,
+.trust-card--airbnb h3 {
+  color: var(--text);
+}
+
+.hero-trust-list p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.section-heading--split {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.section-heading--split > p {
+  max-width: 46ch;
+  margin: 0;
+}
+
+.section-heading h2 {
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.03;
+  max-width: 13ch;
+}
+
+.proof--quiet,
+.explore-section,
+.features--airbnb,
+.workflow--airbnb,
+.integrations--airbnb,
+.under-the-hood--airbnb,
+.pricing--airbnb,
+.trust--airbnb,
+.metrics--credibility {
+  padding: clamp(22px, 3.4vw, 34px);
+  border-radius: 32px;
+}
+
+.logo-bar--airbnb {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.logo-pill--airbnb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 22px;
+  background: #fffaf6;
+  border: 1px solid var(--line);
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.explore-card {
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.06);
+}
+
+.explore-card__visual {
+  min-height: 220px;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-size: cover;
+  background-position: center;
+}
+
+.explore-card--phone .explore-card__visual {
+  background: linear-gradient(135deg, rgba(255, 90, 95, 0.18), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #fbe5dd, #f8f3ee);
+}
+
+.explore-card--receipt .explore-card__visual {
+  background: linear-gradient(135deg, rgba(255, 178, 64, 0.16), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #f7ead8, #fbf7f1);
+}
+
+.explore-card--shield .explore-card__visual {
+  background: linear-gradient(135deg, rgba(67, 160, 111, 0.17), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #e4f1ea, #f8fbf8);
+}
+
+.explore-card--folder .explore-card__visual {
+  background: linear-gradient(135deg, rgba(60, 132, 244, 0.16), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #e6eefb, #f8fafd);
+}
+
+.explore-card--spark .explore-card__visual {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.16), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #efe6f5, #fbf9fd);
+}
+
+.explore-tag {
+  display: inline-flex;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--text);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.explore-card__body {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.explore-card__body h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.explore-card__body p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.testimonial-grid--airbnb,
+.feature-grid--airbnb,
+.workflow-grid--airbnb,
+.connectors-grid--airbnb,
+.subscription-grid--airbnb,
+.trust-signal-grid--airbnb {
+  gap: 16px;
+}
+
+.testimonial-card--airbnb,
+.feature-card--airbnb,
+.pricing-card--airbnb,
+.trust-card--airbnb,
+.payment-chip--airbnb,
+.workflow-card,
+.activity-entry,
+.summary--airbnb li,
+.connector-card--airbnb,
+.stat-card--airbnb,
+.comparison-table-wrap--airbnb {
+  background: #fffdf9;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.testimonial-card--airbnb,
+.feature-card--airbnb,
+.pricing-card--airbnb,
+.trust-card--airbnb {
+  padding: 20px;
+  border-radius: 24px;
+}
+
+.testimonial-card--airbnb {
+  gap: 12px;
+}
+
+.testimonial-card img,
+.founder-card img {
+  width: 64px;
+  height: 64px;
+  border: 2px solid rgba(255, 90, 95, 0.15);
+}
+
+.testimonial-quote,
+.feature-card--airbnb p,
+.connector-heading p,
+.payment-chip--airbnb p,
+.trust-card--airbnb p,
+.founder-card--airbnb p,
+.activity-detail,
+.activity-entry time,
+.pricing-proof p,
+.pricing-list,
+.tier-copy,
+.summary li,
+.connector-form label,
+.checkout-foot,
+.modal-note,
+.payment-status,
+#account-status {
+  color: var(--muted);
+}
+
+.stat-grid--airbnb {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-card--airbnb {
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.stat-card--airbnb .value {
+  color: var(--text);
+  font-size: 1.5rem;
+}
+
+.feature-card--airbnb .feature-icon,
+.connector-card--airbnb .feature-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255, 90, 95, 0.16), rgba(255, 255, 255, 0.9));
+}
+
+.workflow--airbnb {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.workflow-main--airbnb,
+.workflow-side--airbnb {
+  gap: 16px;
+}
+
+.workflow-card {
+  padding: 18px;
+  border-radius: 22px;
+}
+
+.workflow-card h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.workflow-card .note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.summary--airbnb {
+  padding-top: 6px;
+}
+
+.summary--airbnb h3 {
+  margin: 0 0 10px;
+}
+
+.summary--airbnb li {
+  padding: 12px 14px;
+  border-radius: 16px;
+}
+
+.workflow-support {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.95fr);
+  gap: 16px;
+}
+
+.workflow-journey-card,
+.workflow-guidance-card {
+  padding: 20px;
+  border-radius: 24px;
+  background: #fffdf9;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.workflow-journey-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.workflow-journey-step {
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff8f5;
+  border: 1px solid var(--line);
+}
+
+.workflow-journey-step span {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: #8f2430;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.workflow-journey-step h3,
+.workflow-guidance-card h3 {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.workflow-journey-step p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.workflow-guidance-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.autopilot-panel--airbnb {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: #fff8f5;
+}
+
+.activity-entry {
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.integration-intro--airbnb {
+  margin-bottom: 12px;
+}
+
+.connector-card--airbnb {
+  border-radius: 22px;
+}
+
+.connector-card--airbnb summary {
+  padding: 16px;
+}
+
+.connector-form {
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.connector-form input,
+.flow-modal input,
+.flow-modal select,
+.checkout-card input,
+.checkout-card textarea,
+.payment-form input,
+.payment-form textarea,
+.lead-capture input,
+.form-grid input,
+.form-grid select {
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+}
+
+.built-with--airbnb {
+  gap: 10px;
+}
+
+.built-with--airbnb span {
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #fffaf6;
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+
+.pricing-toggle {
+  margin-bottom: 18px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fffaf6;
+}
+
+.toggle-option {
+  color: var(--muted);
+}
+
+.toggle-option.is-active {
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.subscription-grid--airbnb {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.pricing-card--lead {
+  background: linear-gradient(180deg, #fff7f7, #fffdf9 40%);
+  border-color: rgba(255, 90, 95, 0.22);
+}
+
+.pricing-top {
+  display: grid;
+  gap: 6px;
+}
+
+.pricing-top .price {
+  font-size: 1.7rem;
+  color: var(--text);
+}
+
+.comparison-table-wrap--airbnb {
+  margin-top: 18px;
+  border-radius: 24px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 13px 14px;
+}
+
+.payment-strip--airbnb {
+  margin-top: 18px;
+  gap: 14px;
+}
+
+.payment-chip--airbnb {
+  grid-template-columns: 52px 1fr auto;
+  padding: 16px;
+  border-radius: 22px;
+}
+
+.trust-grid--airbnb {
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  gap: 18px;
+}
+
+.founder-card--airbnb {
+  padding: 22px;
+  border-radius: 28px;
+  grid-template-columns: 72px 1fr;
+  background: linear-gradient(180deg, #fffaf7, #fffdf9);
+}
+
+.founder-role {
+  margin: 4px 0 10px;
+}
+
+.site-footer--airbnb {
+  margin-top: 10px;
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 250, 245, 0.92));
+}
+
+.footer-links a {
+  color: #344054;
+}
+
+.primary,
+.ghost,
+.pill {
+  border-radius: 999px;
+  font-weight: 700;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--accent), #ff7a59);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.primary:hover {
+  background: linear-gradient(135deg, var(--accent-strong), #e36245);
+}
+
+.ghost,
+.pill {
+  background: rgba(255, 255, 255, 0.9);
+  color: #111827;
+  border-color: var(--line-strong);
+}
+
+.ghost:hover,
+.pill:hover {
+  background: #fff7f5;
+}
+
+.toast {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
+}
+
+.mobile-dock {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-dock a {
+  color: #344054;
+}
+
+.mobile-dock a:hover {
+  background: var(--accent-soft);
+}
+
+@supports (content-visibility: auto) {
+  .proof--quiet,
+  .explore-section,
+  .proof--testimonials,
+  .metrics--credibility,
+  .features--airbnb,
+  .workflow--airbnb,
+  .integrations--airbnb,
+  .under-the-hood--airbnb,
+  .pricing--airbnb,
+  .trust--airbnb,
+  .site-footer--airbnb {
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+  }
+
+  .workflow--airbnb,
+  .pricing--airbnb {
+    contain-intrinsic-size: 1100px;
+  }
+}
+
+html[data-theme="dark"] {
+  --bg: #0f1720;
+  --bg-soft: #16212e;
+  --panel: #14202c;
+  --panel-strong: #1a2836;
+  --text: #f3f4f6;
+  --muted: #9aa8bb;
+  --accent: #ff7d72;
+  --accent-strong: #ff9b92;
+  --accent-soft: rgba(255, 125, 114, 0.12);
+  --line: #263445;
+  --line-strong: #34465d;
+  --warning: #f59e0b;
+  --shadow: 0 18px 38px rgba(2, 6, 23, 0.35);
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .payment-body,
+html[data-theme="dark"] .checkout-body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 125, 114, 0.1), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(23, 32, 44, 0.42), transparent 24%),
+    var(--bg);
+}
+
+html[data-theme="dark"] .top--airbnb {
+  background: rgba(15, 23, 32, 0.86);
+  border-color: rgba(38, 52, 69, 0.85);
+}
+
+html[data-theme="dark"] .nav,
+html[data-theme="dark"] .lead-capture--airbnb,
+html[data-theme="dark"] .flow-modal__content {
+  background: rgba(20, 32, 44, 0.94);
+}
+
+html[data-theme="dark"] .brand-mark,
+html[data-theme="dark"] .explore-rail article,
+html[data-theme="dark"] .hero-trust-card,
+html[data-theme="dark"] .hero-media-card,
+html[data-theme="dark"] .hero-status-card--airbnb,
+html[data-theme="dark"] .proof--quiet,
+html[data-theme="dark"] .explore-section,
+html[data-theme="dark"] .features--airbnb,
+html[data-theme="dark"] .workflow--airbnb,
+html[data-theme="dark"] .integrations--airbnb,
+html[data-theme="dark"] .under-the-hood--airbnb,
+html[data-theme="dark"] .pricing--airbnb,
+html[data-theme="dark"] .trust--airbnb,
+html[data-theme="dark"] .site-footer--airbnb,
+html[data-theme="dark"] .testimonial-card--airbnb,
+html[data-theme="dark"] .feature-card--airbnb,
+html[data-theme="dark"] .pricing-card--airbnb,
+html[data-theme="dark"] .trust-card--airbnb,
+html[data-theme="dark"] .payment-chip--airbnb,
+html[data-theme="dark"] .workflow-card,
+html[data-theme="dark"] .activity-entry,
+html[data-theme="dark"] .summary--airbnb li,
+html[data-theme="dark"] .connector-card--airbnb,
+html[data-theme="dark"] .stat-card--airbnb,
+html[data-theme="dark"] .comparison-table-wrap--airbnb,
+html[data-theme="dark"] .logo-pill--airbnb,
+html[data-theme="dark"] .founder-card--airbnb,
+html[data-theme="dark"] .autopilot-panel--airbnb,
+html[data-theme="dark"] .built-with--airbnb span,
+html[data-theme="dark"] .workflow-journey-card,
+html[data-theme="dark"] .workflow-guidance-card,
+html[data-theme="dark"] .workflow-journey-step {
+  background: linear-gradient(180deg, rgba(20, 32, 44, 0.98), rgba(17, 27, 38, 0.94));
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .nav a,
+html[data-theme="dark"] .text-link,
+html[data-theme="dark"] .footer-links a,
+html[data-theme="dark"] .mobile-dock a {
+  color: #d5dde7;
+}
+
+html[data-theme="dark"] .explore-rail strong,
+html[data-theme="dark"] .hero-trust-list strong,
+html[data-theme="dark"] .testimonial-card--airbnb strong,
+html[data-theme="dark"] .explore-card__body h3,
+html[data-theme="dark"] .feature-card--airbnb h3,
+html[data-theme="dark"] .payment-chip--airbnb h3,
+html[data-theme="dark"] .trust-card--airbnb h3,
+html[data-theme="dark"] .stat-card--airbnb .value,
+html[data-theme="dark"] .workflow-journey-step h3,
+html[data-theme="dark"] .workflow-guidance-card h3,
+html[data-theme="dark"] .pricing-top .price,
+html[data-theme="dark"] .built-with--airbnb span,
+html[data-theme="dark"] .explore-tag {
+  color: #f3f4f6;
+}
+
+html[data-theme="dark"] .section-heading h2,
+html[data-theme="dark"] h1,
+html[data-theme="dark"] .workflow-card h4,
+html[data-theme="dark"] .summary--airbnb h3 {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .feature-link,
+html[data-theme="dark"] .text-link {
+  color: #9cc2ff;
+}
+
+html[data-theme="dark"] .feature-link:hover,
+html[data-theme="dark"] .text-link:hover {
+  color: #c7ddff;
+}
+
+html[data-theme="dark"] .nav a:hover,
+html[data-theme="dark"] .nav a.is-active,
+html[data-theme="dark"] .mobile-dock a:hover {
+  background: rgba(255, 125, 114, 0.14);
+  color: #fff3f1;
+}
+
+html[data-theme="dark"] .hero-status-card--airbnb div,
+html[data-theme="dark"] .logo-pill--airbnb,
+html[data-theme="dark"] .connector-form input,
+html[data-theme="dark"] .flow-modal input,
+html[data-theme="dark"] .flow-modal select,
+html[data-theme="dark"] .checkout-card input,
+html[data-theme="dark"] .checkout-card textarea,
+html[data-theme="dark"] .payment-form input,
+html[data-theme="dark"] .payment-form textarea,
+html[data-theme="dark"] .lead-capture input,
+html[data-theme="dark"] .form-grid input,
+html[data-theme="dark"] .form-grid select {
+  background: rgba(11, 18, 32, 0.9);
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .hero-media-points span,
+html[data-theme="dark"] .logo-mark,
+html[data-theme="dark"] .tier-badge,
+html[data-theme="dark"] .workflow-status,
+html[data-theme="dark"] .connector-toggle,
+html[data-theme="dark"] .integration-intro--airbnb span,
+html[data-theme="dark"] .shield-pill,
+html[data-theme="dark"] .workflow-journey-step span,
+html[data-theme="dark"] .signal-pill {
+  background: rgba(255, 125, 114, 0.12);
+  color: #ffd7d1;
+  border-color: rgba(255, 125, 114, 0.22);
+}
+
+html[data-theme="dark"] .ghost,
+html[data-theme="dark"] .pill {
+  background: rgba(20, 32, 44, 0.96);
+  color: #f3f4f6;
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .ghost:hover,
+html[data-theme="dark"] .pill:hover {
+  background: rgba(29, 43, 58, 0.96);
+}
+
+html[data-theme="dark"] .flow-modal pre {
+  background: #0b1220;
+  color: #f3f4f6;
+  border-color: var(--line);
+}
+
+@media (max-width: 1120px) {
+  .hero--airbnb,
+  .workflow--airbnb,
+  .trust-grid--airbnb,
+  .stat-grid--airbnb,
+  .workflow-support,
+  .workflow-journey-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading--split {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  h1,
+  .section-heading h2 {
+    max-width: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .top--airbnb {
+    align-items: flex-start;
+  }
+
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .explore-rail,
+  .hero-status-card--airbnb,
+  .stat-grid--airbnb {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-video {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 720px) {
+  main.landing-main {
+    gap: 24px;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+  }
+
+  .lead-capture--airbnb {
+    flex-direction: column;
+    border-radius: 22px;
+  }
+
+  .lead-capture--airbnb .ghost {
+    width: 100%;
+  }
+
+  .payment-chip--airbnb,
+  .founder-card--airbnb {
+    grid-template-columns: 1fr;
+  }
+}

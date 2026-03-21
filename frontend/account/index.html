@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fa" />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("globalflow_theme");
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+        } catch (error) {}
+      })();
+    </script>
+    <title>GlobalFlow | Account</title>
+    <link rel="stylesheet" href="/static/flow.css" />
+      <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <header class="top">
+      <div class="brand">
+        <span>GlobalFlow</span>
+        <p>Account</p>
+      </div>
+      <nav class="nav" aria-label="Account navigation">
+        <a href="/">Dashboard</a>
+        <a href="/automation">Automation</a>
+        <a href="/account">Account</a>
+      </nav>
+    </header>
+    <main class="account-page">
+      <section class="account-panel">
+        <div class="panel-heading">
+          <h2>Profile settings</h2>
+          <p>Manage identity, alerts, and automation preferences.</p>
+        </div>
+        <form id="account-form">
+          <div class="form-grid">
+            <label>
+              Full name
+              <input name="name" value="Nova Ops" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" value="ops@globalflow.ai" required />
+            </label>
+            <label>
+              Role
+              <input name="role" value="Automation Architect" />
+            </label>
+            <label>
+              Timezone
+              <input name="timezone" value="UTC" />
+            </label>
+          </div>
+          <div class="form-grid">
+            <label>
+              Daily digest
+              <select name="daily_digest">
+                <option value="enabled" selected>Enabled</option>
+                <option value="paused" >Paused</option>
+              </select>
+            </label>
+            <label>
+              Alert channel
+              <select name="alert_channel">
+                <option value="Slack" selected>Slack</option>
+                <option value="Email" >Email</option>
+                <option value="SMS" >SMS</option>
+              </select>
+            </label>
+            <label>
+              Automation tier
+              <select name="automation_tier">
+                <option value="High trust" selected>
+                  High trust
+                </option>
+                <option value="Autonomous" >
+                  Autonomous
+                </option>
+                <option value="Human review" >
+                  Human review
+                </option>
+              </select>
+            </label>
+            <label>
+              Theme
+              <select name="theme">
+                <option value="light" selected>Light</option>
+                <option value="dark" >Dark</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary">Save changes</button>
+            <span id="account-status" aria-live="polite"></span>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="/static/account.js"></script>
+  </body>
+</html>

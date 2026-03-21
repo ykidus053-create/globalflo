@@ -6,6 +6,7 @@ from typing import Any, Dict, List
 
 import httpx
 from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -34,6 +35,21 @@ logger.setLevel(logging.INFO)
 
 app = FastAPI(title="Global Flow Automation")
 app.add_middleware(GZipMiddleware, minimum_size=1200)
+
+allowed_origins = [origin.strip() for origin in os.getenv("GLOBALFLOW_ALLOWED_ORIGINS", "*").split(",") if origin.strip()]
+if not allowed_origins:
+    allowed_origins = ["*"]
+
+cors_options = {
+    "allow_methods": ["*"],
+    "allow_headers": ["*"],
+}
+if allowed_origins == ["*"]:
+    cors_options["allow_origins"] = ["*"]
+else:
+    cors_options["allow_origins"] = allowed_origins
+
+app.add_middleware(CORSMiddleware, **cors_options)
 templates = Jinja2Templates(directory=root / "templates")
 
 AUTOPILOT_BOOT_ENABLED = os.getenv("GLOBALFLOW_AUTOPILOT_ENABLED", "1").lower() not in {"0", "false", "no"}
@@ -875,3 +891,8 @@ async def update_account(payload: Dict[str, str]):
     theme = payload.get("theme", USER_SETTINGS.get("theme", "light"))
     USER_SETTINGS["theme"] = theme if theme in {"light", "dark"} else "light"
     return {"status": "updated", "profile": USER_PROFILE, "settings": USER_SETTINGS}
+
+
+@app.get("/api/account", response_class=JSONResponse)
+async def account_state():
+    return {"profile": USER_PROFILE, "settings": USER_SETTINGS}

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    runtime: static
+    name: globalflo-site
+    buildCommand: pip install -r requirements.txt && python export_static_frontend.py
+    staticPublishPath: ./frontend
+    buildFilter:
+      paths:
+        - export_static_frontend.py
+        - render-frontend.yaml
+        - globalflow/**
+        - requirements.txt
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=3600
