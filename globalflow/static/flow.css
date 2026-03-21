@@ -1792,3 +1792,963 @@ html[data-theme="dark"] .toast {
   background: #020617;
   border-color: #0f172a;
 }
+
+/* Airbnb-inspired landing redesign */
+:root {
+  --bg: #f7f4ef;
+  --bg-soft: #f1ece5;
+  --panel: #ffffff;
+  --panel-strong: #fffdf9;
+  --text: #1f2937;
+  --muted: #667085;
+  --accent: #ff5a5f;
+  --accent-strong: #d9424c;
+  --accent-soft: #fff0f1;
+  --line: #e9e2d8;
+  --line-strong: #d8cec1;
+  --warning: #b45309;
+  --shadow: 0 12px 34px rgba(31, 41, 55, 0.08);
+  --radius: 28px;
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+body,
+.payment-body,
+.checkout-body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 90, 95, 0.08), transparent 28%),
+    radial-gradient(circle at 85% 10%, rgba(255, 255, 255, 0.72), transparent 24%),
+    var(--bg);
+  color: var(--text);
+}
+
+.aurora,
+.grid-overlay,
+.backdrop {
+  display: none;
+}
+
+h1,
+.section-heading h2,
+.footer-top h2,
+.payment-header h1,
+.checkout-hero-copy h1 {
+  font-family: "Newsreader", serif;
+  letter-spacing: -0.03em;
+}
+
+.top--airbnb {
+  gap: 20px;
+  padding: 18px clamp(18px, 4vw, 52px);
+  background: rgba(247, 244, 239, 0.86);
+  border-bottom: 1px solid rgba(233, 226, 216, 0.88);
+  backdrop-filter: blur(22px);
+}
+
+.brand-mark {
+  padding: 7px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 90, 95, 0.18);
+  background: #fff8f7;
+}
+
+.brand-mark span {
+  background: linear-gradient(135deg, var(--accent), #ff8a70);
+}
+
+.brand-copy span {
+  font-size: 1.08rem;
+}
+
+.brand-copy p {
+  color: var(--muted);
+}
+
+.nav {
+  gap: 6px;
+  padding: 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(233, 226, 216, 0.96);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.nav a {
+  padding: 8px 13px;
+  color: #435063;
+  font-size: 0.84rem;
+}
+
+.nav a:hover,
+.nav a.is-active {
+  background: var(--accent-soft);
+  color: #101828;
+}
+
+main.landing-main {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 18px clamp(18px, 4vw, 52px) 52px;
+  gap: 34px;
+}
+
+.hero--airbnb {
+  grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+  gap: 28px;
+  padding-top: 20px;
+  align-items: stretch;
+}
+
+.hero-copy--airbnb,
+.hero-stage--airbnb,
+.hero-side-stack {
+  gap: 18px;
+}
+
+.hero-copy--airbnb {
+  align-content: center;
+  padding: 20px 0;
+}
+
+.signal-pill {
+  border: 1px solid rgba(255, 90, 95, 0.16);
+  background: rgba(255, 255, 255, 0.86);
+  color: #243041;
+}
+
+.signal-meta {
+  color: var(--muted);
+}
+
+.eyebrow {
+  color: var(--accent-strong);
+  letter-spacing: 0.16rem;
+  font-size: 0.7rem;
+}
+
+h1 {
+  font-size: clamp(3rem, 5vw, 5.35rem);
+  line-height: 0.96;
+  max-width: 11ch;
+}
+
+.lead {
+  max-width: 58ch;
+  color: #526070;
+  font-size: 1.04rem;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  margin-top: 6px;
+}
+
+.primary--hero {
+  min-width: 170px;
+  padding-inline: 18px;
+}
+
+.hero-meta {
+  gap: 18px;
+}
+
+.text-link {
+  color: #344054;
+  font-weight: 600;
+}
+
+.text-link:hover {
+  color: var(--accent-strong);
+}
+
+.explore-rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.explore-rail article,
+.hero-trust-card,
+.hero-media-card,
+.hero-status-card--airbnb,
+.proof--quiet,
+.explore-section,
+.features--airbnb,
+.workflow--airbnb,
+.integrations--airbnb,
+.under-the-hood--airbnb,
+.pricing--airbnb,
+.trust--airbnb,
+.site-footer--airbnb {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 252, 247, 0.96));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.explore-rail article {
+  padding: 16px 18px;
+  border-radius: 22px;
+}
+
+.explore-rail span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.explore-rail strong {
+  font-size: 0.95rem;
+  color: #19212d;
+}
+
+.lead-capture--airbnb {
+  max-width: 560px;
+  padding: 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+}
+
+.lead-capture--airbnb input {
+  border: none;
+  background: transparent;
+  padding-left: 14px;
+}
+
+.lead-capture--airbnb input:focus-visible {
+  outline: none;
+}
+
+.hero-media-card {
+  position: relative;
+  padding: 18px;
+  border-radius: 32px;
+  overflow: hidden;
+}
+
+.hero-video {
+  min-height: 430px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: linear-gradient(135deg, #d6c0b0, #f3ebe2 40%, #e9f0f8);
+  object-fit: cover;
+}
+
+.hero-media-caption {
+  display: grid;
+  gap: 12px;
+}
+
+.hero-media-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-media-points span,
+.logo-mark,
+.tier-badge,
+.workflow-status,
+.connector-toggle,
+.integration-intro--airbnb span,
+.shield-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 90, 95, 0.15);
+  background: var(--accent-soft);
+  color: #8f2430;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hero-status-card--airbnb {
+  padding: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: 24px;
+}
+
+.hero-status-card--airbnb div {
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(233, 226, 216, 0.96);
+  background: rgba(255, 250, 245, 0.88);
+}
+
+.hero-status-card--airbnb strong {
+  margin-top: 8px;
+  font-size: 1.35rem;
+  color: #101828;
+}
+
+.hero-trust-card {
+  padding: 22px;
+  border-radius: 28px;
+}
+
+.hero-trust-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.hero-trust-list strong,
+.testimonial-card--airbnb strong,
+.explore-card__body h3,
+.feature-card--airbnb h3,
+.payment-chip--airbnb h3,
+.trust-card--airbnb h3 {
+  color: #101828;
+}
+
+.hero-trust-list p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.section-heading--split {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.section-heading--split > p {
+  max-width: 46ch;
+  margin: 0;
+}
+
+.section-heading h2 {
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.03;
+  max-width: 13ch;
+}
+
+.proof--quiet,
+.explore-section,
+.features--airbnb,
+.workflow--airbnb,
+.integrations--airbnb,
+.under-the-hood--airbnb,
+.pricing--airbnb,
+.trust--airbnb,
+.metrics--credibility {
+  padding: clamp(22px, 3.4vw, 34px);
+  border-radius: 32px;
+}
+
+.logo-bar--airbnb {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.logo-pill--airbnb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 22px;
+  background: #fffaf6;
+  border: 1px solid var(--line);
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.explore-card {
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.06);
+}
+
+.explore-card__visual {
+  min-height: 220px;
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-size: cover;
+  background-position: center;
+}
+
+.explore-card--phone .explore-card__visual {
+  background: linear-gradient(135deg, rgba(255, 90, 95, 0.18), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #fbe5dd, #f8f3ee);
+}
+
+.explore-card--receipt .explore-card__visual {
+  background: linear-gradient(135deg, rgba(255, 178, 64, 0.16), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #f7ead8, #fbf7f1);
+}
+
+.explore-card--shield .explore-card__visual {
+  background: linear-gradient(135deg, rgba(67, 160, 111, 0.17), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #e4f1ea, #f8fbf8);
+}
+
+.explore-card--folder .explore-card__visual {
+  background: linear-gradient(135deg, rgba(60, 132, 244, 0.16), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #e6eefb, #f8fafd);
+}
+
+.explore-card--spark .explore-card__visual {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.16), rgba(255, 255, 255, 0) 55%), linear-gradient(160deg, #efe6f5, #fbf9fd);
+}
+
+.explore-tag {
+  display: inline-flex;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #243041;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.explore-card__body {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.explore-card__body h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.explore-card__body p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.testimonial-grid--airbnb,
+.feature-grid--airbnb,
+.workflow-grid--airbnb,
+.connectors-grid--airbnb,
+.subscription-grid--airbnb,
+.trust-signal-grid--airbnb {
+  gap: 16px;
+}
+
+.testimonial-card--airbnb,
+.feature-card--airbnb,
+.pricing-card--airbnb,
+.trust-card--airbnb,
+.payment-chip--airbnb,
+.workflow-card,
+.activity-entry,
+.summary--airbnb li,
+.connector-card--airbnb,
+.stat-card--airbnb,
+.comparison-table-wrap--airbnb {
+  background: #fffdf9;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+}
+
+.testimonial-card--airbnb,
+.feature-card--airbnb,
+.pricing-card--airbnb,
+.trust-card--airbnb {
+  padding: 20px;
+  border-radius: 24px;
+}
+
+.testimonial-card--airbnb {
+  gap: 12px;
+}
+
+.testimonial-card img,
+.founder-card img {
+  width: 64px;
+  height: 64px;
+  border: 2px solid rgba(255, 90, 95, 0.15);
+}
+
+.testimonial-quote,
+.feature-card--airbnb p,
+.connector-heading p,
+.payment-chip--airbnb p,
+.trust-card--airbnb p,
+.founder-card--airbnb p,
+.activity-detail,
+.activity-entry time,
+.pricing-proof p,
+.pricing-list,
+.tier-copy,
+.summary li,
+.connector-form label,
+.checkout-foot,
+.modal-note,
+.payment-status,
+#account-status {
+  color: var(--muted);
+}
+
+.stat-grid--airbnb {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.stat-card--airbnb {
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.stat-card--airbnb .value {
+  color: #111827;
+  font-size: 1.5rem;
+}
+
+.feature-card--airbnb .feature-icon,
+.connector-card--airbnb .feature-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255, 90, 95, 0.16), rgba(255, 255, 255, 0.9));
+}
+
+.workflow--airbnb {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 18px;
+}
+
+.workflow-main--airbnb,
+.workflow-side--airbnb {
+  gap: 16px;
+}
+
+.workflow-card {
+  padding: 18px;
+  border-radius: 22px;
+}
+
+.workflow-card h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.workflow-card .note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.summary--airbnb {
+  padding-top: 6px;
+}
+
+.summary--airbnb h3 {
+  margin: 0 0 10px;
+}
+
+.summary--airbnb li {
+  padding: 12px 14px;
+  border-radius: 16px;
+}
+
+.autopilot-panel--airbnb {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: #fff8f5;
+}
+
+.activity-entry {
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.integration-intro--airbnb {
+  margin-bottom: 12px;
+}
+
+.connector-card--airbnb {
+  border-radius: 22px;
+}
+
+.connector-card--airbnb summary {
+  padding: 16px;
+}
+
+.connector-form {
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.connector-form input,
+.flow-modal input,
+.flow-modal select,
+.checkout-card input,
+.checkout-card textarea,
+.payment-form input,
+.payment-form textarea,
+.lead-capture input,
+.form-grid input,
+.form-grid select {
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+}
+
+.built-with--airbnb {
+  gap: 10px;
+}
+
+.built-with--airbnb span {
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #fffaf6;
+  border: 1px solid var(--line);
+  color: #344054;
+}
+
+.pricing-toggle {
+  margin-bottom: 18px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fffaf6;
+}
+
+.toggle-option {
+  color: #526070;
+}
+
+.toggle-option.is-active {
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+}
+
+.subscription-grid--airbnb {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.pricing-card--lead {
+  background: linear-gradient(180deg, #fff7f7, #fffdf9 40%);
+  border-color: rgba(255, 90, 95, 0.22);
+}
+
+.pricing-top {
+  display: grid;
+  gap: 6px;
+}
+
+.pricing-top .price {
+  font-size: 1.7rem;
+  color: #111827;
+}
+
+.comparison-table-wrap--airbnb {
+  margin-top: 18px;
+  border-radius: 24px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 13px 14px;
+}
+
+.payment-strip--airbnb {
+  margin-top: 18px;
+  gap: 14px;
+}
+
+.payment-chip--airbnb {
+  grid-template-columns: 52px 1fr auto;
+  padding: 16px;
+  border-radius: 22px;
+}
+
+.trust-grid--airbnb {
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  gap: 18px;
+}
+
+.founder-card--airbnb {
+  padding: 22px;
+  border-radius: 28px;
+  grid-template-columns: 72px 1fr;
+  background: linear-gradient(180deg, #fffaf7, #fffdf9);
+}
+
+.founder-role {
+  margin: 4px 0 10px;
+}
+
+.site-footer--airbnb {
+  margin-top: 10px;
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 250, 245, 0.92));
+}
+
+.footer-links a {
+  color: #344054;
+}
+
+.primary,
+.ghost,
+.pill {
+  border-radius: 999px;
+  font-weight: 700;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--accent), #ff7a59);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.primary:hover {
+  background: linear-gradient(135deg, var(--accent-strong), #e36245);
+}
+
+.ghost,
+.pill {
+  background: rgba(255, 255, 255, 0.9);
+  color: #111827;
+  border-color: var(--line-strong);
+}
+
+.ghost:hover,
+.pill:hover {
+  background: #fff7f5;
+}
+
+.toast {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
+}
+
+.mobile-dock {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.mobile-dock a {
+  color: #344054;
+}
+
+.mobile-dock a:hover {
+  background: var(--accent-soft);
+}
+
+html[data-theme="dark"] {
+  --bg: #0f1720;
+  --bg-soft: #16212e;
+  --panel: #14202c;
+  --panel-strong: #1a2836;
+  --text: #f3f4f6;
+  --muted: #9aa8bb;
+  --accent: #ff7d72;
+  --accent-strong: #ff9b92;
+  --accent-soft: rgba(255, 125, 114, 0.12);
+  --line: #263445;
+  --line-strong: #34465d;
+  --warning: #f59e0b;
+  --shadow: 0 18px 38px rgba(2, 6, 23, 0.35);
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .payment-body,
+html[data-theme="dark"] .checkout-body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 125, 114, 0.1), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(23, 32, 44, 0.42), transparent 24%),
+    var(--bg);
+}
+
+html[data-theme="dark"] .top--airbnb {
+  background: rgba(15, 23, 32, 0.86);
+  border-color: rgba(38, 52, 69, 0.85);
+}
+
+html[data-theme="dark"] .nav,
+html[data-theme="dark"] .lead-capture--airbnb,
+html[data-theme="dark"] .flow-modal__content {
+  background: rgba(20, 32, 44, 0.94);
+}
+
+html[data-theme="dark"] .brand-mark,
+html[data-theme="dark"] .explore-rail article,
+html[data-theme="dark"] .hero-trust-card,
+html[data-theme="dark"] .hero-media-card,
+html[data-theme="dark"] .hero-status-card--airbnb,
+html[data-theme="dark"] .proof--quiet,
+html[data-theme="dark"] .explore-section,
+html[data-theme="dark"] .features--airbnb,
+html[data-theme="dark"] .workflow--airbnb,
+html[data-theme="dark"] .integrations--airbnb,
+html[data-theme="dark"] .under-the-hood--airbnb,
+html[data-theme="dark"] .pricing--airbnb,
+html[data-theme="dark"] .trust--airbnb,
+html[data-theme="dark"] .site-footer--airbnb,
+html[data-theme="dark"] .testimonial-card--airbnb,
+html[data-theme="dark"] .feature-card--airbnb,
+html[data-theme="dark"] .pricing-card--airbnb,
+html[data-theme="dark"] .trust-card--airbnb,
+html[data-theme="dark"] .payment-chip--airbnb,
+html[data-theme="dark"] .workflow-card,
+html[data-theme="dark"] .activity-entry,
+html[data-theme="dark"] .summary--airbnb li,
+html[data-theme="dark"] .connector-card--airbnb,
+html[data-theme="dark"] .stat-card--airbnb,
+html[data-theme="dark"] .comparison-table-wrap--airbnb,
+html[data-theme="dark"] .logo-pill--airbnb,
+html[data-theme="dark"] .founder-card--airbnb,
+html[data-theme="dark"] .autopilot-panel--airbnb,
+html[data-theme="dark"] .built-with--airbnb span {
+  background: linear-gradient(180deg, rgba(20, 32, 44, 0.98), rgba(17, 27, 38, 0.94));
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .nav a,
+html[data-theme="dark"] .text-link,
+html[data-theme="dark"] .footer-links a,
+html[data-theme="dark"] .mobile-dock a {
+  color: #d5dde7;
+}
+
+html[data-theme="dark"] .nav a:hover,
+html[data-theme="dark"] .nav a.is-active,
+html[data-theme="dark"] .mobile-dock a:hover {
+  background: rgba(255, 125, 114, 0.14);
+  color: #fff3f1;
+}
+
+html[data-theme="dark"] .hero-status-card--airbnb div,
+html[data-theme="dark"] .logo-pill--airbnb,
+html[data-theme="dark"] .connector-form input,
+html[data-theme="dark"] .flow-modal input,
+html[data-theme="dark"] .flow-modal select,
+html[data-theme="dark"] .checkout-card input,
+html[data-theme="dark"] .checkout-card textarea,
+html[data-theme="dark"] .payment-form input,
+html[data-theme="dark"] .payment-form textarea,
+html[data-theme="dark"] .lead-capture input,
+html[data-theme="dark"] .form-grid input,
+html[data-theme="dark"] .form-grid select {
+  background: rgba(11, 18, 32, 0.9);
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .hero-media-points span,
+html[data-theme="dark"] .logo-mark,
+html[data-theme="dark"] .tier-badge,
+html[data-theme="dark"] .workflow-status,
+html[data-theme="dark"] .connector-toggle,
+html[data-theme="dark"] .integration-intro--airbnb span,
+html[data-theme="dark"] .shield-pill,
+html[data-theme="dark"] .signal-pill {
+  background: rgba(255, 125, 114, 0.12);
+  color: #ffd7d1;
+  border-color: rgba(255, 125, 114, 0.22);
+}
+
+html[data-theme="dark"] .ghost,
+html[data-theme="dark"] .pill {
+  background: rgba(20, 32, 44, 0.96);
+  color: #f3f4f6;
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .ghost:hover,
+html[data-theme="dark"] .pill:hover {
+  background: rgba(29, 43, 58, 0.96);
+}
+
+html[data-theme="dark"] .flow-modal pre {
+  background: #0b1220;
+  color: #f3f4f6;
+  border-color: var(--line);
+}
+
+@media (max-width: 1120px) {
+  .hero--airbnb,
+  .workflow--airbnb,
+  .trust-grid--airbnb,
+  .stat-grid--airbnb {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading--split {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  h1,
+  .section-heading h2 {
+    max-width: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .top--airbnb {
+    align-items: flex-start;
+  }
+
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .explore-rail,
+  .hero-status-card--airbnb,
+  .stat-grid--airbnb {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-video {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 720px) {
+  main.landing-main {
+    gap: 24px;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+  }
+
+  .lead-capture--airbnb {
+    flex-direction: column;
+    border-radius: 22px;
+  }
+
+  .lead-capture--airbnb .ghost {
+    width: 100%;
+  }
+
+  .payment-chip--airbnb,
+  .founder-card--airbnb {
+    grid-template-columns: 1fr;
+  }
+}
