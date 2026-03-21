@@ -73,7 +73,15 @@
     </header>
 
     <main id="main-content" class="landing-main">
-      <section id="hero" class="hero hero--airbnb">
+      <section id="hero" class="hero hero--airbnb hero--cinematic">
+        <div class="hero-backdrop" aria-hidden="true">
+          <video class="hero-backdrop-video" autoplay muted loop playsinline preload="metadata" poster="/static/globalflow-walkthrough-poster.png">
+            <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
+          </video>
+          <div class="hero-backdrop-wash"></div>
+        </div>
+
+        <div class="hero-inner">
         <div class="hero-copy hero-copy--airbnb">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
@@ -125,29 +133,29 @@
         </div>
 
         <div class="hero-stage hero-stage--airbnb">
-          <article class="hero-media-card" id="demo">
-            <div class="video-card-top">
-              <p>Product walkthrough</p>
-              <span id="panel-health">Live tracking active</span>
-            </div>
-            <video
-              id="demo-video"
-              class="hero-video"
-              controls
-              preload="none"
-              poster="/static/globalflow-walkthrough-poster.png"
-              aria-label="GlobalFlow product walkthrough"
-            >
-              <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
-              Your browser does not support embedded video.
-            </video>
-            <div class="hero-media-caption">
-              <p class="video-note">95 second narrated walkthrough: overview, exploration, live workflow, integrations, pricing, and the automation workspace.</p>
-              <div class="hero-media-points">
-                <span>Review work in one place</span>
-                <span>Approve only when needed</span>
-                <span>Track every handoff</span>
-              </div>
+          <article class="hero-proof-card">
+            <p class="eyebrow">Story-first layout</p>
+            <h2>The screen should explain the product before the user reads a second paragraph.</h2>
+            <p>
+              A request comes in, the workflow routes the handoff, and the operator stays in control. The motion in the background
+              now supports that story instead of competing with it.
+            </p>
+            <div class="hero-story-grid">
+              <article>
+                <span>01</span>
+                <strong>Capture the signal</strong>
+                <p>Calls, files, invoices, and compliance work enter one queue instead of four separate tools.</p>
+              </article>
+              <article>
+                <span>02</span>
+                <strong>Route the system</strong>
+                <p>GlobalFlow decides the next system, the next owner, and the next checkpoint before work stalls.</p>
+              </article>
+              <article>
+                <span>03</span>
+                <strong>Return proof</strong>
+                <p>Approvals, exceptions, and completed work come back with a visible audit trail.</p>
+              </article>
             </div>
           </article>
 
@@ -179,6 +187,62 @@
               </div>
             </article>
           </div>
+        </div>
+        </div>
+      </section>
+
+      <section id="demo" class="demo-showcase">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Product walkthrough</p>
+            <h2>Watch the interface tell the same story as the copy.</h2>
+          </div>
+          <p>The demo now sits in its own section so the first screen can stay cinematic while the real walkthrough remains easy to inspect.</p>
+        </div>
+        <div class="demo-showcase-grid">
+          <article class="hero-media-card">
+            <div class="video-card-top">
+              <p>Product walkthrough</p>
+              <span id="panel-health">Live tracking active</span>
+            </div>
+            <video
+              id="demo-video"
+              class="hero-video"
+              controls
+              preload="none"
+              poster="/static/globalflow-walkthrough-poster.png"
+              aria-label="GlobalFlow product walkthrough"
+            >
+              <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
+              Your browser does not support embedded video.
+            </video>
+            <div class="hero-media-caption">
+              <p class="video-note">95 second narrated walkthrough: overview, exploration, live workflow, integrations, pricing, and the automation workspace.</p>
+              <div class="hero-media-points">
+                <span>Review work in one place</span>
+                <span>Approve only when needed</span>
+                <span>Track every handoff</span>
+              </div>
+            </div>
+          </article>
+          <article class="demo-story-card">
+            <p class="eyebrow">What to look for</p>
+            <div class="demo-story-list">
+              <div>
+                <strong>Visual hierarchy</strong>
+                <p>The page starts broad, then narrows into concrete workflow detail as the user scrolls.</p>
+              </div>
+              <div>
+                <strong>Motion with meaning</strong>
+                <p>The moving backdrop gives context to the product while the real demo stays in a stable inspection area.</p>
+              </div>
+              <div>
+                <strong>Consistent structure</strong>
+                <p>Spacing, card rhythm, and CTA placement now line up more tightly from hero through workflow.</p>
+              </div>
+            </div>
+            <a class="text-link" href="#flowboard">Jump to the live workflow -></a>
+          </article>
         </div>
       </section>
 

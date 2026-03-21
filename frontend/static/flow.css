@@ -1928,6 +1928,47 @@ main.landing-main {
   align-items: stretch;
 }
 
+.hero--cinematic {
+  position: relative;
+  min-height: calc(100vh - 112px);
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: 36px;
+  overflow: hidden;
+  grid-template-columns: 1fr;
+}
+
+.hero-backdrop,
+.hero-backdrop-wash {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-backdrop {
+  z-index: 0;
+}
+
+.hero-backdrop-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.82) contrast(1.02) brightness(0.46);
+}
+
+.hero-backdrop-wash {
+  background:
+    linear-gradient(115deg, rgba(10, 16, 22, 0.9) 0%, rgba(10, 16, 22, 0.72) 48%, rgba(10, 16, 22, 0.48) 100%),
+    radial-gradient(circle at 82% 18%, rgba(255, 122, 89, 0.16), transparent 26%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
 .hero-copy--airbnb,
 .hero-stage--airbnb,
 .hero-side-stack {
@@ -1937,6 +1978,21 @@ main.landing-main {
 .hero-copy--airbnb {
   align-content: center;
   padding: 20px 0;
+}
+
+.hero--cinematic .hero-copy--airbnb,
+.hero--cinematic .hero-proof-card,
+.hero--cinematic .hero-status-card--airbnb,
+.hero--cinematic .hero-trust-card {
+  background: rgba(10, 16, 22, 0.54);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.22);
+  backdrop-filter: blur(18px);
+}
+
+.hero--cinematic .hero-copy--airbnb {
+  padding: 28px;
+  border-radius: 32px;
 }
 
 .signal-pill {
@@ -2140,6 +2196,135 @@ h1 {
   margin: 4px 0 0;
   color: var(--muted);
   line-height: 1.55;
+}
+
+.hero--cinematic .eyebrow,
+.hero--cinematic .signal-meta,
+.hero--cinematic .hero-copy--airbnb .form-note,
+.hero--cinematic .hero-proof-card p,
+.hero--cinematic .hero-trust-list p,
+.hero--cinematic .hero-meta a,
+.hero--cinematic .lead {
+  color: rgba(243, 244, 246, 0.82);
+}
+
+.hero--cinematic h1,
+.hero--cinematic .hero-proof-card h2,
+.hero--cinematic .hero-proof-card strong,
+.hero--cinematic .hero-trust-list strong,
+.hero--cinematic .hero-status-card--airbnb strong,
+.hero--cinematic .explore-rail strong {
+  color: #f8fafc;
+}
+
+.hero--cinematic .signal-pill,
+.hero--cinematic .explore-rail article {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+}
+
+.hero--cinematic .signal-dot {
+  background: #ff8c69;
+}
+
+.hero--cinematic .lead-capture--airbnb {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.hero-proof-card {
+  padding: 26px;
+  border-radius: 32px;
+  display: grid;
+  gap: 16px;
+}
+
+.hero-proof-card h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 1.08;
+}
+
+.hero-proof-card p {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.hero-story-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.hero-story-grid article {
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero-story-grid span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: rgba(255, 122, 89, 0.18);
+  color: #ffd7d1;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.hero-story-grid strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.hero-story-grid p {
+  color: rgba(243, 244, 246, 0.78);
+}
+
+.demo-showcase {
+  padding: clamp(22px, 3.4vw, 34px);
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 252, 247, 0.96));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.demo-showcase-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.78fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.demo-story-card {
+  padding: 24px;
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 248, 244, 0.96), rgba(255, 255, 255, 0.98));
+  display: grid;
+  gap: 18px;
+}
+
+.demo-story-list {
+  display: grid;
+  gap: 16px;
+}
+
+.demo-story-list strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.demo-story-list p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .section-heading--split {
@@ -2713,6 +2898,7 @@ html[data-theme="dark"] .explore-rail article,
 html[data-theme="dark"] .hero-trust-card,
 html[data-theme="dark"] .hero-media-card,
 html[data-theme="dark"] .hero-status-card--airbnb,
+html[data-theme="dark"] .demo-showcase,
 html[data-theme="dark"] .proof--quiet,
 html[data-theme="dark"] .explore-section,
 html[data-theme="dark"] .features--airbnb,
@@ -2793,6 +2979,7 @@ html[data-theme="dark"] .mobile-dock a:hover {
 
 html[data-theme="dark"] .hero-status-card--airbnb div,
 html[data-theme="dark"] .logo-pill--airbnb,
+html[data-theme="dark"] .demo-story-card,
 html[data-theme="dark"] .connector-form input,
 html[data-theme="dark"] .flow-modal input,
 html[data-theme="dark"] .flow-modal select,
@@ -2820,6 +3007,14 @@ html[data-theme="dark"] .signal-pill {
   background: rgba(255, 125, 114, 0.12);
   color: #ffd7d1;
   border-color: rgba(255, 125, 114, 0.22);
+}
+
+html[data-theme="dark"] .demo-story-list strong {
+  color: #f3f4f6;
+}
+
+html[data-theme="dark"] .demo-story-list p {
+  color: #9aa8bb;
 }
 
 html[data-theme="dark"] .ghost,
@@ -2855,6 +3050,11 @@ html[data-theme="dark"] .flow-modal pre {
     flex-direction: column;
   }
 
+  .hero-inner,
+  .demo-showcase-grid {
+    grid-template-columns: 1fr;
+  }
+
   h1,
   .section-heading h2 {
     max-width: none;
@@ -2886,6 +3086,10 @@ html[data-theme="dark"] .flow-modal pre {
 
   .hero-video {
     min-height: 280px;
+  }
+
+  .hero--cinematic {
+    min-height: auto;
   }
 }
 
