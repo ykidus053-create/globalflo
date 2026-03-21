@@ -60,11 +60,10 @@
       </div>
       <nav class="nav" aria-label="Primary">
         <a href="#hero">Overview</a>
-        <a href="#explore">Explore</a>
+        <a href="#use-cases">Use cases</a>
         <a href="#flowboard">Workflow</a>
         <a href="#integrations">Integrations</a>
         <a href="#pricing">Pricing</a>
-        <a href="#founder">Founder</a>
         <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <button class="ghost small" id="open-login" type="button">Login</button>
@@ -91,11 +90,6 @@
             <button class="primary primary--hero" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
             <button class="ghost primary--hero" id="watch-demo" type="button">Watch the demo</button>
           </div>
-          <p class="hero-meta hero-meta--unified">
-            <a class="text-link" href="#flowboard">Live workflow</a>
-            <a class="text-link" href="#integrations">Integrations</a>
-            <a class="text-link" href="#pricing">Pricing</a>
-          </p>
 
           <div class="hero-quickfacts">
             <article>
@@ -111,15 +105,6 @@
               <strong>Human override included</strong>
             </article>
           </div>
-
-          <form id="hero-lead-form" class="lead-capture lead-capture--airbnb">
-            <label class="sr-only" for="hero-email">Business email</label>
-            <input id="hero-email" name="email" type="email" placeholder="you@company.com" required />
-            <input name="name" type="hidden" value="Landing page visitor" />
-            <input name="tier" type="hidden" value="starter" />
-            <button class="ghost" type="submit">Get early access</button>
-          </form>
-          <p class="form-note">Start free with one workflow and 100 runs each month.</p>
         </div>
 
         <aside class="hero-stage hero-stage--airbnb hero-stage--unified">
@@ -172,7 +157,7 @@
       <section id="demo" class="demo-showcase">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">Product walkthrough</p>
+            <p class="eyebrow">Demo</p>
             <h2>See the product.</h2>
           </div>
         </div>
@@ -194,7 +179,6 @@
               Your browser does not support embedded video.
             </video>
             <div class="hero-media-caption">
-              <p class="video-note">95 seconds.</p>
               <div class="hero-media-points">
                 <span>Workflow</span>
                 <span>Integrations</span>
@@ -213,28 +197,7 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <section class="proof proof--logos proof--quiet">
-        <div class="section-heading section-heading--split">
-          <div>
-            <p class="eyebrow">Trusted by early operators</p>
-            <h2>Calm enough to explore. Credible enough to adopt.</h2>
-          </div>
-          <p>Replace the placeholders below with approved customer logos when they are ready.</p>
-        </div>
-        <div class="logo-bar logo-bar--airbnb">
-          {% for logo in trusted_logos %}
-          <article class="logo-pill logo-pill--airbnb">
-            <span class="logo-mark" aria-hidden="true">{{ logo.name[0] }}</span>
-            <div>
-              <strong>{{ logo.name }}</strong>
-              <span>{{ logo.label }}</span>
-            </div>
-          </article>
-          {% endfor %}
-        </div>
-      </section>
-
-      <section id="explore" class="explore-section">
+      <section id="use-cases" class="explore-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Use cases</p>
@@ -249,29 +212,7 @@
             </div>
             <div class="explore-card__body">
               <h3>{{ task.headline }}</h3>
-              <a class="feature-link" href="#flowboard">Preview workflow -></a>
-            </div>
-          </article>
-          {% endfor %}
-        </div>
-      </section>
-
-      <section class="proof proof--testimonials">
-        <div class="section-heading section-heading--split">
-          <div>
-            <p class="eyebrow">Results</p>
-            <h2>What teams get.</h2>
-          </div>
-        </div>
-        <!-- REPLACE WITH REAL TESTIMONIALS -->
-        <div class="testimonial-grid testimonial-grid--airbnb">
-          {% for testimonial in testimonials %}
-          <article class="testimonial-card testimonial-card--airbnb">
-            <img src="{{ testimonial.photo }}" alt="{{ testimonial.name }} placeholder portrait" loading="lazy" />
-            <strong>{{ testimonial.result }}</strong>
-            <div class="testimonial-meta">
-              <span>{{ testimonial.name }}</span>
-              <p>{{ testimonial.role }} - {{ testimonial.company }}</p>
+              <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
           {% endfor %}
@@ -294,25 +235,6 @@
           {% endfor %}
         </div>
         <p class="metrics-footnote">Pilot-team average.</p>
-      </section>
-
-      <section id="features" class="features features--airbnb">
-        <div class="section-heading section-heading--split">
-          <div>
-            <p class="eyebrow">Core functions</p>
-            <h2>What it does.</h2>
-          </div>
-        </div>
-        <div class="feature-grid feature-grid--airbnb">
-          {% for feature in features %}
-          <article class="feature-card feature-card--airbnb">
-            <div class="feature-icon feature-icon--{{ feature.icon }}" aria-hidden="true"></div>
-            <h3>{{ feature.title }}</h3>
-            <p class="feature-headline">{{ feature.headline }}</p>
-            <a class="feature-link" href="{{ feature.href }}">Learn more -></a>
-          </article>
-          {% endfor %}
-        </div>
       </section>
 
       <section class="workflow workflow--split workflow--airbnb" id="flowboard">
@@ -358,9 +280,6 @@
             <h2>Connect your stack.</h2>
           </div>
         </div>
-        <div class="integration-intro integration-intro--airbnb">
-          <span>Connect in 2 clicks</span>
-        </div>
         <div class="connectors-grid connectors-grid--airbnb">
           {% for connector in connectors %}
           <details class="connector-card connector-card--airbnb" {% if loop.first %}open{% endif %}>
@@ -374,10 +293,6 @@
               </div>
               <span class="connector-toggle">Connect</span>
             </summary>
-            <p class="connector-meta">
-              <a href="{{ connector.doc }}" target="_blank" rel="noreferrer">Read setup guide</a>
-              <span>Connect in 2 clicks</span>
-            </p>
             <form class="connector-form" data-connector-id="{{ connector.id }}">
               <label>
                 Endpoint
@@ -399,30 +314,12 @@
         </div>
       </section>
 
-      <section id="under-the-hood" class="under-the-hood under-the-hood--airbnb">
-        <div class="section-heading section-heading--split">
-          <div>
-            <p class="eyebrow">Built with</p>
-            <h2>Core stack.</h2>
-          </div>
-        </div>
-        <div class="built-with built-with--airbnb">
-          {% for tool in built_with %}
-          <span>{{ tool }}</span>
-          {% endfor %}
-        </div>
-      </section>
-
       <section class="pricing pricing--airbnb" id="pricing">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Pricing</p>
             <h2>Start free. Scale later.</h2>
           </div>
-        </div>
-        <div class="pricing-toggle" role="tablist" aria-label="Billing period">
-          <button class="toggle-option is-active" id="billing-monthly" type="button">Monthly</button>
-          <button class="toggle-option" id="billing-annual" type="button">Annual <span>Save 17%</span></button>
         </div>
         <div class="subscription-grid subscription-grid--airbnb">
           {% for tier in subscription_tiers %}
@@ -446,44 +343,6 @@
           </article>
           {% endfor %}
         </div>
-
-        <div class="comparison-table-wrap comparison-table-wrap--airbnb">
-          <table class="comparison-table">
-            <thead>
-              <tr>
-                <th>Included</th>
-                <th>Starter</th>
-                <th>Pilot</th>
-                <th>Launch</th>
-                <th>Captain</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in pricing_comparison %}
-              <tr>
-                <td>{{ row.label }}</td>
-                <td>{{ row.starter }}</td>
-                <td>{{ row.pilot }}</td>
-                <td>{{ row.launch }}</td>
-                <td>{{ row.captain }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="payment-strip payment-strip--airbnb">
-          {% for method in payment_methods %}
-          <article class="payment-chip payment-chip--airbnb">
-            <div class="payment-icon {{ method.id }}"></div>
-            <div>
-              <h3>{{ method.name }}</h3>
-              <p>{{ method.description }}</p>
-            </div>
-            <button class="ghost small" data-payment-method="{{ method.id }}">{{ method.action }}</button>
-          </article>
-          {% endfor %}
-        </div>
       </section>
 
       <section id="why-globalflow" class="trust trust--airbnb">
@@ -493,27 +352,13 @@
             <h2>Security and control.</h2>
           </div>
         </div>
-        <div class="trust-grid trust-grid--airbnb">
-          <article class="founder-card founder-card--airbnb" id="founder">
-            <img src="{{ founders[0].photo }}" alt="{{ founders[0].name }} placeholder portrait" loading="lazy" />
-            <div>
-              <p class="eyebrow">Founder</p>
-              <h3>{{ founders[0].name }}</h3>
-              <p class="founder-role">{{ founders[0].role }}</p>
-              <div class="founder-actions">
-                <a class="ghost small" href="mailto:hello@globalflow.ai?subject=GlobalFlow%20founder%20chat">Talk to the founder</a>
-                <a class="ghost small" href="https://github.com/ykidus053-create/globalflo/issues" target="_blank" rel="noreferrer">View roadmap</a>
-              </div>
-            </div>
+        <div class="trust-signal-grid trust-signal-grid--airbnb">
+          {% for signal in trust_signals %}
+          <article class="trust-card trust-card--airbnb">
+            <h3>{{ signal.title }}</h3>
+            <p>{{ signal.detail }}</p>
           </article>
-          <div class="trust-signal-grid trust-signal-grid--airbnb">
-            {% for signal in trust_signals %}
-            <article class="trust-card trust-card--airbnb">
-              <h3>{{ signal.title }}</h3>
-              <p>{{ signal.detail }}</p>
-            </article>
-            {% endfor %}
-          </div>
+          {% endfor %}
         </div>
       </section>
 
@@ -585,17 +430,17 @@
     </main>
 
     <nav class="mobile-dock" aria-label="Mobile actions">
-      <a href="#explore">Explore</a>
+      <a href="#use-cases">Use cases</a>
       <a href="#flowboard">Workflow</a>
       <a href="#pricing">Pricing</a>
-      <a href="#founder">Founder</a>
+      <a href="/account">Account</a>
     </nav>
 
     <footer class="site-footer site-footer--airbnb">
       <div class="footer-top">
         <div>
           <h2>GlobalFlow</h2>
-          <p>Automation for billing, calls, taxes, files, and follow-up that stays calm, inspectable, and easy to trust.</p>
+          <p>Automation for billing, files, follow-up, and compliance.</p>
         </div>
         <div class="footer-links">
           {% for link in footer_links %}

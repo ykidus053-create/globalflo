@@ -456,15 +456,15 @@ FOUNDERS = [
 TRUST_SIGNALS = [
     {
         "title": "256-bit encryption",
-        "detail": "Sensitive billing, document, and workflow data is protected in transit and at rest.",
+        "detail": "Data is protected in transit and at rest.",
     },
     {
         "title": "Human override built in",
-        "detail": "Autonomous runs remain inspectable, reversible, and easy to pause when a team wants manual review.",
+        "detail": "Pause, inspect, or review any run.",
     },
     {
         "title": "Data stays traceable",
-        "detail": "Activity feeds, audit trails, and connector logs make workflow decisions easy to verify.",
+        "detail": "Logs and audit history stay visible.",
     },
 ]
 
@@ -686,10 +686,7 @@ PRICING_COMPARISON = [
 ]
 
 FOOTER_LINKS = [
-    {"label": "About", "href": "#why-globalflow"},
-    {"label": "Blog", "href": "#founder"},
     {"label": "Changelog", "href": "https://github.com/ykidus053-create/globalflo/commits/main"},
-    {"label": "Docs", "href": "#under-the-hood"},
     {"label": "Privacy Policy", "href": "/privacy"},
     {"label": "Terms of Service", "href": "/terms"},
     {"label": "Contact", "href": "mailto:hello@globalflow.ai"},
@@ -698,7 +695,6 @@ FOOTER_LINKS = [
 SOCIAL_LINKS = [
     {"label": "GitHub", "href": "https://github.com/ykidus053-create/globalflo"},
     {"label": "Roadmap", "href": "https://github.com/ykidus053-create/globalflo/issues"},
-    {"label": "Founder inbox", "href": "mailto:hello@globalflow.ai?subject=Talk%20to%20the%20founder"},
 ]
 
 AUTOMATION_TOOLS = [
@@ -774,10 +770,10 @@ async def homepage(request: Request):
     autopilot_status = autopilot.status()
     execution_status = "Active" if autopilot_status["enabled"] else "Human-in-the-loop"
     stats = [
-        {"label": "Recovered in most pilot teams", "value": "20+ hours / week"},
-        {"label": "Operator confidence", "value": "99.2%"},
-        {"label": "Time to first live workflow", "value": "72 hours"},
-        {"label": "Autonomous execution", "value": execution_status},
+        {"label": "Time saved", "value": "20+ hrs / week"},
+        {"label": "Confidence", "value": "99.2%"},
+        {"label": "Time to live", "value": "72 hours"},
+        {"label": "Autonomy", "value": execution_status},
     ]
     return templates.TemplateResponse(
         "flow.html",
