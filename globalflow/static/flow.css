@@ -3398,6 +3398,23 @@ button:disabled {
   border-bottom: none;
 }
 
+.demo-showcase-grid--single {
+  grid-template-columns: 1fr;
+}
+
+.hero-quickfacts article {
+  min-height: auto;
+}
+
+.hero-quickfacts strong {
+  margin-bottom: 0;
+}
+
+.pricing-card .pricing-top,
+.subscription-actions {
+  gap: 10px;
+}
+
 html[data-theme="dark"] .top--airbnb {
   background: rgba(17, 24, 39, 0.94);
   border-color: var(--line);

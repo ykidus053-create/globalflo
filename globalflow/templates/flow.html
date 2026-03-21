@@ -85,10 +85,7 @@
 
           <p class="eyebrow">Built for operators, finance teams, and service businesses</p>
           <h1>One calm control room for calls, billing, taxes, files, and follow-up.</h1>
-          <p class="lead">
-            Automate billing, call follow-up, and compliance tracking without turning your team into workflow managers.
-            Most pilot teams cut 20+ hours of admin work each week in the first month.
-          </p>
+          <p class="lead">Automate billing, follow-up, files, and compliance. Most pilot teams recover 20+ hours each week.</p>
 
           <div class="hero-actions">
             <button class="primary primary--hero" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
@@ -104,17 +101,14 @@
             <article>
               <span>Time to launch</span>
               <strong>72 hours</strong>
-              <p>to first live workflow</p>
             </article>
             <article>
               <span>Best first use case</span>
               <strong>Billing and follow-up</strong>
-              <p>high-volume admin work with clear owners</p>
             </article>
             <article>
               <span>Control model</span>
               <strong>Human override included</strong>
-              <p>approvals, retries, and audit history stay visible</p>
             </article>
           </div>
 
@@ -133,10 +127,9 @@
             <p class="eyebrow">What runs inside GlobalFlow</p>
             <h2>One system for intake, routing, follow-through, and verification.</h2>
             <ul class="hero-benefit-list">
-              <li>Capture calls, files, billing tasks, and compliance work in one queue.</li>
-              <li>Route the next step to the right connector, owner, or approval lane.</li>
-              <li>Keep exceptions, retries, and completed steps visible to the operator.</li>
-              <li>Move paid users into a dedicated automation workspace without extra setup.</li>
+              <li>Capture work</li>
+              <li>Route the next step</li>
+              <li>Verify every result</li>
             </ul>
             <div class="hero-chip-row" aria-label="Core workflows">
               <span>Billing</span>
@@ -180,11 +173,10 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Product walkthrough</p>
-            <h2>See billing, follow-up, approvals, and automation in one walkthrough.</h2>
+            <h2>See the product.</h2>
           </div>
-          <p>The walkthrough shows the live workflow, integrations, pricing handoff, account center, and automation workspace.</p>
         </div>
-        <div class="demo-showcase-grid">
+        <div class="demo-showcase-grid demo-showcase-grid--single">
           <article class="hero-media-card">
             <div class="video-card-top">
               <p>Product walkthrough</p>
@@ -202,31 +194,13 @@
               Your browser does not support embedded video.
             </video>
             <div class="hero-media-caption">
-              <p class="video-note">95 second narrated walkthrough: overview, exploration, live workflow, integrations, pricing, and the automation workspace.</p>
+              <p class="video-note">95 seconds.</p>
               <div class="hero-media-points">
-                <span>Review work in one place</span>
-                <span>Approve only when needed</span>
-                <span>Track every handoff</span>
+                <span>Workflow</span>
+                <span>Integrations</span>
+                <span>Automation</span>
               </div>
             </div>
-          </article>
-          <article class="demo-story-card">
-            <p class="eyebrow">What the walkthrough covers</p>
-            <div class="demo-story-list">
-              <div>
-                <strong>Live workflow control</strong>
-                <p>Launch a workflow, inspect the next step, and see where the operator can approve, pause, or retry.</p>
-              </div>
-              <div>
-                <strong>Connector execution</strong>
-                <p>Trigger integrations, route context into the right system, and keep a visible record of each handoff.</p>
-              </div>
-              <div>
-                <strong>Automation workspace</strong>
-                <p>Move from subscription and onboarding into a dedicated workspace where the automation actually runs.</p>
-              </div>
-            </div>
-            <a class="text-link" href="/automation">Open the automation workspace -></a>
           </article>
         </div>
       </section>
@@ -263,10 +237,9 @@
       <section id="explore" class="explore-section">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">Explore before you commit</p>
-            <h2>Start with the work that already drains the week.</h2>
+            <p class="eyebrow">Use cases</p>
+            <h2>Start with one workflow.</h2>
           </div>
-          <p>GlobalFlow is built for browsing by problem area first, then drilling into the workflow when you are ready.</p>
         </div>
         <div class="explore-grid">
           {% for task in world_tasks %}
@@ -276,7 +249,6 @@
             </div>
             <div class="explore-card__body">
               <h3>{{ task.headline }}</h3>
-              <p>{{ task.description }}</p>
               <a class="feature-link" href="#flowboard">Preview workflow -></a>
             </div>
           </article>
@@ -287,17 +259,15 @@
       <section class="proof proof--testimonials">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">What teams notice first</p>
-            <h2>Less chasing. More visibility. Better follow-through.</h2>
+            <p class="eyebrow">Results</p>
+            <h2>What teams get.</h2>
           </div>
-          <p>Operators do not buy promises. They buy visible results, faster follow-through, and proof the workflow will hold under pressure.</p>
         </div>
         <!-- REPLACE WITH REAL TESTIMONIALS -->
         <div class="testimonial-grid testimonial-grid--airbnb">
           {% for testimonial in testimonials %}
           <article class="testimonial-card testimonial-card--airbnb">
             <img src="{{ testimonial.photo }}" alt="{{ testimonial.name }} placeholder portrait" loading="lazy" />
-            <p class="testimonial-quote">"{{ testimonial.quote }}"</p>
             <strong>{{ testimonial.result }}</strong>
             <div class="testimonial-meta">
               <span>{{ testimonial.name }}</span>
@@ -311,10 +281,9 @@
       <section class="metrics metrics--credibility">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">Clear signals</p>
-            <h2>Trust is built from visible progress, not noisy counters.</h2>
+            <p class="eyebrow">Proof</p>
+            <h2>Key signals.</h2>
           </div>
-          <p>Only the proof that helps an operator decide stays on the page.</p>
         </div>
         <div class="stat-grid stat-grid--airbnb">
           {% for stat in stats %}
@@ -324,18 +293,15 @@
           </article>
           {% endfor %}
         </div>
-        <p class="metrics-footnote">
-          Time-saved benchmarks are based on average admin task time measured across pilot-team workflow reviews.
-        </p>
+        <p class="metrics-footnote">Pilot-team average.</p>
       </section>
 
       <section id="features" class="features features--airbnb">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">What changes in practice</p>
-            <h2>Less software noise. Better operational flow.</h2>
+            <p class="eyebrow">Core functions</p>
+            <h2>What it does.</h2>
           </div>
-          <p>Every feature is written for the operator who has to trust the result, not the engineer who built it.</p>
         </div>
         <div class="feature-grid feature-grid--airbnb">
           {% for feature in features %}
@@ -343,7 +309,6 @@
             <div class="feature-icon feature-icon--{{ feature.icon }}" aria-hidden="true"></div>
             <h3>{{ feature.title }}</h3>
             <p class="feature-headline">{{ feature.headline }}</p>
-            <p>{{ feature.detail }}</p>
             <a class="feature-link" href="{{ feature.href }}">Learn more -></a>
           </article>
           {% endfor %}
@@ -355,9 +320,8 @@
           <div class="section-heading section-heading--split">
             <div>
               <p class="eyebrow">Live workflow</p>
-              <h2>Inspect the system before you hand it work.</h2>
+              <h2>Inspect before you run.</h2>
             </div>
-            <p>Explore the flow the same way operators do: launch a task, inspect the next step, and keep human override close by.</p>
           </div>
           <div class="workflow-actions">
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
@@ -368,43 +332,11 @@
             <h3>Next steps</h3>
             <ul id="flow-next-steps"></ul>
           </div>
-          <div class="workflow-support">
-            <article class="workflow-journey-card">
-              <p class="eyebrow">After you click launch</p>
-              <div class="workflow-journey-grid">
-                <div class="workflow-journey-step">
-                  <span>01</span>
-                  <h3>Capture the task</h3>
-                  <p>GlobalFlow reads the job, checks the context, and prepares the right automation path before anything moves.</p>
-                </div>
-                <div class="workflow-journey-step">
-                  <span>02</span>
-                  <h3>Route the handoff</h3>
-                  <p>The workflow assigns the next system, owner, or connector so billing, files, and follow-up keep moving cleanly.</p>
-                </div>
-                <div class="workflow-journey-step">
-                  <span>03</span>
-                  <h3>Return visible output</h3>
-                  <p>Results, approvals, and exceptions come back into one control room so operators can verify the outcome fast.</p>
-                </div>
-              </div>
-            </article>
-            <article class="workflow-guidance-card">
-              <p class="eyebrow">Why teams keep it running</p>
-              <h3>Control, visibility, and retry paths stay close to the operator.</h3>
-              <ul class="workflow-guidance-list">
-                <li>Human override stays one click away during every run.</li>
-                <li>Every task leaves a visible audit trail instead of a black box.</li>
-                <li>Connector failures surface quickly so operators can respond before work stalls.</li>
-              </ul>
-            </article>
-          </div>
         </div>
         <aside class="workflow-side workflow-side--airbnb">
           <div class="section-heading">
             <p class="eyebrow">Live activity</p>
-            <h2>Reliability stays visible.</h2>
-            <p>Activity, autonomous state, and operator control sit together instead of being buried in a back-office screen.</p>
+            <h2>System state.</h2>
           </div>
           <div class="autopilot-panel autopilot-panel--airbnb">
             <div class="autopilot-copy">
@@ -422,14 +354,12 @@
       <section id="integrations" class="integrations integrations--airbnb">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">Plug into the tools you already trust</p>
-            <h2>Simple connections, clear outcomes.</h2>
+            <p class="eyebrow">Integrations</p>
+            <h2>Connect your stack.</h2>
           </div>
-          <p>Slack, HubSpot, QuickBooks, and Airtable stay easy to connect. Setup belongs in the product, not in developer-looking marketing copy.</p>
         </div>
         <div class="integration-intro integration-intro--airbnb">
           <span>Connect in 2 clicks</span>
-          <p>More integrations coming soon - request yours.</p>
         </div>
         <div class="connectors-grid connectors-grid--airbnb">
           {% for connector in connectors %}
@@ -472,10 +402,9 @@
       <section id="under-the-hood" class="under-the-hood under-the-hood--airbnb">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">Under the hood</p>
-            <h2>Technical detail for technical buyers.</h2>
+            <p class="eyebrow">Built with</p>
+            <h2>Core stack.</h2>
           </div>
-          <p>The stack still matters. It just should not be the first thing a buyer has to decode.</p>
         </div>
         <div class="built-with built-with--airbnb">
           {% for tool in built_with %}
@@ -488,9 +417,8 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Pricing</p>
-            <h2>Try the workflow first, expand when it earns trust.</h2>
+            <h2>Start free. Scale later.</h2>
           </div>
-          <p>Start free, upgrade when the workflow proves itself, and switch to annual when the rollout is stable.</p>
         </div>
         <div class="pricing-toggle" role="tablist" aria-label="Billing period">
           <button class="toggle-option is-active" id="billing-monthly" type="button">Monthly</button>
@@ -507,17 +435,6 @@
               <p class="price" data-monthly="{{ tier.monthly_price }}" data-annual="{{ tier.annual_price }}">{{ tier.monthly_price }}</p>
               <p class="tier-copy">{{ tier.description }}</p>
             </div>
-            <div class="pricing-proof">
-              <p><strong>Best fit:</strong> {{ tier.qualification }}</p>
-              <p><strong>Typical outcome:</strong> {{ tier.roi }}</p>
-              <p><strong>Low-risk rollout:</strong> {{ tier.risk_reversal }}</p>
-              <p class="certainty-line">
-                {% if 'guarantee' in tier.certainty_line|lower %}
-                <span class="shield-pill">Shield guarantee</span>
-                {% endif %}
-                {{ tier.certainty_line }}
-              </p>
-            </div>
             <ul class="pricing-list">
               {% for feature in tier.features %}
               <li>{{ feature }}</li>
@@ -525,7 +442,6 @@
             </ul>
             <div class="subscription-actions">
               <button class="primary small" data-checkout-tier="{{ tier.id }}">{{ tier.cta }}</button>
-              <button class="ghost small" data-tier="{{ tier.id }}" data-subscribe-open="true">Request access</button>
             </div>
           </article>
           {% endfor %}
@@ -573,10 +489,9 @@
       <section id="why-globalflow" class="trust trust--airbnb">
         <div class="section-heading section-heading--split">
           <div>
-            <p class="eyebrow">Why teams choose GlobalFlow</p>
-            <h2>Easy to adopt. Strong enough to run the work that matters.</h2>
+            <p class="eyebrow">Trust</p>
+            <h2>Security and control.</h2>
           </div>
-          <p>GlobalFlow helps teams replace scattered admin work with one reliable system that feels simple on day one and compounds value every week after.</p>
         </div>
         <div class="trust-grid trust-grid--airbnb">
           <article class="founder-card founder-card--airbnb" id="founder">
@@ -585,7 +500,6 @@
               <p class="eyebrow">Founder</p>
               <h3>{{ founders[0].name }}</h3>
               <p class="founder-role">{{ founders[0].role }}</p>
-              <p>{{ founders[0].bio }}</p>
               <div class="founder-actions">
                 <a class="ghost small" href="mailto:hello@globalflow.ai?subject=GlobalFlow%20founder%20chat">Talk to the founder</a>
                 <a class="ghost small" href="https://github.com/ykidus053-create/globalflo/issues" target="_blank" rel="noreferrer">View roadmap</a>
