@@ -311,6 +311,7 @@ USER_SETTINGS: Dict[str, str] = {
     "daily_digest": "enabled",
     "alert_channel": "Slack",
     "automation_tier": "High trust",
+    "theme": "light",
 }
 
 SUBSCRIPTIONS: List[Dict[str, str]] = []
@@ -533,6 +534,11 @@ autopilot = AutoPilot(task_manager, monitoring, activity_log, interval_seconds=5
 def _tasks_list() -> List[Dict[str, str]]:
     return task_manager.list_tasks()
 
+
+def _active_theme() -> str:
+    theme = USER_SETTINGS.get("theme", "light")
+    return theme if theme in {"light", "dark"} else "light"
+
 @app.get("/", response_class=HTMLResponse)
 async def homepage(request: Request):
     autopilot_status = autopilot.status()
@@ -565,6 +571,7 @@ async def homepage(request: Request):
             "pricing_comparison": PRICING_COMPARISON,
             "footer_links": FOOTER_LINKS,
             "social_links": SOCIAL_LINKS,
+            "theme": _active_theme(),
         },
     )
 
@@ -656,6 +663,7 @@ async def payment_portal(request: Request, method: str):
         {
             "request": request,
             "portal": portal,
+            "theme": _active_theme(),
         },
     )
 
@@ -671,6 +679,7 @@ async def checkout_page(request: Request, tier_id: str):
             "request": request,
             "tier": tier,
             "payment_methods": PAYMENT_METHODS,
+            "theme": _active_theme(),
         },
     )
 
@@ -782,6 +791,7 @@ async def privacy_policy(request: Request):
         {
             "request": request,
             "updated_on": "March 20, 2026",
+            "theme": _active_theme(),
         },
     )
 
@@ -793,6 +803,7 @@ async def terms_of_service(request: Request):
         {
             "request": request,
             "updated_on": "March 20, 2026",
+            "theme": _active_theme(),
         },
     )
 
@@ -805,6 +816,7 @@ async def account_center(request: Request):
             "request": request,
             "profile": USER_PROFILE,
             "settings": USER_SETTINGS,
+            "theme": _active_theme(),
         },
     )
 
@@ -818,4 +830,6 @@ async def update_account(payload: Dict[str, str]):
     USER_SETTINGS["daily_digest"] = payload.get("daily_digest", USER_SETTINGS["daily_digest"])
     USER_SETTINGS["alert_channel"] = payload.get("alert_channel", USER_SETTINGS["alert_channel"])
     USER_SETTINGS["automation_tier"] = payload.get("automation_tier", USER_SETTINGS["automation_tier"])
+    theme = payload.get("theme", USER_SETTINGS.get("theme", "light"))
+    USER_SETTINGS["theme"] = theme if theme in {"light", "dark"} else "light"
     return {"status": "updated", "profile": USER_PROFILE, "settings": USER_SETTINGS}

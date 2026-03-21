@@ -1484,3 +1484,311 @@ summary:focus-visible {
     transform: none;
   }
 }
+
+/* Minimalist, professional theme pass */
+:root {
+  --bg: #f7f8fa;
+  --bg-soft: #f1f3f6;
+  --panel: #ffffff;
+  --panel-strong: #ffffff;
+  --text: #111827;
+  --muted: #5b6473;
+  --accent: #0a66ff;
+  --accent-strong: #0048b0;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --warning: #a16207;
+}
+
+body,
+.payment-body,
+.checkout-body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.aurora,
+.grid-overlay,
+.backdrop {
+  display: none;
+}
+
+.top {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-mark {
+  background: #fff;
+}
+
+.brand-mark span {
+  background: var(--accent);
+}
+
+.brand-copy p,
+.lead,
+.section-heading p,
+.video-note,
+.metrics-footnote,
+.testimonial-meta p,
+.payment-chip p,
+.founder-role,
+.founder-card p,
+.trust-card p,
+.checkout-foot,
+.modal-note,
+.payment-status,
+#account-status {
+  color: var(--muted);
+}
+
+.nav {
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.nav a {
+  color: #374151;
+}
+
+.nav a:hover,
+.nav a.is-active {
+  background: #eef4ff;
+  color: #0f172a;
+}
+
+.hero-video-card,
+.hero-status-card,
+.workflow,
+.proof,
+.metrics,
+.features,
+.integrations,
+.under-the-hood,
+.pricing,
+.trust,
+.checkout-hero-copy,
+.checkout-hero-panel,
+.checkout-card,
+.checkout-panel,
+.payment-panel,
+.payment-form-section,
+.account-panel,
+.site-footer,
+.flow-modal__content {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 6px 18px rgba(16, 24, 40, 0.06);
+}
+
+.logo-pill,
+.testimonial-card,
+.stat-card,
+.feature-card,
+.workflow-card,
+.connector-card,
+.pricing-card,
+.trust-card,
+.payment-chip,
+.summary li,
+.hero-status-card div,
+.activity-entry,
+.method-grid li,
+.built-with span {
+  background: #fafafa;
+  border: 1px solid var(--line);
+}
+
+.feature-headline,
+.tier-copy,
+.pricing-proof p,
+.pricing-list,
+.checkout-hero-panel p,
+.activity-detail,
+.activity-entry time {
+  color: #4b5563;
+}
+
+.text-link,
+.feature-link,
+.connector-meta a {
+  color: var(--accent-strong);
+}
+
+.primary,
+.ghost,
+.pill {
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.primary:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.ghost,
+.pill {
+  background: #ffffff;
+  border-color: var(--line-strong);
+  color: #111827;
+}
+
+.ghost:hover,
+.pill:hover {
+  background: #f8fafc;
+}
+
+.connector-form input,
+.flow-modal input,
+.flow-modal select,
+.checkout-card input,
+.checkout-card textarea,
+.payment-form input,
+.payment-form textarea,
+.lead-capture input,
+.form-grid input,
+.form-grid select {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+}
+
+.signal-pill,
+.integration-intro span,
+.pricing-toggle,
+.toggle-option.is-active,
+.workflow-status,
+.shield-pill {
+  background: #eef4ff;
+  color: #1e3a8a;
+  border-color: #cfe0ff;
+}
+
+.flow-modal {
+  background: rgba(17, 24, 39, 0.36);
+}
+
+.flow-modal pre {
+  background: #f8fafc;
+  color: #111827;
+  border: 1px solid var(--line);
+}
+
+.flow-modal__close {
+  color: #4b5563;
+}
+
+.toast {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
+}
+
+.mobile-dock {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--line);
+}
+
+.mobile-dock a {
+  color: #374151;
+}
+
+.mobile-dock a:hover {
+  background: #eef4ff;
+}
+
+html[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-soft: #111827;
+  --panel: #111827;
+  --panel-strong: #111827;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --accent: #60a5fa;
+  --accent-strong: #93c5fd;
+  --line: #273449;
+  --line-strong: #334155;
+  --warning: #f59e0b;
+}
+
+html[data-theme="dark"] .top {
+  background: rgba(17, 24, 39, 0.92);
+}
+
+html[data-theme="dark"] .nav {
+  background: #111827;
+}
+
+html[data-theme="dark"] .nav a {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .nav a:hover,
+html[data-theme="dark"] .nav a.is-active {
+  background: rgba(96, 165, 250, 0.16);
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] .logo-pill,
+html[data-theme="dark"] .testimonial-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .feature-card,
+html[data-theme="dark"] .workflow-card,
+html[data-theme="dark"] .connector-card,
+html[data-theme="dark"] .pricing-card,
+html[data-theme="dark"] .trust-card,
+html[data-theme="dark"] .payment-chip,
+html[data-theme="dark"] .summary li,
+html[data-theme="dark"] .hero-status-card div,
+html[data-theme="dark"] .activity-entry,
+html[data-theme="dark"] .method-grid li,
+html[data-theme="dark"] .built-with span {
+  background: #0b1220;
+}
+
+html[data-theme="dark"] .ghost,
+html[data-theme="dark"] .pill {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: var(--line-strong);
+}
+
+html[data-theme="dark"] .ghost:hover,
+html[data-theme="dark"] .pill:hover {
+  background: #1f2937;
+}
+
+html[data-theme="dark"] .connector-form input,
+html[data-theme="dark"] .flow-modal input,
+html[data-theme="dark"] .flow-modal select,
+html[data-theme="dark"] .checkout-card input,
+html[data-theme="dark"] .checkout-card textarea,
+html[data-theme="dark"] .payment-form input,
+html[data-theme="dark"] .payment-form textarea,
+html[data-theme="dark"] .lead-capture input,
+html[data-theme="dark"] .form-grid input,
+html[data-theme="dark"] .form-grid select {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .flow-modal {
+  background: rgba(2, 6, 23, 0.7);
+}
+
+html[data-theme="dark"] .flow-modal pre {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .toast {
+  background: #020617;
+  border-color: #0f172a;
+}

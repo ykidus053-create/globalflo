@@ -20,6 +20,10 @@ if (form) {
       if (status) {
         if (response.ok) {
           status.textContent = "Profile updated.";
+          const theme = body?.settings?.theme;
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.setAttribute("data-theme", theme);
+          }
         } else {
           status.textContent = body.detail || "Could not update yet.";
         }
