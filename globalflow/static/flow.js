@@ -440,6 +440,8 @@ function showToast(text) {
   const toast = document.getElementById("toast");
   if (!toast) return;
   toast.textContent = text;
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
   toast.style.display = "block";
   if (!prefersReducedMotion) {
     toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
