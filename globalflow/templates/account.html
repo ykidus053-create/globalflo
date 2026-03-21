@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="{{ theme }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -71,6 +71,13 @@
                 <option value="Human review" {% if settings.automation_tier == "Human review" %}selected{% endif %}>
                   Human review
                 </option>
+              </select>
+            </label>
+            <label>
+              Theme
+              <select name="theme">
+                <option value="light" {% if settings.theme == "light" %}selected{% endif %}>Light</option>
+                <option value="dark" {% if settings.theme == "dark" %}selected{% endif %}>Dark</option>
               </select>
             </label>
           </div>
