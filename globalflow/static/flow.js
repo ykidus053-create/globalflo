@@ -244,18 +244,29 @@ function submitSubscription(form, statusEl, modalEl) {
   if (!form) return;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
     const data = Object.fromEntries(new FormData(form));
-    const response = await fetch("/api/subscribe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const payload = await response.json();
-    if (statusEl) {
-      statusEl.textContent = payload.message || payload.detail || "Thanks! We'll stay in touch.";
-    }
-    if (response.ok && modalEl) {
-      setTimeout(() => closeModal(modalEl), 1500);
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const payload = await response.json();
+      if (statusEl) {
+        statusEl.textContent = payload.message || payload.detail || "Thanks! We'll stay in touch.";
+      }
+      if (response.ok && modalEl) {
+        form.reset();
+        setTimeout(() => closeModal(modalEl), 1200);
+      }
+    } catch (error) {
+      if (statusEl) {
+        statusEl.textContent = "Could not submit right now. Please try again.";
+      }
+    } finally {
+      if (submitButton) submitButton.disabled = false;
     }
   });
 }
@@ -393,6 +404,8 @@ function showToast(text) {
   const toast = document.getElementById("toast");
   if (!toast) return;
   toast.textContent = text;
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
   toast.style.display = "block";
   toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
   setTimeout(() => {

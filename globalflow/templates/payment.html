@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
   <body class="payment-body">
+    <header class="top">
+      <div class="brand">
+        <span>GlobalFlow</span>
+        <p>Payment center</p>
+      </div>
+      <nav class="nav" aria-label="Payment navigation">
+        <a href="/">Dashboard</a>
+        <a href="/account">Account</a>
+      </nav>
+    </header>
     <main class="payment-page">
       <header class="payment-header">
         <p class="eyebrow">{{ portal.name }} payment</p>
@@ -47,8 +57,8 @@
             Notes for the finance team
             <textarea name="notes" rows="3" placeholder="Add a project name, tiers, or billing cadence"></textarea>
           </label>
-            <button class="primary" type="submit">Send request</button>
-          <p class="payment-status" id="payment-status"></p>
+          <button class="primary" type="submit">Send request</button>
+          <p class="payment-status" id="payment-status" aria-live="polite"></p>
         </form>
       </section>
     </main>

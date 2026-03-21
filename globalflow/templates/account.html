@@ -13,10 +13,10 @@
         <span>GlobalFlow</span>
         <p>Account</p>
       </div>
-      <div class="nav">
+      <nav class="nav" aria-label="Account navigation">
         <a href="/">Dashboard</a>
         <a href="/account">Account</a>
-      </div>
+      </nav>
     </header>
     <main class="account-page">
       <section class="account-panel">
@@ -76,7 +76,7 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="primary">Save changes</button>
-            <span id="account-status"></span>
+            <span id="account-status" aria-live="polite"></span>
           </div>
         </form>
       </section>

@@ -16,6 +16,8 @@ if (trigger && form) {
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
     status.textContent = "Sending your finance request…";
     const payload = Object.fromEntries(new FormData(form));
     try {
@@ -34,6 +36,8 @@ if (form) {
     } catch (error) {
       status.textContent = "Payment portal unavailable. Try again shortly.";
       console.error(error);
+    } finally {
+      if (submitButton) submitButton.disabled = false;
     }
   });
 }
