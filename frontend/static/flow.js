@@ -11,6 +11,8 @@ const loginButton = document.getElementById("open-login");
 const loginModal = document.getElementById("login-modal");
 const loginForm = document.getElementById("login-form");
 const loginStatus = document.getElementById("login-status");
+const googleLoginButton = document.getElementById("login-with-google");
+const appleLoginButton = document.getElementById("login-with-apple");
 const launchOrchestrationBtn = document.getElementById("launch-orchestration");
 const watchDemoBtn = document.getElementById("watch-demo");
 const demoVideo = document.getElementById("demo-video");
@@ -449,6 +451,61 @@ function loadSession() {
 
 function saveSession(payload) {
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+  updateLoginButton();
+}
+
+function updateLoginButton() {
+  if (!loginButton) return;
+  const saved = loadSession();
+  if (!saved) {
+    loginButton.textContent = "Login";
+    return;
+  }
+  loginButton.textContent = saved.name ? `Hi, ${String(saved.name).split(" ")[0]}` : "Account";
+}
+
+function decodeBase64Url(value) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  const binary = window.atob(padded);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+function handleAuthReturn() {
+  const rawHash = window.location.hash.replace(/^#/, "");
+  if (!rawHash) return;
+  const params = new URLSearchParams(rawHash);
+  const encodedSession = params.get("auth_session");
+  const authError = params.get("auth_error");
+  if (!encodedSession && !authError) return;
+
+  if (encodedSession) {
+    try {
+      const session = JSON.parse(decodeBase64Url(encodedSession));
+      saveSession(session);
+      hydrateLoginForm();
+      if (loginStatus) loginStatus.textContent = `Signed in with ${session.login_method || "your account"} as ${session.email || "your account"}`;
+      showToast(`Signed in with ${session.login_method || "your account"}`);
+    } catch (error) {
+      console.warn("Could not restore auth session", error);
+      if (loginStatus) loginStatus.textContent = "Sign-in completed, but the session could not be restored.";
+      showToast("Sign-in completed, but the session could not be restored");
+    }
+  }
+
+  if (authError) {
+    if (loginStatus) loginStatus.textContent = authError;
+    showToast(authError);
+    if (loginModal) openModal(loginModal, false);
+  }
+
+  const cleanUrl = `${window.location.pathname}${window.location.search}`;
+  if (historySupported) {
+    window.history.replaceState(window.history.state, "", cleanUrl);
+  } else {
+    window.location.hash = "";
+  }
 }
 
 function hydrateLoginForm() {
@@ -460,6 +517,7 @@ function hydrateLoginForm() {
     if (input) input.value = value;
   });
   if (loginStatus) loginStatus.textContent = `Session restored for ${saved.email || "you"}`;
+  updateLoginButton();
 }
 
 function scrollToSelector(selector) {
@@ -472,6 +530,11 @@ function openCheckoutForTier(tierId) {
   if (!tierId) return;
   showToast("Opening subscription checkout...");
   window.location.assign(`/checkout/${String(tierId).toLowerCase()}`);
+}
+
+function startSocialLogin(provider) {
+  const returnTo = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+  window.location.assign(apiUrl(`/auth/${provider}/start?return_to=${encodeURIComponent(returnTo)}`));
 }
 
 function setBillingMode(mode) {
@@ -589,6 +652,12 @@ subscribeOpenButtons.forEach((button) => {
 });
 
 if (loginButton) loginButton.addEventListener("click", () => openModal(loginModal));
+if (googleLoginButton) {
+  googleLoginButton.addEventListener("click", () => startSocialLogin("google"));
+}
+if (appleLoginButton) {
+  appleLoginButton.addEventListener("click", () => startSocialLogin("apple"));
+}
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -681,6 +750,7 @@ function scheduleSafe(task, interval) {
 }
 
 async function bootstrap() {
+  handleAuthReturn();
   initRevealObserver();
   initActiveNav();
   setBillingMode(billingMode);

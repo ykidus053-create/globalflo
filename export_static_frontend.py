@@ -34,10 +34,8 @@ def write_page(relative_path: str, html: str) -> None:
 
 
 def export_pages() -> None:
-    if FRONTEND_ROOT.exists():
-        shutil.rmtree(FRONTEND_ROOT)
-
-    shutil.copytree(SOURCE_STATIC, FRONTEND_ROOT / "static")
+    FRONTEND_ROOT.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(SOURCE_STATIC, FRONTEND_ROOT / "static", dirs_exist_ok=True)
 
     with TestClient(app, base_url=STATIC_BASE_URL) as client:
         pages = ["/", "/account", "/automation", "/privacy", "/terms"]

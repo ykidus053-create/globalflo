@@ -1,11 +1,18 @@
+import base64
+import hashlib
+import hmac
+import json
 import logging
 import os
+import secrets
+import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
+from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import httpx
-from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
@@ -25,6 +32,7 @@ except ImportError:  # pragma: no cover - fallback when running as a top-level m
     from services import AutoPilot, Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
+AUTH_STATE_MAX_AGE_SECONDS = 900
 
 logger = logging.getLogger("globalflow.app")
 if not logger.handlers:
@@ -57,6 +65,189 @@ EDGE_STATIC_ENABLED = os.getenv("GLOBALFLOW_EDGE_STATIC", "0").lower() in {"1", 
 
 if not EDGE_STATIC_ENABLED:
     app.mount("/static", StaticFiles(directory=root / "static"), name="static")
+
+
+def _urlsafe_b64encode(value: bytes) -> str:
+    return base64.urlsafe_b64encode(value).decode("utf-8").rstrip("=")
+
+
+def _urlsafe_b64decode(value: str) -> bytes:
+    padding = "=" * (-len(value) % 4)
+    return base64.urlsafe_b64decode(f"{value}{padding}")
+
+
+def _auth_secret() -> str:
+    return os.getenv("GLOBALFLOW_AUTH_SECRET", "globalflow-dev-auth-secret")
+
+
+def _sign_token(payload: str) -> str:
+    return _urlsafe_b64encode(hmac.new(_auth_secret().encode("utf-8"), payload.encode("utf-8"), hashlib.sha256).digest())
+
+
+def _encode_signed_state(data: Dict[str, Any]) -> str:
+    payload = _urlsafe_b64encode(json.dumps(data, separators=(",", ":"), sort_keys=True).encode("utf-8"))
+    signature = _sign_token(payload)
+    return f"{payload}.{signature}"
+
+
+def _decode_signed_state(token: str) -> Dict[str, Any]:
+    payload, signature = token.split(".", 1)
+    expected = _sign_token(payload)
+    if not hmac.compare_digest(signature, expected):
+        raise ValueError("Invalid auth state signature")
+    return json.loads(_urlsafe_b64decode(payload).decode("utf-8"))
+
+
+def _encode_frontend_session(data: Dict[str, str]) -> str:
+    return _urlsafe_b64encode(json.dumps(data, separators=(",", ":"), ensure_ascii=False).encode("utf-8"))
+
+
+def _default_frontend_url(request: Request) -> str:
+    configured = os.getenv("GLOBALFLOW_FRONTEND_BASE_URL")
+    if configured:
+        return configured.rstrip("/")
+    return str(request.base_url).rstrip("/")
+
+
+def _safe_return_to(request: Request, return_to: Optional[str]) -> str:
+    fallback = _default_frontend_url(request)
+    if not return_to:
+        return fallback
+
+    parsed = urlsplit(return_to)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+        return fallback
+
+    allowed_hosts = {urlsplit(fallback).hostname, request.url.hostname, "globalflow.onrender.com", "globalflow-static.onrender.com"}
+    extra_hosts = {host.strip() for host in os.getenv("GLOBALFLOW_ALLOWED_RETURN_HOSTS", "").split(",") if host.strip()}
+    allowed_hosts.update(extra_hosts)
+
+    if parsed.hostname not in allowed_hosts:
+        return fallback
+
+    return urlunsplit((parsed.scheme, parsed.netloc, parsed.path or "/", parsed.query, ""))
+
+
+def _public_base_url(request: Request) -> str:
+    configured = os.getenv("GLOBALFLOW_PUBLIC_BASE_URL")
+    if configured:
+        return configured.rstrip("/")
+    return str(request.base_url).rstrip("/")
+
+
+def _auth_redirect_uri(request: Request, provider: str) -> str:
+    configured = os.getenv(f"GLOBALFLOW_{provider.upper()}_REDIRECT_URI")
+    if configured:
+        return configured
+    return f"{_public_base_url(request)}/auth/{provider}/callback"
+
+
+def _build_auth_state(request: Request, provider: str, return_to: Optional[str]) -> str:
+    return _encode_signed_state(
+        {
+            "provider": provider,
+            "return_to": _safe_return_to(request, return_to),
+            "nonce": secrets.token_urlsafe(18),
+            "ts": int(time.time()),
+        }
+    )
+
+
+def _resolve_auth_state(token: str, provider: str) -> Dict[str, Any]:
+    state = _decode_signed_state(token)
+    if state.get("provider") != provider:
+        raise ValueError("Auth provider mismatch")
+    if int(time.time()) - int(state.get("ts", 0)) > AUTH_STATE_MAX_AGE_SECONDS:
+        raise ValueError("Auth state expired")
+    return state
+
+
+def _session_redirect(target_url: str, *, session: Optional[Dict[str, str]] = None, error: Optional[str] = None) -> RedirectResponse:
+    fragment_payload: Dict[str, str] = {}
+    if session:
+        fragment_payload["auth_session"] = _encode_frontend_session(session)
+    if error:
+        fragment_payload["auth_error"] = error
+    fragment = urlencode(fragment_payload)
+    location = f"{target_url}#{fragment}" if fragment else target_url
+    return RedirectResponse(url=location, status_code=303)
+
+
+def _decode_jwt_payload(token: str) -> Dict[str, Any]:
+    parts = token.split(".")
+    if len(parts) < 2:
+        return {}
+    try:
+        return json.loads(_urlsafe_b64decode(parts[1]).decode("utf-8"))
+    except (json.JSONDecodeError, ValueError):
+        return {}
+
+
+def _provider_credentials(provider: str) -> Dict[str, str]:
+    upper = provider.upper()
+    return {
+        "client_id": os.getenv(f"GLOBALFLOW_{upper}_CLIENT_ID", "").strip(),
+        "client_secret": os.getenv(f"GLOBALFLOW_{upper}_CLIENT_SECRET", "").strip(),
+    }
+
+
+def _frontend_identity(provider: str, email: str, name: str, avatar_url: str = "") -> Dict[str, str]:
+    session = {
+        "email": email,
+        "name": name,
+        "api_key": "",
+        "provider": provider,
+        "login_method": provider.capitalize(),
+    }
+    if avatar_url:
+        session["avatar_url"] = avatar_url
+    return session
+
+
+def _display_name_from_email(email: str) -> str:
+    local_part = (email or "").split("@", 1)[0].replace(".", " ").replace("_", " ").replace("-", " ").strip()
+    if not local_part:
+        return "GlobalFlow user"
+    return " ".join(part[:1].upper() + part[1:] for part in local_part.split())
+
+
+def _auth_error_redirect(request: Request, provider_label: str, return_to: Optional[str], message: str) -> RedirectResponse:
+    return _session_redirect(_safe_return_to(request, return_to), error=f"{provider_label} sign-in {message}")
+
+
+async def _post_form_json(url: str, payload: Dict[str, str]) -> Dict[str, Any]:
+    async with httpx.AsyncClient(timeout=20) as client:
+        response = await client.post(url, data=payload, headers={"Accept": "application/json"})
+        response.raise_for_status()
+    return response.json()
+
+
+async def _get_json(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
+    async with httpx.AsyncClient(timeout=20) as client:
+        response = await client.get(url, headers=headers)
+        response.raise_for_status()
+    return response.json()
+
+
+def _parse_apple_user(user: Optional[str]) -> Dict[str, Any]:
+    if not user:
+        return {}
+    try:
+        parsed = json.loads(user)
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _apple_display_name(user_payload: Dict[str, Any], email: str) -> str:
+    name_payload = user_payload.get("name") if isinstance(user_payload, dict) else {}
+    if isinstance(name_payload, dict):
+        first = str(name_payload.get("firstName", "")).strip()
+        last = str(name_payload.get("lastName", "")).strip()
+        full_name = " ".join(part for part in (first, last) if part)
+        if full_name:
+            return full_name
+    return _display_name_from_email(email)
 
 
 @app.on_event("startup")
@@ -690,6 +881,175 @@ async def subscribe(payload: Dict[str, str]):
 @app.get("/api/subscriptions", response_class=JSONResponse)
 async def catalog_subscriptions():
     return {"tiers": SUBSCRIPTION_TIERS}
+
+
+@app.get("/auth/google/start", include_in_schema=False)
+async def google_auth_start(request: Request, return_to: Optional[str] = None):
+    credentials = _provider_credentials("google")
+    if not credentials["client_id"] or not credentials["client_secret"]:
+        return _auth_error_redirect(request, "Google", return_to, "is not configured yet.")
+
+    state = _build_auth_state(request, "google", return_to)
+    params = {
+        "client_id": credentials["client_id"],
+        "redirect_uri": _auth_redirect_uri(request, "google"),
+        "response_type": "code",
+        "scope": "openid email profile",
+        "prompt": "select_account",
+        "state": state,
+    }
+    return RedirectResponse(
+        url=f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}",
+        status_code=303,
+    )
+
+
+@app.get("/auth/google/callback", include_in_schema=False)
+async def google_auth_callback(
+    request: Request,
+    state: Optional[str] = None,
+    code: Optional[str] = None,
+    error: Optional[str] = None,
+):
+    target_url = _default_frontend_url(request)
+    if state:
+        try:
+            target_url = _resolve_auth_state(state, "google")["return_to"]
+        except ValueError as exc:
+            return _session_redirect(target_url, error=str(exc))
+
+    if error:
+        return _session_redirect(target_url, error=f"Google sign-in failed: {error.replace('_', ' ')}")
+    if not state or not code:
+        return _session_redirect(target_url, error="Google sign-in did not complete.")
+
+    credentials = _provider_credentials("google")
+    if not credentials["client_id"] or not credentials["client_secret"]:
+        return _session_redirect(target_url, error="Google sign-in is not configured yet.")
+
+    try:
+        token_payload = await _post_form_json(
+            "https://oauth2.googleapis.com/token",
+            {
+                "code": code,
+                "client_id": credentials["client_id"],
+                "client_secret": credentials["client_secret"],
+                "redirect_uri": _auth_redirect_uri(request, "google"),
+                "grant_type": "authorization_code",
+            },
+        )
+        access_token = str(token_payload.get("access_token", "")).strip()
+        if not access_token:
+            raise ValueError("Google token exchange returned no access token")
+        profile = await _get_json(
+            "https://openidconnect.googleapis.com/v1/userinfo",
+            {
+                "Authorization": f"Bearer {access_token}",
+                "Accept": "application/json",
+            },
+        )
+    except (httpx.HTTPError, ValueError, json.JSONDecodeError) as exc:
+        logger.warning("Google sign-in failed: %s", exc)
+        return _session_redirect(target_url, error="Google sign-in could not be completed.")
+
+    email = str(profile.get("email", "")).strip()
+    if not email:
+        return _session_redirect(target_url, error="Google account did not return an email address.")
+    name = str(profile.get("name") or profile.get("given_name") or _display_name_from_email(email)).strip()
+    session = _frontend_identity("google", email, name, avatar_url=str(profile.get("picture", "")).strip())
+    return _session_redirect(target_url, session=session)
+
+
+@app.get("/auth/apple/start", include_in_schema=False)
+async def apple_auth_start(request: Request, return_to: Optional[str] = None):
+    credentials = _provider_credentials("apple")
+    if not credentials["client_id"] or not credentials["client_secret"]:
+        return _auth_error_redirect(request, "Apple", return_to, "is not configured yet.")
+
+    state = _build_auth_state(request, "apple", return_to)
+    params = {
+        "client_id": credentials["client_id"],
+        "redirect_uri": _auth_redirect_uri(request, "apple"),
+        "response_type": "code",
+        "response_mode": "form_post",
+        "scope": "name email",
+        "state": state,
+    }
+    return RedirectResponse(
+        url=f"https://appleid.apple.com/auth/authorize?{urlencode(params)}",
+        status_code=303,
+    )
+
+
+async def _complete_apple_auth(
+    request: Request,
+    *,
+    state: Optional[str],
+    code: Optional[str],
+    error: Optional[str],
+    user: Optional[str] = None,
+):
+    target_url = _default_frontend_url(request)
+    if state:
+        try:
+            target_url = _resolve_auth_state(state, "apple")["return_to"]
+        except ValueError as exc:
+            return _session_redirect(target_url, error=str(exc))
+
+    if error:
+        return _session_redirect(target_url, error=f"Apple sign-in failed: {error.replace('_', ' ')}")
+    if not state or not code:
+        return _session_redirect(target_url, error="Apple sign-in did not complete.")
+
+    credentials = _provider_credentials("apple")
+    if not credentials["client_id"] or not credentials["client_secret"]:
+        return _session_redirect(target_url, error="Apple sign-in is not configured yet.")
+
+    try:
+        token_payload = await _post_form_json(
+            "https://appleid.apple.com/auth/token",
+            {
+                "client_id": credentials["client_id"],
+                "client_secret": credentials["client_secret"],
+                "code": code,
+                "grant_type": "authorization_code",
+                "redirect_uri": _auth_redirect_uri(request, "apple"),
+            },
+        )
+    except (httpx.HTTPError, json.JSONDecodeError) as exc:
+        logger.warning("Apple sign-in failed: %s", exc)
+        return _session_redirect(target_url, error="Apple sign-in could not be completed.")
+
+    id_token_payload = _decode_jwt_payload(str(token_payload.get("id_token", "")))
+    user_payload = _parse_apple_user(user)
+    email = str(user_payload.get("email") or id_token_payload.get("email") or "").strip()
+    if not email:
+        return _session_redirect(target_url, error="Apple account did not return an email address.")
+    name = _apple_display_name(user_payload, email)
+    session = _frontend_identity("apple", email, name)
+    return _session_redirect(target_url, session=session)
+
+
+@app.get("/auth/apple/callback", include_in_schema=False)
+async def apple_auth_callback_get(
+    request: Request,
+    state: Optional[str] = None,
+    code: Optional[str] = None,
+    error: Optional[str] = None,
+    user: Optional[str] = None,
+):
+    return await _complete_apple_auth(request, state=state, code=code, error=error, user=user)
+
+
+@app.post("/auth/apple/callback", include_in_schema=False)
+async def apple_auth_callback_post(
+    request: Request,
+    state: Optional[str] = Form(None),
+    code: Optional[str] = Form(None),
+    error: Optional[str] = Form(None),
+    user: Optional[str] = Form(None),
+):
+    return await _complete_apple_auth(request, state=state, code=code, error=error, user=user)
 
 
 @app.get("/payment/{method}", response_class=HTMLResponse)

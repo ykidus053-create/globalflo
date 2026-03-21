@@ -1035,6 +1035,14 @@
         <div class="flow-modal__content">
           <button class="flow-modal__close" data-modal="login-modal" type="button">&times;</button>
           <h3>Welcome back</h3>
+          <p class="modal-note">Use your Google or Apple account for one-click access, or keep a local session below.</p>
+          <div class="oauth-grid">
+            <button class="ghost oauth-button" id="login-with-google" type="button">Continue with Google</button>
+            <button class="ghost oauth-button" id="login-with-apple" type="button">Continue with Apple</button>
+          </div>
+          <div class="modal-divider" aria-hidden="true">
+            <span>Or use a saved local session</span>
+          </div>
           <form id="login-form">
             <label>
               Email

@@ -1109,6 +1109,35 @@ h1 {
   gap: 8px;
 }
 
+.oauth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.oauth-button {
+  justify-content: center;
+  min-height: 44px;
+}
+
+.modal-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.modal-divider::before,
+.modal-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
 .flow-modal label {
   display: grid;
   gap: 4px;
@@ -2829,6 +2858,12 @@ html[data-theme="dark"] .flow-modal pre {
   h1,
   .section-heading h2 {
     max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .oauth-grid {
+    grid-template-columns: 1fr;
   }
 }
 
