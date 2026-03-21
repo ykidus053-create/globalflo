@@ -3160,3 +3160,285 @@ html[data-theme="dark"] .flow-modal pre {
     grid-template-columns: 1fr;
   }
 }
+
+/* Unified product-first UI pass */
+main.landing-main {
+  max-width: 1280px;
+  gap: 26px;
+}
+
+.nav a,
+.primary,
+.ghost,
+.pill,
+.toggle-option {
+  min-height: 44px;
+}
+
+.nav a,
+.primary,
+.ghost,
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary:active,
+.ghost:active,
+.pill:active,
+.nav a:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.primary:disabled,
+.ghost:disabled,
+.pill:disabled,
+button:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.top--airbnb {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--line);
+}
+
+.top--airbnb .nav {
+  background: #ffffff;
+  border-color: var(--line);
+}
+
+.top--airbnb .brand-copy span,
+.top--airbnb .nav a {
+  color: var(--text);
+}
+
+.top--airbnb .brand-copy p {
+  color: var(--muted);
+}
+
+.hero--unified {
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: 22px;
+  min-height: auto;
+  padding: clamp(24px, 3vw, 34px);
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.hero--unified .hero-backdrop,
+.hero--unified .hero-backdrop-wash {
+  display: none;
+}
+
+.hero-copy--unified,
+.hero-stage--unified,
+.hero-proof-card--unified,
+.hero-trust-card--unified {
+  gap: 16px;
+}
+
+.hero-copy--unified {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.hero-stage--unified {
+  display: grid;
+  gap: 14px;
+}
+
+.hero-proof-card--unified,
+.hero-status-card--airbnb,
+.hero-trust-card--unified,
+.demo-showcase,
+.demo-story-card,
+.workflow-journey-card,
+.workflow-guidance-card {
+  border-radius: 24px;
+}
+
+.hero-meta--unified {
+  gap: 12px;
+}
+
+.hero-meta--unified a {
+  font-weight: 600;
+}
+
+.hero-quickfacts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hero-quickfacts article {
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #fafafa;
+}
+
+.hero-quickfacts span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hero-quickfacts strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.hero-quickfacts p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.hero-benefit-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.hero-benefit-list li {
+  line-height: 1.55;
+}
+
+.hero-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-chip-row span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid #cfe0ff;
+  background: #eef4ff;
+  color: #1e3a8a;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.section-heading h2,
+.hero-proof-card h2,
+.workflow-guidance-card h3,
+.demo-story-list strong,
+.hero-quickfacts strong {
+  letter-spacing: -0.02em;
+}
+
+.lead-capture--airbnb,
+.connector-form,
+.payment-form,
+.checkout-card form,
+#login-form,
+#subscribe-form {
+  gap: 10px;
+}
+
+.connector-form input,
+.flow-modal input,
+.flow-modal select,
+.checkout-card input,
+.checkout-card textarea,
+.payment-form input,
+.payment-form textarea,
+.lead-capture input,
+.form-grid input,
+.form-grid select {
+  min-height: 46px;
+}
+
+.connector-form input:focus-visible,
+.flow-modal input:focus-visible,
+.flow-modal select:focus-visible,
+.checkout-card input:focus-visible,
+.checkout-card textarea:focus-visible,
+.payment-form input:focus-visible,
+.payment-form textarea:focus-visible,
+.lead-capture input:focus-visible,
+.form-grid input:focus-visible,
+.form-grid select:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(10, 102, 255, 0.12);
+}
+
+.demo-story-list {
+  gap: 14px;
+}
+
+.demo-story-list > div {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.demo-story-list > div:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+html[data-theme="dark"] .top--airbnb {
+  background: rgba(17, 24, 39, 0.94);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .top--airbnb .nav {
+  background: #111827;
+}
+
+html[data-theme="dark"] .hero--unified {
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.98), rgba(15, 23, 42, 0.96));
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .hero-copy--unified,
+html[data-theme="dark"] .hero-proof-card--unified,
+html[data-theme="dark"] .hero-trust-card--unified {
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .hero-quickfacts article,
+html[data-theme="dark"] .demo-story-card {
+  background: #0f172a;
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .hero-chip-row span {
+  background: rgba(96, 165, 250, 0.12);
+  border-color: rgba(96, 165, 250, 0.26);
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .hero-quickfacts strong,
+html[data-theme="dark"] .hero-proof-card--unified h2 {
+  color: #f8fafc;
+}
+
+@media (max-width: 1120px) {
+  .hero--unified,
+  .hero-quickfacts {
+    grid-template-columns: 1fr;
+  }
+}
