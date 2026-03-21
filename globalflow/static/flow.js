@@ -43,18 +43,40 @@ const annualToggle = document.getElementById("billing-annual");
 const SESSION_KEY = "globalflow_session";
 const numberFormatter = new Intl.NumberFormat("en-US");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const hiddenPollMultiplier = 4;
+const minimumHiddenInterval = 60000;
 
 let metricsCache = {};
 let activityCount = 0;
 let revealObserver = null;
 let billingMode = "monthly";
 let activeModalId = null;
+let summaryCache = null;
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
   last_run: autopilotData?.dataset?.lastRun || null,
   cycles: parseInt(autopilotData?.dataset?.cycles || "0", 10),
 };
+const inFlightTasks = new Map();
+const pollers = [];
+
+function runExclusive(key, task) {
+  const activeTask = inFlightTasks.get(key);
+  if (activeTask) return activeTask;
+  let promise;
+  promise = (async () => {
+    try {
+      return await task();
+    } finally {
+      if (inFlightTasks.get(key) === promise) {
+        inFlightTasks.delete(key);
+      }
+    }
+  })();
+  inFlightTasks.set(key, promise);
+  return promise;
+}
 
 async function fetchJson(url, options = {}) {
   const response = await fetch(url, options);
@@ -216,19 +238,25 @@ function renderActivity(events) {
 
 async function fetchTasks() {
   if (!workflowGrid) return;
-  const data = await fetchJson("/api/tasks");
+  const data = await runExclusive("tasks", () => fetchJson("/api/tasks"));
   renderTasks(data.tasks);
+  return data;
 }
 
-async function fetchSummary() {
-  const data = await fetchJson("/api/flow");
+async function fetchSummary(force = false) {
+  if (!force && summaryCache) {
+    renderSummary(summaryCache.next_steps);
+    return summaryCache;
+  }
+  const data = await runExclusive("summary", () => fetchJson("/api/flow"));
+  summaryCache = data;
   renderSummary(data.next_steps);
   return data;
 }
 
 async function refreshMetrics() {
   try {
-    metricsCache = await fetchJson("/api/metrics");
+    metricsCache = await runExclusive("metrics", () => fetchJson("/api/metrics"));
     refreshControlReadout();
   } catch (error) {
     setReliabilityState("warning", "Waiting on system response");
@@ -239,7 +267,7 @@ async function refreshMetrics() {
 async function refreshAutopilotStatus() {
   if (!autopilotToggle) return;
   try {
-    const data = await fetchJson("/api/autopilot");
+    const data = await runExclusive("autopilot", () => fetchJson("/api/autopilot"));
     updateAutopilotDisplay(data);
   } catch (error) {
     setReliabilityState("warning", "Autopilot signal delayed");
@@ -250,7 +278,7 @@ async function refreshAutopilotStatus() {
 async function fetchActivity() {
   if (!activityFeed) return;
   try {
-    const body = await fetchJson("/api/activity");
+    const body = await runExclusive("activity", () => fetchJson("/api/activity"));
     renderActivity(body.events);
   } catch (error) {
     setReliabilityState("warning", "Activity stream delayed");
@@ -613,11 +641,36 @@ if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode(
 if (annualToggle) annualToggle.addEventListener("click", () => setBillingMode("annual"));
 
 function scheduleSafe(task, interval) {
-  window.setInterval(() => {
-    task().catch((error) => {
+  let timerId = null;
+
+  const scheduleNext = () => {
+    const nextInterval = document.hidden ? Math.max(interval * hiddenPollMultiplier, minimumHiddenInterval) : interval;
+    timerId = window.setTimeout(runTask, nextInterval);
+  };
+
+  const runTask = async () => {
+    try {
+      await task();
+    } catch (error) {
       console.warn("Scheduled task failed", error);
-    });
-  }, interval);
+    } finally {
+      scheduleNext();
+    }
+  };
+
+  const controller = {
+    restart() {
+      if (timerId) window.clearTimeout(timerId);
+      scheduleNext();
+    },
+    stop() {
+      if (timerId) window.clearTimeout(timerId);
+    },
+  };
+
+  pollers.push(controller);
+  scheduleNext();
+  return controller;
 }
 
 async function bootstrap() {
@@ -632,8 +685,19 @@ bootstrap().catch((error) => {
   console.warn("Bootstrap failed", error);
 });
 
+document.addEventListener("visibilitychange", () => {
+  pollers.forEach((poller) => poller.restart());
+});
+
+window.addEventListener(
+  "pagehide",
+  () => {
+    pollers.forEach((poller) => poller.stop());
+  },
+  { once: true }
+);
+
 scheduleSafe(fetchTasks, 15000);
-scheduleSafe(fetchSummary, 30000);
 scheduleSafe(refreshMetrics, 45000);
 scheduleSafe(refreshAutopilotStatus, 30000);
 scheduleSafe(fetchActivity, 30000);

@@ -2621,6 +2621,28 @@ h1 {
   background: var(--accent-soft);
 }
 
+@supports (content-visibility: auto) {
+  .proof--quiet,
+  .explore-section,
+  .proof--testimonials,
+  .metrics--credibility,
+  .features--airbnb,
+  .workflow--airbnb,
+  .integrations--airbnb,
+  .under-the-hood--airbnb,
+  .pricing--airbnb,
+  .trust--airbnb,
+  .site-footer--airbnb {
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+  }
+
+  .workflow--airbnb,
+  .pricing--airbnb {
+    contain-intrinsic-size: 1100px;
+  }
+}
+
 html[data-theme="dark"] {
   --bg: #0f1720;
   --bg-soft: #16212e;

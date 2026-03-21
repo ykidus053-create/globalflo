@@ -6,6 +6,7 @@ from typing import Any, Dict, List
 
 import httpx
 from fastapi import BackgroundTasks, FastAPI, HTTPException
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -32,6 +33,7 @@ if not logger.handlers:
 logger.setLevel(logging.INFO)
 
 app = FastAPI(title="Global Flow Automation")
+app.add_middleware(GZipMiddleware, minimum_size=1200)
 templates = Jinja2Templates(directory=root / "templates")
 
 AUTOPILOT_BOOT_ENABLED = os.getenv("GLOBALFLOW_AUTOPILOT_ENABLED", "1").lower() not in {"0", "false", "no"}
@@ -56,14 +58,23 @@ async def stop_autopilot():
 
 @app.middleware("http")
 async def request_logger(request: Request, call_next):
-    logger.info("Processing %s %s", request.method, request.url.path)
+    path = request.url.path
+    should_log = not (path.startswith("/static/") or path in {"/health", "/favicon.ico"})
+    if should_log:
+        logger.info("Processing %s %s", request.method, path)
     try:
         response = await call_next(request)
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        if path.startswith("/static/"):
+            response.headers.setdefault("Cache-Control", "public, max-age=3600")
+        elif request.method == "GET":
+            response.headers.setdefault("Cache-Control", "no-cache")
         return response
     except Exception:
         if "monitoring" in globals():
             monitoring.record("errors")
-        logger.exception("Unhandled error for %s %s", request.method, request.url.path)
+        logger.exception("Unhandled error for %s %s", request.method, path)
         raise
 
 
