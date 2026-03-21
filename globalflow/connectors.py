@@ -1,7 +1,8 @@
 import os
-from typing import Dict, List
+from typing import Any, Dict, List
 
-def _resolve_url(connector: Dict[str, str]) -> str:
+
+def _resolve_url(connector: Dict[str, Any]) -> str:
     env_key = connector.get("env_key")
     if env_key:
         env_value = os.environ.get(env_key)
@@ -10,7 +11,7 @@ def _resolve_url(connector: Dict[str, str]) -> str:
     return connector["default_url"]
 
 
-CONNECTORS: List[Dict[str, str]] = [
+CONNECTORS: List[Dict[str, Any]] = [
     {
         "id": "slack",
         "name": "Slack Alert",
@@ -18,7 +19,7 @@ CONNECTORS: List[Dict[str, str]] = [
         "default_url": "https://hooks.example.com/slack/globalflow",
         "env_key": "GLOBALFLOW_SLACK_WEBHOOK",
         "sample_field": "text",
-        "sample_message": "GlobalFlow finished a billing automation – review the results in Prefect.",
+        "sample_message": "GlobalFlow finished a billing automation - review the results in Prefect.",
         "doc": "https://api.slack.com/messaging/webhooks",
         "category": "collaboration",
         "icon": "slack",
@@ -70,4 +71,4 @@ CONNECTORS: List[Dict[str, str]] = [
 for connector in CONNECTORS:
     connector["resolved_url"] = _resolve_url(connector)
 
-CONNECTOR_LOOKUP: Dict[str, Dict[str, str]] = {connector["id"]: connector for connector in CONNECTORS}
+CONNECTOR_LOOKUP: Dict[str, Dict[str, Any]] = {connector["id"]: connector for connector in CONNECTORS}

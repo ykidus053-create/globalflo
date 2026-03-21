@@ -5,7 +5,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 function currentMethod() {
   const segments = window.location.pathname.split("/");
-  return segments.pop() || segments.pop();
+  return (segments.pop() || segments.pop() || "").toLowerCase();
 }
 
 function fillFromQuery() {
@@ -39,10 +39,10 @@ if (form) {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (status) status.textContent = "Sending your finance request...";
+    const payload = Object.fromEntries(new FormData(form));
     const submitButton = form.querySelector('button[type="submit"]');
     if (submitButton) submitButton.disabled = true;
-    status.textContent = "Sending your finance request...";
-    const payload = Object.fromEntries(new FormData(form));
 
     try {
       const response = await fetch(`/api/payments/${currentMethod()}`, {
@@ -50,17 +50,17 @@ if (form) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const body = await response.json();
+      const body = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        status.textContent = body.message;
+        if (status) status.textContent = body.message;
         form.reset();
         fillFromQuery();
       } else {
-        status.textContent = body.detail || "We could not submit it yet.";
+        if (status) status.textContent = body.detail || "We could not submit it yet.";
       }
     } catch (error) {
-      status.textContent = "Payment portal unavailable. Try again shortly.";
+      if (status) status.textContent = "Payment portal unavailable. Try again shortly.";
       console.error(error);
     } finally {
       if (submitButton) submitButton.disabled = false;

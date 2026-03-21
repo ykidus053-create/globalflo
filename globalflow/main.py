@@ -11,10 +11,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
-from .activity import ActivityLog
-from .automations import FlowOrchestrator
-from .connectors import CONNECTOR_LOOKUP, CONNECTORS
-from .services import AutoPilot, Monitoring, TaskManager
+try:
+    from .activity import ActivityLog
+    from .automations import FlowOrchestrator
+    from .connectors import CONNECTOR_LOOKUP, CONNECTORS
+    from .services import AutoPilot, Monitoring, TaskManager
+except ImportError:  # pragma: no cover - fallback when running as a top-level module
+    from activity import ActivityLog
+    from automations import FlowOrchestrator
+    from connectors import CONNECTOR_LOOKUP, CONNECTORS
+    from services import AutoPilot, Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
 
@@ -43,6 +49,11 @@ async def start_autopilot():
         logger.info("Autopilot startup disabled by environment")
 
 
+@app.on_event("shutdown")
+async def stop_autopilot():
+    await autopilot.disable()
+
+
 @app.middleware("http")
 async def request_logger(request: Request, call_next):
     logger.info("Processing %s %s", request.method, request.url.path)
@@ -50,7 +61,8 @@ async def request_logger(request: Request, call_next):
         response = await call_next(request)
         return response
     except Exception:
-        monitoring.record("errors")
+        if "monitoring" in globals():
+            monitoring.record("errors")
         logger.exception("Unhandled error for %s %s", request.method, request.url.path)
         raise
 
@@ -655,7 +667,7 @@ async def catalog_subscriptions():
 
 @app.get("/payment/{method}", response_class=HTMLResponse)
 async def payment_portal(request: Request, method: str):
-    portal = PAYMENT_LOOKUP.get(method)
+    portal = PAYMENT_LOOKUP.get(method.lower())
     if not portal:
         raise HTTPException(status_code=404, detail="Payment method unavailable")
     return templates.TemplateResponse(
@@ -670,7 +682,7 @@ async def payment_portal(request: Request, method: str):
 
 @app.get("/checkout/{tier_id}", response_class=HTMLResponse)
 async def checkout_page(request: Request, tier_id: str):
-    tier = SUBSCRIPTION_LOOKUP.get(tier_id)
+    tier = SUBSCRIPTION_LOOKUP.get(tier_id.lower())
     if not tier:
         raise HTTPException(status_code=404, detail="Subscription tier unavailable")
     return templates.TemplateResponse(
@@ -686,6 +698,7 @@ async def checkout_page(request: Request, tier_id: str):
 
 @app.post("/api/payments/{method}", response_class=JSONResponse)
 async def submit_payment_request(method: str, payload: Dict[str, str]):
+    method = method.lower()
     portal = PAYMENT_LOOKUP.get(method)
     if not portal:
         raise HTTPException(status_code=404, detail="Payment method unavailable")
@@ -710,7 +723,7 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
 
 @app.post("/api/connectors/{connector_id}", response_class=JSONResponse)
 async def trigger_connector(connector_id: str, payload: Dict[str, str]):
-    connector = CONNECTOR_LOOKUP.get(connector_id)
+    connector = CONNECTOR_LOOKUP.get(connector_id.lower())
     if not connector:
         raise HTTPException(status_code=404, detail="Connector not available")
     target_url = payload.get("target_url") or connector.get("resolved_url") or connector["default_url"]
@@ -723,6 +736,7 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     try:
         async with httpx.AsyncClient(timeout=10) as client:
             response = await client.post(target_url, json=body)
+            response.raise_for_status()
     except httpx.HTTPError as exc:
         logger.warning("Connector %s failed: %s", connector_id, exc)
         activity_log.record(
@@ -739,9 +753,12 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
         message=f"Connector hit - {response.status_code}",
         detail=response.text[:200],
     )
-    details = {}
+    details: Dict[str, Any] = {}
     if response.headers.get("content-type", "").startswith("application/json"):
-        details = response.json()
+        try:
+            details = response.json()
+        except ValueError:
+            details = {"raw": response.text[:200]}
     return {
         "status": "ok",
         "message": f"{connector['name']} triggered - {response.status_code}",

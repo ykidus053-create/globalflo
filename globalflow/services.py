@@ -3,9 +3,12 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from .activity import ActivityLog
-
-from .automations import FlowOrchestrator
+try:
+    from .activity import ActivityLog
+    from .automations import FlowOrchestrator
+except ImportError:  # pragma: no cover - fallback when running as a top-level module
+    from activity import ActivityLog
+    from automations import FlowOrchestrator
 
 logger = logging.getLogger("globalflow.services")
 if not logger.handlers:
@@ -142,7 +145,11 @@ class AutoPilot:
     async def _loop(self) -> None:
         try:
             while self.enabled:
-                await self._execute_cycle()
+                try:
+                    await self._execute_cycle()
+                except Exception:
+                    self.monitoring.record("errors")
+                    logger.exception("Autopilot cycle failed")
                 await asyncio.sleep(self.interval_seconds)
         except asyncio.CancelledError:
             pass
@@ -155,6 +162,10 @@ class AutoPilot:
             try:
                 await self.task_manager.kickoff(task["id"])
             except KeyError:
+                continue
+            except Exception:
+                self.monitoring.record("errors")
+                logger.exception("Autopilot task failed: %s", task.get("id"))
                 continue
         self.cycle_count += 1
         self.last_run = datetime.utcnow()

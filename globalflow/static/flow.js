@@ -48,6 +48,7 @@ let metricsCache = {};
 let activityCount = 0;
 let revealObserver = null;
 let billingMode = "monthly";
+let activeModalId = null;
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
@@ -339,35 +340,46 @@ async function inspectFlow() {
 
 const historySupported = typeof window !== "undefined" && window.history && window.history.pushState;
 if (historySupported) {
-  window.history.replaceState({ modalId: null }, "", window.location.pathname);
+  window.history.replaceState({ modalId: null }, "", `${window.location.pathname}${window.location.search}`);
 }
 
 function pushModalHistory(modalId) {
   if (!historySupported) return;
+  if (window.history.state?.modalId === modalId) return;
   window.history.pushState({ modalId }, "", `${window.location.pathname}#${modalId}`);
 }
 
 function resetModalHistory() {
   if (!historySupported) return;
-  window.history.replaceState({ modalId: null }, "", window.location.pathname);
+  window.history.replaceState({ modalId: null }, "", `${window.location.pathname}${window.location.search}`);
 }
 
-function openModal(target) {
+function openModal(target, pushHistory = true) {
   if (!target) return;
+  document.querySelectorAll(".flow-modal--open").forEach((el) => el.classList.remove("flow-modal--open"));
   target.classList.add("flow-modal--open");
-  pushModalHistory(target.id);
+  activeModalId = target.id;
+  if (pushHistory) pushModalHistory(target.id);
 }
 
 function closeModal(target, skipHistory = false) {
   if (!target) return;
   target.classList.remove("flow-modal--open");
+  activeModalId = null;
   if (!skipHistory) resetModalHistory();
 }
 
 window.addEventListener("popstate", (event) => {
   const modalId = event.state?.modalId;
   const openModalEl = document.querySelector(".flow-modal--open");
-  if (!modalId && openModalEl) closeModal(openModalEl, true);
+  if (!modalId && openModalEl) {
+    closeModal(openModalEl, true);
+    return;
+  }
+  if (modalId) {
+    const target = document.getElementById(modalId);
+    if (target) openModal(target, false);
+  }
 });
 
 async function handleLeadCapture(form, statusEl, modalEl) {
@@ -424,7 +436,7 @@ function scrollToSelector(selector) {
 function openCheckoutForTier(tierId) {
   if (!tierId) return;
   showToast("Opening subscription checkout...");
-  window.location.assign(`/checkout/${tierId}`);
+  window.location.assign(`/checkout/${String(tierId).toLowerCase()}`);
 }
 
 function setBillingMode(mode) {
@@ -478,10 +490,18 @@ if (watchDemoBtn) {
 
 if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", async () => {
-    showToast("Launching automation flow...");
-    await fetchTasks();
-    scrollToSelector("#flowboard");
-    triggerFlow();
+    launchOrchestrationBtn.disabled = true;
+    try {
+      showToast("Launching automation flow...");
+      await fetchTasks();
+      scrollToSelector("#flowboard");
+      triggerFlow();
+    } catch (error) {
+      setReliabilityState("warning", "Launch delayed");
+      showToast(error.message || "Could not launch orchestration");
+    } finally {
+      launchOrchestrationBtn.disabled = false;
+    }
   });
 }
 
@@ -564,6 +584,11 @@ connectorForms.forEach((form) => {
     event.preventDefault();
     const connectorId = form.dataset.connectorId;
     const statusEl = form.querySelector(".connector-status");
+    if (!connectorId) {
+      if (statusEl) statusEl.textContent = "Connector is misconfigured.";
+      showToast("Connector unavailable");
+      return;
+    }
     if (statusEl) statusEl.textContent = "Dispatching connector...";
     const payload = Object.fromEntries(new FormData(form));
     try {
@@ -587,17 +612,28 @@ connectorForms.forEach((form) => {
 if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode("monthly"));
 if (annualToggle) annualToggle.addEventListener("click", () => setBillingMode("annual"));
 
-initRevealObserver();
-initActiveNav();
-setBillingMode(billingMode);
-fetchTasks();
-fetchSummary();
-refreshMetrics();
-refreshAutopilotStatus();
-fetchActivity();
+function scheduleSafe(task, interval) {
+  window.setInterval(() => {
+    task().catch((error) => {
+      console.warn("Scheduled task failed", error);
+    });
+  }, interval);
+}
 
-window.setInterval(fetchTasks, 15000);
-window.setInterval(fetchSummary, 30000);
-window.setInterval(refreshMetrics, 45000);
-window.setInterval(refreshAutopilotStatus, 30000);
-window.setInterval(fetchActivity, 30000);
+async function bootstrap() {
+  initRevealObserver();
+  initActiveNav();
+  setBillingMode(billingMode);
+  await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
+}
+
+bootstrap().catch((error) => {
+  setReliabilityState("warning", "Startup checks delayed");
+  console.warn("Bootstrap failed", error);
+});
+
+scheduleSafe(fetchTasks, 15000);
+scheduleSafe(fetchSummary, 30000);
+scheduleSafe(refreshMetrics, 45000);
+scheduleSafe(refreshAutopilotStatus, 30000);
+scheduleSafe(fetchActivity, 30000);

@@ -7,16 +7,17 @@ if (form) {
     const submitButton = form.querySelector('button[type="submit"]');
     if (submitButton) submitButton.disabled = true;
     if (status) {
-      status.textContent = "Saving changes…";
+      status.textContent = "Saving changes...";
     }
     const payload = Object.fromEntries(new FormData(form));
+
     try {
       const response = await fetch("/api/account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const body = await response.json();
+      const body = await response.json().catch(() => ({}));
       if (status) {
         if (response.ok) {
           status.textContent = "Profile updated.";
@@ -32,6 +33,7 @@ if (form) {
       if (status) {
         status.textContent = "Connection issue. Try again.";
       }
+      console.error(error);
     } finally {
       if (submitButton) submitButton.disabled = false;
     }

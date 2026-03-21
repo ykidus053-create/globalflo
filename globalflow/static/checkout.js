@@ -6,12 +6,14 @@ if (invoiceForm) {
     event.preventDefault();
 
     if (!invoiceForm.dataset.method) {
-      invoiceStatus.textContent = "Select a payment method before submitting.";
+      if (invoiceStatus) invoiceStatus.textContent = "Select a payment method before submitting.";
       return;
     }
 
-    invoiceStatus.textContent = "Creating your request and routing it to finance...";
+    if (invoiceStatus) invoiceStatus.textContent = "Creating your request and routing it to finance...";
     const payload = Object.fromEntries(new FormData(invoiceForm));
+    const submitButton = invoiceForm.querySelector("button[type='submit']");
+    if (submitButton) submitButton.disabled = true;
 
     try {
       const response = await fetch(`/api/payments/${invoiceForm.dataset.method}`, {
@@ -19,17 +21,19 @@ if (invoiceForm) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const body = await response.json();
+      const body = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        invoiceStatus.textContent = body.message;
+        if (invoiceStatus) invoiceStatus.textContent = body.message;
         invoiceForm.reset();
       } else {
-        invoiceStatus.textContent = body.detail || "We could not complete the request yet.";
+        if (invoiceStatus) invoiceStatus.textContent = body.detail || "We could not complete the request yet.";
       }
     } catch (error) {
-      invoiceStatus.textContent = "Payment portal offline. Try again shortly.";
+      if (invoiceStatus) invoiceStatus.textContent = "Payment portal offline. Try again shortly.";
       console.error(error);
+    } finally {
+      if (submitButton) submitButton.disabled = false;
     }
   });
 }
