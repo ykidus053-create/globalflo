@@ -2,6 +2,7 @@ const form = document.getElementById("payment-form");
 const status = document.getElementById("payment-status");
 const trigger = document.getElementById("payment-form-trigger");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PAID_KEY = "globalflow_paid";
 
 function currentMethod() {
   const segments = window.location.pathname.split("/");
@@ -54,6 +55,15 @@ if (form) {
 
       if (response.ok) {
         if (status) status.textContent = body.message;
+        try {
+          window.localStorage.setItem(PAID_KEY, "true");
+        } catch {
+          // no-op when storage is unavailable
+        }
+        const redirectUrl = body.redirect_url || "/automation";
+        window.setTimeout(() => {
+          window.location.assign(redirectUrl);
+        }, 900);
         form.reset();
         fillFromQuery();
       } else {

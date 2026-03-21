@@ -1,5 +1,6 @@
 const invoiceForm = document.getElementById("invoice-form");
 const invoiceStatus = document.getElementById("invoice-status");
+const PAID_KEY = "globalflow_paid";
 
 if (invoiceForm) {
   invoiceForm.addEventListener("submit", async (event) => {
@@ -25,6 +26,15 @@ if (invoiceForm) {
 
       if (response.ok) {
         if (invoiceStatus) invoiceStatus.textContent = body.message;
+        try {
+          window.localStorage.setItem(PAID_KEY, "true");
+        } catch {
+          // no-op when storage is unavailable
+        }
+        const redirectUrl = body.redirect_url || "/automation";
+        window.setTimeout(() => {
+          window.location.assign(redirectUrl);
+        }, 900);
         invoiceForm.reset();
       } else {
         if (invoiceStatus) invoiceStatus.textContent = body.detail || "We could not complete the request yet.";

@@ -718,6 +718,7 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     return {
         "status": "ok",
         "message": f"{portal['name']} request received - expect a secure link in your inbox shortly.",
+        "redirect_url": "/automation",
     }
 
 
@@ -833,6 +834,19 @@ async def account_center(request: Request):
             "request": request,
             "profile": USER_PROFILE,
             "settings": USER_SETTINGS,
+            "theme": _active_theme(),
+        },
+    )
+
+
+@app.get("/automation", response_class=HTMLResponse)
+async def automation_workspace(request: Request):
+    return templates.TemplateResponse(
+        "automation.html",
+        {
+            "request": request,
+            "autopilot": autopilot.status(),
+            "connectors": CONNECTORS,
             "theme": _active_theme(),
         },
     )
