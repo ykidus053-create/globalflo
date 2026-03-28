@@ -3970,7 +3970,7 @@ body.paper-site .ghost:hover,
 body.paper-site .pill:hover,
 body.paper-site a:hover,
 body.paper-site button:hover {
-  color: #1d4ed8 !important;
+  color: #6fb0ff !important;
 }
 
 /* ICOMAT-inspired typography accents */
@@ -4047,7 +4047,7 @@ body.paper-site textarea::placeholder {
 body.paper-site input:focus,
 body.paper-site select:focus,
 body.paper-site textarea:focus {
-  color: #1d4ed8 !important;
+  color: #6fb0ff !important;
 }
 
 body.paper-site .flow-modal {
