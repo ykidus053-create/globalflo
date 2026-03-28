@@ -3972,6 +3972,27 @@ body.paper-site button:hover {
   color: #1d4ed8 !important;
 }
 
+/* ICOMAT-inspired typography accents */
+body.paper-site .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+
+body.paper-site h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+body.paper-site .lead {
+  max-width: 720px;
+}
+
+body.paper-site .hero-actions {
+  gap: 18px;
+}
+
 body.paper-site .connector-form,
 body.paper-site .payment-form,
 body.paper-site .checkout-card form,
