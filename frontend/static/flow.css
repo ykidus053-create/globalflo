@@ -1196,12 +1196,13 @@ h1 {
 
 .reveal-ready {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(26px) scale(0.985);
+  transition: opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1), transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .reveal-ready.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .primary,
@@ -1520,9 +1521,9 @@ summary:focus-visible {
 :root {
   --bg: #f7f8fa;
   --bg-soft: #f1f3f6;
-  --panel: #ffffff;
-  --panel-strong: #ffffff;
-  --text: #111827;
+  --panel: transparent;
+  --panel-strong: transparent;
+  --text: #e6ecf8;
   --muted: #5b6473;
   --accent: #0a66ff;
   --accent-strong: #0048b0;
@@ -1668,7 +1669,7 @@ body,
 .pill {
   background: #ffffff;
   border-color: var(--line-strong);
-  color: #111827;
+  color: #e6ecf8;
 }
 
 .ghost:hover,
@@ -1708,7 +1709,7 @@ body,
 
 .flow-modal pre {
   background: #f8fafc;
-  color: #111827;
+  color: #e6ecf8;
   border: 1px solid var(--line);
 }
 
@@ -1719,7 +1720,7 @@ body,
 .toast {
   background: #111827;
   color: #f9fafb;
-  border-color: #111827;
+  border-color: #e6ecf8;
 }
 
 .mobile-dock {
@@ -1828,7 +1829,7 @@ html[data-theme="dark"] .toast {
 :root {
   --bg: #f7f4ef;
   --bg-soft: #f1ece5;
-  --panel: #ffffff;
+  --panel: transparent;
   --panel-strong: #fffdf9;
   --text: #1f2937;
   --muted: #667085;
@@ -2846,7 +2847,7 @@ h1 {
 .ghost,
 .pill {
   background: rgba(255, 255, 255, 0.9);
-  color: #111827;
+  color: #e6ecf8;
   border-color: var(--line-strong);
 }
 
@@ -2858,7 +2859,7 @@ h1 {
 .toast {
   background: #111827;
   color: #f9fafb;
-  border-color: #111827;
+  border-color: #e6ecf8;
 }
 
 .mobile-dock {
@@ -3462,18 +3463,18 @@ html[data-theme="dark"] .hero-proof-card--unified h2 {
 
 body.paper-site,
 html[data-theme="dark"] body.paper-site {
-  --bg: #ffffff;
-  --bg-soft: #ffffff;
-  --panel: #ffffff;
-  --panel-strong: #ffffff;
-  --text: #111827;
-  --muted: #4b5563;
-  --accent: #1d4ed8;
-  --accent-strong: #2563eb;
-  --line: rgba(17, 24, 39, 0.12);
-  --line-strong: rgba(17, 24, 39, 0.2);
-  background: #ffffff !important;
-  color: #111827;
+  --bg: #0a1731;
+  --bg-soft: #0e1d3c;
+  --panel: transparent;
+  --panel-strong: transparent;
+  --text: #e6ecf8;
+  --muted: #b6c3dd;
+  --accent: #6fb0ff;
+  --accent-strong: #8cc3ff;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  background: transparent !important;
+  color: #e6ecf8;
 }
 
 body.paper-site .aurora,
@@ -3485,7 +3486,7 @@ body.paper-site .backdrop {
 body.paper-site .top,
 body.paper-site .top--airbnb {
   padding: 18px clamp(20px, 5vw, 72px);
-  background: #ffffff !important;
+  background: transparent !important;
   border-bottom: 1px solid var(--line);
   box-shadow: none;
   backdrop-filter: none;
@@ -3513,7 +3514,7 @@ body.paper-site .value,
 body.paper-site label,
 body.paper-site .feature-link,
 body.paper-site a {
-  color: #111827;
+  color: #e6ecf8;
 }
 
 body.paper-site .nav {
@@ -3537,7 +3538,7 @@ body.paper-site .nav button {
 body.paper-site .nav a:hover,
 body.paper-site .nav a.is-active,
 body.paper-site .nav button:hover {
-  color: #1d4ed8;
+  color: #6fb0ff;
 }
 
 body.paper-site main {
@@ -3552,7 +3553,7 @@ body.paper-site .site-footer--airbnb {
   width: 100%;
   margin: 0;
   padding: 30px clamp(20px, 5vw, 72px);
-  background: #ffffff !important;
+  background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
@@ -3581,7 +3582,7 @@ html[data-theme="dark"] body.paper-site .integrations--airbnb,
 html[data-theme="dark"] body.paper-site .pricing--airbnb,
 html[data-theme="dark"] body.paper-site .trust--airbnb,
 html[data-theme="dark"] body.paper-site .site-footer--airbnb {
-  background: #ffffff !important;
+  background: transparent !important;
 }
 
 body.paper-site .hero-proof-card--unified,
@@ -3653,7 +3654,7 @@ body.paper-site .pill {
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  color: #111827;
+  color: #e6ecf8;
 }
 
 body.paper-site .primary {
@@ -3669,7 +3670,7 @@ body.paper-site .ghost {
 body.paper-site .primary:hover,
 body.paper-site .ghost:hover,
 body.paper-site .pill:hover {
-  color: #1d4ed8;
+  color: #6fb0ff;
 }
 
 body.paper-site .video-card-top,
@@ -3708,7 +3709,7 @@ body.paper-site .form-grid select {
   border: 1px solid var(--line);
   border-radius: 0;
   box-shadow: none;
-  color: #111827;
+  color: #e6ecf8;
 }
 
 body.paper-site .note,
@@ -3972,6 +3973,27 @@ body.paper-site button:hover {
   color: #1d4ed8 !important;
 }
 
+/* ICOMAT-inspired typography accents */
+body.paper-site .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+
+body.paper-site h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+body.paper-site .lead {
+  max-width: 720px;
+}
+
+body.paper-site .hero-actions {
+  gap: 18px;
+}
+
 body.paper-site .connector-form,
 body.paper-site .payment-form,
 body.paper-site .checkout-card form,
@@ -4029,7 +4051,7 @@ body.paper-site textarea:focus {
 }
 
 body.paper-site .flow-modal {
-  background: #ffffff !important;
+  background: transparent !important;
   padding: 42px clamp(20px, 5vw, 72px);
   align-items: flex-start;
   justify-content: flex-start;
@@ -4211,4 +4233,68 @@ body.paper-site .nav {
   }
   body.paper-site .hero-video { width: 100%; height: auto; }
   body.paper-site .nav { flex-wrap: wrap; row-gap: 8px; }
+}
+/* Navy backdrop overrides */
+body.paper-site,
+body.paper-site main,
+body.paper-site .landing-main,
+body.paper-site .payment-page,
+body.paper-site .checkout-page,
+body.paper-site .account-page,
+body.paper-site #workspace,
+body.paper-site .site-footer,
+body.paper-site .site-footer--airbnb,
+body.paper-site .checkout-foot {
+  background: #0a1731 !important;
+  color: #e6ecf8;
+}
+
+body.paper-site main > section,
+body.paper-site .site-footer--airbnb,
+body.paper-site .site-footer,
+body.paper-site .checkout-foot {
+  background: transparent !important;
+}
+
+body.paper-site .lead,
+body.paper-site .signal-meta,
+body.paper-site .note,
+body.paper-site .label,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time,
+body.paper-site .pricing-meta,
+body.paper-site .hero-quickfacts span,
+body.paper-site .hero-quickfacts p,
+body.paper-site .hero-media-caption,
+body.paper-site .hero-media-points,
+body.paper-site .payment-header p,
+body.paper-site .payment-panel ol,
+body.paper-site .checkout-hero-panel p,
+body.paper-site .checkout-foot,
+body.paper-site .modal-note,
+body.paper-site .payment-status,
+body.paper-site #account-status {
+  color: #b6c3dd !important;
+}
+
+body.paper-site input,
+body.paper-site select,
+body.paper-site textarea,
+body.paper-site .connector-form input,
+body.paper-site .flow-modal input,
+body.paper-site .flow-modal select,
+body.paper-site .checkout-card input,
+body.paper-site .checkout-card textarea,
+body.paper-site .payment-form input,
+body.paper-site .payment-form textarea,
+body.paper-site .lead-capture input,
+body.paper-site .form-grid input,
+body.paper-site .form-grid select {
+  color: #e6ecf8 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.paper-site input::placeholder,
+body.paper-site textarea::placeholder {
+  color: #7f8fb0;
 }

@@ -3463,18 +3463,18 @@ html[data-theme="dark"] .hero-proof-card--unified h2 {
 
 body.paper-site,
 html[data-theme="dark"] body.paper-site {
-  --bg: #ffffff;
-  --bg-soft: #ffffff;
-  --panel: #ffffff;
-  --panel-strong: #ffffff;
-  --text: #111827;
-  --muted: #4b5563;
-  --accent: #1d4ed8;
-  --accent-strong: #2563eb;
-  --line: rgba(17, 24, 39, 0.12);
-  --line-strong: rgba(17, 24, 39, 0.2);
-  background: #ffffff !important;
-  color: #111827;
+  --bg: #0a1731;
+  --bg-soft: #0e1d3c;
+  --panel: transparent;
+  --panel-strong: transparent;
+  --text: #e6ecf8;
+  --muted: #b6c3dd;
+  --accent: #6fb0ff;
+  --accent-strong: #8cc3ff;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  background: #0a1731 !important;
+  color: #e6ecf8;
 }
 
 body.paper-site .aurora,
@@ -3486,8 +3486,8 @@ body.paper-site .backdrop {
 body.paper-site .top,
 body.paper-site .top--airbnb {
   padding: 18px clamp(20px, 5vw, 72px);
-  background: #ffffff !important;
-  border-bottom: 1px solid var(--line);
+  background: transparent !important;
+  border-bottom: none;
   box-shadow: none;
   backdrop-filter: none;
 }
@@ -3538,7 +3538,7 @@ body.paper-site .nav button {
 body.paper-site .nav a:hover,
 body.paper-site .nav a.is-active,
 body.paper-site .nav button:hover {
-  color: #1d4ed8;
+  color: #6fb0ff;
 }
 
 body.paper-site main {
@@ -3553,7 +3553,7 @@ body.paper-site .site-footer--airbnb {
   width: 100%;
   margin: 0;
   padding: 30px clamp(20px, 5vw, 72px);
-  background: #ffffff !important;
+  background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
@@ -3582,7 +3582,7 @@ html[data-theme="dark"] body.paper-site .integrations--airbnb,
 html[data-theme="dark"] body.paper-site .pricing--airbnb,
 html[data-theme="dark"] body.paper-site .trust--airbnb,
 html[data-theme="dark"] body.paper-site .site-footer--airbnb {
-  background: #ffffff !important;
+  background: transparent !important;
 }
 
 body.paper-site .hero-proof-card--unified,
@@ -4051,7 +4051,7 @@ body.paper-site textarea:focus {
 }
 
 body.paper-site .flow-modal {
-  background: #ffffff !important;
+  background: transparent !important;
   padding: 42px clamp(20px, 5vw, 72px);
   align-items: flex-start;
   justify-content: flex-start;
@@ -4126,7 +4126,7 @@ body.paper-site .text-link,
 body.paper-site .feature-link,
 body.paper-site .footer-links a,
 body.paper-site .footer-social a {
-  color: #111827 !important;
+  color: #e6ecf8 !important;
   text-decoration: none;
 }
 
@@ -4134,7 +4134,72 @@ body.paper-site .text-link:hover,
 body.paper-site .feature-link:hover,
 body.paper-site .footer-links a:hover,
 body.paper-site .footer-social a:hover {
-  color: #1d4ed8 !important;
+  color: #6fb0ff !important;
+}
+
+/* Navy backdrop overrides */
+body.paper-site,
+body.paper-site main,
+body.paper-site .landing-main,
+body.paper-site .payment-page,
+body.paper-site .checkout-page,
+body.paper-site .account-page,
+body.paper-site #workspace,
+body.paper-site .site-footer,
+body.paper-site .site-footer--airbnb,
+body.paper-site .checkout-foot {
+  background: #0a1731 !important;
+  color: #e6ecf8;
+}
+
+body.paper-site main > section,
+body.paper-site .site-footer--airbnb,
+body.paper-site .site-footer,
+body.paper-site .checkout-foot {
+  background: transparent !important;
+}
+
+body.paper-site .lead,
+body.paper-site .signal-meta,
+body.paper-site .note,
+body.paper-site .label,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time,
+body.paper-site .pricing-meta,
+body.paper-site .hero-quickfacts span,
+body.paper-site .hero-quickfacts p,
+body.paper-site .hero-media-caption,
+body.paper-site .hero-media-points,
+body.paper-site .payment-header p,
+body.paper-site .payment-panel ol,
+body.paper-site .checkout-hero-panel p,
+body.paper-site .checkout-foot,
+body.paper-site .modal-note,
+body.paper-site .payment-status,
+body.paper-site #account-status {
+  color: #b6c3dd !important;
+}
+
+body.paper-site input,
+body.paper-site select,
+body.paper-site textarea,
+body.paper-site .connector-form input,
+body.paper-site .flow-modal input,
+body.paper-site .flow-modal select,
+body.paper-site .checkout-card input,
+body.paper-site .checkout-card textarea,
+body.paper-site .payment-form input,
+body.paper-site .payment-form textarea,
+body.paper-site .lead-capture input,
+body.paper-site .form-grid input,
+body.paper-site .form-grid select {
+  color: #e6ecf8 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.paper-site input::placeholder,
+body.paper-site textarea::placeholder {
+  color: #7f8fb0;
 }
 
 @media (max-width: 1120px) {
@@ -4233,4 +4298,68 @@ body.paper-site .nav {
   }
   body.paper-site .hero-video { width: 100%; height: auto; }
   body.paper-site .nav { flex-wrap: wrap; row-gap: 8px; }
+}
+/* Navy backdrop overrides */
+body.paper-site,
+body.paper-site main,
+body.paper-site .landing-main,
+body.paper-site .payment-page,
+body.paper-site .checkout-page,
+body.paper-site .account-page,
+body.paper-site #workspace,
+body.paper-site .site-footer,
+body.paper-site .site-footer--airbnb,
+body.paper-site .checkout-foot {
+  background: #0a1731 !important;
+  color: #e6ecf8;
+}
+
+body.paper-site main > section,
+body.paper-site .site-footer--airbnb,
+body.paper-site .site-footer,
+body.paper-site .checkout-foot {
+  background: transparent !important;
+}
+
+body.paper-site .lead,
+body.paper-site .signal-meta,
+body.paper-site .note,
+body.paper-site .label,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time,
+body.paper-site .pricing-meta,
+body.paper-site .hero-quickfacts span,
+body.paper-site .hero-quickfacts p,
+body.paper-site .hero-media-caption,
+body.paper-site .hero-media-points,
+body.paper-site .payment-header p,
+body.paper-site .payment-panel ol,
+body.paper-site .checkout-hero-panel p,
+body.paper-site .checkout-foot,
+body.paper-site .modal-note,
+body.paper-site .payment-status,
+body.paper-site #account-status {
+  color: #b6c3dd !important;
+}
+
+body.paper-site input,
+body.paper-site select,
+body.paper-site textarea,
+body.paper-site .connector-form input,
+body.paper-site .flow-modal input,
+body.paper-site .flow-modal select,
+body.paper-site .checkout-card input,
+body.paper-site .checkout-card textarea,
+body.paper-site .payment-form input,
+body.paper-site .payment-form textarea,
+body.paper-site .lead-capture input,
+body.paper-site .form-grid input,
+body.paper-site .form-grid select {
+  color: #e6ecf8 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.paper-site input::placeholder,
+body.paper-site textarea::placeholder {
+  color: #7f8fb0;
 }
