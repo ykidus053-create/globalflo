@@ -3737,3 +3737,429 @@ body.paper-site .signal-meta {
     padding-right: 18px;
   }
 }
+
+body.paper-site {
+  font-family: "Manrope", "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+body.paper-site .top,
+body.paper-site .top--airbnb,
+body.paper-site .site-footer,
+body.paper-site .site-footer--airbnb,
+body.paper-site .checkout-foot,
+body.paper-site .flow-modal__content,
+body.paper-site .flow-modal pre,
+body.paper-site .toast,
+body.paper-site .checkout-hero,
+body.paper-site .payment-hero,
+body.paper-site .payment-strip,
+body.paper-site .checkout-offset,
+body.paper-site .account-panel,
+body.paper-site .checkout-card,
+body.paper-site .checkout-panel,
+body.paper-site .payment-panel,
+body.paper-site .payment-form-section,
+body.paper-site .checkout-hero-copy,
+body.paper-site .checkout-hero-panel,
+body.paper-site .hero-proof-card--unified,
+body.paper-site .hero-status-card--airbnb,
+body.paper-site .hero-trust-card--unified,
+body.paper-site .hero-media-card,
+body.paper-site .explore-card,
+body.paper-site .stat-card--airbnb,
+body.paper-site .workflow-card,
+body.paper-site .summary,
+body.paper-site .summary--airbnb,
+body.paper-site .summary--airbnb li,
+body.paper-site .summary li,
+body.paper-site .activity-entry,
+body.paper-site .autopilot-panel,
+body.paper-site .autopilot-panel--airbnb,
+body.paper-site .connector-card,
+body.paper-site .connector-card--airbnb,
+body.paper-site .pricing-card,
+body.paper-site .pricing-card--airbnb,
+body.paper-site .trust-card,
+body.paper-site .trust-card--airbnb,
+body.paper-site .payment-chip,
+body.paper-site .payment-chip--airbnb,
+body.paper-site .method-grid li,
+body.paper-site .comparison-table-wrap--airbnb,
+body.paper-site .hero-quickfacts article,
+body.paper-site .hero-trust-list > div,
+body.paper-site .hero-status-card > div,
+body.paper-site .hero-status-card--airbnb > div,
+body.paper-site .workflow-main,
+body.paper-site .workflow-side,
+body.paper-site .payment-header,
+body.paper-site .payment-details,
+body.paper-site .panel-heading,
+body.paper-site .footer-top,
+body.paper-site .footer-links,
+body.paper-site .footer-social,
+body.paper-site .footer-bottom {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+body.paper-site .top,
+body.paper-site .top--airbnb {
+  border-bottom: none !important;
+  padding-bottom: 8px;
+}
+
+body.paper-site main > section,
+body.paper-site .site-footer,
+body.paper-site .site-footer--airbnb,
+body.paper-site .checkout-foot {
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 42px clamp(20px, 5vw, 72px) 0 !important;
+}
+
+body.paper-site .landing-main,
+body.paper-site .payment-page,
+body.paper-site .checkout-page,
+body.paper-site .account-page,
+body.paper-site #workspace {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 0 48px !important;
+  gap: 0 !important;
+}
+
+body.paper-site main > section + section,
+body.paper-site .site-footer--airbnb,
+body.paper-site .site-footer,
+body.paper-site .hero-quickfacts article,
+body.paper-site .explore-card,
+body.paper-site .stat-card--airbnb,
+body.paper-site .workflow-card,
+body.paper-site .activity-entry,
+body.paper-site .summary--airbnb li,
+body.paper-site .summary li,
+body.paper-site .connector-card,
+body.paper-site .connector-card--airbnb,
+body.paper-site .pricing-card,
+body.paper-site .pricing-card--airbnb,
+body.paper-site .trust-card,
+body.paper-site .trust-card--airbnb,
+body.paper-site .method-grid li,
+body.paper-site .hero-trust-list > div,
+body.paper-site .hero-status-card > div,
+body.paper-site .hero-status-card--airbnb > div {
+  border: none !important;
+}
+
+body.paper-site .hero,
+body.paper-site .workflow,
+body.paper-site .workflow--airbnb,
+body.paper-site .payment-hero,
+body.paper-site .checkout-hero {
+  gap: 36px !important;
+}
+
+body.paper-site .hero-copy,
+body.paper-site .hero-stage,
+body.paper-site .workflow-main,
+body.paper-site .workflow-side,
+body.paper-site .payment-header,
+body.paper-site .payment-details,
+body.paper-site .panel-heading,
+body.paper-site .checkout-hero-copy,
+body.paper-site .checkout-hero-panel,
+body.paper-site .account-panel,
+body.paper-site .payment-form-section,
+body.paper-site .checkout-card,
+body.paper-site .checkout-panel,
+body.paper-site .summary,
+body.paper-site .summary--airbnb {
+  gap: 18px !important;
+}
+
+body.paper-site .hero-quickfacts,
+body.paper-site .hero-trust-list,
+body.paper-site .hero-status-card,
+body.paper-site .hero-status-card--airbnb,
+body.paper-site .stat-grid,
+body.paper-site .stat-grid--airbnb,
+body.paper-site .explore-grid,
+body.paper-site .workflow-grid,
+body.paper-site .connectors-grid,
+body.paper-site .pricing-grid,
+body.paper-site .trust-grid,
+body.paper-site .payment-strip,
+body.paper-site .method-grid,
+body.paper-site .footer-links,
+body.paper-site .footer-social {
+  gap: 18px !important;
+}
+
+body.paper-site .hero-quickfacts article,
+body.paper-site .explore-card,
+body.paper-site .stat-card--airbnb,
+body.paper-site .workflow-card,
+body.paper-site .activity-entry,
+body.paper-site .summary--airbnb li,
+body.paper-site .summary li,
+body.paper-site .connector-card,
+body.paper-site .connector-card--airbnb,
+body.paper-site .pricing-card,
+body.paper-site .pricing-card--airbnb,
+body.paper-site .trust-card,
+body.paper-site .trust-card--airbnb,
+body.paper-site .payment-chip,
+body.paper-site .payment-chip--airbnb,
+body.paper-site .method-grid li,
+body.paper-site .hero-trust-list > div,
+body.paper-site .hero-status-card > div,
+body.paper-site .hero-status-card--airbnb > div {
+  padding: 0 !important;
+}
+
+body.paper-site .brand-mark,
+body.paper-site .feature-icon,
+body.paper-site .payment-icon,
+body.paper-site .payment-mark {
+  display: none !important;
+}
+
+body.paper-site .signal-pill,
+body.paper-site .hero-chip-row span,
+body.paper-site .hero-media-points span,
+body.paper-site .tier-badge,
+body.paper-site .connector-toggle,
+body.paper-site .payment-note {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  color: #4b5563 !important;
+  font-weight: 600;
+}
+
+body.paper-site .primary,
+body.paper-site .ghost,
+body.paper-site .pill,
+body.paper-site .small,
+body.paper-site .checkout-links a,
+body.paper-site .payment-actions a,
+body.paper-site .payment-actions button,
+body.paper-site .workflow-actions button,
+body.paper-site .form-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: auto !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #111827 !important;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body.paper-site .primary:hover,
+body.paper-site .ghost:hover,
+body.paper-site .pill:hover,
+body.paper-site a:hover,
+body.paper-site button:hover {
+  color: #1d4ed8 !important;
+}
+
+body.paper-site .connector-form,
+body.paper-site .payment-form,
+body.paper-site .checkout-card form,
+body.paper-site #account-form,
+body.paper-site #login-form,
+body.paper-site #subscribe-form,
+body.paper-site .form-grid {
+  gap: 16px !important;
+}
+
+body.paper-site .connector-form label,
+body.paper-site .payment-form label,
+body.paper-site .checkout-card label,
+body.paper-site .form-grid label,
+body.paper-site .flow-modal label {
+  gap: 6px !important;
+  color: #111827 !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+body.paper-site input,
+body.paper-site select,
+body.paper-site textarea,
+body.paper-site .connector-form input,
+body.paper-site .flow-modal input,
+body.paper-site .flow-modal select,
+body.paper-site .checkout-card input,
+body.paper-site .checkout-card textarea,
+body.paper-site .payment-form input,
+body.paper-site .payment-form textarea,
+body.paper-site .lead-capture input,
+body.paper-site .form-grid input,
+body.paper-site .form-grid select {
+  padding: 0 !important;
+  min-height: auto !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #111827 !important;
+  font: inherit;
+}
+
+body.paper-site input::placeholder,
+body.paper-site textarea::placeholder {
+  color: #9ca3af;
+}
+
+body.paper-site input:focus,
+body.paper-site select:focus,
+body.paper-site textarea:focus {
+  color: #1d4ed8 !important;
+}
+
+body.paper-site .flow-modal {
+  background: #ffffff !important;
+  padding: 42px clamp(20px, 5vw, 72px);
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+body.paper-site .flow-modal__content {
+  width: 100%;
+  max-width: none;
+  padding: 0 !important;
+  position: relative;
+}
+
+body.paper-site .flow-modal pre {
+  padding: 0 !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #4b5563 !important;
+}
+
+body.paper-site .flow-modal__close {
+  right: 0;
+  top: 0;
+  background: none !important;
+  color: #111827 !important;
+  padding: 0 !important;
+}
+
+body.paper-site .toast {
+  right: 20px;
+  bottom: 20px;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #111827 !important;
+}
+
+body.paper-site .video-card-top,
+body.paper-site .hero-media-caption,
+body.paper-site .explore-card__visual,
+body.paper-site .checkout-links,
+body.paper-site .payment-actions,
+body.paper-site .workflow-actions,
+body.paper-site .form-actions {
+  padding: 0 !important;
+}
+
+body.paper-site .lead,
+body.paper-site .signal-meta,
+body.paper-site .note,
+body.paper-site .label,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time,
+body.paper-site .pricing-meta,
+body.paper-site .connector-card p,
+body.paper-site .connector-card--airbnb p,
+body.paper-site .trust-card p,
+body.paper-site .trust-card--airbnb p,
+body.paper-site .hero-quickfacts span,
+body.paper-site .hero-quickfacts p,
+body.paper-site .hero-media-caption,
+body.paper-site .hero-media-points,
+body.paper-site .payment-header p,
+body.paper-site .payment-panel ol,
+body.paper-site .checkout-hero-panel p,
+body.paper-site .checkout-foot,
+body.paper-site .modal-note,
+body.paper-site .payment-status,
+body.paper-site #account-status {
+  color: #4b5563 !important;
+}
+
+body.paper-site .text-link,
+body.paper-site .feature-link,
+body.paper-site .footer-links a,
+body.paper-site .footer-social a {
+  color: #111827 !important;
+  text-decoration: none;
+}
+
+body.paper-site .text-link:hover,
+body.paper-site .feature-link:hover,
+body.paper-site .footer-links a:hover,
+body.paper-site .footer-social a:hover {
+  color: #1d4ed8 !important;
+}
+
+@media (max-width: 1120px) {
+  body.paper-site main > section,
+  body.paper-site .site-footer,
+  body.paper-site .site-footer--airbnb,
+  body.paper-site .checkout-foot,
+  body.paper-site .top,
+  body.paper-site .top--airbnb,
+  body.paper-site .flow-modal {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+}
+
+/* Mobile layout flattening */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; }
+  body.paper-site .top,
+  body.paper-site .top--airbnb,
+  body.paper-site main > section,
+  body.paper-site .site-footer--airbnb,
+  body.paper-site .checkout-foot,
+  body.paper-site .flow-modal {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  body.paper-site .hero,
+  body.paper-site .workflow,
+  body.paper-site .workflow--airbnb,
+  body.paper-site .payment-hero,
+  body.paper-site .checkout-hero,
+  body.paper-site .workflow-main,
+  body.paper-site .workflow-side {
+    grid-template-columns: 1fr !important;
+  }
+  body.paper-site .stat-grid,
+  body.paper-site .stat-grid--airbnb,
+  body.paper-site .explore-grid,
+  body.paper-site .pricing-grid,
+  body.paper-site .trust-grid,
+  body.paper-site .connectors-grid,
+  body.paper-site .payment-strip,
+  body.paper-site .method-grid,
+  body.paper-site .workflow-grid {
+    grid-template-columns: 1fr !important;
+  }
+  body.paper-site .hero-video { width: 100%; height: auto; }
+  body.paper-site .nav { flex-wrap: wrap; row-gap: 8px; }
+}

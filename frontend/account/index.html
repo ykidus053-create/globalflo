@@ -3,14 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f7f8fa" />
-    <script>
+    <meta name="theme-color" content="#ffffff" />
+        <script>
       (function () {
         try {
-          var theme = localStorage.getItem("globalflow_theme");
-          if (theme === "light" || theme === "dark") {
-            document.documentElement.setAttribute("data-theme", theme);
-          }
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
         } catch (error) {}
       })();
     </script>
@@ -18,7 +16,7 @@
     <link rel="stylesheet" href="/static/flow.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body>
+  <body class="paper-site">
     <div class="backdrop"></div>
     <header class="top">
       <div class="brand">
@@ -84,13 +82,6 @@
                 <option value="Human review" >
                   Human review
                 </option>
-              </select>
-            </label>
-            <label>
-              Theme
-              <select name="theme">
-                <option value="light" selected>Light</option>
-                <option value="dark" >Dark</option>
               </select>
             </label>
           </div>
