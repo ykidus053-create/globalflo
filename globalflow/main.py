@@ -15,7 +15,7 @@ import httpx
 from fastapi import BackgroundTasks, FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
@@ -765,8 +765,10 @@ def _active_theme() -> str:
     theme = USER_SETTINGS.get("theme", "light")
     return theme if theme in {"light", "dark"} else "light"
 
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def homepage(request: Request):
+    if request.method == "HEAD":
+        return Response(status_code=200)
     autopilot_status = autopilot.status()
     execution_status = "Active" if autopilot_status["enabled"] else "Human-in-the-loop"
     stats = [
