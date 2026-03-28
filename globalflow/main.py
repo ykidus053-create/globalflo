@@ -59,6 +59,8 @@ else:
 
 app.add_middleware(CORSMiddleware, **cors_options)
 templates = Jinja2Templates(directory=root / "templates")
+# Disable Jinja template caching to avoid unhashable cache key issues in this environment
+templates.env.cache = None
 
 AUTOPILOT_BOOT_ENABLED = os.getenv("GLOBALFLOW_AUTOPILOT_ENABLED", "1").lower() not in {"0", "false", "no"}
 EDGE_STATIC_ENABLED = os.getenv("GLOBALFLOW_EDGE_STATIC", "0").lower() in {"1", "true", "yes"}
