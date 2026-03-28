@@ -4362,3 +4362,27 @@ body.paper-site input::placeholder,
 body.paper-site textarea::placeholder {
   color: #7f8fb0;
 }
+/* ICOMAT mimic overrides */
+body.paper-site {
+  font-family: "Manrope", "Space Grotesk", system-ui, sans-serif;
+}
+body.paper-site h1,
+body.paper-site h2,
+body.paper-site h3,
+body.paper-site h4 {
+  font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+body.paper-site h1 { font-size: clamp(2.8rem, 7vw, 4.6rem); line-height: 1.05; }
+body.paper-site .lead { max-width: 720px; color: #d5def0; }
+body.paper-site .nav { letter-spacing: 0.04em; }
+body.paper-site #hero.hero { min-height: 82vh; align-items: center; padding-top: clamp(40px, 10vw, 110px); padding-bottom: clamp(28px, 8vw, 88px); }
+body.paper-site main > section + section { border-top: 1px solid rgba(255, 255, 255, 0.08) !important; padding-top: clamp(22px, 4vw, 48px); }
+body.paper-site .hero-copy { background: linear-gradient(135deg, rgba(111, 176, 255, 0.12) 0%, rgba(10, 23, 49, 0) 70%); padding: clamp(16px, 3.8vw, 28px); }
+body.paper-site .primary,
+body.paper-site .ghost { font-weight: 800; letter-spacing: 0.01em; border-bottom: 2px solid transparent !important; }
+body.paper-site .primary:hover,
+body.paper-site .ghost:hover { border-color: #6fb0ff !important; }
+body.paper-site .hero-quickfacts { gap: 12px; }
+body.paper-site .hero-quickfacts strong { font-size: 1.1rem; }
