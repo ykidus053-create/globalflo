@@ -4387,3 +4387,57 @@ body.paper-site .primary:hover,
 body.paper-site .ghost:hover { border-color: #6fb0ff !important; }
 body.paper-site .hero-quickfacts { gap: 12px; }
 body.paper-site .hero-quickfacts strong { font-size: 1.1rem; }
+/* === ICOMAT dark 12-col override (app) === */
+:root {
+  --bg: #000000;
+  --bg-soft: #0a0a0a;
+  --panel: transparent;
+  --panel-strong: transparent;
+  --text: #f5f7fa;
+  --muted: #c8ced9;
+  --accent: #00c2ff;
+  --accent-strong: #4bd4ff;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.24);
+  --s-8: 8px; --s-16: 16px; --s-24: 24px; --s-32: 32px; --s-48: 48px; --s-64: 64px; --s-96: 96px;
+}
+body { background: var(--bg); color: var(--text); font-family: "Space Grotesk", "Manrope", system-ui, sans-serif; }
+main, body.paper-site main, body.paper-site .landing-main, body.paper-site .payment-page, body.paper-site .checkout-page, body.paper-site .account-page, body.paper-site #workspace {
+  max-width: 1200px; margin: 0 auto; padding: 0 var(--s-32) var(--s-64); gap: var(--s-32); background: var(--bg);
+}
+body.paper-site main > section, body.paper-site .site-footer--airbnb, body.paper-site .site-footer, body.paper-site .checkout-foot {
+  padding: var(--s-64) var(--s-32) var(--s-48); background: transparent !important; border: none !important;
+}
+body.paper-site .hero, body.paper-site .workflow, body.paper-site .workflow--airbnb, body.paper-site .payment-hero, body.paper-site .checkout-hero {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-32);
+}
+body.paper-site .hero-copy { grid-column: span 6; background: linear-gradient(135deg, rgba(0,194,255,0.16) 0%, rgba(0,0,0,0) 70%); padding: var(--s-24); }
+body.paper-site .hero-stage { grid-column: span 6; }
+body.paper-site .stat-grid, body.paper-site .explore-grid, body.paper-site .pricing-grid, body.paper-site .trust-grid, body.paper-site .connectors-grid, body.paper-site .workflow-grid, body.paper-site .payment-strip {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-24);
+}
+body.paper-site .stat-card--airbnb, body.paper-site .explore-card, body.paper-site .pricing-card--airbnb, body.paper-site .trust-card--airbnb, body.paper-site .connector-card--airbnb, body.paper-site .payment-chip--airbnb, body.paper-site .activity-entry, body.paper-site .workflow-card, body.paper-site .summary--airbnb li, body.paper-site .summary li { grid-column: span 3; }
+@media (max-width: 920px) {
+  body.paper-site .hero, body.paper-site .workflow, body.paper-site .workflow--airbnb, body.paper-site .payment-hero, body.paper-site .checkout-hero { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  body.paper-site .hero-copy, body.paper-site .hero-stage, body.paper-site .stat-card--airbnb, body.paper-site .explore-card, body.paper-site .pricing-card--airbnb, body.paper-site .trust-card--airbnb, body.paper-site .connector-card--airbnb, body.paper-site .payment-chip--airbnb, body.paper-site .activity-entry, body.paper-site .workflow-card, body.paper-site .summary--airbnb li, body.paper-site .summary li { grid-column: span 6; }
+}
+@media (max-width: 640px) {
+  body.paper-site .hero, body.paper-site .workflow, body.paper-site .workflow--airbnb, body.paper-site .payment-hero, body.paper-site .checkout-hero { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  body.paper-site .hero-copy, body.paper-site .hero-stage, body.paper-site .stat-card--airbnb, body.paper-site .explore-card, body.paper-site .pricing-card--airbnb, body.paper-site .trust-card--airbnb, body.paper-site .connector-card--airbnb, body.paper-site .payment-chip--airbnb, body.paper-site .activity-entry, body.paper-site .workflow-card, body.paper-site .summary--airbnb li, body.paper-site .summary li { grid-column: span 4; }
+}
+body.paper-site main > section + section { border-top: 1px solid rgba(255,255,255,0.08) !important; padding-top: var(--s-48); }
+body.paper-site h1 { font-size: clamp(2.8rem, 7vw, 4.6rem); line-height: 1.05; letter-spacing: -0.03em; }
+body.paper-site h2 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.02em; }
+body.paper-site h3 { font-size: clamp(1.4rem, 2.8vw, 2rem); line-length: 1.2; }
+body.paper-site p, body.paper-site li { font-size: 1rem; line-height: 1.6; }
+body.paper-site .eyebrow { text-transform: uppercase; letter-spacing: 0.18em; font-weight: 700; color: var(--accent-strong); }
+body.paper-site .text-link, body.paper-site .feature-link, body.paper-site .footer-links a, body.paper-site .footer-social a { color: var(--text) !important; border-bottom: 1px solid rgba(0,194,255,0.28); padding-bottom: 3px; }
+body.paper-site .text-link:hover, body.paper-site .feature-link:hover, body.paper-site .footer-links a:hover, body.paper-site .footer-social a:hover { color: var(--accent); border-color: var(--accent); }
+body.paper-site .lead, body.paper-site .signal-meta, body.paper-site .note, body.paper-site .label, body.paper-site .activity-detail, body.paper-site .activity-entry time, body.paper-site .pricing-meta, body.paper-site .hero-quickfacts span, body.paper-site .hero-quickfacts p, body.paper-site .hero-media-caption, body.paper-site .hero-media-points, body.paper-site .payment-header p, body.paper-site .payment-panel ol, body.paper-site .checkout-hero-panel p, body.paper-site .checkout-foot, body.paper-site .modal-note, body.paper-site .payment-status, body.paper-site #account-status { color: var(--muted) !important; }
+body.paper-site input, body.paper-site select, body.paper-site textarea { color: var(--text) !important; border-color: rgba(255,255,255,0.18) !important; }
+body.paper-site input::placeholder, body.paper-site textarea::placeholder { color: #7f8fb0; }
+body.paper-site .primary, body.paper-site .ghost { font-weight: 800; letter-spacing: 0.01em; border-bottom: 2px solid transparent !important; transition: color 0.25s ease, border-color 0.25s ease; }
+body.paper-site .primary:hover, body.paper-site .ghost:hover { border-color: var(--accent) !important; }
+/* Scroll reveal timing */
+.reveal-ready { opacity: 0; transform: translateY(18px) scale(0.99); transition: opacity 0.32s ease-out, transform 0.36s ease-out; }
+.reveal-ready.is-visible { opacity: 1; transform: translateY(0) scale(1); }
