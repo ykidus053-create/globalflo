@@ -4448,3 +4448,37 @@ body.paper-site, body.paper-site * { color: #ffffff !important; }
 .reveal-ready { opacity: 0; transform: translateY(18px) scale(0.99); transition: opacity 0.32s ease-out, transform 0.36s ease-out; }
 .reveal-ready.is-visible { opacity: 1; transform: translateY(0) scale(1); animation: icomat-float 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 @keyframes icomat-float { 0% { opacity: 0; transform: translateY(26px) scale(0.985);} 100% { opacity:1; transform: translateY(0) scale(1);} }
+
+/* --- De-crowd live workflow & activity feed (keep consistent on dark navy) --- */
+.workflow-grid .workflow-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  line-height: 1.45;
+}
+.workflow-grid {
+  gap: 16px !important;
+}
+.workflow-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.08);
+}
+.activity-grid .activity-entry {
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+.activity-grid .activity-message { margin: 0 0 6px; font-weight: 700; }
+.activity-grid .activity-detail,
+.activity-grid time { margin: 0; color: var(--muted); }
