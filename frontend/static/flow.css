@@ -1,14 +1,14 @@
 :root {
-  --bg: #161b18;
-  --bg-soft: #1d2521;
-  --panel: #202a25;
-  --panel-strong: #27332d;
-  --text: #edf2ef;
-  --muted: #aeb8b2;
-  --accent: #8db39a;
-  --accent-strong: #b8d0bf;
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.18);
+  --bg: #0a1731;
+  --bg-soft: #0e1d3c;
+  --panel: transparent;
+  --panel-strong: transparent;
+  --text: #e6ecf8;
+  --muted: #b6c3dd;
+  --accent: #6fb0ff;
+  --accent-strong: #8cc3ff;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.2);
   --warning: #f2c287;
   --radius: 18px;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
@@ -162,6 +162,7 @@ main {
   padding: 0 clamp(16px, 3.5vw, 48px) 36px;
   display: grid;
   gap: 22px;
+  background: var(--bg);
 }
 
 .hero {
