@@ -780,8 +780,8 @@ async def homepage(request: Request):
         {"label": "Autonomy", "value": execution_status},
     ]
     return templates.TemplateResponse(
-        name="flow.html",
-        context={
+        "flow.html",
+        {
             "request": request,
             "page_url": str(request.url),
             "world_tasks": WORLD_TASKS,
@@ -1058,8 +1058,8 @@ async def payment_portal(request: Request, method: str):
     if not portal:
         raise HTTPException(status_code=404, detail="Payment method unavailable")
     return templates.TemplateResponse(
-        name="payment.html",
-        context={
+        "payment.html",
+        {
             "request": request,
             "portal": portal,
             "theme": _active_theme(),
@@ -1073,8 +1073,8 @@ async def checkout_page(request: Request, tier_id: str):
     if not tier:
         raise HTTPException(status_code=404, detail="Subscription tier unavailable")
     return templates.TemplateResponse(
-        name="checkout.html",
-        context={
+        "checkout.html",
+        {
             "request": request,
             "tier": tier,
             "payment_methods": PAYMENT_METHODS,
@@ -1192,8 +1192,8 @@ async def toolkit_action(tool_id: str):
 @app.get("/privacy", response_class=HTMLResponse)
 async def privacy_policy(request: Request):
     return templates.TemplateResponse(
-        name="privacy.html",
-        context={
+        "privacy.html",
+        {
             "request": request,
             "updated_on": "March 20, 2026",
             "theme": _active_theme(),
@@ -1204,8 +1204,8 @@ async def privacy_policy(request: Request):
 @app.get("/terms", response_class=HTMLResponse)
 async def terms_of_service(request: Request):
     return templates.TemplateResponse(
-        name="terms.html",
-        context={
+        "terms.html",
+        {
             "request": request,
             "updated_on": "March 20, 2026",
             "theme": _active_theme(),
@@ -1216,8 +1216,8 @@ async def terms_of_service(request: Request):
 @app.get("/account", response_class=HTMLResponse)
 async def account_center(request: Request):
     return templates.TemplateResponse(
-        name="account.html",
-        context={
+        "account.html",
+        {
             "request": request,
             "profile": USER_PROFILE,
             "settings": USER_SETTINGS,
@@ -1229,8 +1229,8 @@ async def account_center(request: Request):
 @app.get("/automation", response_class=HTMLResponse)
 async def automation_workspace(request: Request):
     return templates.TemplateResponse(
-        name="automation.html",
-        context={
+        "automation.html",
+        {
             "request": request,
             "autopilot": autopilot.status(),
             "connectors": CONNECTORS,
