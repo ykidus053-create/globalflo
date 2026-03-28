@@ -4128,6 +4128,55 @@ body.paper-site .footer-social a:hover {
   }
 }
 
+/* Paper layout: constrain width for readability on desktop, fluid on mobile */
+body.paper-site header.top,
+body.paper-site header.top--airbnb,
+body.paper-site main,
+body.paper-site .landing-main,
+body.paper-site .payment-page,
+body.paper-site .checkout-page,
+body.paper-site .account-page,
+body.paper-site #workspace,
+body.paper-site .site-footer,
+body.paper-site .site-footer--airbnb,
+body.paper-site .checkout-foot {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-left: clamp(16px, 4vw, 32px);
+  padding-right: clamp(16px, 4vw, 32px);
+}
+
+body.paper-site img,
+body.paper-site video,
+body.paper-site svg {
+  max-width: 100%;
+  height: auto;
+}
+
+body.paper-site .nav {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+
+@media (max-width: 768px) {
+  body.paper-site header.top,
+  body.paper-site header.top--airbnb,
+  body.paper-site main,
+  body.paper-site .landing-main,
+  body.paper-site .payment-page,
+  body.paper-site .checkout-page,
+  body.paper-site .account-page,
+  body.paper-site #workspace,
+  body.paper-site .site-footer,
+  body.paper-site .site-footer--airbnb,
+  body.paper-site .checkout-foot {
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
 /* Mobile layout flattening */
 @media (max-width: 768px) {
   html, body { overflow-x: hidden; }
