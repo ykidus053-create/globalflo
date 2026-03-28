@@ -18,6 +18,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from subprocess import CalledProcessError, check_output
 from starlette.requests import Request
 
 try:
@@ -62,8 +63,22 @@ templates = Jinja2Templates(directory=root / "templates")
 # Disable Jinja template caching to avoid unhashable cache key issues in this environment
 templates.env.cache = None
 
+# Asset version for cache-busting (env > git hash > fallback)
+ASSET_VERSION = os.getenv("ASSET_VERSION")
+if not ASSET_VERSION:
+    try:
+        ASSET_VERSION = (
+            check_output(["git", "rev-parse", "--short", "HEAD"], cwd=root)
+            .decode()
+            .strip()
+        )
+    except (CalledProcessError, FileNotFoundError):
+        ASSET_VERSION = "dev"
+
 
 def _render_html(template_name: str, context: Dict[str, Any]) -> HTMLResponse:
+    context = dict(context)
+    context.setdefault("asset_version", ASSET_VERSION)
     template = templates.get_template(template_name)
     return HTMLResponse(template.render(context))
 
