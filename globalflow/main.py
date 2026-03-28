@@ -62,6 +62,11 @@ templates = Jinja2Templates(directory=root / "templates")
 # Disable Jinja template caching to avoid unhashable cache key issues in this environment
 templates.env.cache = None
 
+
+def _render_html(template_name: str, context: Dict[str, Any]) -> HTMLResponse:
+    template = templates.get_template(template_name)
+    return HTMLResponse(template.render(context))
+
 AUTOPILOT_BOOT_ENABLED = os.getenv("GLOBALFLOW_AUTOPILOT_ENABLED", "1").lower() not in {"0", "false", "no"}
 EDGE_STATIC_ENABLED = os.getenv("GLOBALFLOW_EDGE_STATIC", "0").lower() in {"1", "true", "yes"}
 
@@ -779,7 +784,7 @@ async def homepage(request: Request):
         {"label": "Time to live", "value": "72 hours"},
         {"label": "Autonomy", "value": execution_status},
     ]
-    return templates.TemplateResponse(
+    return _render_html(
         "flow.html",
         {
             "request": request,
@@ -1057,7 +1062,7 @@ async def payment_portal(request: Request, method: str):
     portal = PAYMENT_LOOKUP.get(method.lower())
     if not portal:
         raise HTTPException(status_code=404, detail="Payment method unavailable")
-    return templates.TemplateResponse(
+    return _render_html(
         "payment.html",
         {
             "request": request,
@@ -1072,7 +1077,7 @@ async def checkout_page(request: Request, tier_id: str):
     tier = SUBSCRIPTION_LOOKUP.get(tier_id.lower())
     if not tier:
         raise HTTPException(status_code=404, detail="Subscription tier unavailable")
-    return templates.TemplateResponse(
+    return _render_html(
         "checkout.html",
         {
             "request": request,
@@ -1191,7 +1196,7 @@ async def toolkit_action(tool_id: str):
 
 @app.get("/privacy", response_class=HTMLResponse)
 async def privacy_policy(request: Request):
-    return templates.TemplateResponse(
+    return _render_html(
         "privacy.html",
         {
             "request": request,
@@ -1203,7 +1208,7 @@ async def privacy_policy(request: Request):
 
 @app.get("/terms", response_class=HTMLResponse)
 async def terms_of_service(request: Request):
-    return templates.TemplateResponse(
+    return _render_html(
         "terms.html",
         {
             "request": request,
@@ -1215,7 +1220,7 @@ async def terms_of_service(request: Request):
 
 @app.get("/account", response_class=HTMLResponse)
 async def account_center(request: Request):
-    return templates.TemplateResponse(
+    return _render_html(
         "account.html",
         {
             "request": request,
@@ -1228,7 +1233,7 @@ async def account_center(request: Request):
 
 @app.get("/automation", response_class=HTMLResponse)
 async def automation_workspace(request: Request):
-    return templates.TemplateResponse(
+    return _render_html(
         "automation.html",
         {
             "request": request,
