@@ -55,6 +55,7 @@ let revealObserver = null;
 let billingMode = "monthly";
 let activeModalId = null;
 let summaryCache = null;
+let revealIndex = 0;
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
@@ -336,7 +337,9 @@ function initRevealObserver() {
 
 function registerRevealTargets(target) {
   if (!target || target.classList.contains("reveal-ready")) return;
+  target.style.transitionDelay = `${Math.min(revealIndex * 40, 320)}ms`;
   target.classList.add("reveal-ready");
+  revealIndex += 1;
   if (prefersReducedMotion) {
     target.classList.add("is-visible");
     return;
