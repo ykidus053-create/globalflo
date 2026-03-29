@@ -15,12 +15,23 @@
     <title>GlobalFlow | Account</title>
     <link rel="stylesheet" href="/static/flow.css" />
   </head>
-  <body class="paper-site">
+  <body class="paper-site is-loading">
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader__inner">
+        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
+        <p class="site-loader__word">GlobalFlow</p>
+      </div>
+    </div>
     <div class="backdrop"></div>
     <header class="top">
       <div class="brand">
-        <span>GlobalFlow</span>
-        <p>Account</p>
+        <div class="brand-mark" aria-hidden="true">
+          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow</span>
+          <p>Account</p>
+        </div>
       </div>
       <nav class="nav" aria-label="Account navigation">
         <a href="/">Dashboard</a>
@@ -91,6 +102,7 @@
         </form>
       </section>
     </main>
+    <script src="/static/site-boot.js" defer></script>
     <script type="module" src="/static/account.js"></script>
   </body>
 </html>
