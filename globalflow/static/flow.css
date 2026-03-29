@@ -4788,10 +4788,15 @@ body.paper-site .explore-card__body {
   flex-direction: column;
   gap: 16px;
 }
-body.paper-site .explore-card__body p {
+body.paper-site .explore-card__body p,
+body.paper-site .explore-description {
   margin: 0;
   line-height: 1.6;
   opacity: 0.96;
+}
+body.paper-site .explore-description {
+  min-height: 88px;
+  font-size: 0.98rem;
 }
 body.paper-site .demo-showcase-grid .hero-media-card,
 body.paper-site .demo-showcase-grid .overview-panel {
