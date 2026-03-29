@@ -5985,3 +5985,330 @@ body.paper-site .site-loader__logo {
     opacity: 1 !important;
   }
 }
+
+/* Unified product system */
+body.paper-site {
+  --page-max: 1200px;
+  --section-gap: 96px;
+  --surface: rgba(255, 255, 255, 0.025);
+  --surface-strong: rgba(255, 255, 255, 0.04);
+  --surface-line: rgba(255, 255, 255, 0.1);
+  --copy-max: 640px;
+  background: #080808 !important;
+  color: #f8f8f8 !important;
+}
+
+body.paper-site main.landing-main {
+  max-width: var(--page-max) !important;
+  padding: 0 32px 96px !important;
+  gap: var(--section-gap) !important;
+}
+
+body.paper-site .gf-section {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+body.paper-site .section-heading {
+  margin-bottom: 32px !important;
+}
+
+body.paper-site .section-heading--split > div,
+body.paper-site .hero-copy,
+body.paper-site .hero-proof-card .content-body,
+body.paper-site .hero-trust-card .content-body,
+body.paper-site .endtoend-intro .content-body,
+body.paper-site .founder-card .content-body,
+body.paper-site .founder-proof .content-body {
+  gap: 16px !important;
+}
+
+body.paper-site .lead,
+body.paper-site .section-heading p,
+body.paper-site .pricing-summary,
+body.paper-site .pricing-proofline,
+body.paper-site .testimonial-quote,
+body.paper-site .trust-card p,
+body.paper-site .connector-heading p,
+body.paper-site .explore-description,
+body.paper-site .endtoend-copy,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time,
+body.paper-site .founder-card p {
+  color: #cfd9e0 !important;
+  max-width: var(--copy-max);
+  line-height: 1.35 !important;
+}
+
+body.paper-site .eyebrow,
+body.paper-site .signal-meta,
+body.paper-site .video-card-top p,
+body.paper-site .video-card-top span,
+body.paper-site .activity-kind,
+body.paper-site .connector-toggle,
+body.paper-site .brand-copy p,
+body.paper-site .footer-top p {
+  color: rgba(248, 248, 248, 0.56) !important;
+}
+
+body.paper-site h1,
+body.paper-site h2,
+body.paper-site h3,
+body.paper-site .value,
+body.paper-site .testimonial-result,
+body.paper-site .hero-status-card strong {
+  color: #f8f8f8 !important;
+}
+
+body.paper-site .hero {
+  gap: 32px !important;
+  align-items: start;
+  min-height: 0 !important;
+}
+
+body.paper-site .hero-copy,
+body.paper-site .hero-stage,
+body.paper-site .workflow-main,
+body.paper-site .workflow-side {
+  gap: 24px !important;
+}
+
+body.paper-site .logo-bar,
+body.paper-site .testimonial-grid,
+body.paper-site .explore-grid,
+body.paper-site .stat-grid,
+body.paper-site .subscription-grid,
+body.paper-site .trust-signal-grid,
+body.paper-site .connectors-grid,
+body.paper-site .workflow-grid,
+body.paper-site .activity-grid,
+body.paper-site .founder-grid {
+  gap: 24px !important;
+}
+
+body.paper-site .gf-card,
+body.paper-site .logo-pill,
+body.paper-site .testimonial-card,
+body.paper-site .explore-card,
+body.paper-site .stat-card,
+body.paper-site .pricing-card,
+body.paper-site .trust-card,
+body.paper-site .connector-card,
+body.paper-site .summary,
+body.paper-site .activity-entry,
+body.paper-site .workflow-card,
+body.paper-site .founder-card,
+body.paper-site .founder-proof,
+body.paper-site .autopilot-panel {
+  background: var(--surface) !important;
+  border: 1px solid var(--surface-line) !important;
+  border-radius: 14px !important;
+  padding: 24px !important;
+  box-shadow: none !important;
+}
+
+body.paper-site .hero-proof-card,
+body.paper-site .hero-trust-card,
+body.paper-site .hero-status-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--surface-line) !important;
+  border-radius: 14px !important;
+}
+
+body.paper-site .hero-status-card {
+  padding: 24px !important;
+  gap: 16px !important;
+}
+
+body.paper-site .hero-status-card > div {
+  padding: 16px !important;
+  background: rgba(255, 255, 255, 0.015) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+}
+
+body.paper-site .hero-quickfacts {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+body.paper-site .hero-quickfacts article {
+  min-height: 0 !important;
+  padding: 16px !important;
+}
+
+body.paper-site .testimonial-card {
+  display: grid;
+  gap: 16px !important;
+}
+
+body.paper-site .testimonial-result {
+  font-size: 18px !important;
+  letter-spacing: -0.02em;
+}
+
+body.paper-site .testimonial-meta p,
+body.paper-site .logo-pill span {
+  margin: 0 !important;
+  font-size: 14px !important;
+}
+
+body.paper-site .logo-pill strong,
+body.paper-site .testimonial-meta span,
+body.paper-site .pricing-top h3,
+body.paper-site .trust-card h3,
+body.paper-site .connector-heading h3,
+body.paper-site .explore-card h3 {
+  font-size: 20px !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.02em;
+}
+
+body.paper-site .pricing-top,
+body.paper-site .subscription-actions,
+body.paper-site .workflow-actions,
+body.paper-site .hero-actions {
+  gap: 16px !important;
+}
+
+body.paper-site .pricing-top {
+  display: grid;
+  gap: 12px !important;
+}
+
+body.paper-site .pricing-summary,
+body.paper-site .pricing-proofline {
+  margin: 0 !important;
+}
+
+body.paper-site .pricing-proofline {
+  color: #f8f8f8 !important;
+  font-size: 16px !important;
+}
+
+body.paper-site .pricing-list,
+body.paper-site .summary ul {
+  gap: 12px !important;
+}
+
+body.paper-site .summary li {
+  padding: 16px !important;
+}
+
+body.paper-site .workflow {
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.82fr) !important;
+  gap: 32px !important;
+  align-items: start;
+}
+
+body.paper-site .workflow-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+body.paper-site .activity-grid--single {
+  gap: 16px !important;
+}
+
+body.paper-site .connector-card summary {
+  padding: 0 0 16px 0 !important;
+}
+
+body.paper-site .connector-form {
+  padding: 16px 0 0 0 !important;
+  gap: 16px !important;
+}
+
+body.paper-site .hero-video {
+  min-height: 420px !important;
+  border-radius: 14px !important;
+}
+
+body.paper-site .overview-statement {
+  display: grid;
+  gap: 8px;
+  max-width: 840px;
+}
+
+body.paper-site .overview-statement__lead {
+  font-size: 16px;
+  color: rgba(248, 248, 248, 0.56);
+  letter-spacing: 0.02em;
+}
+
+body.paper-site .overview-statement__main {
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: #f8f8f8;
+}
+
+body.paper-site .footer-top {
+  align-items: start;
+  gap: 24px !important;
+}
+
+body.paper-site .footer-links {
+  gap: 10px !important;
+}
+
+body.paper-site .footer-links a {
+  color: #cfd9e0 !important;
+}
+
+@media (max-width: 920px) {
+  body.paper-site main.landing-main {
+    padding: 0 24px 64px !important;
+    gap: 64px !important;
+  }
+
+  body.paper-site .hero,
+  body.paper-site .workflow,
+  body.paper-site .footer-top,
+  body.paper-site .founder-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.paper-site .workflow-grid,
+  body.paper-site .hero-quickfacts {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body.paper-site .top {
+    padding: 16px 20px !important;
+  }
+
+  body.paper-site main.landing-main {
+    padding: 0 16px 48px !important;
+    gap: 48px !important;
+  }
+
+  body.paper-site .gf-card,
+  body.paper-site .logo-pill,
+  body.paper-site .testimonial-card,
+  body.paper-site .explore-card,
+  body.paper-site .stat-card,
+  body.paper-site .pricing-card,
+  body.paper-site .trust-card,
+  body.paper-site .connector-card,
+  body.paper-site .summary,
+  body.paper-site .activity-entry,
+  body.paper-site .workflow-card,
+  body.paper-site .founder-card,
+  body.paper-site .founder-proof,
+  body.paper-site .autopilot-panel,
+  body.paper-site .hero-status-card,
+  body.paper-site .hero-proof-card,
+  body.paper-site .hero-trust-card {
+    padding: 16px !important;
+  }
+
+  body.paper-site h1 {
+    font-size: clamp(44px, 14vw, 72px) !important;
+  }
+
+  body.paper-site h2 {
+    font-size: clamp(28px, 10vw, 44px) !important;
+  }
+}

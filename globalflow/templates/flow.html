@@ -88,7 +88,7 @@
 
           <p class="eyebrow">Operations automation</p>
           <h1>One calm control room for calls, billing, taxes, files, and follow-up.</h1>
-          <p class="lead">Automate billing, follow-up, files, and compliance. Most pilot teams recover 20+ hours each week.</p>
+          <p class="lead">Replace scattered admin work with one operating layer that captures requests, runs the workflow, and records the result.</p>
 
           <div class="hero-actions">
             <button class="primary primary--hero" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
@@ -115,11 +115,11 @@
           <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
             <div class="content-body">
               <p class="eyebrow">What runs inside GlobalFlow</p>
-              <h2>One system for intake, routing, follow-through, and verification.</h2>
+              <h2>From inbound request to verified completion.</h2>
               <ul class="hero-benefit-list">
-                <li>Capture work</li>
-                <li>Route the next step</li>
-                <li>Verify every result</li>
+                <li>Capture the task instantly</li>
+                <li>Launch the correct workflow</li>
+                <li>Verify every outcome before it closes</li>
               </ul>
               <div class="hero-chip-row" aria-label="Core workflows">
                 <span>Billing</span>
@@ -162,14 +162,45 @@
         </aside>
       </section>
 
+      <section class="proof proof--unified gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Proof</p>
+            <h2>Operators trust the system when the handoffs stay visible.</h2>
+            <p class="lead">Early pilot teams use GlobalFlow to remove repetitive work from billing, client follow-up, file routing, and compliance prep.</p>
+          </div>
+        </div>
+        <div class="logo-bar gf-card-grid">
+          {% for logo in trusted_logos %}
+          <article class="logo-pill gf-card gf-fade">
+            <strong>{{ logo.name }}</strong>
+            <span>{{ logo.label }}</span>
+          </article>
+          {% endfor %}
+        </div>
+        <div class="testimonial-grid gf-card-grid">
+          {% for testimonial in testimonials %}
+          <article class="testimonial-card gf-card gf-fade">
+            <img src="{{ testimonial.photo }}" alt="{{ testimonial.name }}" />
+            <p class="testimonial-quote">{{ testimonial.quote }}</p>
+            <div class="testimonial-result">{{ testimonial.result }}</div>
+            <div class="testimonial-meta">
+              <span>{{ testimonial.name }}</span>
+              <p>{{ testimonial.role }} · {{ testimonial.company }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
       <section id="overview" class="demo-showcase gf-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Overview</p>
-            <h2>See how the system works end to end.</h2>
+            <h2>One operating view for work that usually lives in five tools.</h2>
             <p class="overview-statement">
-              <span class="overview-statement__lead">How we operate.</span>
-              <span class="overview-statement__main">GlobalFlow captures incoming work, routes the next action, runs the automation, and logs the outcome in one place.</span>
+              <span class="overview-statement__lead">How it works.</span>
+              <span class="overview-statement__main">GlobalFlow captures incoming work, classifies it, runs the automation, and logs the output without losing operator control.</span>
             </p>
           </div>
         </div>
@@ -198,8 +229,9 @@
       <section id="demo" class="demo-showcase gf-section">
         <div class="section-heading section-heading--split">
           <div>
-            <h2>See the workflow end to end.</h2>
-            <p class="lead">From inbound request to verified output, GlobalFlow runs one continuous operating sequence instead of disconnected tools and manual follow-up.</p>
+            <p class="eyebrow">Operating sequence</p>
+            <h2>One sequence. No disconnected handoffs.</h2>
+            <p class="lead">The same engine captures requests, routes execution, surfaces exceptions, and closes the loop with the next action already assigned.</p>
           </div>
         </div>
         <div class="endtoend-shell gf-grid-12">
@@ -209,8 +241,8 @@
                 <p>End-to-end operating system</p>
                 <span id="panel-health">Live tracking active</span>
               </div>
-              <h3>One sequence. Six controlled stages.</h3>
-              <p class="endtoend-copy">GlobalFlow captures the request, routes the work, runs the automation, validates the result, and records the next action without losing operator visibility.</p>
+              <h3>Built for operators who need visibility, not noise.</h3>
+              <p class="endtoend-copy">Every request moves through a controlled path with telemetry, verification, and a clear owner for the next step.</p>
               <div class="hero-media-points">
                 <span>Intake</span>
                 <span>Routing</span>
@@ -290,8 +322,8 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Use cases</p>
-            <h2>Start with one workflow.</h2>
-            <p class="lead">Global Flow automates routine business work like call summaries, invoicing, and tax organization. After a client call, it can generate a summary, pull out action items, and update your workflow automatically. That reduces repetitive admin work so you can focus on growth, decisions, and client relationships.</p>
+            <h2>Start where manual work slows the team down most.</h2>
+            <p class="lead">Most teams begin with one high-friction workflow, prove the result, then expand into the next operational bottleneck.</p>
           </div>
         </div>
         <div class="explore-grid gf-card-grid">
@@ -314,7 +346,8 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Proof</p>
-            <h2>Key signals.</h2>
+            <h2>Measured outcomes teams care about.</h2>
+            <p class="lead">The product is designed to reduce manual work, shorten turnaround time, and keep operators confident in every run.</p>
           </div>
         </div>
         <div class="stat-grid stat-grid--airbnb gf-metrics-row">
@@ -327,6 +360,7 @@
           </article>
           {% endfor %}
         </div>
+        <p class="metrics-footnote">Based on pilot-team operating time across billing, follow-up, file routing, and compliance workflows.</p>
       </section>
 
       <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard">
@@ -335,6 +369,7 @@
             <div>
               <p class="eyebrow">Live workflow</p>
               <h2>Inspect before you run.</h2>
+              <p class="lead">Launch one workflow, inspect telemetry, and keep the audit trail visible while work moves.</p>
             </div>
           </div>
           <div class="workflow-actions">
@@ -350,7 +385,7 @@
         <aside class="workflow-side workflow-side--airbnb visual">
           <div class="section-heading">
             <p class="eyebrow">Live activity</p>
-            <h2>System state.</h2>
+            <h2>Activity and control.</h2>
           </div>
           <div class="autopilot-panel autopilot-panel--airbnb gf-card gf-fade">
             <div class="autopilot-copy">
@@ -369,7 +404,8 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Integrations</p>
-            <h2>Connect your stack.</h2>
+            <h2>Connect the systems your team already uses.</h2>
+            <p class="lead">Route work into the tools you already operate so the workflow can run without another migration project.</p>
           </div>
         </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
@@ -410,7 +446,8 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Pricing</p>
-            <h2>Start free. Scale later.</h2>
+            <h2>Start with one workflow. Expand when the result is obvious.</h2>
+            <p class="lead">Each tier keeps the same operating model: clear scope, visible runs, and human override where it matters.</p>
           </div>
         </div>
         <div class="subscription-grid subscription-grid--airbnb gf-card-grid">
@@ -423,12 +460,14 @@
                 {% endif %}
                 <h3>{{ tier.name }}</h3>
                 <p class="price" data-monthly="{{ tier.monthly_price }}" data-annual="{{ tier.annual_price }}">{{ tier.monthly_price }}</p>
+                <p class="pricing-summary">{{ tier.description }}</p>
               </div>
               <ul class="pricing-list">
                 {% for feature in tier.features %}
                 <li>{{ feature }}</li>
                 {% endfor %}
               </ul>
+              <p class="pricing-proofline">{{ tier.risk_reversal }}</p>
               <div class="subscription-actions">
                 <button class="primary small" data-checkout-tier="{{ tier.id }}">{{ tier.cta }}</button>
               </div>
@@ -442,8 +481,28 @@
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Trust</p>
-            <h2>Security and control.</h2>
+            <h2>Built for teams that need control, traceability, and calm execution.</h2>
+            <p class="lead">GlobalFlow is designed to reduce operational noise while keeping every decision, result, and exception visible.</p>
           </div>
+        </div>
+        <div class="founder-grid gf-grid-12 gf-gap-24">
+          {% for founder in founders %}
+          <article class="founder-card gf-card gf-span-6 gf-fade">
+            <img src="{{ founder.photo }}" alt="{{ founder.name }}" />
+            <div class="content-body">
+              <h3>{{ founder.name }}</h3>
+              <p class="founder-role">{{ founder.role }}</p>
+              <p>{{ founder.bio }}</p>
+            </div>
+          </article>
+          {% endfor %}
+          <article class="gf-card founder-proof gf-span-6 gf-fade">
+            <div class="content-body">
+              <p class="eyebrow">Why teams buy</p>
+              <h3>Fewer manual handoffs. Better operator visibility.</h3>
+              <p>GlobalFlow is for teams that cannot afford dropped follow-up, delayed invoices, missing files, or invisible compliance work.</p>
+            </div>
+          </article>
         </div>
         <div class="trust-signal-grid trust-signal-grid--airbnb gf-card-grid">
           {% for signal in trust_signals %}
