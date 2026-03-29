@@ -5778,3 +5778,210 @@ body.paper-site .site-loader__logo {
     transition: none !important;
   }
 }
+
+/* Advanced motion pass */
+body.paper-site .motion-track {
+  --motion-delay: 0ms;
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  position: relative;
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.38s ease,
+    border-color 0.32s ease,
+    background 0.32s ease,
+    box-shadow 0.38s ease;
+  transition-delay: var(--motion-delay);
+}
+
+body.paper-site .motion-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(255, 255, 255, 0.14), transparent 38%);
+  opacity: 0;
+  transition: opacity 0.34s ease;
+}
+
+body.paper-site .motion-track.is-entered {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.paper-site .motion-track.is-hovered::after,
+body.paper-site .motion-track:hover::after {
+  opacity: 1;
+}
+
+body.paper-site .hero-visual.motion-track,
+body.paper-site .overview-statement.motion-track {
+  transform: translateY(18px) scale(0.992);
+  opacity: 0.88;
+}
+
+body.paper-site .hero-visual.motion-track.is-entered,
+body.paper-site .overview-statement.motion-track.is-entered {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+body.paper-site .hero-visual.motion-track.is-entered {
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+}
+
+body.paper-site .endtoend-step.motion-track,
+body.paper-site .explore-card.motion-track,
+body.paper-site .stat-card--airbnb.motion-track,
+body.paper-site .pricing-card.motion-track,
+body.paper-site .trust-card.motion-track,
+body.paper-site .workflow-card.motion-track,
+body.paper-site .activity-entry.motion-track,
+body.paper-site .connector-card.motion-track,
+body.paper-site .hero-quickfacts article.motion-track {
+  transform: translateY(16px);
+  opacity: 0.84;
+}
+
+body.paper-site .endtoend-step.motion-track.is-entered,
+body.paper-site .explore-card.motion-track.is-entered,
+body.paper-site .stat-card--airbnb.motion-track.is-entered,
+body.paper-site .pricing-card.motion-track.is-entered,
+body.paper-site .trust-card.motion-track.is-entered,
+body.paper-site .workflow-card.motion-track.is-entered,
+body.paper-site .activity-entry.motion-track.is-entered,
+body.paper-site .connector-card.motion-track.is-entered,
+body.paper-site .hero-quickfacts article.motion-track.is-entered {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+body.paper-site .hero-visual.is-hovered,
+body.paper-site .hero-visual:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+body.paper-site .overview-statement.is-entered {
+  letter-spacing: -0.022em;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.04);
+}
+
+body.paper-site .workflow-card.motion-track.is-hovered,
+body.paper-site .workflow-card.motion-track:hover,
+body.paper-site .activity-entry.motion-track.is-hovered,
+body.paper-site .activity-entry.motion-track:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+body.paper-site .endtoend-step.motion-track.is-hovered,
+body.paper-site .endtoend-step.motion-track:hover,
+body.paper-site .explore-card.motion-track.is-hovered,
+body.paper-site .explore-card.motion-track:hover,
+body.paper-site .pricing-card.motion-track.is-hovered,
+body.paper-site .pricing-card.motion-track:hover,
+body.paper-site .trust-card.motion-track.is-hovered,
+body.paper-site .trust-card.motion-track:hover,
+body.paper-site .connector-card.motion-track.is-hovered,
+body.paper-site .connector-card.motion-track:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.paper-site .hero-quickfacts article.motion-track.is-hovered,
+body.paper-site .hero-quickfacts article.motion-track:hover,
+body.paper-site .stat-card--airbnb.motion-track.is-hovered,
+body.paper-site .stat-card--airbnb.motion-track:hover {
+  transform: translateY(-2px);
+}
+
+body.paper-site .primary,
+body.paper-site .ghost,
+body.paper-site .feature-link {
+  overflow: hidden;
+}
+
+body.paper-site .primary::before,
+body.paper-site .ghost::before,
+body.paper-site .feature-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.16) 50%, transparent 80%);
+  transform: translateX(-110%);
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+body.paper-site .primary:hover::before,
+body.paper-site .ghost:hover::before,
+body.paper-site .feature-link:hover::before {
+  transform: translateX(110%);
+}
+
+body.paper-site .hero-chip-row span:hover,
+body.paper-site .hero-media-points span:hover,
+body.paper-site .signal-pill:hover,
+body.paper-site .workflow-status:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+body.paper-site .nav a:hover,
+body.paper-site .nav a.is-active {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+body.paper-site .section-heading .lead,
+body.paper-site .lead {
+  transition: opacity 0.34s ease, transform 0.34s ease;
+}
+
+body.paper-site main > section.is-section-active .section-heading .lead,
+body.paper-site main > section.is-section-active .lead {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.paper-site .site-loader__logo {
+  animation:
+    loaderPulse 1.6s ease-in-out infinite,
+    loaderFloat 2.8s ease-in-out infinite;
+}
+
+@keyframes loaderFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.paper-site .motion-track,
+  body.paper-site .motion-track::after,
+  body.paper-site .primary::before,
+  body.paper-site .ghost::before,
+  body.paper-site .feature-link::before,
+  body.paper-site .site-loader__logo {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  body.paper-site .motion-track,
+  body.paper-site .hero-visual.motion-track,
+  body.paper-site .overview-statement.motion-track,
+  body.paper-site .endtoend-step.motion-track,
+  body.paper-site .explore-card.motion-track,
+  body.paper-site .stat-card--airbnb.motion-track,
+  body.paper-site .pricing-card.motion-track,
+  body.paper-site .trust-card.motion-track,
+  body.paper-site .workflow-card.motion-track,
+  body.paper-site .activity-entry.motion-track,
+  body.paper-site .connector-card.motion-track,
+  body.paper-site .hero-quickfacts article.motion-track {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

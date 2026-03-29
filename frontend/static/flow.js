@@ -56,6 +56,7 @@ let metricsCache = {};
 let activityCount = 0;
 let revealObserver = null;
 let sectionObserver = null;
+let motionObserver = null;
 let billingMode = "monthly";
 let activeModalId = null;
 let summaryCache = null;
@@ -374,6 +375,60 @@ function initSectionStateObserver() {
   );
 
   sections.forEach((section) => sectionObserver.observe(section));
+}
+
+function initAdvancedMotion() {
+  const trackedSelectors = [
+    ".hero-visual",
+    ".overview-statement",
+    ".endtoend-step",
+    ".explore-card",
+    ".stat-card--airbnb",
+    ".pricing-card",
+    ".trust-card",
+    ".workflow-card",
+    ".activity-entry",
+    ".connector-card",
+    ".hero-quickfacts article",
+  ];
+
+  const trackedNodes = document.querySelectorAll(trackedSelectors.join(", "));
+  trackedNodes.forEach((node, index) => {
+    node.classList.add("motion-track");
+    node.style.setProperty("--motion-delay", `${Math.min(index * 40, 320)}ms`);
+  });
+
+  const pointerTargets = document.querySelectorAll(
+    ".gf-card, .workflow-card, .activity-entry, .explore-card, .endtoend-step, .hero-visual, .connector-card"
+  );
+
+  pointerTargets.forEach((target) => {
+    target.addEventListener("pointermove", (event) => {
+      const rect = target.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+      target.style.setProperty("--pointer-x", `${x.toFixed(2)}%`);
+      target.style.setProperty("--pointer-y", `${y.toFixed(2)}%`);
+    });
+    target.addEventListener("pointerenter", () => target.classList.add("is-hovered"));
+    target.addEventListener("pointerleave", () => target.classList.remove("is-hovered"));
+  });
+
+  if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+    trackedNodes.forEach((node) => node.classList.add("is-entered"));
+    return;
+  }
+
+  motionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("is-entered", entry.isIntersecting);
+      });
+    },
+    { threshold: 0.22, rootMargin: "-6% 0px -12% 0px" }
+  );
+
+  trackedNodes.forEach((node) => motionObserver.observe(node));
 }
 
 function initAmbientVfx() {
@@ -861,12 +916,13 @@ function scheduleSafe(task, interval) {
 
 async function bootstrap() {
   handleAuthReturn();
-initRevealObserver();
-initSectionStateObserver();
-initActiveNav();
-initAmbientVfx();
-initMagneticButtons();
-initKineticType();
+  initRevealObserver();
+  initSectionStateObserver();
+  initAdvancedMotion();
+  initActiveNav();
+  initAmbientVfx();
+  initMagneticButtons();
+  initKineticType();
   setBillingMode(billingMode);
   await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
 }
