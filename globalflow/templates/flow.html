@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Automate billing, call follow-up, compliance tracking, and document routing from one calm control room."
@@ -69,9 +69,9 @@
       </nav>
     </header>
 
-    <main id="main-content" class="landing-main">
-      <section id="hero" class="hero hero--airbnb hero--unified">
-        <div class="hero-copy hero-copy--airbnb hero-copy--unified">
+    <main id="main-content" class="landing-main gf-container gf-dark">
+      <section id="hero" class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
+        <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
               <span class="signal-dot" id="signal-dot"></span>
@@ -105,8 +105,8 @@
           </div>
         </div>
 
-        <aside class="hero-stage hero-stage--airbnb hero-stage--unified">
-          <article class="hero-proof-card hero-proof-card--unified">
+        <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24">
+          <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
             <p class="eyebrow">What runs inside GlobalFlow</p>
             <h2>One system for intake, routing, follow-through, and verification.</h2>
             <ul class="hero-benefit-list">
@@ -123,7 +123,7 @@
             </div>
           </article>
 
-          <article class="hero-status-card hero-status-card--airbnb">
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
             <div>
               <span>Operator confidence</span>
               <strong id="system-confidence">99.2%</strong>
@@ -138,7 +138,7 @@
             </div>
           </article>
 
-          <article class="hero-trust-card hero-trust-card--unified">
+          <article class="hero-trust-card hero-trust-card--unified gf-card gf-span-6 gf-fade">
             <p class="eyebrow">Control and reliability</p>
             <div class="hero-trust-list">
               {% for signal in trust_signals %}
@@ -152,15 +152,15 @@
         </aside>
       </section>
 
-      <section id="demo" class="demo-showcase">
+      <section id="demo" class="demo-showcase gf-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Demo</p>
             <h2>See the product.</h2>
           </div>
         </div>
-        <div class="demo-showcase-grid demo-showcase-grid--single">
-          <article class="hero-media-card">
+        <div class="demo-showcase-grid demo-showcase-grid--single gf-grid-12">
+          <article class="hero-media-card gf-card gf-span-12 gf-fade">
             <div class="video-card-top">
               <p>Product walkthrough</p>
               <span id="panel-health">Live tracking active</span>
@@ -195,16 +195,16 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <section id="use-cases" class="explore-section">
+      <section id="use-cases" class="explore-section gf-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Use cases</p>
             <h2>Start with one workflow.</h2>
           </div>
         </div>
-        <div class="explore-grid">
+        <div class="explore-grid gf-card-grid">
           {% for task in world_tasks %}
-          <article class="explore-card explore-card--{{ task.icon }}">
+          <article class="explore-card explore-card--{{ task.icon }} gf-card gf-fade">
             <div class="explore-card__visual">
               <span class="explore-tag">{{ task.domain }}</span>
             </div>
@@ -217,16 +217,16 @@
         </div>
       </section>
 
-      <section class="metrics metrics--credibility">
+      <section class="metrics metrics--credibility gf-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Proof</p>
             <h2>Key signals.</h2>
           </div>
         </div>
-        <div class="stat-grid stat-grid--airbnb">
+        <div class="stat-grid stat-grid--airbnb gf-metrics-row">
           {% for stat in stats %}
-          <article class="stat-card stat-card--airbnb">
+          <article class="stat-card stat-card--airbnb gf-card gf-fade">
             <p class="value">{{ stat.value }}</p>
             <p class="label">{{ stat.label }}</p>
           </article>
@@ -234,8 +234,8 @@
         </div>
       </section>
 
-      <section class="workflow workflow--split workflow--airbnb" id="flowboard">
-        <div class="workflow-main workflow-main--airbnb">
+      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard">
+        <div class="workflow-main workflow-main--airbnb text">
           <div class="section-heading section-heading--split">
             <div>
               <p class="eyebrow">Live workflow</p>
@@ -246,18 +246,18 @@
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
             <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
           </div>
-          <div id="workflow-grid" class="workflow-grid workflow-grid--airbnb"></div>
-          <div class="summary summary--airbnb">
+          <div id="workflow-grid" class="workflow-grid workflow-grid--airbnb gf-card-grid"></div>
+          <div class="summary summary--airbnb gf-card gf-fade">
             <h3>Next steps</h3>
             <ul id="flow-next-steps"></ul>
           </div>
         </div>
-        <aside class="workflow-side workflow-side--airbnb">
+        <aside class="workflow-side workflow-side--airbnb visual">
           <div class="section-heading">
             <p class="eyebrow">Live activity</p>
             <h2>System state.</h2>
           </div>
-          <div class="autopilot-panel autopilot-panel--airbnb">
+          <div class="autopilot-panel autopilot-panel--airbnb gf-card gf-fade">
             <div class="autopilot-copy">
               <p class="eyebrow">Autonomous control</p>
               <h3 id="autopilot-status" aria-live="polite">Standing by</h3>
@@ -270,16 +270,16 @@
         </aside>
       </section>
 
-      <section id="integrations" class="integrations integrations--airbnb">
+      <section id="integrations" class="integrations integrations--airbnb gf-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Integrations</p>
             <h2>Connect your stack.</h2>
           </div>
         </div>
-        <div class="connectors-grid connectors-grid--airbnb">
+        <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for connector in connectors %}
-          <details class="connector-card connector-card--airbnb" {% if loop.first %}open{% endif %}>
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" {% if loop.first %}open{% endif %}>
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--{{ connector.icon }}" aria-hidden="true"></div>
@@ -311,16 +311,16 @@
         </div>
       </section>
 
-      <section class="pricing pricing--airbnb" id="pricing">
+      <section class="pricing pricing--airbnb gf-section" id="pricing">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Pricing</p>
             <h2>Start free. Scale later.</h2>
           </div>
         </div>
-        <div class="subscription-grid subscription-grid--airbnb">
+        <div class="subscription-grid subscription-grid--airbnb gf-card-grid">
           {% for tier in subscription_tiers %}
-          <article class="pricing-card pricing-card--airbnb {% if loop.first %}pricing-card--lead{% endif %}">
+          <article class="pricing-card pricing-card--airbnb gf-card gf-fade {% if loop.first %}pricing-card--lead{% endif %}">
             <div class="pricing-top">
               {% if tier.badge %}
               <span class="tier-badge">{{ tier.badge }}</span>
@@ -341,16 +341,16 @@
         </div>
       </section>
 
-      <section id="why-globalflow" class="trust trust--airbnb">
+      <section id="why-globalflow" class="trust trust--airbnb gf-section">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Trust</p>
             <h2>Security and control.</h2>
           </div>
         </div>
-        <div class="trust-signal-grid trust-signal-grid--airbnb">
+        <div class="trust-signal-grid trust-signal-grid--airbnb gf-card-grid">
           {% for signal in trust_signals %}
-          <article class="trust-card trust-card--airbnb">
+          <article class="trust-card trust-card--airbnb gf-card gf-fade">
             <h3>{{ signal.title }}</h3>
             <p>{{ signal.detail }}</p>
           </article>
@@ -432,8 +432,8 @@
       <a href="/account">Account</a>
     </nav>
 
-    <footer class="site-footer site-footer--airbnb">
-      <div class="footer-top">
+    <footer class="site-footer site-footer--airbnb gf-section">
+      <div class="footer-top gf-grid-12 gf-gap-24">
         <div>
           <h2>GlobalFlow</h2>
           <p>Billing, files, follow-up, compliance.</p>

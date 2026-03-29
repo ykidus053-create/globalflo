@@ -182,7 +182,7 @@ function renderTasks(tasks) {
   workflowGrid.innerHTML = "";
   tasks.forEach((task) => {
     const card = document.createElement("article");
-    card.className = "workflow-card";
+    card.className = "workflow-card gf-card gf-fade";
     card.innerHTML = `
       <span class="workflow-status">${task.status}</span>
       <h4>${task.domain}</h4>
@@ -226,14 +226,14 @@ function renderActivity(events) {
 
   if (!events || !events.length) {
     activityFeed.innerHTML =
-      '<div class="activity-entry"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div>';
+      '<div class="activity-entry gf-card gf-fade"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div>';
     return;
   }
 
   activityFeed.innerHTML = events
     .map(
       (event) => `
-      <article class="activity-entry">
+      <article class="activity-entry gf-card gf-fade">
         <span class="activity-kind">${event.kind || "event"}</span>
         <p class="activity-message">${event.message}</p>
         <p class="activity-detail">${event.detail || ""}</p>
