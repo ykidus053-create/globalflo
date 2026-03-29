@@ -41,6 +41,7 @@
   </head>
   <body class="paper-site">
     <a class="skip-link" href="#main-content">Skip to content</a>
+    <canvas class="render-layer" id="render-layer" aria-hidden="true"></canvas>
     <div class="vfx-progress" id="scroll-progress" aria-hidden="true"></div>
     <div class="vfx-cursor" id="vfx-cursor" aria-hidden="true"></div>
     <div class="aurora"></div>
@@ -510,6 +511,7 @@
     </footer>
 
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
+    <script type="module" src="/static/render-layer.js?v={{ asset_version }}"></script>
     <script type="module" src="/static/flow.js?v={{ asset_version }}"></script>
   </body>
 </html>

@@ -4723,6 +4723,49 @@ html body.paper-site textarea::placeholder {
   color: rgba(255, 255, 255, 0.82) !important;
 }
 
+body.paper-site .render-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+body.paper-site .render-layer.render-layer--ready {
+  opacity: 0.82;
+}
+body.paper-site .aurora,
+body.paper-site .grid-overlay,
+body.paper-site header,
+body.paper-site main,
+body.paper-site footer,
+body.paper-site .mobile-dock,
+body.paper-site .toast,
+body.paper-site .flow-modal,
+body.paper-site .vfx-progress,
+body.paper-site .vfx-cursor {
+  position: relative;
+}
+body.paper-site .aurora,
+body.paper-site .grid-overlay {
+  z-index: 1;
+}
+body.paper-site header,
+body.paper-site main,
+body.paper-site footer,
+body.paper-site .mobile-dock,
+body.paper-site .toast,
+body.paper-site .flow-modal {
+  z-index: 2;
+}
+body.paper-site .vfx-progress,
+body.paper-site .vfx-cursor {
+  z-index: 5;
+}
+
 /* Automation workspace: keep workflow engine and autopilot/activity separated */
 body.paper-site #workspace .workflow.workflow--split {
   display: grid !important;
@@ -4992,6 +5035,7 @@ body.paper-site .nav a:hover {
   filter: blur(0);
 }
 @media (prefers-reduced-motion: reduce) {
+  body.paper-site .render-layer,
   body.paper-site .vfx-progress,
   body.paper-site .vfx-cursor,
   body.paper-site .aurora,
