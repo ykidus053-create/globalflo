@@ -4722,3 +4722,44 @@ html body.paper-site input::placeholder,
 html body.paper-site textarea::placeholder {
   color: rgba(255, 255, 255, 0.82) !important;
 }
+
+/* Automation workspace: keep workflow engine and autopilot/activity separated */
+body.paper-site #workspace .workflow.workflow--split {
+  display: grid !important;
+  grid-template-columns: minmax(0, 7fr) minmax(320px, 5fr) !important;
+  gap: 32px !important;
+  align-items: start !important;
+}
+body.paper-site #workspace .workflow-main,
+body.paper-site #workspace .workflow-side {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 24px !important;
+  min-width: 0;
+}
+body.paper-site #workspace .workflow-grid,
+body.paper-site #workspace .activity-grid {
+  gap: 16px !important;
+}
+body.paper-site #workspace .summary,
+body.paper-site #workspace .autopilot-panel,
+body.paper-site #workspace .activity-entry,
+body.paper-site #workspace .workflow-card {
+  padding: 16px !important;
+}
+body.paper-site #workspace .summary ul,
+body.paper-site #workspace .activity-grid {
+  margin-top: 8px !important;
+}
+body.paper-site #workspace .autopilot-panel {
+  margin-bottom: 8px !important;
+}
+body.paper-site #workspace .section-heading {
+  margin-bottom: 8px !important;
+}
+@media (max-width: 920px) {
+  body.paper-site #workspace .workflow.workflow--split {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+}
