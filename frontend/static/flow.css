@@ -4689,3 +4689,36 @@ body.paper-site .card-grid > *, body.paper-site .stat-card--airbnb, body.paper-s
   .gf-metrics-row > * { grid-column: span 4; }
   .gf-metrics-row { grid-template-columns: repeat(1, minmax(0,1fr)); }
 }
+
+/* Final readability override: every visible text node resolves to white */
+html body.paper-site,
+html body.paper-site *,
+html body.paper-site *::before,
+html body.paper-site *::after,
+html body.paper-site input,
+html body.paper-site textarea,
+html body.paper-site select,
+html body.paper-site option,
+html body.paper-site label,
+html body.paper-site p,
+html body.paper-site span,
+html body.paper-site a,
+html body.paper-site li,
+html body.paper-site strong,
+html body.paper-site em,
+html body.paper-site small,
+html body.paper-site time,
+html body.paper-site h1,
+html body.paper-site h2,
+html body.paper-site h3,
+html body.paper-site h4,
+html body.paper-site h5,
+html body.paper-site h6,
+html body.paper-site button,
+html body.paper-site summary {
+  color: #ffffff !important;
+}
+html body.paper-site input::placeholder,
+html body.paper-site textarea::placeholder {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
