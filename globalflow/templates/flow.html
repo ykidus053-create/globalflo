@@ -65,7 +65,6 @@
         <a href="#flowboard">Workflow</a>
         <a href="#integrations">Integrations</a>
         <a href="#pricing">Pricing</a>
-        <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <button class="ghost small" id="open-login" type="button">Login</button>
         <button class="primary small" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
@@ -324,6 +323,16 @@
           </article>
           {% endfor %}
         </div>
+        <div class="key-signals-list gf-card gf-fade">
+          <div class="content-body">
+            <ul>
+              <li>80% less manual work</li>
+              <li>3x faster workflow execution</li>
+              <li>95% accuracy in automation</li>
+              <li>Real-time insights from every interaction</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard">
@@ -495,9 +504,16 @@
           <h3>Welcome back</h3>
           <p class="modal-note">Use your Google or Apple account for one-click access, or keep a local session below.</p>
           <div class="oauth-grid">
-            <button class="ghost oauth-button" id="login-with-google" type="button">Continue with Google</button>
-            <button class="ghost oauth-button" id="login-with-apple" type="button">Continue with Apple</button>
+            <button class="ghost oauth-button" id="login-with-google" type="button" data-provider-ready="{{ 'true' if oauth_configured.google else 'false' }}">Continue with Google</button>
+            <button class="ghost oauth-button" id="login-with-apple" type="button" data-provider-ready="{{ 'true' if oauth_configured.apple else 'false' }}">Continue with Apple</button>
           </div>
+          <p class="modal-note" id="oauth-status">
+            {% if oauth_configured.google or oauth_configured.apple %}
+            Social sign-in is enabled for configured providers.
+            {% else %}
+            Google and Apple sign-in require provider credentials in Render environment variables.
+            {% endif %}
+          </p>
           <div class="modal-divider" aria-hidden="true">
             <span>Or use a saved local session</span>
           </div>

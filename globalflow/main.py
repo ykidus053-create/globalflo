@@ -822,6 +822,10 @@ async def homepage(request: Request):
             "footer_links": FOOTER_LINKS,
             "social_links": SOCIAL_LINKS,
             "theme": _active_theme(),
+            "oauth_configured": {
+                "google": bool(_provider_credentials("google")["client_id"] and _provider_credentials("google")["client_secret"]),
+                "apple": bool(_provider_credentials("apple")["client_id"] and _provider_credentials("apple")["client_secret"]),
+            },
         },
     )
 

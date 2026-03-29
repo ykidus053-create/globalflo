@@ -13,6 +13,7 @@ const loginForm = document.getElementById("login-form");
 const loginStatus = document.getElementById("login-status");
 const googleLoginButton = document.getElementById("login-with-google");
 const appleLoginButton = document.getElementById("login-with-apple");
+const oauthStatus = document.getElementById("oauth-status");
 const launchOrchestrationBtn = document.getElementById("launch-orchestration");
 const watchDemoBtn = document.getElementById("watch-demo");
 const demoVideo = document.getElementById("demo-video");
@@ -612,6 +613,14 @@ function openCheckoutForTier(tierId) {
 }
 
 function startSocialLogin(provider) {
+  const providerButton =
+    provider === "google" ? googleLoginButton : provider === "apple" ? appleLoginButton : null;
+  if (providerButton && providerButton.dataset.providerReady !== "true") {
+    const message = `${provider[0].toUpperCase()}${provider.slice(1)} sign-in is not configured on the server yet.`;
+    if (oauthStatus) oauthStatus.textContent = message;
+    showToast(message);
+    return;
+  }
   const returnTo = `${window.location.origin}${window.location.pathname}${window.location.search}`;
   window.location.assign(apiUrl(`/auth/${provider}/start?return_to=${encodeURIComponent(returnTo)}`));
 }

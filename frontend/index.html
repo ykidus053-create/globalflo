@@ -37,7 +37,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=eb1c588" />
+    <link rel="stylesheet" href="/static/flow.css?v=921a7f1" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site">
@@ -66,7 +66,6 @@
         <a href="#flowboard">Workflow</a>
         <a href="#integrations">Integrations</a>
         <a href="#pricing">Pricing</a>
-        <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <button class="ghost small" id="open-login" type="button">Login</button>
         <button class="primary small" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
@@ -399,6 +398,16 @@
             </div>
           </article>
           
+        </div>
+        <div class="key-signals-list gf-card gf-fade">
+          <div class="content-body">
+            <ul>
+              <li>80% less manual work</li>
+              <li>3x faster workflow execution</li>
+              <li>95% accuracy in automation</li>
+              <li>Real-time insights from every interaction</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -760,9 +769,14 @@
           <h3>Welcome back</h3>
           <p class="modal-note">Use your Google or Apple account for one-click access, or keep a local session below.</p>
           <div class="oauth-grid">
-            <button class="ghost oauth-button" id="login-with-google" type="button">Continue with Google</button>
-            <button class="ghost oauth-button" id="login-with-apple" type="button">Continue with Apple</button>
+            <button class="ghost oauth-button" id="login-with-google" type="button" data-provider-ready="false">Continue with Google</button>
+            <button class="ghost oauth-button" id="login-with-apple" type="button" data-provider-ready="false">Continue with Apple</button>
           </div>
+          <p class="modal-note" id="oauth-status">
+            
+            Google and Apple sign-in require provider credentials in Render environment variables.
+            
+          </p>
           <div class="modal-divider" aria-hidden="true">
             <span>Or use a saved local session</span>
           </div>
@@ -821,7 +835,7 @@
     </footer>
 
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
-    <script type="module" src="/static/render-layer.js?v=eb1c588"></script>
-    <script type="module" src="/static/flow.js?v=eb1c588"></script>
+    <script type="module" src="/static/render-layer.js?v=921a7f1"></script>
+    <script type="module" src="/static/flow.js?v=921a7f1"></script>
   </body>
 </html>

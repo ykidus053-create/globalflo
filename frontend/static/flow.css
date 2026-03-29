@@ -5470,6 +5470,34 @@ body.paper-site .hero-media-points span {
   color: #cfd9e0 !important;
 }
 
+body.paper-site .key-signals-list {
+  margin-top: 16px;
+}
+body.paper-site .key-signals-list .content-body {
+  padding: 24px;
+}
+body.paper-site .key-signals-list ul {
+  margin: 0;
+  padding-left: 24px;
+  display: grid;
+  gap: 8px;
+}
+body.paper-site .key-signals-list li {
+  color: #cfd9e0 !important;
+}
+body.paper-site .metrics {
+  padding-bottom: 24px !important;
+  margin-bottom: 0 !important;
+}
+body.paper-site #integrations.integrations {
+  padding-top: 24px !important;
+  margin-top: 0 !important;
+}
+body.paper-site .metrics + .workflow,
+body.paper-site .workflow + #integrations.integrations {
+  margin-top: 0 !important;
+}
+
 /* Quieter motion system */
 body.paper-site .vfx-progress {
   height: 2px !important;
