@@ -31,6 +31,8 @@ const reliabilityState = document.getElementById("reliability-state");
 const signalDot = document.getElementById("signal-dot");
 const panelHealth = document.getElementById("panel-health");
 const lastSync = document.getElementById("last-sync");
+const scrollProgress = document.getElementById("scroll-progress");
+const vfxCursor = document.getElementById("vfx-cursor");
 
 const connectorForms = document.querySelectorAll(".connector-form");
 const paymentButtons = document.querySelectorAll("[data-payment-method]");
@@ -184,10 +186,12 @@ function renderTasks(tasks) {
     const card = document.createElement("article");
     card.className = "workflow-card gf-card gf-fade";
     card.innerHTML = `
-      <span class="workflow-status">${task.status}</span>
-      <h4>${task.domain}</h4>
-      <p>${task.next_action}</p>
-      <p class="note">${task.note}</p>
+      <div class="content-body">
+        <span class="workflow-status">${task.status}</span>
+        <h4>${task.domain}</h4>
+        <p>${task.next_action}</p>
+        <p class="note">${task.note}</p>
+      </div>
       <button class="primary small" type="button">Kick off</button>
     `;
     const button = card.querySelector("button");
@@ -226,7 +230,7 @@ function renderActivity(events) {
 
   if (!events || !events.length) {
     activityFeed.innerHTML =
-      '<div class="activity-entry gf-card gf-fade"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div>';
+      '<div class="activity-entry gf-card gf-fade"><div class="content-body"><p class="activity-message">No activity yet.</p><p class="activity-detail">Launch a workflow or connector to start the audit trail.</p></div></div>';
     return;
   }
 
@@ -234,10 +238,12 @@ function renderActivity(events) {
     .map(
       (event) => `
       <article class="activity-entry gf-card gf-fade">
-        <span class="activity-kind">${event.kind || "event"}</span>
-        <p class="activity-message">${event.message}</p>
-        <p class="activity-detail">${event.detail || ""}</p>
-        <time>${new Date(event.timestamp).toLocaleString()}</time>
+        <div class="content-body">
+          <span class="activity-kind">${event.kind || "event"}</span>
+          <p class="activity-message">${event.message}</p>
+          <p class="activity-detail">${event.detail || ""}</p>
+          <time>${new Date(event.timestamp).toLocaleString()}</time>
+        </div>
       </article>
     `
     )
@@ -345,6 +351,95 @@ function registerRevealTargets(target) {
     return;
   }
   if (revealObserver) revealObserver.observe(target);
+}
+
+function initAmbientVfx() {
+  if (prefersReducedMotion) return;
+  const root = document.documentElement;
+  const aurora = document.querySelector(".aurora");
+  const cards = document.querySelectorAll(".gf-card");
+  const parallaxSections = document.querySelectorAll("main > section");
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      const x = event.clientX / window.innerWidth;
+      const y = event.clientY / window.innerHeight;
+      root.style.setProperty("--mx", x.toFixed(4));
+      root.style.setProperty("--my", y.toFixed(4));
+      if (aurora) {
+        aurora.style.transform = `translate3d(${(x - 0.5) * 28}px, ${(y - 0.5) * 20}px, 0)`;
+      }
+      if (vfxCursor) {
+        vfxCursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+      }
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      const doc = document.documentElement;
+      const maxScroll = Math.max(doc.scrollHeight - window.innerHeight, 1);
+      const progress = window.scrollY / maxScroll;
+      root.style.setProperty("--scroll-progress", progress.toFixed(4));
+      if (scrollProgress) {
+        scrollProgress.style.transform = `scaleX(${Math.max(progress, 0.02)})`;
+      }
+      parallaxSections.forEach((section, index) => {
+        const rate = ((index % 3) + 1) * 0.012;
+        const offset = Math.min(window.scrollY * rate, 18);
+        section.style.setProperty("--section-shift", `${offset.toFixed(2)}px`);
+      });
+    },
+    { passive: true }
+  );
+
+  cards.forEach((card) => {
+    card.addEventListener("pointermove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const px = ((event.clientX - rect.left) / rect.width) * 100;
+      const py = ((event.clientY - rect.top) / rect.height) * 100;
+      const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -10;
+      const ry = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+      card.style.setProperty("--gx", `${px.toFixed(2)}%`);
+      card.style.setProperty("--gy", `${py.toFixed(2)}%`);
+      card.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+      card.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
+      card.classList.add("is-hovered");
+    });
+    card.addEventListener("pointerleave", () => {
+      card.style.removeProperty("--rx");
+      card.style.removeProperty("--ry");
+      card.classList.remove("is-hovered");
+    });
+  });
+}
+
+function initMagneticButtons() {
+  if (prefersReducedMotion) return;
+  const buttons = document.querySelectorAll("button.primary, button.ghost, .nav a, .feature-link");
+  buttons.forEach((button) => {
+    button.addEventListener("pointermove", (event) => {
+      const rect = button.getBoundingClientRect();
+      const dx = ((event.clientX - rect.left) / rect.width - 0.5) * 14;
+      const dy = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
+      button.style.setProperty("--bx", `${dx.toFixed(2)}px`);
+      button.style.setProperty("--by", `${dy.toFixed(2)}px`);
+      button.classList.add("is-magnetic");
+    });
+    button.addEventListener("pointerleave", () => {
+      button.style.removeProperty("--bx");
+      button.style.removeProperty("--by");
+      button.classList.remove("is-magnetic");
+    });
+  });
+}
+
+function initKineticType() {
+  const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3");
+  headings.forEach((heading) => heading.classList.add("kinetic-heading"));
 }
 
 function initActiveNav() {
@@ -754,8 +849,11 @@ function scheduleSafe(task, interval) {
 
 async function bootstrap() {
   handleAuthReturn();
-  initRevealObserver();
-  initActiveNav();
+initRevealObserver();
+initActiveNav();
+initAmbientVfx();
+initMagneticButtons();
+initKineticType();
   setBillingMode(billingMode);
   await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
 }

@@ -37,11 +37,13 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=6a56359" />
+    <link rel="stylesheet" href="/static/flow.css?v=444b2ee" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site">
     <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="vfx-progress" id="scroll-progress" aria-hidden="true"></div>
+    <div class="vfx-cursor" id="vfx-cursor" aria-hidden="true"></div>
     <div class="aurora"></div>
     <div class="grid-overlay"></div>
 
@@ -108,19 +110,21 @@
 
         <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24">
           <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
-            <p class="eyebrow">What runs inside GlobalFlow</p>
-            <h2>One system for intake, routing, follow-through, and verification.</h2>
-            <ul class="hero-benefit-list">
-              <li>Capture work</li>
-              <li>Route the next step</li>
-              <li>Verify every result</li>
-            </ul>
-            <div class="hero-chip-row" aria-label="Core workflows">
-              <span>Billing</span>
-              <span>Calls</span>
-              <span>Files</span>
-              <span>Taxes</span>
-              <span>Approvals</span>
+            <div class="content-body">
+              <p class="eyebrow">What runs inside GlobalFlow</p>
+              <h2>One system for intake, routing, follow-through, and verification.</h2>
+              <ul class="hero-benefit-list">
+                <li>Capture work</li>
+                <li>Route the next step</li>
+                <li>Verify every result</li>
+              </ul>
+              <div class="hero-chip-row" aria-label="Core workflows">
+                <span>Billing</span>
+                <span>Calls</span>
+                <span>Files</span>
+                <span>Taxes</span>
+                <span>Approvals</span>
+              </div>
             </div>
           </article>
 
@@ -140,24 +144,26 @@
           </article>
 
           <article class="hero-trust-card hero-trust-card--unified gf-card gf-span-6 gf-fade">
-            <p class="eyebrow">Control and reliability</p>
-            <div class="hero-trust-list">
-              
-              <div>
-                <strong>256-bit encryption</strong>
-                <p>Data is protected in transit and at rest.</p>
+            <div class="content-body">
+              <p class="eyebrow">Control and reliability</p>
+              <div class="hero-trust-list">
+                
+                <div>
+                  <strong>256-bit encryption</strong>
+                  <p>Data is protected in transit and at rest.</p>
+                </div>
+                
+                <div>
+                  <strong>Human override built in</strong>
+                  <p>Pause, inspect, or review any run.</p>
+                </div>
+                
+                <div>
+                  <strong>Data stays traceable</strong>
+                  <p>Logs and audit history stay visible.</p>
+                </div>
+                
               </div>
-              
-              <div>
-                <strong>Human override built in</strong>
-                <p>Pause, inspect, or review any run.</p>
-              </div>
-              
-              <div>
-                <strong>Data stays traceable</strong>
-                <p>Logs and audit history stay visible.</p>
-              </div>
-              
             </div>
           </article>
         </aside>
@@ -173,30 +179,34 @@
         </div>
         <div class="demo-showcase-grid demo-showcase-grid--single gf-grid-12">
           <article class="hero-media-card gf-card gf-span-7 gf-fade">
-            <div class="video-card-top">
-              <p>Product walkthrough</p>
-              <span>From the live product flow</span>
+            <div class="content-body">
+              <div class="video-card-top">
+                <p>Product walkthrough</p>
+                <span>From the live product flow</span>
+              </div>
+              <video
+                class="hero-video"
+                controls
+                preload="none"
+                poster="/static/globalflow-walkthrough-poster.png"
+                aria-label="GlobalFlow overview walkthrough"
+              >
+                <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
+                Your browser does not support embedded video.
+              </video>
             </div>
-            <video
-              class="hero-video"
-              controls
-              preload="none"
-              poster="/static/globalflow-walkthrough-poster.png"
-              aria-label="GlobalFlow overview walkthrough"
-            >
-              <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
-              Your browser does not support embedded video.
-            </video>
           </article>
           <article class="overview-panel gf-card gf-span-5 gf-fade">
-            <h3>What happens inside the workflow</h3>
-            <p>Inbound tasks from calls, billing, files, and compliance are turned into tracked runs with operator visibility.</p>
-            <ul class="hero-benefit-list">
-              <li>Capture the task instantly</li>
-              <li>Assign the correct next action</li>
-              <li>Run the workflow with telemetry</li>
-              <li>Log completion and next steps</li>
-            </ul>
+            <div class="content-body">
+              <h3>What happens inside the workflow</h3>
+              <p>Inbound tasks from calls, billing, files, and compliance are turned into tracked runs with operator visibility.</p>
+              <ul class="hero-benefit-list">
+                <li>Capture the task instantly</li>
+                <li>Assign the correct next action</li>
+                <li>Run the workflow with telemetry</li>
+                <li>Log completion and next steps</li>
+              </ul>
+            </div>
           </article>
         </div>
       </section>
@@ -210,26 +220,28 @@
         </div>
         <div class="demo-showcase-grid demo-showcase-grid--single gf-grid-12">
           <article class="hero-media-card gf-card gf-span-12 gf-fade">
-            <div class="video-card-top">
-              <p>Product walkthrough</p>
-              <span id="panel-health">Live tracking active</span>
-            </div>
-            <video
-              id="demo-video"
-              class="hero-video"
-              controls
-              preload="none"
-              poster="/static/globalflow-walkthrough-poster.png"
-              aria-label="GlobalFlow product walkthrough"
-            >
-              <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
-              Your browser does not support embedded video.
-            </video>
-            <div class="hero-media-caption">
-              <div class="hero-media-points">
-                <span>Workflow</span>
-                <span>Integrations</span>
-                <span>Automation</span>
+            <div class="content-body">
+              <div class="video-card-top">
+                <p>Product walkthrough</p>
+                <span id="panel-health">Live tracking active</span>
+              </div>
+              <video
+                id="demo-video"
+                class="hero-video"
+                controls
+                preload="none"
+                poster="/static/globalflow-walkthrough-poster.png"
+                aria-label="GlobalFlow product walkthrough"
+              >
+                <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
+                Your browser does not support embedded video.
+              </video>
+              <div class="hero-media-caption">
+                <div class="hero-media-points">
+                  <span>Workflow</span>
+                  <span>Integrations</span>
+                  <span>Automation</span>
+                </div>
               </div>
             </div>
           </article>
@@ -249,6 +261,7 @@
           <div>
             <p class="eyebrow">Use cases</p>
             <h2>Start with one workflow.</h2>
+            <p class="lead">Each use case shows the operational outcome, the automation path, and the kind of work GlobalFlow removes from your team.</p>
           </div>
         </div>
         <div class="explore-grid gf-card-grid">
@@ -257,9 +270,9 @@
             <div class="explore-card__visual">
               <span class="explore-tag">Call follow-up</span>
             </div>
-            <div class="explore-card__body">
+            <div class="explore-card__body content-body">
               <h3>Close the loop after every call.</h3>
-              <p>Summaries, action items, and next steps land in the right system without a coordinator chasing people.</p>
+              <p class="explore-description">Summaries, action items, and next steps land in the right system without a coordinator chasing people.</p>
               <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
@@ -268,9 +281,9 @@
             <div class="explore-card__visual">
               <span class="explore-tag">Billing recovery</span>
             </div>
-            <div class="explore-card__body">
+            <div class="explore-card__body content-body">
               <h3>Keep invoices moving.</h3>
-              <p>GlobalFlow routes invoice work automatically so finance teams recover revenue faster with less manual admin.</p>
+              <p class="explore-description">GlobalFlow routes invoice work automatically so finance teams recover revenue faster with less manual admin.</p>
               <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
@@ -279,9 +292,9 @@
             <div class="explore-card__visual">
               <span class="explore-tag">Tax readiness</span>
             </div>
-            <div class="explore-card__body">
+            <div class="explore-card__body content-body">
               <h3>Stay ahead of deadlines.</h3>
-              <p>Compliance tasks, supporting docs, and reminders stay visible in one workflow before they become urgent.</p>
+              <p class="explore-description">Compliance tasks, supporting docs, and reminders stay visible in one workflow before they become urgent.</p>
               <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
@@ -290,9 +303,9 @@
             <div class="explore-card__visual">
               <span class="explore-tag">Document control</span>
             </div>
-            <div class="explore-card__body">
+            <div class="explore-card__body content-body">
               <h3>Route documents automatically.</h3>
-              <p>Files are classified, routed, and attached to the right workflow so teams stop losing time to document hunts.</p>
+              <p class="explore-description">Files are classified, routed, and attached to the right workflow so teams stop losing time to document hunts.</p>
               <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
@@ -301,9 +314,9 @@
             <div class="explore-card__visual">
               <span class="explore-tag">Ops orchestration</span>
             </div>
-            <div class="explore-card__body">
+            <div class="explore-card__body content-body">
               <h3>Run ops work from one dashboard.</h3>
-              <p>Approvals, retries, audits, and handoffs stay coordinated across billing, files, calls, and follow-up.</p>
+              <p class="explore-description">Approvals, retries, audits, and handoffs stay coordinated across billing, files, calls, and follow-up.</p>
               <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
@@ -321,23 +334,31 @@
         <div class="stat-grid stat-grid--airbnb gf-metrics-row">
           
           <article class="stat-card stat-card--airbnb gf-card gf-fade">
-            <p class="value">20+ hrs / week</p>
-            <p class="label">Time saved</p>
+            <div class="content-body">
+              <p class="value">20+ hrs / week</p>
+              <p class="label">Time saved</p>
+            </div>
           </article>
           
           <article class="stat-card stat-card--airbnb gf-card gf-fade">
-            <p class="value">99.2%</p>
-            <p class="label">Confidence</p>
+            <div class="content-body">
+              <p class="value">99.2%</p>
+              <p class="label">Confidence</p>
+            </div>
           </article>
           
           <article class="stat-card stat-card--airbnb gf-card gf-fade">
-            <p class="value">72 hours</p>
-            <p class="label">Time to live</p>
+            <div class="content-body">
+              <p class="value">72 hours</p>
+              <p class="label">Time to live</p>
+            </div>
           </article>
           
           <article class="stat-card stat-card--airbnb gf-card gf-fade">
-            <p class="value">Human-in-the-loop</p>
-            <p class="label">Autonomy</p>
+            <div class="content-body">
+              <p class="value">Human-in-the-loop</p>
+              <p class="label">Autonomy</p>
+            </div>
           </article>
           
         </div>
@@ -392,7 +413,7 @@
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--slack" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Slack Alert</h3>
                   <p>Post automation summaries, anomalies, and approvals straight into a Slack channel.</p>
                 </div>
@@ -421,7 +442,7 @@
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--hubspot" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>HubSpot CRM</h3>
                   <p>Create or update deals and contacts with the automation outcome metadata.</p>
                 </div>
@@ -450,7 +471,7 @@
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--quickbooks" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>QuickBooks Sync</h3>
                   <p>Send reconciliation and invoice metadata into QuickBooks Online for downstream finance teams.</p>
                 </div>
@@ -479,7 +500,7 @@
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--airtable" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Airtable Sync</h3>
                   <p>Stream updates into Airtable bases for ops teams that track statuses visually.</p>
                 </div>
@@ -517,96 +538,104 @@
         <div class="subscription-grid subscription-grid--airbnb gf-card-grid">
           
           <article class="pricing-card pricing-card--airbnb gf-card gf-fade pricing-card--lead">
-            <div class="pricing-top">
-              
-              <span class="tier-badge">Free trial</span>
-              
-              <h3>Starter</h3>
-              <p class="price" data-monthly="Free" data-annual="Free">Free</p>
-            </div>
-            <ul class="pricing-list">
-              
-              <li>1 live workflow</li>
-              
-              <li>100 workflow runs per month</li>
-              
-              <li>2 app connections</li>
-              
-              <li>Email support</li>
-              
-            </ul>
-            <div class="subscription-actions">
-              <button class="primary small" data-checkout-tier="starter">Start free</button>
-            </div>
-          </article>
-          
-          <article class="pricing-card pricing-card--airbnb gf-card gf-fade ">
-            <div class="pricing-top">
-              
-              <span class="tier-badge">Popular</span>
-              
-              <h3>Pilot</h3>
-              <p class="price" data-monthly="$349 / month" data-annual="$290 / month billed annually">$349 / month</p>
-            </div>
-            <ul class="pricing-list">
-              
-              <li>Dedicated AutoPilot queue with live telemetry</li>
-              
-              <li>4 production integrations</li>
-              
-              <li>Weekly outcomes brief tied to time-saved metrics</li>
-              
-              <li>Rework guarantee</li>
-              
-            </ul>
-            <div class="subscription-actions">
-              <button class="primary small" data-checkout-tier="pilot">Start Pilot</button>
+            <div class="content-body">
+              <div class="pricing-top">
+                
+                <span class="tier-badge">Free trial</span>
+                
+                <h3>Starter</h3>
+                <p class="price" data-monthly="Free" data-annual="Free">Free</p>
+              </div>
+              <ul class="pricing-list">
+                
+                <li>1 live workflow</li>
+                
+                <li>100 workflow runs per month</li>
+                
+                <li>2 app connections</li>
+                
+                <li>Email support</li>
+                
+              </ul>
+              <div class="subscription-actions">
+                <button class="primary small" data-checkout-tier="starter">Start free</button>
+              </div>
             </div>
           </article>
           
           <article class="pricing-card pricing-card--airbnb gf-card gf-fade ">
-            <div class="pricing-top">
-              
-              <h3>Launch</h3>
-              <p class="price" data-monthly="$549 / month" data-annual="$458 / month billed annually">$549 / month</p>
-            </div>
-            <ul class="pricing-list">
-              
-              <li>8 production integrations</li>
-              
-              <li>Dedicated automations for billing, taxes, and files</li>
-              
-              <li>Live dashboards and team approvals</li>
-              
-              <li>Slack implementation channel</li>
-              
-            </ul>
-            <div class="subscription-actions">
-              <button class="primary small" data-checkout-tier="launch">Talk to sales</button>
+            <div class="content-body">
+              <div class="pricing-top">
+                
+                <span class="tier-badge">Popular</span>
+                
+                <h3>Pilot</h3>
+                <p class="price" data-monthly="$349 / month" data-annual="$290 / month billed annually">$349 / month</p>
+              </div>
+              <ul class="pricing-list">
+                
+                <li>Dedicated AutoPilot queue with live telemetry</li>
+                
+                <li>4 production integrations</li>
+                
+                <li>Weekly outcomes brief tied to time-saved metrics</li>
+                
+                <li>Rework guarantee</li>
+                
+              </ul>
+              <div class="subscription-actions">
+                <button class="primary small" data-checkout-tier="pilot">Start Pilot</button>
+              </div>
             </div>
           </article>
           
           <article class="pricing-card pricing-card--airbnb gf-card gf-fade ">
-            <div class="pricing-top">
-              
-              <span class="tier-badge">Scale</span>
-              
-              <h3>Captain</h3>
-              <p class="price" data-monthly="$899 / month" data-annual="$749 / month billed annually">$899 / month</p>
+            <div class="content-body">
+              <div class="pricing-top">
+                
+                <h3>Launch</h3>
+                <p class="price" data-monthly="$549 / month" data-annual="$458 / month billed annually">$549 / month</p>
+              </div>
+              <ul class="pricing-list">
+                
+                <li>8 production integrations</li>
+                
+                <li>Dedicated automations for billing, taxes, and files</li>
+                
+                <li>Live dashboards and team approvals</li>
+                
+                <li>Slack implementation channel</li>
+                
+              </ul>
+              <div class="subscription-actions">
+                <button class="primary small" data-checkout-tier="launch">Talk to sales</button>
+              </div>
             </div>
-            <ul class="pricing-list">
-              
-              <li>Unlimited workflow runs</li>
-              
-              <li>Custom API and ERP connector support</li>
-              
-              <li>Executive readiness reviews</li>
-              
-              <li>White-glove onboarding</li>
-              
-            </ul>
-            <div class="subscription-actions">
-              <button class="primary small" data-checkout-tier="captain">Book a rollout call</button>
+          </article>
+          
+          <article class="pricing-card pricing-card--airbnb gf-card gf-fade ">
+            <div class="content-body">
+              <div class="pricing-top">
+                
+                <span class="tier-badge">Scale</span>
+                
+                <h3>Captain</h3>
+                <p class="price" data-monthly="$899 / month" data-annual="$749 / month billed annually">$899 / month</p>
+              </div>
+              <ul class="pricing-list">
+                
+                <li>Unlimited workflow runs</li>
+                
+                <li>Custom API and ERP connector support</li>
+                
+                <li>Executive readiness reviews</li>
+                
+                <li>White-glove onboarding</li>
+                
+              </ul>
+              <div class="subscription-actions">
+                <button class="primary small" data-checkout-tier="captain">Book a rollout call</button>
+              </div>
             </div>
           </article>
           
@@ -623,18 +652,24 @@
         <div class="trust-signal-grid trust-signal-grid--airbnb gf-card-grid">
           
           <article class="trust-card trust-card--airbnb gf-card gf-fade">
-            <h3>256-bit encryption</h3>
-            <p>Data is protected in transit and at rest.</p>
+            <div class="content-body">
+              <h3>256-bit encryption</h3>
+              <p>Data is protected in transit and at rest.</p>
+            </div>
           </article>
           
           <article class="trust-card trust-card--airbnb gf-card gf-fade">
-            <h3>Human override built in</h3>
-            <p>Pause, inspect, or review any run.</p>
+            <div class="content-body">
+              <h3>Human override built in</h3>
+              <p>Pause, inspect, or review any run.</p>
+            </div>
           </article>
           
           <article class="trust-card trust-card--airbnb gf-card gf-fade">
-            <h3>Data stays traceable</h3>
-            <p>Logs and audit history stay visible.</p>
+            <div class="content-body">
+              <h3>Data stays traceable</h3>
+              <p>Logs and audit history stay visible.</p>
+            </div>
           </article>
           
         </div>
@@ -748,6 +783,6 @@
     </footer>
 
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
-    <script type="module" src="/static/flow.js?v=6a56359"></script>
+    <script type="module" src="/static/flow.js?v=444b2ee"></script>
   </body>
 </html>
