@@ -55,6 +55,7 @@ const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
 let metricsCache = {};
 let activityCount = 0;
 let revealObserver = null;
+let sectionObserver = null;
 let billingMode = "monthly";
 let activeModalId = null;
 let summaryCache = null;
@@ -354,6 +355,27 @@ function registerRevealTargets(target) {
   if (revealObserver) revealObserver.observe(target);
 }
 
+function initSectionStateObserver() {
+  const sections = document.querySelectorAll("main > section");
+  if (!sections.length) return;
+
+  if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+    sections.forEach((section) => section.classList.add("is-section-active"));
+    return;
+  }
+
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        entry.target.classList.toggle("is-section-active", entry.isIntersecting);
+      });
+    },
+    { threshold: 0.28, rootMargin: "-8% 0px -18% 0px" }
+  );
+
+  sections.forEach((section) => sectionObserver.observe(section));
+}
+
 function initAmbientVfx() {
   if (prefersReducedMotion) return;
   const root = document.documentElement;
@@ -439,7 +461,7 @@ function initActiveNav() {
         });
       });
     },
-    { threshold: 0.45 }
+    { threshold: 0.45, rootMargin: "-12% 0px -30% 0px" }
   );
 
   sections.forEach((section) => observer.observe(section));
@@ -840,6 +862,7 @@ function scheduleSafe(task, interval) {
 async function bootstrap() {
   handleAuthReturn();
 initRevealObserver();
+initSectionStateObserver();
 initActiveNav();
 initAmbientVfx();
 initMagneticButtons();
