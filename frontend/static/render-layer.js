@@ -52,18 +52,18 @@ function initRenderLayer(target) {
 
     void main() {
       vec3 p = aPosition;
-      float drift = uReduced > 0.5 ? 0.04 : 0.14;
-      p *= rotationY(uTime * drift + uPointer.x * 0.75 + uScroll * 0.35);
-      p *= rotationX(sin(uTime * 0.11) * 0.18 + uPointer.y * 0.42);
-      p.xy += vec2(uPointer.x, -uPointer.y) * 0.12;
-      p.z += 4.4 + sin(uTime * 0.07 + aScale) * 0.18;
+      float drift = uReduced > 0.5 ? 0.02 : 0.08;
+      p *= rotationY(uTime * drift + uPointer.x * 0.34 + uScroll * 0.22);
+      p *= rotationX(sin(uTime * 0.08) * 0.12 + uPointer.y * 0.18);
+      p.xy += vec2(uPointer.x, -uPointer.y) * 0.05;
+      p.z += 4.7 + sin(uTime * 0.05 + aScale) * 0.12;
 
       float depth = 1.0 / max(0.9, p.z);
       vec2 clip = vec2((p.x * depth) / max(uAspect, 0.001), p.y * depth) * 1.8;
 
       gl_Position = vec4(clip, 0.0, 1.0);
-      gl_PointSize = (12.0 + aScale * 22.0) * depth * (uReduced > 0.5 ? 0.75 : 1.0);
-      vAlpha = (0.34 + aScale * 0.42) * smoothstep(0.18, 1.25, depth);
+      gl_PointSize = (8.0 + aScale * 14.0) * depth * (uReduced > 0.5 ? 0.72 : 1.0);
+      vAlpha = (0.16 + aScale * 0.24) * smoothstep(0.18, 1.25, depth);
       vDepth = depth;
     }
   `;
@@ -78,11 +78,11 @@ function initRenderLayer(target) {
       vec2 uv = gl_PointCoord - 0.5;
       float dist = length(uv);
       float core = smoothstep(0.5, 0.06, dist);
-      float halo = smoothstep(0.75, 0.18, dist) * 0.45;
+      float halo = smoothstep(0.75, 0.18, dist) * 0.24;
       float alpha = (core + halo) * vAlpha;
 
-      vec3 nearColor = vec3(0.56, 0.82, 1.0);
-      vec3 farColor = vec3(0.06, 0.18, 0.48);
+      vec3 nearColor = vec3(0.81, 0.85, 0.88);
+      vec3 farColor = vec3(0.16, 0.19, 0.22);
       vec3 color = mix(farColor, nearColor, clamp(vDepth * 2.2, 0.0, 1.0));
 
       gl_FragColor = vec4(color, alpha);
@@ -92,7 +92,7 @@ function initRenderLayer(target) {
   const program = createProgram(gl, vertexSource, fragmentSource);
   if (!program) return;
 
-  const particleCount = prefersReducedMotion ? 700 : 1800;
+  const particleCount = prefersReducedMotion ? 480 : 1100;
   const { positions, scales } = createParticles(particleCount);
 
   const positionBuffer = gl.createBuffer();

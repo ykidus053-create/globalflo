@@ -5047,3 +5047,425 @@ body.paper-site .nav a:hover {
     transform: none !important;
   }
 }
+
+/* End-to-end demo section */
+body.paper-site .endtoend-shell {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+body.paper-site .endtoend-intro {
+  grid-column: span 4;
+  min-height: 100%;
+}
+body.paper-site .endtoend-intro .content-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 100%;
+}
+body.paper-site .endtoend-copy {
+  color: rgba(255, 255, 255, 0.84) !important;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+body.paper-site .endtoend-rail {
+  grid-column: span 8;
+  display: grid;
+  gap: 16px;
+}
+body.paper-site .endtoend-step {
+  min-height: 0;
+}
+body.paper-site .endtoend-step .content-body {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding: 24px;
+}
+body.paper-site .endtoend-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88px;
+  border-right: 1px solid rgba(111, 176, 255, 0.2);
+  color: rgba(111, 176, 255, 0.9);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+body.paper-site .endtoend-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+body.paper-site .endtoend-body h3 {
+  margin: 0;
+  color: #ffffff !important;
+}
+body.paper-site .endtoend-body p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82) !important;
+  line-height: 1.72;
+}
+@media (max-width: 920px) {
+  body.paper-site .endtoend-intro,
+  body.paper-site .endtoend-rail {
+    grid-column: span 12;
+  }
+}
+@media (max-width: 640px) {
+  body.paper-site .endtoend-shell {
+    gap: 24px;
+  }
+  body.paper-site .endtoend-step .content-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+  body.paper-site .endtoend-index {
+    min-height: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(111, 176, 255, 0.2);
+    justify-content: flex-start;
+    padding-bottom: 16px;
+  }
+}
+
+/* ICOMAT-style overview statement */
+body.paper-site .overview-statement {
+  margin: 0;
+  max-width: 1120px;
+  color: #cfd9e0 !important;
+  font-family: "Manrope", sans-serif;
+  font-size: 48px;
+  line-height: 0.98;
+  letter-spacing: -0.48px;
+  font-weight: 600;
+  text-rendering: geometricPrecision;
+}
+body.paper-site .overview-statement__lead {
+  color: rgba(248, 248, 248, 0.44) !important;
+  margin-right: 8px;
+}
+body.paper-site .overview-statement__main {
+  color: #cfd9e0 !important;
+}
+@media (max-width: 920px) {
+  body.paper-site .overview-statement {
+    font-size: 40px;
+    line-height: 1.02;
+  }
+}
+@media (max-width: 640px) {
+  body.paper-site .overview-statement {
+    font-size: 35px;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+  body.paper-site .overview-statement__lead,
+  body.paper-site .overview-statement__main {
+    display: inline;
+  }
+}
+
+/* ICOMAT text palette */
+:root {
+  --text: #cfd9e0;
+  --muted: rgba(248, 248, 248, 0.44);
+}
+body.paper-site,
+body.paper-site main,
+body.paper-site p,
+body.paper-site li,
+body.paper-site span,
+body.paper-site label,
+body.paper-site small,
+body.paper-site time,
+body.paper-site .lead,
+body.paper-site .section-heading p,
+body.paper-site .signal-meta,
+body.paper-site .note,
+body.paper-site .label,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time,
+body.paper-site .pricing-meta,
+body.paper-site .hero-quickfacts span,
+body.paper-site .hero-quickfacts p,
+body.paper-site .hero-media-caption,
+body.paper-site .hero-media-points,
+body.paper-site .payment-header p,
+body.paper-site .payment-panel ol,
+body.paper-site .checkout-hero-panel p,
+body.paper-site .checkout-foot,
+body.paper-site .modal-note,
+body.paper-site .payment-status,
+body.paper-site #account-status,
+body.paper-site .feature-link,
+body.paper-site .connector-form p,
+body.paper-site .explore-description,
+body.paper-site .overview-panel p,
+body.paper-site .endtoend-body p,
+body.paper-site .endtoend-copy {
+  color: #cfd9e0 !important;
+}
+body.paper-site .eyebrow,
+body.paper-site .brand-copy p,
+body.paper-site .nav a,
+body.paper-site .video-card-top span,
+body.paper-site .video-card-top p,
+body.paper-site .signal-pill,
+body.paper-site .hero-benefit-list li,
+body.paper-site .payment-chip,
+body.paper-site .price-note,
+body.paper-site .method-note,
+body.paper-site .activity-entry .kind,
+body.paper-site .activity-entry .timestamp,
+body.paper-site .stat-card .label,
+body.paper-site .overview-statement__lead {
+  color: rgba(248, 248, 248, 0.44) !important;
+}
+body.paper-site h1,
+body.paper-site h2,
+body.paper-site h3,
+body.paper-site h4,
+body.paper-site strong,
+body.paper-site .brand-copy span,
+body.paper-site .value,
+body.paper-site .price,
+body.paper-site .activity-entry .title,
+body.paper-site .workflow-card h3,
+body.paper-site .summary h3,
+body.paper-site .overview-panel h3,
+body.paper-site .endtoend-body h3 {
+  color: #f8f8f8 !important;
+}
+
+/* ICOMAT dark surface palette */
+:root {
+  --bg: #080808;
+  --bg-soft: #101010;
+  --panel: rgba(255, 255, 255, 0.02);
+  --panel-strong: rgba(255, 255, 255, 0.04);
+}
+html,
+body,
+body.paper-site,
+body.paper-site main,
+body.paper-site .landing-main,
+body.paper-site .account-page,
+body.paper-site .automation-page,
+body.paper-site .payment-page,
+body.paper-site .checkout-page,
+body.paper-site .overview-panel,
+body.paper-site .demo-showcase,
+body.paper-site .explore-section,
+body.paper-site .metrics,
+body.paper-site .pricing,
+body.paper-site .trust,
+body.paper-site .connectors,
+body.paper-site .cta-section {
+  background: #080808 !important;
+}
+body.paper-site .aurora,
+body.paper-site .backdrop {
+  background:
+    radial-gradient(circle at 0% 12%, rgba(255, 255, 255, 0.045), transparent 36%),
+    radial-gradient(circle at 100% 16%, rgba(255, 255, 255, 0.03), transparent 34%),
+    #080808 !important;
+}
+body.paper-site .grid-overlay {
+  opacity: 0.18;
+}
+body.paper-site .top {
+  background: rgba(8, 8, 8, 0.86) !important;
+}
+body.paper-site .gf-card,
+body.paper-site .hero-media-card,
+body.paper-site .overview-panel,
+body.paper-site .endtoend-step,
+body.paper-site .hero-status-card--airbnb,
+body.paper-site .hero-trust-card--unified,
+body.paper-site .explore-card,
+body.paper-site .stat-card,
+body.paper-site .pricing-card,
+body.paper-site .trust-card,
+body.paper-site .connector-card,
+body.paper-site .summary,
+body.paper-site .activity-entry,
+body.paper-site .workflow-card,
+body.paper-site .checkout-panel,
+body.paper-site .account-panel,
+body.paper-site .payment-panel {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* ICOMAT system overrides */
+@font-face {
+  font-family: "LayGrotesk-Semibold";
+  src: url("https://www.icomat.co.uk/fonts/LayGrotesk-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+body.paper-site,
+body.paper-site button,
+body.paper-site input,
+body.paper-site textarea,
+body.paper-site select {
+  font-family: "LayGrotesk-Semibold", "Manrope", sans-serif !important;
+}
+body.paper-site h1,
+body.paper-site h2,
+body.paper-site h3,
+body.paper-site h4,
+body.paper-site .overview-statement {
+  font-family: "LayGrotesk-Semibold", "Manrope", sans-serif !important;
+  font-weight: 600 !important;
+  text-rendering: geometricPrecision;
+}
+body.paper-site h1 {
+  font-size: clamp(64px, 8vw, 104px) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.04em !important;
+}
+body.paper-site h2 {
+  font-size: clamp(40px, 5vw, 64px) !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.03em !important;
+}
+body.paper-site h3 {
+  font-size: clamp(24px, 2.4vw, 34px) !important;
+  line-height: 1 !important;
+  letter-spacing: -0.02em !important;
+}
+body.paper-site .lead,
+body.paper-site p,
+body.paper-site li,
+body.paper-site .endtoend-body p,
+body.paper-site .explore-description {
+  font-size: clamp(18px, 1.55vw, 24px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+}
+body.paper-site .top {
+  padding: 20px 32px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(10px) !important;
+}
+body.paper-site .nav {
+  gap: 16px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+body.paper-site .nav a {
+  font-size: 11px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: lowercase;
+}
+body.paper-site .brand-copy span {
+  font-size: 1rem !important;
+  letter-spacing: -0.02em;
+}
+body.paper-site .gf-card,
+body.paper-site .hero-media-card,
+body.paper-site .overview-panel,
+body.paper-site .explore-card,
+body.paper-site .stat-card,
+body.paper-site .pricing-card,
+body.paper-site .trust-card,
+body.paper-site .connector-card,
+body.paper-site .summary,
+body.paper-site .activity-entry,
+body.paper-site .workflow-card,
+body.paper-site .checkout-panel,
+body.paper-site .account-panel,
+body.paper-site .payment-panel {
+  border-radius: 10px !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: none !important;
+}
+body.paper-site .gf-card::before,
+body.paper-site .gf-card::after {
+  display: none !important;
+}
+body.paper-site .gf-card:hover,
+body.paper-site .gf-card.is-hovered {
+  transform: translateY(-2px) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: none !important;
+}
+body.paper-site .primary,
+body.paper-site .ghost {
+  min-height: 44px;
+  padding: 0 18px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: lowercase;
+}
+body.paper-site .primary {
+  background: #f8f8f8 !important;
+  color: #080808 !important;
+  border: 1px solid #f8f8f8 !important;
+}
+body.paper-site .ghost {
+  background: transparent !important;
+  color: #cfd9e0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+body.paper-site .primary:hover,
+body.paper-site .ghost:hover {
+  transform: translateY(-1px) !important;
+}
+body.paper-site .overview-panel .content-body,
+body.paper-site .endtoend-step .content-body,
+body.paper-site .explore-card__body,
+body.paper-site .stat-card .content-body,
+body.paper-site .hero-proof-card .content-body,
+body.paper-site .hero-trust-card .content-body {
+  gap: 16px !important;
+}
+body.paper-site .overview-panel,
+body.paper-site .hero-media-card,
+body.paper-site .endtoend-intro,
+body.paper-site .endtoend-step {
+  background: transparent !important;
+}
+body.paper-site .render-layer.render-layer--ready {
+  opacity: 0.46 !important;
+}
+body.paper-site .aurora {
+  opacity: 0.42;
+}
+body.paper-site .grid-overlay {
+  opacity: 0.08;
+  background-size: 160px 160px;
+}
+body.paper-site .video-card-top p,
+body.paper-site .video-card-top span,
+body.paper-site .eyebrow {
+  font-size: 11px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none;
+}
+body.paper-site .hero-benefit-list,
+body.paper-site .hero-chip-row,
+body.paper-site .hero-media-points {
+  gap: 8px !important;
+}
+body.paper-site .hero-chip-row span,
+body.paper-site .hero-media-points span {
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  color: #cfd9e0 !important;
+}
