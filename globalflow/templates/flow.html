@@ -57,7 +57,7 @@
         </div>
       </div>
       <nav class="nav" aria-label="Primary">
-        <a href="#hero">Overview</a>
+        <a href="#overview">Overview</a>
         <a href="#use-cases">Use cases</a>
         <a href="#flowboard">Workflow</a>
         <a href="#integrations">Integrations</a>
@@ -152,6 +152,44 @@
         </aside>
       </section>
 
+      <section id="overview" class="demo-showcase gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h2>See how the system works end to end.</h2>
+            <p class="lead">GlobalFlow captures incoming work, routes the next action, runs the automation, and logs the outcome in one place.</p>
+          </div>
+        </div>
+        <div class="demo-showcase-grid demo-showcase-grid--single gf-grid-12">
+          <article class="hero-media-card gf-card gf-span-7 gf-fade">
+            <div class="video-card-top">
+              <p>Product walkthrough</p>
+              <span>From the live product flow</span>
+            </div>
+            <video
+              class="hero-video"
+              controls
+              preload="none"
+              poster="/static/globalflow-walkthrough-poster.png"
+              aria-label="GlobalFlow overview walkthrough"
+            >
+              <source src="/static/globalflow-walkthrough.mp4" type="video/mp4" />
+              Your browser does not support embedded video.
+            </video>
+          </article>
+          <article class="overview-panel gf-card gf-span-5 gf-fade">
+            <h3>What happens inside the workflow</h3>
+            <p>Inbound tasks from calls, billing, files, and compliance are turned into tracked runs with operator visibility.</p>
+            <ul class="hero-benefit-list">
+              <li>Capture the task instantly</li>
+              <li>Assign the correct next action</li>
+              <li>Run the workflow with telemetry</li>
+              <li>Log completion and next steps</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section id="demo" class="demo-showcase gf-section">
         <div class="section-heading section-heading--split">
           <div>
@@ -210,6 +248,7 @@
             </div>
             <div class="explore-card__body">
               <h3>{{ task.headline }}</h3>
+              <p>{{ task.description }}</p>
               <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
