@@ -317,7 +317,7 @@ function triggerFlow() {
 
 function initRevealObserver() {
   const targets = document.querySelectorAll(
-    "main > section, .hero-video-card, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card"
+    "main > section, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card, .endtoend-step, .overview-panel, .hero-proof-card, .hero-trust-card"
   );
   targets.forEach((target) => registerRevealTargets(target));
 
@@ -343,7 +343,7 @@ function initRevealObserver() {
 
 function registerRevealTargets(target) {
   if (!target || target.classList.contains("reveal-ready")) return;
-  target.style.transitionDelay = `${Math.min(revealIndex * 40, 320)}ms`;
+  target.style.transitionDelay = `${Math.min(revealIndex * 55, 360)}ms`;
   target.classList.add("reveal-ready");
   revealIndex += 1;
   if (prefersReducedMotion) {
@@ -368,10 +368,7 @@ function initAmbientVfx() {
       root.style.setProperty("--mx", x.toFixed(4));
       root.style.setProperty("--my", y.toFixed(4));
       if (aurora) {
-        aurora.style.transform = `translate3d(${(x - 0.5) * 28}px, ${(y - 0.5) * 20}px, 0)`;
-      }
-      if (vfxCursor) {
-        vfxCursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+        aurora.style.transform = `translate3d(${(x - 0.5) * 12}px, ${(y - 0.5) * 8}px, 0)`;
       }
     },
     { passive: true }
@@ -388,8 +385,8 @@ function initAmbientVfx() {
         scrollProgress.style.transform = `scaleX(${Math.max(progress, 0.02)})`;
       }
       parallaxSections.forEach((section, index) => {
-        const rate = ((index % 3) + 1) * 0.012;
-        const offset = Math.min(window.scrollY * rate, 18);
+        const rate = ((index % 2) + 1) * 0.004;
+        const offset = Math.min(window.scrollY * rate, 8);
         section.style.setProperty("--section-shift", `${offset.toFixed(2)}px`);
       });
     },
@@ -401,8 +398,8 @@ function initAmbientVfx() {
       const rect = card.getBoundingClientRect();
       const px = ((event.clientX - rect.left) / rect.width) * 100;
       const py = ((event.clientY - rect.top) / rect.height) * 100;
-      const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -10;
-      const ry = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+      const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -3;
+      const ry = ((event.clientX - rect.left) / rect.width - 0.5) * 4;
       card.style.setProperty("--gx", `${px.toFixed(2)}%`);
       card.style.setProperty("--gy", `${py.toFixed(2)}%`);
       card.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
@@ -418,27 +415,11 @@ function initAmbientVfx() {
 }
 
 function initMagneticButtons() {
-  if (prefersReducedMotion) return;
-  const buttons = document.querySelectorAll("button.primary, button.ghost, .nav a, .feature-link");
-  buttons.forEach((button) => {
-    button.addEventListener("pointermove", (event) => {
-      const rect = button.getBoundingClientRect();
-      const dx = ((event.clientX - rect.left) / rect.width - 0.5) * 14;
-      const dy = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
-      button.style.setProperty("--bx", `${dx.toFixed(2)}px`);
-      button.style.setProperty("--by", `${dy.toFixed(2)}px`);
-      button.classList.add("is-magnetic");
-    });
-    button.addEventListener("pointerleave", () => {
-      button.style.removeProperty("--bx");
-      button.style.removeProperty("--by");
-      button.classList.remove("is-magnetic");
-    });
-  });
+  return;
 }
 
 function initKineticType() {
-  const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3");
+  const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3, .overview-statement, .endtoend-body h3");
   headings.forEach((heading) => heading.classList.add("kinetic-heading"));
 }
 

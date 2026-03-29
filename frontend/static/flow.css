@@ -5469,3 +5469,83 @@ body.paper-site .hero-media-points span {
   background: rgba(255, 255, 255, 0.02) !important;
   color: #cfd9e0 !important;
 }
+
+/* Quieter motion system */
+body.paper-site .vfx-progress {
+  height: 2px !important;
+  background: linear-gradient(90deg, rgba(248, 248, 248, 0.14), rgba(207, 217, 224, 0.8), #f8f8f8) !important;
+  box-shadow: none !important;
+}
+body.paper-site .vfx-cursor {
+  display: none !important;
+}
+body.paper-site .aurora {
+  filter: blur(34px) saturate(0.9) !important;
+  transition: transform 0.45s ease-out !important;
+}
+body.paper-site main > section {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+body.paper-site .gf-card {
+  backdrop-filter: blur(2px) !important;
+  transform-style: flat !important;
+  transition:
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.32s ease,
+    background 0.32s ease !important;
+}
+body.paper-site .gf-card::before,
+body.paper-site .gf-card::after {
+  display: none !important;
+}
+body.paper-site .gf-card:hover,
+body.paper-site .gf-card.is-hovered {
+  transform: translateY(-2px) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+body.paper-site .primary,
+body.paper-site .ghost,
+body.paper-site .feature-link,
+body.paper-site .nav a {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.28s ease,
+    border-color 0.28s ease,
+    opacity 0.28s ease !important;
+}
+body.paper-site .primary:hover,
+body.paper-site .ghost:hover,
+body.paper-site .feature-link:hover,
+body.paper-site .nav a:hover {
+  transform: translateY(-1px) !important;
+}
+.kinetic-heading {
+  text-shadow: none !important;
+  transition:
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    letter-spacing 0.42s ease,
+    filter 0.42s ease !important;
+}
+.kinetic-heading.reveal-ready {
+  filter: blur(10px) !important;
+  letter-spacing: 0.01em !important;
+}
+.kinetic-heading.reveal-ready.is-visible {
+  filter: blur(0) !important;
+  letter-spacing: -0.02em !important;
+}
+.reveal-ready {
+  opacity: 0;
+  transform: translateY(28px) !important;
+  filter: blur(8px) !important;
+  transition:
+    opacity 0.48s ease-out,
+    transform 0.62s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.62s ease-out !important;
+}
+.reveal-ready.is-visible {
+  opacity: 1;
+  transform: translateY(0) !important;
+  filter: blur(0) !important;
+}
