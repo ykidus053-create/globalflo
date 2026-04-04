@@ -13,7 +13,7 @@
       })();
     </script>
     <title>GlobalFlow | Account</title>
-    <link rel="stylesheet" href="/static/flow.css?v=b4e931e" />
+    <link rel="stylesheet" href="/static/flow.css?v=1c5c531" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site is-loading">
@@ -36,6 +36,7 @@
       </div>
       <nav class="nav" aria-label="Account navigation">
         <a href="/">Dashboard</a>
+        <a href="/workflow">Workflow</a>
         <a href="/account">Account</a>
       </nav>
     </header>
@@ -45,7 +46,7 @@
           <img class="user-card__avatar" src="/static/globalflow-logo.svg" alt="" />
           <div class="user-card__title">
             <h2 class="user-card__name">Nova Ops</h2>
-            <p class="user-card__meta">Automation Architect · ops@globalflow.ai</p>
+            <p class="user-card__meta">Automation Architect - ops@globalflow.ai</p>
           </div>
         </header>
 
@@ -58,24 +59,72 @@
           </ul>
 
           <div class="color-grid" role="list" aria-label="Semantic color grid">
-            <div class="color-cell" role="listitem" data-tone="ok">
+            <button
+              class="color-cell"
+              type="button"
+              role="listitem"
+              data-tone="ok"
+              data-ripple="true"
+              data-tooltip="Healthy automation. Runs are completing inside expected time and confidence bounds."
+              aria-label="Operational status: ok"
+            >
               <span>Operational</span><strong>Ok</strong>
-            </div>
-            <div class="color-cell" role="listitem" data-tone="info">
+            </button>
+            <button
+              class="color-cell"
+              type="button"
+              role="listitem"
+              data-tone="info"
+              data-ripple="true"
+              data-tooltip="Informational state. Work is queued or in progress and waiting on the next trigger."
+              aria-label="Queued status: info"
+            >
               <span>Queued</span><strong>Info</strong>
-            </div>
-            <div class="color-cell" role="listitem" data-tone="warn">
+            </button>
+            <button
+              class="color-cell"
+              type="button"
+              role="listitem"
+              data-tone="warn"
+              data-ripple="true"
+              data-tooltip="Needs review. A run completed but is waiting for operator verification or approval."
+              aria-label="Needs review status: warn"
+            >
               <span>Needs review</span><strong>Warn</strong>
-            </div>
-            <div class="color-cell" role="listitem" data-tone="err">
+            </button>
+            <button
+              class="color-cell"
+              type="button"
+              role="listitem"
+              data-tone="err"
+              data-ripple="true"
+              data-tooltip="Blocked. A run failed validation or a dependency is missing, and requires intervention."
+              aria-label="Blocked status: error"
+            >
               <span>Blocked</span><strong>Error</strong>
-            </div>
-            <div class="color-cell" role="listitem" data-tone="accent">
+            </button>
+            <button
+              class="color-cell"
+              type="button"
+              role="listitem"
+              data-tone="accent"
+              data-ripple="true"
+              data-tooltip="Verified. Outcome was checked and logged, ready to sync downstream."
+              aria-label="Verified status: accent"
+            >
               <span>Verified</span><strong>Accent</strong>
-            </div>
-            <div class="color-cell" role="listitem" data-tone="neutral">
+            </button>
+            <button
+              class="color-cell"
+              type="button"
+              role="listitem"
+              data-tone="neutral"
+              data-ripple="true"
+              data-tooltip="Draft state. Prepared but not yet launched into the workflow."
+              aria-label="Draft status: neutral"
+            >
               <span>Draft</span><strong>Neutral</strong>
-            </div>
+            </button>
           </div>
         </div>
 
@@ -147,7 +196,7 @@
         </form>
       </section>
     </main>
-    <script src="/static/site-boot.js?v=b4e931e" defer></script>
-    <script type="module" src="/static/account.js?v=b4e931e"></script>
+    <script src="/static/site-boot.js?v=1c5c531" defer></script>
+    <script type="module" src="/static/account.js?v=1c5c531"></script>
   </body>
 </html>

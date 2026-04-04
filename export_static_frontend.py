@@ -38,7 +38,7 @@ def export_pages() -> None:
     shutil.copytree(SOURCE_STATIC, FRONTEND_ROOT / "static", dirs_exist_ok=True)
 
     with TestClient(app, base_url=STATIC_BASE_URL) as client:
-        pages = ["/", "/account", "/automation", "/privacy", "/terms"]
+        pages = ["/", "/account", "/automation", "/workflow", "/privacy", "/terms"]
         pages.extend(f"/payment/{method['id']}" for method in PAYMENT_METHODS)
         pages.extend(f"/checkout/{tier['id']}" for tier in SUBSCRIPTION_TIERS)
 

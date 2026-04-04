@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-        <script>
+    <meta name="theme-color" content="#0b0f16" />
+    <script>
       (function () {
         try {
           document.documentElement.setAttribute("data-theme", "light");
@@ -12,17 +12,15 @@
         } catch (error) {}
       })();
     </script>
-    <title>GlobalFlow | Automation Workspace</title>
+    <title>GlobalFlow | Workflow Workspace</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
   </head>
-  <body class="paper-site is-loading">
+  <body class="paper-site workflow-lab-page is-loading">
     <div class="site-loader" id="site-loader" aria-hidden="true">
       <div class="site-loader__inner">
         <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
@@ -39,47 +37,40 @@
         </div>
         <div class="brand-copy">
           <span>GlobalFlow</span>
-          <p>Automation workspace</p>
+          <p>Workflow workspace</p>
         </div>
       </div>
-      <nav class="nav" aria-label="Automation navigation">
-        <a href="/#hero">Home</a>
+      <nav class="nav" aria-label="Workflow navigation">
+        <a href="/">Home</a>
         <a href="/workflow">Workflow</a>
-        <a href="#workspace">Workspace</a>
+        <a href="#signals">Signals</a>
+        <a href="#engine">Engine</a>
         <a href="#connectors">Connectors</a>
-        <a href="#activity">Activity</a>
         <a href="/account">Account</a>
       </nav>
     </header>
 
-    <main id="workspace">
-      <section class="hero hero--landing">
-        <div class="hero-copy">
-          <div class="signal-bar" aria-live="polite">
-            <div class="signal-pill">
-              <span class="signal-dot" id="signal-dot"></span>
-              <span id="reliability-state">System healthy</span>
-            </div>
-            <span class="signal-meta" id="last-sync">Waiting for first sync</span>
-          </div>
-          <p class="eyebrow">Paid workspace</p>
-          <h1>Automation only control room</h1>
+    <main id="workspace" class="wf-shell">
+      <section class="wf-hero">
+        <div class="wf-hero-copy">
+          <p class="eyebrow">Workflow command center</p>
+          <h1>Adaptive operations grid with live execution visibility.</h1>
           <p class="lead">
-            This page is focused on running workflows, inspecting telemetry, and managing connector automation without checkout distractions.
+            Prioritize urgency, trust, and throughput from one page. Launch automations, inspect activity, and control routing with accessible interaction states.
           </p>
           <div class="workflow-actions">
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
             <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
           </div>
         </div>
-        <div class="hero-stage">
+        <div class="wf-hero-side">
           <article class="hero-status-card">
             <div>
               <span>Operator confidence</span>
               <strong id="system-confidence">99.2%</strong>
             </div>
             <div>
-              <span>Workflow pressure</span>
+              <span>Queue pressure</span>
               <strong id="queue-pressure">Stable</strong>
             </div>
             <div>
@@ -87,6 +78,52 @@
               <strong id="activity-total">0 events</strong>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section id="signals" class="wf-section">
+        <div class="section-heading">
+          <h2>Adaptive color grid</h2>
+          <p>Semantic signals tuned for rapid scan and action.</p>
+        </div>
+        <div class="wf-signal-grid" role="list" aria-label="Workflow signal grid">
+          {% for signal in workflow_signals %}
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="{{ signal.tone }}"
+            data-tooltip="{{ signal.detail }}"
+            data-ripple="true"
+            aria-label="{{ signal.label }} {{ signal.value }}"
+          >
+            <span>{{ signal.label }}</span>
+            <strong>{{ signal.value }}</strong>
+            <small>{{ signal.detail }}</small>
+          </button>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="wf-section">
+        <div class="section-heading">
+          <h2>Operator cards</h2>
+          <p>Drag to reorder handoff priority. Badge colors reflect current state.</p>
+        </div>
+        <div class="wf-operator-grid" id="operator-grid">
+          {% for operator in workflow_operators %}
+          <article class="wf-operator-card" draggable="true" data-state="{{ operator.state }}" aria-label="{{ operator.name }}">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">{{ operator.name[0] }}</div>
+              <div class="wf-operator-copy">
+                <h3>{{ operator.name }}</h3>
+                <p>{{ operator.role }}</p>
+              </div>
+              <span class="wf-badge" data-state="{{ operator.state }}">{{ operator.badge }}</span>
+            </header>
+            <p class="wf-operator-note">Owner for workflow transitions, retries, and approvals.</p>
+          </article>
+          {% endfor %}
         </div>
       </section>
 
@@ -98,11 +135,11 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <section class="workflow workflow--split">
+      <section id="engine" class="workflow workflow--split wf-section">
         <div class="workflow-main">
           <div class="section-heading">
             <h2>Workflow engine</h2>
-            <p>Run and monitor your live automations.</p>
+            <p>Run and monitor live automation runs.</p>
           </div>
           <div id="workflow-grid" class="workflow-grid"></div>
           <div class="summary">
@@ -112,17 +149,17 @@
         </div>
         <div class="workflow-side" id="activity">
           <div class="section-heading">
-            <h2>Activity</h2>
-            <p>Real-time execution visibility.</p>
+            <h2>Activity feed</h2>
+            <p>Real-time run visibility with execution detail.</p>
           </div>
           <div id="activity-feed" class="activity-grid activity-grid--single" aria-live="polite"></div>
         </div>
       </section>
 
-      <section id="connectors" class="integrations">
+      <section id="connectors" class="integrations wf-section">
         <div class="section-heading">
           <h2>Connector actions</h2>
-          <p>Trigger external systems directly from the automation workspace.</p>
+          <p>Route events to external tools with guarded trigger inputs.</p>
         </div>
         <div class="connectors-grid">
           {% for connector in connectors %}
@@ -148,7 +185,7 @@
               </label>
               <label>
                 Context
-                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+                <input name="context" placeholder="Workflow workspace trigger" />
               </label>
               <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
               <p class="modal-note connector-status"></p>
@@ -168,7 +205,8 @@
     </main>
 
     <div class="toast" id="toast" aria-live="polite">Action running...</div>
-    <script src="/static/site-boot.js" defer></script>
-    <script type="module" src="/static/flow.js"></script>
+    <script src="/static/site-boot.js?v={{ asset_version }}" defer></script>
+    <script type="module" src="/static/flow.js?v={{ asset_version }}"></script>
+    <script type="module" src="/static/workflow.js?v={{ asset_version }}"></script>
   </body>
 </html>

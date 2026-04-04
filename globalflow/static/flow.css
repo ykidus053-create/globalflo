@@ -6857,3 +6857,221 @@ body.paper-site .footer-links a {
     font-size: clamp(28px, 10vw, 44px) !important;
   }
 }
+
+/* Workflow page */
+body.workflow-lab-page .wf-shell {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  gap: 24px;
+}
+
+body.workflow-lab-page .wf-section {
+  display: grid;
+  gap: 16px;
+}
+
+body.workflow-lab-page .wf-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+body.workflow-lab-page .wf-hero-copy,
+body.workflow-lab-page .wf-hero-side {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 17, 30, 0.8);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+body.workflow-lab-page .wf-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+body.workflow-lab-page .wf-signal-cell {
+  appearance: none;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  min-height: 132px;
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+  text-align: left;
+  color: #f8f8f8;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+}
+
+body.workflow-lab-page .wf-signal-cell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(var(--signal-rgb, 111, 176, 255), 0.3), rgba(8, 12, 20, 0.2) 62%);
+  pointer-events: none;
+}
+
+body.workflow-lab-page .wf-signal-cell > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.workflow-lab-page .wf-signal-cell span {
+  font-size: 12px;
+  color: rgba(248, 248, 248, 0.74);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+body.workflow-lab-page .wf-signal-cell strong {
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+body.workflow-lab-page .wf-signal-cell small {
+  font-size: 13px;
+  color: rgba(248, 248, 248, 0.76);
+  line-height: 1.35;
+}
+
+body.workflow-lab-page .wf-signal-cell:hover {
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+body.workflow-lab-page .wf-signal-cell:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+
+body.workflow-lab-page .wf-signal-cell[data-tone="trust"] { --signal-rgb: 56, 189, 248; border-color: rgba(56, 189, 248, 0.5); }
+body.workflow-lab-page .wf-signal-cell[data-tone="urgency"] { --signal-rgb: 239, 68, 68; border-color: rgba(239, 68, 68, 0.56); }
+body.workflow-lab-page .wf-signal-cell[data-tone="speed"] { --signal-rgb: 34, 197, 94; border-color: rgba(34, 197, 94, 0.5); }
+body.workflow-lab-page .wf-signal-cell[data-tone="risk"] { --signal-rgb: 245, 158, 11; border-color: rgba(245, 158, 11, 0.54); }
+body.workflow-lab-page .wf-signal-cell[data-tone="insight"] { --signal-rgb: 99, 102, 241; border-color: rgba(99, 102, 241, 0.5); }
+body.workflow-lab-page .wf-signal-cell[data-tone="neutral"] { --signal-rgb: 148, 163, 184; border-color: rgba(148, 163, 184, 0.45); }
+body.workflow-lab-page .wf-signal-cell[data-tone="success"] { --signal-rgb: 16, 185, 129; border-color: rgba(16, 185, 129, 0.5); }
+body.workflow-lab-page .wf-signal-cell[data-tone="capacity"] { --signal-rgb: 111, 176, 255; border-color: rgba(111, 176, 255, 0.5); }
+
+body.workflow-lab-page .wf-signal-cell[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  transform: translateY(8px);
+  opacity: 0;
+  pointer-events: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(8, 12, 20, 0.92);
+  color: rgba(248, 248, 248, 0.92);
+  font-size: 12px;
+  line-height: 1.35;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+body.workflow-lab-page .wf-signal-cell:hover::after,
+body.workflow-lab-page .wf-signal-cell:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.workflow-lab-page .wf-operator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+body.workflow-lab-page .wf-operator-card {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(10, 17, 30, 0.78);
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  cursor: grab;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+body.workflow-lab-page .wf-operator-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(111, 176, 255, 0.42);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.24);
+}
+
+body.workflow-lab-page .wf-operator-card.is-dragging {
+  opacity: 0.65;
+}
+
+body.workflow-lab-page .wf-operator-card.is-drop-target {
+  border-color: rgba(96, 165, 250, 0.88);
+}
+
+body.workflow-lab-page .wf-operator-card header {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+body.workflow-lab-page .wf-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 3px solid rgba(229, 231, 235, 0.7);
+  background: rgba(66, 133, 244, 0.22);
+  font-weight: 700;
+}
+
+body.workflow-lab-page .wf-operator-copy h3 {
+  margin: 0;
+  font-size: clamp(1.125rem, 4vw, 1.5rem);
+  line-height: 1.2;
+}
+
+body.workflow-lab-page .wf-operator-copy p {
+  margin: 4px 0 0;
+  color: rgba(248, 248, 248, 0.7);
+}
+
+body.workflow-lab-page .wf-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+body.workflow-lab-page .wf-badge[data-state="online"] { background: rgba(16, 185, 129, 0.25); color: #34d399; }
+body.workflow-lab-page .wf-badge[data-state="review"] { background: rgba(245, 158, 11, 0.24); color: #fbbf24; }
+body.workflow-lab-page .wf-badge[data-state="ready"] { background: rgba(56, 189, 248, 0.25); color: #7dd3fc; }
+body.workflow-lab-page .wf-badge[data-state="offline"] { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+
+body.workflow-lab-page .wf-operator-note {
+  margin: 0;
+  color: rgba(248, 248, 248, 0.78);
+  line-height: 1.55;
+}
+
+@media (max-width: 920px) {
+  body.workflow-lab-page .wf-shell {
+    padding: 16px;
+  }
+
+  body.workflow-lab-page .wf-hero,
+  body.workflow-lab-page .workflow.workflow--split {
+    grid-template-columns: 1fr !important;
+  }
+}

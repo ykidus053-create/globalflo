@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-        <script>
+    <meta name="theme-color" content="#0b0f16" />
+    <script>
       (function () {
         try {
           document.documentElement.setAttribute("data-theme", "light");
@@ -12,18 +12,16 @@
         } catch (error) {}
       })();
     </script>
-    <title>GlobalFlow | Automation Workspace</title>
+    <title>GlobalFlow | Workflow Workspace</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/flow.css?v=1c5c531" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="paper-site is-loading">
+  <body class="paper-site workflow-lab-page is-loading">
     <div class="site-loader" id="site-loader" aria-hidden="true">
       <div class="site-loader__inner">
         <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
@@ -40,47 +38,40 @@
         </div>
         <div class="brand-copy">
           <span>GlobalFlow</span>
-          <p>Automation workspace</p>
+          <p>Workflow workspace</p>
         </div>
       </div>
-      <nav class="nav" aria-label="Automation navigation">
-        <a href="/#hero">Home</a>
+      <nav class="nav" aria-label="Workflow navigation">
+        <a href="/">Home</a>
         <a href="/workflow">Workflow</a>
-        <a href="#workspace">Workspace</a>
+        <a href="#signals">Signals</a>
+        <a href="#engine">Engine</a>
         <a href="#connectors">Connectors</a>
-        <a href="#activity">Activity</a>
         <a href="/account">Account</a>
       </nav>
     </header>
 
-    <main id="workspace">
-      <section class="hero hero--landing">
-        <div class="hero-copy">
-          <div class="signal-bar" aria-live="polite">
-            <div class="signal-pill">
-              <span class="signal-dot" id="signal-dot"></span>
-              <span id="reliability-state">System healthy</span>
-            </div>
-            <span class="signal-meta" id="last-sync">Waiting for first sync</span>
-          </div>
-          <p class="eyebrow">Paid workspace</p>
-          <h1>Automation only control room</h1>
+    <main id="workspace" class="wf-shell">
+      <section class="wf-hero">
+        <div class="wf-hero-copy">
+          <p class="eyebrow">Workflow command center</p>
+          <h1>Adaptive operations grid with live execution visibility.</h1>
           <p class="lead">
-            This page is focused on running workflows, inspecting telemetry, and managing connector automation without checkout distractions.
+            Prioritize urgency, trust, and throughput from one page. Launch automations, inspect activity, and control routing with accessible interaction states.
           </p>
           <div class="workflow-actions">
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
             <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
           </div>
         </div>
-        <div class="hero-stage">
+        <div class="wf-hero-side">
           <article class="hero-status-card">
             <div>
               <span>Operator confidence</span>
               <strong id="system-confidence">99.2%</strong>
             </div>
             <div>
-              <span>Workflow pressure</span>
+              <span>Queue pressure</span>
               <strong id="queue-pressure">Stable</strong>
             </div>
             <div>
@@ -88,6 +79,186 @@
               <strong id="activity-total">0 events</strong>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section id="signals" class="wf-section">
+        <div class="section-heading">
+          <h2>Adaptive color grid</h2>
+          <p>Semantic signals tuned for rapid scan and action.</p>
+        </div>
+        <div class="wf-signal-grid" role="list" aria-label="Workflow signal grid">
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="trust"
+            data-tooltip="Validated outcomes"
+            data-ripple="true"
+            aria-label="Trusted runs 99.2%"
+          >
+            <span>Trusted runs</span>
+            <strong>99.2%</strong>
+            <small>Validated outcomes</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="urgency"
+            data-tooltip="Needs attention"
+            data-ripple="true"
+            aria-label="Urgent queue 4"
+          >
+            <span>Urgent queue</span>
+            <strong>4</strong>
+            <small>Needs attention</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="speed"
+            data-tooltip="Fast execution"
+            data-ripple="true"
+            aria-label="Median cycle 42s"
+          >
+            <span>Median cycle</span>
+            <strong>42s</strong>
+            <small>Fast execution</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="risk"
+            data-tooltip="Operator review"
+            data-ripple="true"
+            aria-label="Risk flags 2"
+          >
+            <span>Risk flags</span>
+            <strong>2</strong>
+            <small>Operator review</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="insight"
+            data-tooltip="Signal coverage"
+            data-ripple="true"
+            aria-label="Telemetry health 98%"
+          >
+            <span>Telemetry health</span>
+            <strong>98%</strong>
+            <small>Signal coverage</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="neutral"
+            data-tooltip="Prepared not launched"
+            data-ripple="true"
+            aria-label="Draft runs 7"
+          >
+            <span>Draft runs</span>
+            <strong>7</strong>
+            <small>Prepared not launched</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="success"
+            data-tooltip="Closed loops"
+            data-ripple="true"
+            aria-label="Completed today 34"
+          >
+            <span>Completed today</span>
+            <strong>34</strong>
+            <small>Closed loops</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="capacity"
+            data-tooltip="Within target"
+            data-ripple="true"
+            aria-label="Capacity 71%"
+          >
+            <span>Capacity</span>
+            <strong>71%</strong>
+            <small>Within target</small>
+          </button>
+          
+        </div>
+      </section>
+
+      <section class="wf-section">
+        <div class="section-heading">
+          <h2>Operator cards</h2>
+          <p>Drag to reorder handoff priority. Badge colors reflect current state.</p>
+        </div>
+        <div class="wf-operator-grid" id="operator-grid">
+          
+          <article class="wf-operator-card" draggable="true" data-state="online" aria-label="Amina Tekle">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">A</div>
+              <div class="wf-operator-copy">
+                <h3>Amina Tekle</h3>
+                <p>Ops lead</p>
+              </div>
+              <span class="wf-badge" data-state="online">Live</span>
+            </header>
+            <p class="wf-operator-note">Owner for workflow transitions, retries, and approvals.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="review" aria-label="Noah Rivera">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">N</div>
+              <div class="wf-operator-copy">
+                <h3>Noah Rivera</h3>
+                <p>Billing analyst</p>
+              </div>
+              <span class="wf-badge" data-state="review">Review</span>
+            </header>
+            <p class="wf-operator-note">Owner for workflow transitions, retries, and approvals.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="ready" aria-label="Liya Solomon">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">L</div>
+              <div class="wf-operator-copy">
+                <h3>Liya Solomon</h3>
+                <p>Compliance owner</p>
+              </div>
+              <span class="wf-badge" data-state="ready">Ready</span>
+            </header>
+            <p class="wf-operator-note">Owner for workflow transitions, retries, and approvals.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="offline" aria-label="Daniel Kim">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">D</div>
+              <div class="wf-operator-copy">
+                <h3>Daniel Kim</h3>
+                <p>Automation engineer</p>
+              </div>
+              <span class="wf-badge" data-state="offline">Idle</span>
+            </header>
+            <p class="wf-operator-note">Owner for workflow transitions, retries, and approvals.</p>
+          </article>
+          
         </div>
       </section>
 
@@ -99,11 +270,11 @@
         data-cycles="0"
       ></div>
 
-      <section class="workflow workflow--split">
+      <section id="engine" class="workflow workflow--split wf-section">
         <div class="workflow-main">
           <div class="section-heading">
             <h2>Workflow engine</h2>
-            <p>Run and monitor your live automations.</p>
+            <p>Run and monitor live automation runs.</p>
           </div>
           <div id="workflow-grid" class="workflow-grid"></div>
           <div class="summary">
@@ -113,17 +284,17 @@
         </div>
         <div class="workflow-side" id="activity">
           <div class="section-heading">
-            <h2>Activity</h2>
-            <p>Real-time execution visibility.</p>
+            <h2>Activity feed</h2>
+            <p>Real-time run visibility with execution detail.</p>
           </div>
           <div id="activity-feed" class="activity-grid activity-grid--single" aria-live="polite"></div>
         </div>
       </section>
 
-      <section id="connectors" class="integrations">
+      <section id="connectors" class="integrations wf-section">
         <div class="section-heading">
           <h2>Connector actions</h2>
-          <p>Trigger external systems directly from the automation workspace.</p>
+          <p>Route events to external tools with guarded trigger inputs.</p>
         </div>
         <div class="connectors-grid">
           
@@ -149,7 +320,7 @@
               </label>
               <label>
                 Context
-                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+                <input name="context" placeholder="Workflow workspace trigger" />
               </label>
               <button type="submit" class="primary small">Trigger Slack Alert</button>
               <p class="modal-note connector-status"></p>
@@ -178,7 +349,7 @@
               </label>
               <label>
                 Context
-                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+                <input name="context" placeholder="Workflow workspace trigger" />
               </label>
               <button type="submit" class="primary small">Trigger HubSpot CRM</button>
               <p class="modal-note connector-status"></p>
@@ -207,7 +378,7 @@
               </label>
               <label>
                 Context
-                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+                <input name="context" placeholder="Workflow workspace trigger" />
               </label>
               <button type="submit" class="primary small">Trigger QuickBooks Sync</button>
               <p class="modal-note connector-status"></p>
@@ -236,7 +407,7 @@
               </label>
               <label>
                 Context
-                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+                <input name="context" placeholder="Workflow workspace trigger" />
               </label>
               <button type="submit" class="primary small">Trigger Airtable Sync</button>
               <p class="modal-note connector-status"></p>
@@ -256,7 +427,8 @@
     </main>
 
     <div class="toast" id="toast" aria-live="polite">Action running...</div>
-    <script src="/static/site-boot.js" defer></script>
-    <script type="module" src="/static/flow.js"></script>
+    <script src="/static/site-boot.js?v=1c5c531" defer></script>
+    <script type="module" src="/static/flow.js?v=1c5c531"></script>
+    <script type="module" src="/static/workflow.js?v=1c5c531"></script>
   </body>
 </html>

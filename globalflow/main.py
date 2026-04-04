@@ -1295,6 +1295,37 @@ async def automation_workspace(request: Request):
     )
 
 
+@app.get("/workflow", response_class=HTMLResponse)
+async def workflow_workspace(request: Request):
+    workflow_signals = [
+        {"tone": "trust", "label": "Trusted runs", "value": "99.2%", "detail": "Validated outcomes"},
+        {"tone": "urgency", "label": "Urgent queue", "value": "4", "detail": "Needs attention"},
+        {"tone": "speed", "label": "Median cycle", "value": "42s", "detail": "Fast execution"},
+        {"tone": "risk", "label": "Risk flags", "value": "2", "detail": "Operator review"},
+        {"tone": "insight", "label": "Telemetry health", "value": "98%", "detail": "Signal coverage"},
+        {"tone": "neutral", "label": "Draft runs", "value": "7", "detail": "Prepared not launched"},
+        {"tone": "success", "label": "Completed today", "value": "34", "detail": "Closed loops"},
+        {"tone": "capacity", "label": "Capacity", "value": "71%", "detail": "Within target"},
+    ]
+    workflow_operators = [
+        {"name": "Amina Tekle", "role": "Ops lead", "state": "online", "badge": "Live"},
+        {"name": "Noah Rivera", "role": "Billing analyst", "state": "review", "badge": "Review"},
+        {"name": "Liya Solomon", "role": "Compliance owner", "state": "ready", "badge": "Ready"},
+        {"name": "Daniel Kim", "role": "Automation engineer", "state": "offline", "badge": "Idle"},
+    ]
+    return _render_html(
+        "workflow.html",
+        {
+            "request": request,
+            "autopilot": autopilot.status(),
+            "connectors": CONNECTORS,
+            "workflow_signals": workflow_signals,
+            "workflow_operators": workflow_operators,
+            "theme": _active_theme(),
+        },
+    )
+
+
 @app.post("/api/account", response_class=JSONResponse)
 async def update_account(payload: Dict[str, str]):
     USER_PROFILE["name"] = payload.get("name", USER_PROFILE["name"])

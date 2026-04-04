@@ -2,6 +2,7 @@ const form = document.getElementById("account-form");
 const status = document.getElementById("account-status");
 const THEME_KEY = "globalflow_theme";
 const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
+const rippleTargets = Array.from(document.querySelectorAll('[data-ripple="true"]'));
 
 function applyDeviceClass() {
   const width = window.innerWidth;
@@ -10,6 +11,40 @@ function applyDeviceClass() {
   else if (width < 1024) device = "tablet";
   else if (width < 1440) device = "laptop";
   document.documentElement.dataset.device = device;
+}
+
+function installRipples() {
+  if (!rippleTargets.length) return;
+
+  rippleTargets.forEach((el) => {
+    el.addEventListener(
+      "pointerdown",
+      (event) => {
+        // Only show ripple for primary pointer interactions.
+        if (event.button != null && event.button !== 0) return;
+        const rect = el.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = (event.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
+        const y = (event.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
+
+        const ripple = document.createElement("span");
+        ripple.className = "ripple";
+        ripple.style.width = `${size}px`;
+        ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+
+        // Clear previous ripples quickly to keep DOM light.
+        el.querySelectorAll(".ripple").forEach((node) => node.remove());
+        el.appendChild(ripple);
+
+        window.setTimeout(() => {
+          ripple.remove();
+        }, 750);
+      },
+      { passive: true }
+    );
+  });
 }
 
 function apiUrl(path) {
@@ -61,6 +96,7 @@ function applyTheme(theme) {
 if (form) {
   applyDeviceClass();
   window.addEventListener("resize", applyDeviceClass, { passive: true });
+  installRipples();
 
   const themeSelect = form.querySelector('select[name="theme"]');
   if (themeSelect) {
