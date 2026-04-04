@@ -66,7 +66,6 @@
       <nav class="nav" aria-label="Primary">
         <a href="#overview">Overview</a>
         <a href="#use-cases">Use cases</a>
-        <a href="#flowboard">Workflow</a>
         <a href="#integrations">Integrations</a>
         <a href="#pricing">Pricing</a>
         <a href="/account">Account</a>
@@ -85,7 +84,6 @@
           <a href="#overview">overview</a>
           <a href="#use-cases">use cases</a>
           <a href="#features">capabilities</a>
-          <a href="#flowboard">workflow</a>
           <a href="#pricing">pricing</a>
         </div>
         <div class="operator-rail__hint">inspect, decide, launch</div>
@@ -361,7 +359,7 @@
               <div class="explore-card__body content-body">
                 <h3>{{ task.headline }}</h3>
                 <p class="explore-description">{{ task.description }}</p>
-                <a class="feature-link" href="#flowboard">Open workflow -></a>
+                <a class="feature-link" href="#integrations">See integrations -></a>
               </div>
             </article>
             {% endfor %}
@@ -435,43 +433,6 @@
           {% endfor %}
         </div>
         <p class="metrics-footnote">Based on pilot-team operating time across billing, follow-up, file routing, and compliance workflows.</p>
-      </section>
-
-      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard">
-        <div class="workflow-main workflow-main--airbnb text">
-          <div class="section-heading section-heading--split">
-            <div>
-              <p class="eyebrow">Live workflow</p>
-              <h2>Inspect before you run.</h2>
-              <p class="lead">Launch one workflow, inspect telemetry, and keep the audit trail visible while work moves.</p>
-            </div>
-          </div>
-          <div class="workflow-actions">
-            <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
-            <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
-          </div>
-          <div id="workflow-grid" class="workflow-grid workflow-grid--airbnb gf-card-grid"></div>
-          <div class="summary summary--airbnb gf-card gf-fade">
-            <h3>Next steps</h3>
-            <ul id="flow-next-steps"></ul>
-          </div>
-        </div>
-        <aside class="workflow-side workflow-side--airbnb visual">
-          <div class="section-heading">
-            <p class="eyebrow">Live activity</p>
-            <h2>Activity and control.</h2>
-          </div>
-          <div class="autopilot-panel autopilot-panel--airbnb gf-card gf-fade">
-            <div class="autopilot-copy">
-              <p class="eyebrow">Autonomous control</p>
-              <h3 id="autopilot-status" aria-live="polite">Standing by</h3>
-              <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
-              <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
-            </div>
-            <button class="ghost small" id="autopilot-toggle" type="button">Enable autonomous loops</button>
-          </div>
-          <div id="activity-feed" class="activity-grid activity-grid--single" aria-live="polite"></div>
-        </aside>
       </section>
 
       <section id="integrations" class="integrations integrations--airbnb gf-section">
@@ -708,7 +669,6 @@
 
     <nav class="mobile-dock" aria-label="Mobile actions">
       <a href="#use-cases">Use cases</a>
-      <a href="#flowboard">Workflow</a>
       <a href="#pricing">Pricing</a>
       <a href="/account">Account</a>
     </nav>

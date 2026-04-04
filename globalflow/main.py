@@ -427,7 +427,7 @@ FEATURES = [
         "title": "Orchestration",
         "headline": "Automation stays under operator control.",
         "detail": "Operators can launch workflows, inspect every step, and intervene when needed from a single control room.",
-        "href": "#flowboard",
+        "href": "#integrations",
     },
 ]
 

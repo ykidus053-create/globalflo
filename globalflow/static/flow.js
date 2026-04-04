@@ -1012,7 +1012,6 @@ if (launchOrchestrationBtn) {
     try {
       showToast("Launching automation flow...");
       await fetchTasks();
-      scrollToSelector("#flowboard");
       triggerFlow();
     } catch (error) {
       setReliabilityState("warning", "Launch delayed");
