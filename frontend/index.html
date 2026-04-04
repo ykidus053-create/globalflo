@@ -37,7 +37,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=3fac877" />
+    <link rel="stylesheet" href="/static/flow.css?v=5eee809" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site is-loading">
@@ -232,7 +232,7 @@
             <div class="testimonial-result">Recovered 23 hours each week in the first month.</div>
             <div class="testimonial-meta">
               <span>Maya Chen</span>
-              <p>Operations Director · Northwind Ops</p>
+              <p>Operations Director - Northwind Ops</p>
             </div>
           </article>
           
@@ -242,7 +242,7 @@
             <div class="testimonial-result">Cut invoice turnaround from 4 days to under 1 day.</div>
             <div class="testimonial-meta">
               <span>Daniel Brooks</span>
-              <p>Finance Lead · Cedar Accounting</p>
+              <p>Finance Lead - Cedar Accounting</p>
             </div>
           </article>
           
@@ -252,7 +252,7 @@
             <div class="testimonial-result">Removed 80+ hours of admin work each month.</div>
             <div class="testimonial-meta">
               <span>Leila Hassan</span>
-              <p>Client Services Manager · FieldMint Health</p>
+              <p>Client Services Manager - FieldMint Health</p>
             </div>
           </article>
           
@@ -391,6 +391,11 @@
             <h2>Start where manual work slows the team down most.</h2>
             <p class="lead">Most teams begin with one high-friction workflow, prove the result, then expand into the next operational bottleneck.</p>
           </div>
+        </div>
+        <div class="section-tools">
+          <label class="sr-only" for="use-case-search">Search use cases</label>
+          <input id="use-case-search" class="search-input" type="search" inputmode="search" placeholder="Search use cases..." autocomplete="off" />
+          <span class="search-meta" id="use-case-search-meta" aria-live="polite"></span>
         </div>
         <div class="use-case-layout gf-grid-12 gf-gap-24">
           <div class="explore-grid gf-card-grid gf-span-8">
@@ -704,6 +709,11 @@
           <span>QuickBooks</span>
           <span>Airtable</span>
           <p>More integrations coming soon. Request the next one inside the connector panel.</p>
+        </div>
+        <div class="section-tools">
+          <label class="sr-only" for="integration-search">Search integrations</label>
+          <input id="integration-search" class="search-input" type="search" inputmode="search" placeholder="Search integrations..." autocomplete="off" />
+          <span class="search-meta" id="integration-search-meta" aria-live="polite"></span>
         </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           
@@ -1167,6 +1177,7 @@
           
           <a href="mailto:hello@globalflow.ai">Contact</a>
           
+          <button class="footer-link-button" id="open-feedback" type="button">Feedback</button>
         </div>
         <div class="footer-links">
           
@@ -1178,9 +1189,39 @@
       </div>
     </footer>
 
+    <div class="flow-modal" role="dialog" aria-modal="true" id="feedback-modal">
+      <div class="flow-modal__content">
+        <button class="flow-modal__close" data-modal="feedback-modal" type="button">&times;</button>
+        <h3>Help improve GlobalFlow</h3>
+        <p class="modal-note">This is a lightweight feedback capture for iteration. No account required.</p>
+        <form id="feedback-form">
+          <label>
+            Rating
+            <select name="rating" required>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - OK</option>
+              <option value="2">2 - Needs work</option>
+              <option value="1">1 - Broken</option>
+            </select>
+          </label>
+          <label>
+            What should we improve?
+            <textarea name="comment" rows="4" maxlength="2000" placeholder="Tell us what blocked you or what felt unclear." required></textarea>
+          </label>
+          <label>
+            Email (optional)
+            <input name="email" type="email" placeholder="ops@company.com" />
+          </label>
+          <button type="submit" class="primary small">Send feedback</button>
+          <p class="modal-note" id="feedback-status"></p>
+        </form>
+      </div>
+    </div>
+
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
-    <script src="/static/site-boot.js?v=3fac877" defer></script>
-    <script type="module" src="/static/render-layer.js?v=3fac877"></script>
-    <script type="module" src="/static/flow.js?v=3fac877"></script>
+    <script src="/static/site-boot.js?v=5eee809" defer></script>
+    <script type="module" src="/static/render-layer.js?v=5eee809"></script>
+    <script type="module" src="/static/flow.js?v=5eee809"></script>
   </body>
 </html>

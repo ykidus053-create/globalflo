@@ -49,8 +49,18 @@ const useCaseCards = document.querySelectorAll("[data-preview-headline]");
 const useCasePreviewTitle = document.getElementById("use-case-preview-title");
 const useCasePreviewDomain = document.getElementById("use-case-preview-domain");
 const useCasePreviewCopy = document.getElementById("use-case-preview-copy");
+const useCaseSearch = document.getElementById("use-case-search");
+const useCaseSearchMeta = document.getElementById("use-case-search-meta");
+const integrationSearch = document.getElementById("integration-search");
+const integrationSearchMeta = document.getElementById("integration-search-meta");
+const connectorCards = document.querySelectorAll(".connector-card");
+const openFeedbackButton = document.getElementById("open-feedback");
+const feedbackModal = document.getElementById("feedback-modal");
+const feedbackForm = document.getElementById("feedback-form");
+const feedbackStatus = document.getElementById("feedback-status");
 
 const SESSION_KEY = "globalflow_session";
+const NEXT_STEPS_ORDER_KEY = "globalflow_next_steps_order";
 const numberFormatter = new Intl.NumberFormat("en-US");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hiddenPollMultiplier = 4;
@@ -223,12 +233,15 @@ function renderTasks(tasks) {
 
 function renderSummary(steps) {
   if (!nextSteps) return;
+  const savedOrder = loadNextStepsOrder();
+  const orderedSteps = applyNextStepsOrder(steps, savedOrder);
   nextSteps.innerHTML = "";
-  steps.forEach((step) => {
+  orderedSteps.forEach((step) => {
     const li = document.createElement("li");
     li.textContent = step;
     nextSteps.appendChild(li);
   });
+  initNextStepsDragDrop();
 }
 
 function renderActivity(events) {
@@ -694,6 +707,22 @@ function openCheckoutForTier(tierId) {
   window.location.assign(`/checkout/${String(tierId).toLowerCase()}`);
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function updateSearchMeta(metaEl, visible, total) {
+  if (!metaEl) return;
+  if (!total) {
+    metaEl.textContent = "";
+    return;
+  }
+  metaEl.textContent = `${visible}/${total}`;
+}
+
 function applyDeviceClass() {
   const width = window.innerWidth;
   let device = "desktop";
@@ -701,6 +730,179 @@ function applyDeviceClass() {
   else if (width < 1024) device = "tablet";
   else if (width < 1440) device = "laptop";
   document.documentElement.dataset.device = device;
+}
+
+function loadNextStepsOrder() {
+  try {
+    const raw = window.localStorage.getItem(NEXT_STEPS_ORDER_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveNextStepsOrder(order) {
+  try {
+    window.localStorage.setItem(NEXT_STEPS_ORDER_KEY, JSON.stringify(order));
+  } catch {}
+}
+
+function applyNextStepsOrder(steps, order) {
+  if (!Array.isArray(steps) || !steps.length) return [];
+  if (!Array.isArray(order) || !order.length) return steps;
+  const index = new Map(order.map((value, idx) => [value, idx]));
+  return [...steps].sort((a, b) => {
+    const ia = index.has(a) ? index.get(a) : Number.MAX_SAFE_INTEGER;
+    const ib = index.has(b) ? index.get(b) : Number.MAX_SAFE_INTEGER;
+    return ia - ib;
+  });
+}
+
+function initNextStepsDragDrop() {
+  if (!nextSteps) return;
+  const items = [...nextSteps.querySelectorAll("li")];
+  if (!items.length) return;
+
+  items.forEach((li) => {
+    li.draggable = true;
+    li.classList.add("is-draggable");
+  });
+
+  let dragSource = null;
+
+  const onDragStart = (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    dragSource = target;
+    target.classList.add("is-dragging");
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", target.textContent || "");
+  };
+
+  const onDragEnd = () => {
+    nextSteps.querySelectorAll(".is-dragging, .is-drop-target").forEach((el) => el.classList.remove("is-dragging", "is-drop-target"));
+    dragSource = null;
+    const order = [...nextSteps.querySelectorAll("li")].map((li) => li.textContent || "");
+    saveNextStepsOrder(order);
+    showToast("Saved next-step order");
+  };
+
+  const onDragOver = (event) => {
+    event.preventDefault();
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const li = target.closest("li");
+    if (!li || li === dragSource) return;
+    li.classList.add("is-drop-target");
+    event.dataTransfer.dropEffect = "move";
+  };
+
+  const onDrop = (event) => {
+    event.preventDefault();
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    const li = target.closest("li");
+    if (!li || !dragSource || li === dragSource) return;
+    const rect = li.getBoundingClientRect();
+    const before = event.clientY < rect.top + rect.height / 2;
+    if (before) nextSteps.insertBefore(dragSource, li);
+    else nextSteps.insertBefore(dragSource, li.nextSibling);
+    nextSteps.querySelectorAll(".is-drop-target").forEach((el) => el.classList.remove("is-drop-target"));
+  };
+
+  nextSteps.addEventListener("dragstart", onDragStart);
+  nextSteps.addEventListener("dragend", onDragEnd);
+  nextSteps.addEventListener("dragover", onDragOver);
+  nextSteps.addEventListener("drop", onDrop);
+}
+
+function initSearchFilters() {
+  const filterUseCases = () => {
+    if (!useCaseSearch || !useCaseCards.length) return;
+    const query = normalizeText(useCaseSearch.value);
+    let visible = 0;
+    useCaseCards.forEach((card) => {
+      const haystack = normalizeText(
+        `${card.dataset.previewDomain || ""} ${card.dataset.previewHeadline || ""} ${card.dataset.previewDescription || ""}`
+      );
+      const match = !query || haystack.includes(query);
+      card.hidden = !match;
+      card.setAttribute("aria-hidden", match ? "false" : "true");
+      if (match) visible += 1;
+    });
+
+    updateSearchMeta(useCaseSearchMeta, visible, useCaseCards.length);
+
+    // Keep preview panel in sync with the first visible card.
+    if (visible > 0) {
+      const first = [...useCaseCards].find((card) => !card.hidden);
+      if (first && useCasePreviewTitle && useCasePreviewDomain && useCasePreviewCopy) {
+        useCasePreviewTitle.textContent = first.dataset.previewHeadline || "";
+        useCasePreviewDomain.textContent = first.dataset.previewDomain || "";
+        useCasePreviewCopy.textContent = first.dataset.previewDescription || "";
+      }
+    }
+  };
+
+  const filterIntegrations = () => {
+    if (!integrationSearch || !connectorCards.length) return;
+    const query = normalizeText(integrationSearch.value);
+    let visible = 0;
+    connectorCards.forEach((card) => {
+      const text = normalizeText(card.textContent);
+      const match = !query || text.includes(query);
+      card.hidden = !match;
+      card.setAttribute("aria-hidden", match ? "false" : "true");
+      if (match) visible += 1;
+    });
+    updateSearchMeta(integrationSearchMeta, visible, connectorCards.length);
+  };
+
+  if (useCaseSearch) useCaseSearch.addEventListener("input", filterUseCases);
+  if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
+
+  filterUseCases();
+  filterIntegrations();
+}
+
+async function submitFeedback(payload) {
+  try {
+    const data = await fetchJson("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return data;
+  } catch (error) {
+    return { status: "queued", message: error.message || "Feedback queued locally." };
+  }
+}
+
+function initFeedback() {
+  if (openFeedbackButton) {
+    openFeedbackButton.addEventListener("click", () => openModal(feedbackModal));
+  }
+  if (!feedbackForm) return;
+  feedbackForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const payload = Object.fromEntries(new FormData(feedbackForm));
+    payload.rating = Number(payload.rating || 0);
+    payload.ua = navigator.userAgent;
+    payload.path = `${window.location.pathname}${window.location.hash}`;
+    if (!payload.comment || payload.rating < 1 || payload.rating > 5) {
+      if (feedbackStatus) feedbackStatus.textContent = "Rating and comment are required.";
+      showToast("Feedback incomplete");
+      return;
+    }
+    if (feedbackStatus) feedbackStatus.textContent = "Sending...";
+    const result = await submitFeedback(payload);
+    if (feedbackStatus) feedbackStatus.textContent = result.message || "Thanks. Feedback received.";
+    showToast(result.message || "Feedback received");
+    await fetchActivity().catch(() => {});
+    window.setTimeout(() => closeModal(feedbackModal), 700);
+  });
 }
 
 function initUseCasePreview() {
@@ -998,6 +1200,8 @@ async function bootstrap() {
   initKineticType();
   initUseCasePreview();
   initFeatureDetailButtons();
+  initSearchFilters();
+  initFeedback();
   setBillingMode(billingMode);
   await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
 }

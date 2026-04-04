@@ -4894,6 +4894,64 @@ body.paper-site .mobile-dock {
   backdrop-filter: blur(12px);
 }
 
+body.paper-site .section-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 24px 0;
+}
+
+body.paper-site .search-input {
+  flex: 1;
+  min-width: 220px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f8f8f8;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+body.paper-site .search-input::placeholder {
+  color: rgba(248, 248, 248, 0.5);
+}
+
+body.paper-site .search-meta {
+  min-width: 64px;
+  text-align: right;
+  font-size: 13px;
+  color: rgba(248, 248, 248, 0.56);
+}
+
+body.paper-site .footer-link-button {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: #cfd9e0;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+body.paper-site .footer-link-button:hover {
+  text-decoration: underline;
+}
+
+body.paper-site #flow-next-steps li.is-draggable {
+  cursor: grab;
+  user-select: none;
+}
+
+body.paper-site #flow-next-steps li.is-dragging {
+  opacity: 0.65;
+}
+
+body.paper-site #flow-next-steps li.is-drop-target {
+  outline: 1px solid rgba(255, 255, 255, 0.18);
+  outline-offset: 2px;
+}
+
 body.paper-site .operator-rail {
   position: sticky;
   top: 84px;

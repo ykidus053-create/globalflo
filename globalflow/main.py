@@ -567,6 +567,7 @@ USER_SETTINGS: Dict[str, str] = {
 }
 
 SUBSCRIPTIONS: List[Dict[str, str]] = []
+FEEDBACK: List[Dict[str, Any]] = []
 
 SUBSCRIPTION_TIERS = [
     {
@@ -1176,6 +1177,37 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
         "message": f"{connector['name']} triggered - {response.status_code}",
         "details": details,
     }
+
+@app.post("/api/feedback", response_class=JSONResponse)
+async def capture_feedback(payload: Dict[str, Any]):
+    rating = int(payload.get("rating") or 0)
+    comment = str(payload.get("comment") or "").strip()
+    email = str(payload.get("email") or "").strip()
+
+    if rating < 1 or rating > 5:
+        raise HTTPException(status_code=400, detail="rating must be between 1 and 5")
+    if not comment:
+        raise HTTPException(status_code=400, detail="comment is required")
+    if len(comment) > 2000:
+        raise HTTPException(status_code=400, detail="comment is too long")
+
+    entry = {
+        "rating": rating,
+        "comment": comment,
+        "email": email[:200],
+        "timestamp": datetime.utcnow().isoformat(),
+        "ua": str(payload.get("ua") or "")[:200],
+        "path": str(payload.get("path") or "")[:200],
+    }
+    FEEDBACK.append(entry)
+    monitoring.record("feedback")
+    activity_log.record(
+        kind="feedback",
+        source="website",
+        message=f"Feedback received ({rating}/5)",
+        detail=comment[:200],
+    )
+    return {"status": "ok", "message": "Thanks. Feedback received."}
 
 
 @app.get("/api/activity", response_class=JSONResponse)
