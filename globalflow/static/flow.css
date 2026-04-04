@@ -5156,6 +5156,16 @@ body.paper-site .use-case-layout .explore-card__visual {
   min-height: 140px;
 }
 
+body.paper-site .use-case-layout .explore-card__body h3 {
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+}
+
+body.paper-site .use-case-layout .explore-description {
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+}
+
 body.paper-site .use-case-preview {
   position: sticky;
   top: 168px;
@@ -5210,6 +5220,48 @@ html[data-device="tablet"] body.paper-site .use-case-preview {
 html[data-device="mobile"] body.paper-site .use-case-layout .explore-grid,
 html[data-device="tablet"] body.paper-site .use-case-layout .explore-grid {
   grid-template-columns: 1fr !important;
+}
+
+/* Proof + metrics grids: avoid ultra-narrow 12-col spans */
+body.paper-site .metrics .stat-grid,
+body.paper-site .metrics .gf-metrics-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+body.paper-site .metrics .stat-card,
+body.paper-site .metrics .stat-card--airbnb {
+  grid-column: auto !important;
+}
+
+body.paper-site .proof .logo-bar {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+body.paper-site .proof .logo-pill {
+  grid-column: auto !important;
+}
+
+body.paper-site .proof .testimonial-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+body.paper-site .proof .testimonial-card {
+  grid-column: auto !important;
+}
+
+@media (max-width: 920px) {
+  body.paper-site .proof .logo-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  body.paper-site .proof .testimonial-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.paper-site .metrics .stat-grid,
+  body.paper-site .metrics .gf-metrics-row {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 html[data-device="mobile"] body.paper-site .top .nav {
