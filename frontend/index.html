@@ -37,7 +37,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=f25fa6e" />
+    <link rel="stylesheet" href="/static/flow.css?v=3fac877" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site is-loading">
@@ -77,6 +77,21 @@
     </header>
 
     <main id="main-content" class="landing-main gf-container gf-dark">
+      <section class="operator-rail gf-section gf-fade" aria-label="Operator controls">
+        <div class="operator-rail__status">
+          <span class="operator-rail__label">system status</span>
+          <strong>live</strong>
+        </div>
+        <div class="operator-rail__links">
+          <a href="#overview">overview</a>
+          <a href="#use-cases">use cases</a>
+          <a href="#features">capabilities</a>
+          <a href="#flowboard">workflow</a>
+          <a href="#pricing">pricing</a>
+        </div>
+        <div class="operator-rail__hint">inspect, decide, launch</div>
+      </section>
+
       <section id="hero" class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
         <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
@@ -377,60 +392,218 @@
             <p class="lead">Most teams begin with one high-friction workflow, prove the result, then expand into the next operational bottleneck.</p>
           </div>
         </div>
-        <div class="explore-grid gf-card-grid">
-          
-          <article class="explore-card explore-card--phone gf-card gf-fade">
-            <div class="explore-card__visual">
-              <span class="explore-tag">Call follow-up</span>
+        <div class="use-case-layout gf-grid-12 gf-gap-24">
+          <div class="explore-grid gf-card-grid gf-span-8">
+            
+            <article
+              class="explore-card explore-card--phone gf-card gf-fade"
+              data-preview-domain="Call follow-up"
+              data-preview-headline="Close the loop after every call."
+              data-preview-description="Summaries, action items, and next steps land in the right system without a coordinator chasing people."
+            >
+              <div class="explore-card__visual">
+                <span class="explore-tag">Call follow-up</span>
+              </div>
+              <div class="explore-card__body content-body">
+                <h3>Close the loop after every call.</h3>
+                <p class="explore-description">Summaries, action items, and next steps land in the right system without a coordinator chasing people.</p>
+                <a class="feature-link" href="#flowboard">Open workflow -></a>
+              </div>
+            </article>
+            
+            <article
+              class="explore-card explore-card--receipt gf-card gf-fade"
+              data-preview-domain="Billing recovery"
+              data-preview-headline="Keep invoices moving."
+              data-preview-description="GlobalFlow routes invoice work automatically so finance teams recover revenue faster with less manual admin."
+            >
+              <div class="explore-card__visual">
+                <span class="explore-tag">Billing recovery</span>
+              </div>
+              <div class="explore-card__body content-body">
+                <h3>Keep invoices moving.</h3>
+                <p class="explore-description">GlobalFlow routes invoice work automatically so finance teams recover revenue faster with less manual admin.</p>
+                <a class="feature-link" href="#flowboard">Open workflow -></a>
+              </div>
+            </article>
+            
+            <article
+              class="explore-card explore-card--shield gf-card gf-fade"
+              data-preview-domain="Tax readiness"
+              data-preview-headline="Stay ahead of deadlines."
+              data-preview-description="Compliance tasks, supporting docs, and reminders stay visible in one workflow before they become urgent."
+            >
+              <div class="explore-card__visual">
+                <span class="explore-tag">Tax readiness</span>
+              </div>
+              <div class="explore-card__body content-body">
+                <h3>Stay ahead of deadlines.</h3>
+                <p class="explore-description">Compliance tasks, supporting docs, and reminders stay visible in one workflow before they become urgent.</p>
+                <a class="feature-link" href="#flowboard">Open workflow -></a>
+              </div>
+            </article>
+            
+            <article
+              class="explore-card explore-card--folder gf-card gf-fade"
+              data-preview-domain="Document control"
+              data-preview-headline="Route documents automatically."
+              data-preview-description="Files are classified, routed, and attached to the right workflow so teams stop losing time to document hunts."
+            >
+              <div class="explore-card__visual">
+                <span class="explore-tag">Document control</span>
+              </div>
+              <div class="explore-card__body content-body">
+                <h3>Route documents automatically.</h3>
+                <p class="explore-description">Files are classified, routed, and attached to the right workflow so teams stop losing time to document hunts.</p>
+                <a class="feature-link" href="#flowboard">Open workflow -></a>
+              </div>
+            </article>
+            
+            <article
+              class="explore-card explore-card--spark gf-card gf-fade"
+              data-preview-domain="Ops orchestration"
+              data-preview-headline="Run ops work from one dashboard."
+              data-preview-description="Approvals, retries, audits, and handoffs stay coordinated across billing, files, calls, and follow-up."
+            >
+              <div class="explore-card__visual">
+                <span class="explore-tag">Ops orchestration</span>
+              </div>
+              <div class="explore-card__body content-body">
+                <h3>Run ops work from one dashboard.</h3>
+                <p class="explore-description">Approvals, retries, audits, and handoffs stay coordinated across billing, files, calls, and follow-up.</p>
+                <a class="feature-link" href="#flowboard">Open workflow -></a>
+              </div>
+            </article>
+            
+          </div>
+          <aside class="use-case-preview gf-card gf-span-4 gf-fade" aria-live="polite">
+            <div class="content-body">
+              <p class="eyebrow">Live preview</p>
+              <h3 id="use-case-preview-title">Close the loop after every call.</h3>
+              <p class="use-case-preview-domain" id="use-case-preview-domain">Call follow-up</p>
+              <p class="use-case-preview-copy" id="use-case-preview-copy">Summaries, action items, and next steps land in the right system without a coordinator chasing people.</p>
+              <div class="hero-media-points">
+                <span>Fast start</span>
+                <span>Clear ownership</span>
+                <span>Visible output</span>
+              </div>
             </div>
-            <div class="explore-card__body content-body">
-              <h3>Close the loop after every call.</h3>
-              <p class="explore-description">Summaries, action items, and next steps land in the right system without a coordinator chasing people.</p>
-              <a class="feature-link" href="#flowboard">Open workflow -></a>
+          </aside>
+        </div>
+      </section>
+
+      <section id="features" class="features gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Capabilities</p>
+            <h2>Built for fast operator decisions.</h2>
+            <p class="lead">Each capability is designed to reduce friction, surface the next action, and keep the operator in control.</p>
+          </div>
+        </div>
+        <div class="feature-grid gf-card-grid">
+          
+          <article class="feature-card gf-card gf-fade">
+            <div class="content-body">
+              <div class="feature-icon feature-icon--phone" aria-hidden="true"></div>
+              <div class="feature-copy">
+                <p class="feature-kicker">Call summaries</p>
+                <h3>Calls end with the next step assigned.</h3>
+                <p>GlobalFlow turns conversations into summaries, owners, and follow-up tasks so nothing important gets lost after the call.</p>
+              </div>
+              <button
+                class="feature-link"
+                type="button"
+                data-feature-title="Call summaries"
+                data-feature-headline="Calls end with the next step assigned."
+                data-feature-detail="GlobalFlow turns conversations into summaries, owners, and follow-up tasks so nothing important gets lost after the call."
+                data-feature-target="#demo"
+              >
+                Learn more ->
+              </button>
             </div>
           </article>
           
-          <article class="explore-card explore-card--receipt gf-card gf-fade">
-            <div class="explore-card__visual">
-              <span class="explore-tag">Billing recovery</span>
-            </div>
-            <div class="explore-card__body content-body">
-              <h3>Keep invoices moving.</h3>
-              <p class="explore-description">GlobalFlow routes invoice work automatically so finance teams recover revenue faster with less manual admin.</p>
-              <a class="feature-link" href="#flowboard">Open workflow -></a>
-            </div>
-          </article>
-          
-          <article class="explore-card explore-card--shield gf-card gf-fade">
-            <div class="explore-card__visual">
-              <span class="explore-tag">Tax readiness</span>
-            </div>
-            <div class="explore-card__body content-body">
-              <h3>Stay ahead of deadlines.</h3>
-              <p class="explore-description">Compliance tasks, supporting docs, and reminders stay visible in one workflow before they become urgent.</p>
-              <a class="feature-link" href="#flowboard">Open workflow -></a>
-            </div>
-          </article>
-          
-          <article class="explore-card explore-card--folder gf-card gf-fade">
-            <div class="explore-card__visual">
-              <span class="explore-tag">Document control</span>
-            </div>
-            <div class="explore-card__body content-body">
-              <h3>Route documents automatically.</h3>
-              <p class="explore-description">Files are classified, routed, and attached to the right workflow so teams stop losing time to document hunts.</p>
-              <a class="feature-link" href="#flowboard">Open workflow -></a>
+          <article class="feature-card gf-card gf-fade">
+            <div class="content-body">
+              <div class="feature-icon feature-icon--receipt" aria-hidden="true"></div>
+              <div class="feature-copy">
+                <p class="feature-kicker">Billing</p>
+                <h3>Invoices and approvals keep moving.</h3>
+                <p>Finance teams can route invoice work automatically, spot bottlenecks early, and keep collections on schedule.</p>
+              </div>
+              <button
+                class="feature-link"
+                type="button"
+                data-feature-title="Billing"
+                data-feature-headline="Invoices and approvals keep moving."
+                data-feature-detail="Finance teams can route invoice work automatically, spot bottlenecks early, and keep collections on schedule."
+                data-feature-target="#pricing"
+              >
+                Learn more ->
+              </button>
             </div>
           </article>
           
-          <article class="explore-card explore-card--spark gf-card gf-fade">
-            <div class="explore-card__visual">
-              <span class="explore-tag">Ops orchestration</span>
+          <article class="feature-card gf-card gf-fade">
+            <div class="content-body">
+              <div class="feature-icon feature-icon--shield" aria-hidden="true"></div>
+              <div class="feature-copy">
+                <p class="feature-kicker">Compliance</p>
+                <h3>Deadlines stay visible.</h3>
+                <p>The workflow collects documents, tracks status, and keeps operations teams ahead of filing and review pressure.</p>
+              </div>
+              <button
+                class="feature-link"
+                type="button"
+                data-feature-title="Compliance"
+                data-feature-headline="Deadlines stay visible."
+                data-feature-detail="The workflow collects documents, tracks status, and keeps operations teams ahead of filing and review pressure."
+                data-feature-target="#why-globalflow"
+              >
+                Learn more ->
+              </button>
             </div>
-            <div class="explore-card__body content-body">
-              <h3>Run ops work from one dashboard.</h3>
-              <p class="explore-description">Approvals, retries, audits, and handoffs stay coordinated across billing, files, calls, and follow-up.</p>
-              <a class="feature-link" href="#flowboard">Open workflow -></a>
+          </article>
+          
+          <article class="feature-card gf-card gf-fade">
+            <div class="content-body">
+              <div class="feature-icon feature-icon--folder" aria-hidden="true"></div>
+              <div class="feature-copy">
+                <p class="feature-kicker">Files</p>
+                <h3>Documents reach the right place.</h3>
+                <p>Contracts, receipts, and records are classified and routed so teams stop digging through shared drives and inboxes.</p>
+              </div>
+              <button
+                class="feature-link"
+                type="button"
+                data-feature-title="Files"
+                data-feature-headline="Documents reach the right place."
+                data-feature-detail="Contracts, receipts, and records are classified and routed so teams stop digging through shared drives and inboxes."
+                data-feature-target="#integrations"
+              >
+                Learn more ->
+              </button>
+            </div>
+          </article>
+          
+          <article class="feature-card gf-card gf-fade">
+            <div class="content-body">
+              <div class="feature-icon feature-icon--spark" aria-hidden="true"></div>
+              <div class="feature-copy">
+                <p class="feature-kicker">Orchestration</p>
+                <h3>Automation stays under operator control.</h3>
+                <p>Operators can launch workflows, inspect every step, and intervene when needed from a single control room.</p>
+              </div>
+              <button
+                class="feature-link"
+                type="button"
+                data-feature-title="Orchestration"
+                data-feature-headline="Automation stays under operator control."
+                data-feature-detail="Operators can launch workflows, inspect every step, and intervene when needed from a single control room."
+                data-feature-target="#flowboard"
+              >
+                Learn more ->
+              </button>
             </div>
           </article>
           
@@ -524,6 +697,14 @@
             <p class="lead">Route work into the tools you already operate so the workflow can run without another migration project.</p>
           </div>
         </div>
+        <div class="integration-intro integration-intro--airbnb">
+          <span>Connect in 2 clicks</span>
+          <span>Slack</span>
+          <span>HubSpot</span>
+          <span>QuickBooks</span>
+          <span>Airtable</span>
+          <p>More integrations coming soon. Request the next one inside the connector panel.</p>
+        </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           
           <details class="connector-card connector-card--airbnb gf-card gf-fade" open>
@@ -550,6 +731,7 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
+              <p class="form-helper">Use a live endpoint and one sample field to validate the connector before you route production work.</p>
               <button type="submit" class="primary small">Trigger Slack Alert</button>
               <p class="modal-note connector-status"></p>
             </form>
@@ -579,6 +761,7 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
+              <p class="form-helper">Use a live endpoint and one sample field to validate the connector before you route production work.</p>
               <button type="submit" class="primary small">Trigger HubSpot CRM</button>
               <p class="modal-note connector-status"></p>
             </form>
@@ -608,6 +791,7 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
+              <p class="form-helper">Use a live endpoint and one sample field to validate the connector before you route production work.</p>
               <button type="submit" class="primary small">Trigger QuickBooks Sync</button>
               <p class="modal-note connector-status"></p>
             </form>
@@ -637,6 +821,7 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
+              <p class="form-helper">Use a live endpoint and one sample field to validate the connector before you route production work.</p>
               <button type="submit" class="primary small">Trigger Airtable Sync</button>
               <p class="modal-note connector-status"></p>
             </form>
@@ -652,6 +837,10 @@
             <h2>Start with one workflow. Expand when the result is obvious.</h2>
             <p class="lead">Each tier keeps the same operating model: clear scope, visible runs, and human override where it matters.</p>
           </div>
+        </div>
+        <div class="pricing-toggle" role="tablist" aria-label="Billing cadence">
+          <button class="toggle-option is-active" id="billing-monthly" type="button" role="tab" aria-selected="true">monthly</button>
+          <button class="toggle-option" id="billing-annual" type="button" role="tab" aria-selected="false">annual <span>save</span></button>
         </div>
         <div class="subscription-grid subscription-grid--airbnb gf-card-grid">
           
@@ -765,6 +954,62 @@
             </div>
           </article>
           
+        </div>
+        <div class="comparison-table-wrap gf-fade">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Included</th>
+                <th>Starter</th>
+                <th>Pilot</th>
+                <th>Launch</th>
+                <th>Captain</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td>Workflow runs / month</td>
+                <td>100</td>
+                <td>2,000</td>
+                <td>10,000</td>
+                <td>Unlimited</td>
+              </tr>
+              
+              <tr>
+                <td>Connected apps</td>
+                <td>2</td>
+                <td>4</td>
+                <td>8</td>
+                <td>Custom</td>
+              </tr>
+              
+              <tr>
+                <td>Human approvals</td>
+                <td>Basic</td>
+                <td>Advanced</td>
+                <td>Advanced</td>
+                <td>Executive guardrails</td>
+              </tr>
+              
+              <tr>
+                <td>Reporting</td>
+                <td>Weekly digest</td>
+                <td>Weekly proof report</td>
+                <td>Live dashboards</td>
+                <td>Executive reviews</td>
+              </tr>
+              
+              <tr>
+                <td>Support</td>
+                <td>Community</td>
+                <td>Priority email</td>
+                <td>Slack channel</td>
+                <td>White-glove</td>
+              </tr>
+              
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -934,8 +1179,8 @@
     </footer>
 
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
-    <script src="/static/site-boot.js?v=f25fa6e" defer></script>
-    <script type="module" src="/static/render-layer.js?v=f25fa6e"></script>
-    <script type="module" src="/static/flow.js?v=f25fa6e"></script>
+    <script src="/static/site-boot.js?v=3fac877" defer></script>
+    <script type="module" src="/static/render-layer.js?v=3fac877"></script>
+    <script type="module" src="/static/flow.js?v=3fac877"></script>
   </body>
 </html>

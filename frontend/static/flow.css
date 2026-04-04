@@ -4807,6 +4807,205 @@ body.paper-site #workspace .section-heading {
   }
 }
 
+/* Heuristic/accessibility refinement */
+body.paper-site a:focus-visible,
+body.paper-site button:focus-visible,
+body.paper-site input:focus-visible,
+body.paper-site select:focus-visible,
+body.paper-site summary:focus-visible {
+  outline: 2px solid #f8f8f8 !important;
+  outline-offset: 3px;
+}
+
+body.paper-site .feature-card .content-body,
+body.paper-site .pricing-card .content-body,
+body.paper-site .testimonial-card,
+body.paper-site .connector-card .content-body {
+  display: grid;
+  gap: 16px !important;
+}
+
+body.paper-site .feature-kicker {
+  margin: 0;
+  font-size: 14px !important;
+  letter-spacing: 0.02em;
+  color: rgba(248, 248, 248, 0.56) !important;
+}
+
+body.paper-site .feature-copy {
+  display: grid;
+  gap: 12px !important;
+}
+
+body.paper-site .feature-copy p,
+body.paper-site .form-helper {
+  margin: 0;
+  color: #cfd9e0 !important;
+  font-size: 15px !important;
+  line-height: 1.45 !important;
+}
+
+body.paper-site .integration-intro {
+  margin-bottom: 24px !important;
+  gap: 12px !important;
+}
+
+body.paper-site .pricing-toggle {
+  margin-bottom: 24px !important;
+}
+
+body.paper-site .toggle-option {
+  min-height: 40px;
+}
+
+body.paper-site .toggle-option.is-active {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+body.paper-site .comparison-table-wrap {
+  margin-top: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+body.paper-site .comparison-table th,
+body.paper-site .comparison-table td {
+  padding: 16px !important;
+  color: #cfd9e0 !important;
+}
+
+body.paper-site .comparison-table th {
+  color: #f8f8f8 !important;
+}
+
+body.paper-site .form-helper,
+body.paper-site .modal-note,
+body.paper-site .connector-status {
+  min-height: 20px;
+}
+
+body.paper-site .connector-form button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+body.paper-site .mobile-dock {
+  backdrop-filter: blur(12px);
+}
+
+body.paper-site .operator-rail {
+  position: sticky;
+  top: 84px;
+  z-index: 12;
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+}
+
+body.paper-site .operator-rail__status,
+body.paper-site .operator-rail__links,
+body.paper-site .operator-rail__hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+body.paper-site .operator-rail__label,
+body.paper-site .operator-rail__hint {
+  color: rgba(248, 248, 248, 0.56);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+body.paper-site .operator-rail__links {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+body.paper-site .operator-rail__links a,
+body.paper-site .feature-link {
+  color: #f8f8f8 !important;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+body.paper-site .use-case-layout {
+  align-items: start;
+}
+
+body.paper-site .use-case-preview {
+  position: sticky;
+  top: 168px;
+}
+
+body.paper-site .use-case-preview-domain {
+  margin: 0;
+  color: rgba(248, 248, 248, 0.56) !important;
+  font-size: 14px !important;
+}
+
+body.paper-site .use-case-preview-copy {
+  margin: 0;
+}
+
+html[data-device="laptop"] body.paper-site main.landing-main {
+  max-width: 1320px !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+html[data-device="laptop"] body.paper-site .hero {
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr) !important;
+}
+
+html[data-device="mobile"] body.paper-site .operator-rail,
+html[data-device="tablet"] body.paper-site .operator-rail {
+  grid-template-columns: 1fr !important;
+  top: 72px;
+}
+
+html[data-device="mobile"] body.paper-site .operator-rail__links,
+html[data-device="tablet"] body.paper-site .operator-rail__links {
+  justify-content: flex-start;
+}
+
+html[data-device="mobile"] body.paper-site .use-case-layout,
+html[data-device="tablet"] body.paper-site .use-case-layout,
+html[data-device="mobile"] body.paper-site .hero,
+html[data-device="tablet"] body.paper-site .hero,
+html[data-device="mobile"] body.paper-site .workflow,
+html[data-device="tablet"] body.paper-site .workflow {
+  grid-template-columns: 1fr !important;
+}
+
+html[data-device="mobile"] body.paper-site .use-case-preview,
+html[data-device="tablet"] body.paper-site .use-case-preview {
+  position: relative;
+  top: auto;
+}
+
+html[data-device="mobile"] body.paper-site .top .nav {
+  display: none !important;
+}
+
+html[data-device="mobile"] body.paper-site .hero-quickfacts,
+html[data-device="tablet"] body.paper-site .hero-quickfacts,
+html[data-device="mobile"] body.paper-site .workflow-grid {
+  grid-template-columns: 1fr !important;
+}
+
 /* Overview and use-case readability */
 body.paper-site .overview-panel {
   display: flex;

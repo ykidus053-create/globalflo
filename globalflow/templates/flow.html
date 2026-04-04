@@ -76,6 +76,21 @@
     </header>
 
     <main id="main-content" class="landing-main gf-container gf-dark">
+      <section class="operator-rail gf-section gf-fade" aria-label="Operator controls">
+        <div class="operator-rail__status">
+          <span class="operator-rail__label">system status</span>
+          <strong>live</strong>
+        </div>
+        <div class="operator-rail__links">
+          <a href="#overview">overview</a>
+          <a href="#use-cases">use cases</a>
+          <a href="#features">capabilities</a>
+          <a href="#flowboard">workflow</a>
+          <a href="#pricing">pricing</a>
+        </div>
+        <div class="operator-rail__hint">inspect, decide, launch</div>
+      </section>
+
       <section id="hero" class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
         <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
@@ -326,16 +341,70 @@
             <p class="lead">Most teams begin with one high-friction workflow, prove the result, then expand into the next operational bottleneck.</p>
           </div>
         </div>
-        <div class="explore-grid gf-card-grid">
-          {% for task in world_tasks %}
-          <article class="explore-card explore-card--{{ task.icon }} gf-card gf-fade">
-            <div class="explore-card__visual">
-              <span class="explore-tag">{{ task.domain }}</span>
+        <div class="use-case-layout gf-grid-12 gf-gap-24">
+          <div class="explore-grid gf-card-grid gf-span-8">
+            {% for task in world_tasks %}
+            <article
+              class="explore-card explore-card--{{ task.icon }} gf-card gf-fade"
+              data-preview-domain="{{ task.domain }}"
+              data-preview-headline="{{ task.headline }}"
+              data-preview-description="{{ task.description }}"
+            >
+              <div class="explore-card__visual">
+                <span class="explore-tag">{{ task.domain }}</span>
+              </div>
+              <div class="explore-card__body content-body">
+                <h3>{{ task.headline }}</h3>
+                <p class="explore-description">{{ task.description }}</p>
+                <a class="feature-link" href="#flowboard">Open workflow -></a>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+          <aside class="use-case-preview gf-card gf-span-4 gf-fade" aria-live="polite">
+            <div class="content-body">
+              <p class="eyebrow">Live preview</p>
+              <h3 id="use-case-preview-title">{{ world_tasks[0].headline }}</h3>
+              <p class="use-case-preview-domain" id="use-case-preview-domain">{{ world_tasks[0].domain }}</p>
+              <p class="use-case-preview-copy" id="use-case-preview-copy">{{ world_tasks[0].description }}</p>
+              <div class="hero-media-points">
+                <span>Fast start</span>
+                <span>Clear ownership</span>
+                <span>Visible output</span>
+              </div>
             </div>
-            <div class="explore-card__body content-body">
-              <h3>{{ task.headline }}</h3>
-              <p class="explore-description">{{ task.description }}</p>
-              <a class="feature-link" href="#flowboard">Open workflow -></a>
+          </aside>
+        </div>
+      </section>
+
+      <section id="features" class="features gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Capabilities</p>
+            <h2>Built for fast operator decisions.</h2>
+            <p class="lead">Each capability is designed to reduce friction, surface the next action, and keep the operator in control.</p>
+          </div>
+        </div>
+        <div class="feature-grid gf-card-grid">
+          {% for feature in features %}
+          <article class="feature-card gf-card gf-fade">
+            <div class="content-body">
+              <div class="feature-icon feature-icon--{{ feature.icon }}" aria-hidden="true"></div>
+              <div class="feature-copy">
+                <p class="feature-kicker">{{ feature.title }}</p>
+                <h3>{{ feature.headline }}</h3>
+                <p>{{ feature.detail }}</p>
+              </div>
+              <button
+                class="feature-link"
+                type="button"
+                data-feature-title="{{ feature.title }}"
+                data-feature-headline="{{ feature.headline }}"
+                data-feature-detail="{{ feature.detail }}"
+                data-feature-target="{{ feature.href }}"
+              >
+                Learn more ->
+              </button>
             </div>
           </article>
           {% endfor %}
@@ -408,6 +477,14 @@
             <p class="lead">Route work into the tools you already operate so the workflow can run without another migration project.</p>
           </div>
         </div>
+        <div class="integration-intro integration-intro--airbnb">
+          <span>Connect in 2 clicks</span>
+          <span>Slack</span>
+          <span>HubSpot</span>
+          <span>QuickBooks</span>
+          <span>Airtable</span>
+          <p>More integrations coming soon. Request the next one inside the connector panel.</p>
+        </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for connector in connectors %}
           <details class="connector-card connector-card--airbnb gf-card gf-fade" {% if loop.first %}open{% endif %}>
@@ -434,6 +511,7 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
+              <p class="form-helper">Use a live endpoint and one sample field to validate the connector before you route production work.</p>
               <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
               <p class="modal-note connector-status"></p>
             </form>
@@ -449,6 +527,10 @@
             <h2>Start with one workflow. Expand when the result is obvious.</h2>
             <p class="lead">Each tier keeps the same operating model: clear scope, visible runs, and human override where it matters.</p>
           </div>
+        </div>
+        <div class="pricing-toggle" role="tablist" aria-label="Billing cadence">
+          <button class="toggle-option is-active" id="billing-monthly" type="button" role="tab" aria-selected="true">monthly</button>
+          <button class="toggle-option" id="billing-annual" type="button" role="tab" aria-selected="false">annual <span>save</span></button>
         </div>
         <div class="subscription-grid subscription-grid--airbnb gf-card-grid">
           {% for tier in subscription_tiers %}
@@ -474,6 +556,30 @@
             </div>
           </article>
           {% endfor %}
+        </div>
+        <div class="comparison-table-wrap gf-fade">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Included</th>
+                <th>Starter</th>
+                <th>Pilot</th>
+                <th>Launch</th>
+                <th>Captain</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in pricing_comparison %}
+              <tr>
+                <td>{{ row.label }}</td>
+                <td>{{ row.starter }}</td>
+                <td>{{ row.pilot }}</td>
+                <td>{{ row.launch }}</td>
+                <td>{{ row.captain }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </section>
 

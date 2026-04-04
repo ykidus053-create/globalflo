@@ -44,6 +44,11 @@ const navLinks = document.querySelectorAll(".nav a[href^='#']");
 const priceCells = document.querySelectorAll(".price[data-monthly][data-annual]");
 const monthlyToggle = document.getElementById("billing-monthly");
 const annualToggle = document.getElementById("billing-annual");
+const featureDetailButtons = document.querySelectorAll("[data-feature-title]");
+const useCaseCards = document.querySelectorAll("[data-preview-headline]");
+const useCasePreviewTitle = document.getElementById("use-case-preview-title");
+const useCasePreviewDomain = document.getElementById("use-case-preview-domain");
+const useCasePreviewCopy = document.getElementById("use-case-preview-copy");
 
 const SESSION_KEY = "globalflow_session";
 const numberFormatter = new Intl.NumberFormat("en-US");
@@ -689,6 +694,48 @@ function openCheckoutForTier(tierId) {
   window.location.assign(`/checkout/${String(tierId).toLowerCase()}`);
 }
 
+function applyDeviceClass() {
+  const width = window.innerWidth;
+  let device = "desktop";
+  if (width < 640) device = "mobile";
+  else if (width < 1024) device = "tablet";
+  else if (width < 1440) device = "laptop";
+  document.documentElement.dataset.device = device;
+}
+
+function initUseCasePreview() {
+  if (!useCaseCards.length || !useCasePreviewTitle || !useCasePreviewDomain || !useCasePreviewCopy) return;
+
+  const updatePreview = (card) => {
+    useCasePreviewTitle.textContent = card.dataset.previewHeadline || "";
+    useCasePreviewDomain.textContent = card.dataset.previewDomain || "";
+    useCasePreviewCopy.textContent = card.dataset.previewDescription || "";
+  };
+
+  useCaseCards.forEach((card, index) => {
+    if (index === 0) updatePreview(card);
+    ["mouseenter", "focusin"].forEach((eventName) => {
+      card.addEventListener(eventName, () => updatePreview(card));
+    });
+  });
+}
+
+function initFeatureDetailButtons() {
+  if (!featureDetailButtons.length || !flowModal || !flowModalBody) return;
+  featureDetailButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const payload = {
+        capability: button.dataset.featureTitle,
+        headline: button.dataset.featureHeadline,
+        detail: button.dataset.featureDetail,
+        next_step: button.dataset.featureTarget,
+      };
+      flowModalBody.textContent = JSON.stringify(payload, null, 2);
+      openModal(flowModal);
+    });
+  });
+}
+
 function startSocialLogin(provider) {
   const providerButton =
     provider === "google" ? googleLoginButton : provider === "apple" ? appleLoginButton : null;
@@ -707,8 +754,14 @@ function setBillingMode(mode) {
   priceCells.forEach((cell) => {
     cell.textContent = cell.dataset[mode] || cell.textContent;
   });
-  if (monthlyToggle) monthlyToggle.classList.toggle("is-active", mode === "monthly");
-  if (annualToggle) annualToggle.classList.toggle("is-active", mode === "annual");
+  if (monthlyToggle) {
+    monthlyToggle.classList.toggle("is-active", mode === "monthly");
+    monthlyToggle.setAttribute("aria-selected", mode === "monthly" ? "true" : "false");
+  }
+  if (annualToggle) {
+    annualToggle.classList.toggle("is-active", mode === "annual");
+    annualToggle.setAttribute("aria-selected", mode === "annual" ? "true" : "false");
+  }
 }
 
 function showToast(text) {
@@ -849,6 +902,9 @@ subscriptionButtons.forEach((button) => {
 });
 
 connectorForms.forEach((form) => {
+  const endpointInput = form.querySelector("input[name='target_url']");
+  const sampleInput = form.querySelector("input:not([name='target_url']):not([name='context'])");
+  const submitButton = form.querySelector("button[type='submit']");
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const connectorId = form.dataset.connectorId;
@@ -876,6 +932,22 @@ connectorForms.forEach((form) => {
       showToast(error.message || "Connector offline");
     }
   });
+
+  const refreshConnectorState = () => {
+    if (!submitButton) return;
+    const hasEndpoint = endpointInput && endpointInput.value.trim().startsWith("http");
+    const hasSample = sampleInput && sampleInput.value.trim().length > 0;
+    submitButton.disabled = !(hasEndpoint && hasSample);
+    const statusEl = form.querySelector(".connector-status");
+    if (statusEl && !submitButton.disabled) {
+      statusEl.textContent = "Ready to validate connector";
+    }
+  };
+
+  [endpointInput, sampleInput].forEach((input) => {
+    if (input) input.addEventListener("input", refreshConnectorState);
+  });
+  refreshConnectorState();
 });
 
 if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode("monthly"));
@@ -916,6 +988,7 @@ function scheduleSafe(task, interval) {
 
 async function bootstrap() {
   handleAuthReturn();
+  applyDeviceClass();
   initRevealObserver();
   initSectionStateObserver();
   initAdvancedMotion();
@@ -923,6 +996,8 @@ async function bootstrap() {
   initAmbientVfx();
   initMagneticButtons();
   initKineticType();
+  initUseCasePreview();
+  initFeatureDetailButtons();
   setBillingMode(billingMode);
   await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
 }
@@ -935,6 +1010,8 @@ bootstrap().catch((error) => {
 document.addEventListener("visibilitychange", () => {
   pollers.forEach((poller) => poller.restart());
 });
+
+window.addEventListener("resize", applyDeviceClass, { passive: true });
 
 window.addEventListener(
   "pagehide",
