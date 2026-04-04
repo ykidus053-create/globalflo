@@ -11,6 +11,10 @@ const openImmersiveInspector = document.getElementById("open-immersive-inspector
 const closeImmersiveModal = document.getElementById("close-immersive-modal");
 const laserCursor = document.getElementById("laser-cursor");
 const laserTrail = document.getElementById("laser-trail");
+const enterVRButton = document.getElementById("enter-vr");
+const exitVRButton = document.getElementById("exit-vr");
+const vrStatus = document.getElementById("vr-status");
+const vrCanvas = document.getElementById("vr-canvas");
 
 const immersiveState = {
   laser: true,
@@ -26,6 +30,9 @@ const queuedEvents = [
   { kind: "ops", title: "Retry window optimized", detail: "Mean retry delay reduced by 14%." },
 ];
 let queuedIndex = 0;
+let xrSession = null;
+let xrRefSpace = null;
+let xrGl = null;
 
 function toast(message) {
   const el = document.getElementById("toast");
@@ -310,6 +317,9 @@ function installImmersiveModal() {
 function installShortcuts() {
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
+      if (xrSession) {
+        xrSession.end().catch(() => {});
+      }
       closeImmersiveInspectorModal();
       return;
     }
@@ -332,6 +342,120 @@ function installShortcuts() {
   });
 }
 
+function setVRStatus(message) {
+  if (vrStatus) vrStatus.textContent = message;
+}
+
+function toggleVRButtons(inSession) {
+  if (enterVRButton) enterVRButton.disabled = inSession;
+  if (exitVRButton) exitVRButton.disabled = !inSession;
+}
+
+async function ensureXRSupport() {
+  if (!("xr" in navigator) || !navigator.xr) {
+    setVRStatus("WebXR not available on this device/browser.");
+    if (enterVRButton) enterVRButton.disabled = true;
+    if (exitVRButton) exitVRButton.disabled = true;
+    return false;
+  }
+  const supported = await navigator.xr.isSessionSupported("immersive-vr");
+  if (!supported) {
+    setVRStatus("Immersive VR session is not supported here.");
+    if (enterVRButton) enterVRButton.disabled = true;
+    if (exitVRButton) exitVRButton.disabled = true;
+    return false;
+  }
+  setVRStatus("VR ready. Connect headset and click Enter VR.");
+  toggleVRButtons(false);
+  return true;
+}
+
+function renderXRFrame(time, frame) {
+  if (!xrSession || !xrRefSpace || !xrGl) return;
+  xrSession.requestAnimationFrame(renderXRFrame);
+  const pose = frame.getViewerPose(xrRefSpace);
+  const layer = xrSession.renderState.baseLayer;
+  if (!pose || !layer) return;
+
+  xrGl.bindFramebuffer(xrGl.FRAMEBUFFER, layer.framebuffer);
+  xrGl.enable(xrGl.DEPTH_TEST);
+  xrGl.clearColor(0.03, 0.06, 0.12, 1.0);
+  xrGl.clear(xrGl.COLOR_BUFFER_BIT | xrGl.DEPTH_BUFFER_BIT);
+
+  let controllers = 0;
+  let hands = 0;
+  for (const source of xrSession.inputSources) {
+    if (source.targetRayMode === "tracked-pointer") controllers += 1;
+    if (source.hand) hands += 1;
+  }
+  if (vrStatus) {
+    vrStatus.textContent = `VR live: ${pose.views.length} view(s), ${controllers} controller(s), ${hands} hand-tracking source(s).`;
+  }
+
+  for (const view of pose.views) {
+    const viewport = layer.getViewport(view);
+    if (!viewport) continue;
+    xrGl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
+    const hue = view.eye === "left" ? 0.14 : 0.18;
+    xrGl.clearColor(hue, 0.08, 0.2, 1.0);
+    xrGl.clear(xrGl.COLOR_BUFFER_BIT | xrGl.DEPTH_BUFFER_BIT);
+  }
+}
+
+async function enterVR() {
+  if (!("xr" in navigator) || !navigator.xr || xrSession) return;
+  try {
+    xrSession = await navigator.xr.requestSession("immersive-vr", {
+      requiredFeatures: ["local-floor"],
+      optionalFeatures: ["bounded-floor", "hand-tracking", "layers"],
+    });
+    xrSession.addEventListener("end", () => {
+      xrSession = null;
+      xrRefSpace = null;
+      xrGl = null;
+      toggleVRButtons(false);
+      setVRStatus("VR session ended.");
+      toast("VR session ended");
+    });
+    xrSession.addEventListener("selectstart", () => toast("VR select start"));
+    xrSession.addEventListener("selectend", () => toast("VR select end"));
+
+    if (!vrCanvas) throw new Error("VR canvas not found");
+    xrGl = vrCanvas.getContext("webgl", { xrCompatible: true, antialias: true, alpha: false });
+    if (!xrGl) throw new Error("WebGL context unavailable");
+
+    await xrGl.makeXRCompatible();
+    await xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, xrGl) });
+    xrRefSpace = await xrSession.requestReferenceSpace("local-floor");
+    toggleVRButtons(true);
+    setVRStatus("VR session active.");
+    toast("Entered VR");
+    xrSession.requestAnimationFrame(renderXRFrame);
+  } catch (error) {
+    setVRStatus(`VR start failed: ${error?.message || "unknown error"}`);
+    xrSession = null;
+    xrRefSpace = null;
+    xrGl = null;
+    toggleVRButtons(false);
+  }
+}
+
+async function exitVR() {
+  if (!xrSession) return;
+  try {
+    await xrSession.end();
+  } catch (_) {}
+}
+
+function installRealVR() {
+  ensureXRSupport().catch(() => {
+    setVRStatus("WebXR capability check failed.");
+    if (enterVRButton) enterVRButton.disabled = true;
+  });
+  if (enterVRButton) enterVRButton.addEventListener("click", enterVR);
+  if (exitVRButton) exitVRButton.addEventListener("click", exitVR);
+}
+
 installSignalRipples();
 installDensityControls();
 installOperatorDnD();
@@ -343,3 +467,4 @@ installLaserPointer();
 installImmersiveControls();
 installImmersiveModal();
 installShortcuts();
+installRealVR();
