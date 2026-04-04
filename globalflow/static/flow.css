@@ -7644,3 +7644,36 @@ body.top-tier-site .workflow-card h4 {
     margin-block: 14px;
   }
 }
+
+/* Workflow readability lock: keep text legible on navy workflow surfaces */
+body.workflow-lab-page .wf-hero-copy h1,
+body.workflow-lab-page .wf-hero-copy .lead,
+body.workflow-lab-page .wf-hero-copy .eyebrow,
+body.workflow-lab-page .hero-status-card span,
+body.workflow-lab-page .hero-status-card strong,
+body.workflow-lab-page .section-heading h2,
+body.workflow-lab-page .section-heading p,
+body.workflow-lab-page .wf-signal-cell span,
+body.workflow-lab-page .wf-signal-cell strong,
+body.workflow-lab-page .wf-signal-cell small,
+body.workflow-lab-page .nav a,
+body.workflow-lab-page .brand-copy span,
+body.workflow-lab-page .brand-copy p {
+  color: #eef4ff !important;
+}
+
+body.workflow-lab-page .section-heading p,
+body.workflow-lab-page .wf-hero-copy .lead,
+body.workflow-lab-page .wf-signal-cell small,
+body.workflow-lab-page .hero-status-card span,
+body.workflow-lab-page .brand-copy p {
+  color: #cdd9ef !important;
+}
+
+body.workflow-lab-page .wf-hero-copy,
+body.workflow-lab-page .wf-hero-side,
+body.workflow-lab-page .hero-status-card,
+body.workflow-lab-page .wf-signal-cell {
+  background: rgba(10, 17, 30, 0.88) !important;
+  border-color: rgba(150, 185, 235, 0.3) !important;
+}
