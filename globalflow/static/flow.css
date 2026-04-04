@@ -7576,3 +7576,120 @@ body.workflow-lab-page .wf-signal-cell {
   background: rgba(10, 17, 30, 0.88) !important;
   border-color: rgba(150, 185, 235, 0.3) !important;
 }
+
+/* Adaptive grid contrast guard: keep all adaptive cards/cells readable */
+:root {
+  --adaptive-grid-fg: #f8fbff;
+  --adaptive-grid-muted: #d7e4fb;
+  --adaptive-grid-scrim-top: rgba(6, 12, 24, 0.22);
+  --adaptive-grid-scrim-bottom: rgba(4, 8, 16, 0.66);
+}
+
+html[data-theme="light"] {
+  --adaptive-grid-fg: #eef4ff;
+  --adaptive-grid-muted: #d2ddf1;
+  --adaptive-grid-scrim-top: rgba(7, 12, 24, 0.28);
+  --adaptive-grid-scrim-bottom: rgba(5, 9, 18, 0.72);
+}
+
+body.paper-site .gf-card,
+body.paper-site .stat-card,
+body.paper-site .stat-card--airbnb,
+body.paper-site .workflow-card,
+body.paper-site .connector-card,
+body.paper-site .connector-card--airbnb,
+body.paper-site .explore-card,
+body.paper-site .pricing-card,
+body.paper-site .pricing-card--airbnb,
+body.paper-site .payment-chip,
+body.paper-site .payment-chip--airbnb,
+body.paper-site .color-cell,
+body.workflow-lab-page .wf-signal-cell {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+body.paper-site .gf-card::after,
+body.paper-site .stat-card::after,
+body.paper-site .stat-card--airbnb::after,
+body.paper-site .workflow-card::after,
+body.paper-site .connector-card::after,
+body.paper-site .connector-card--airbnb::after,
+body.paper-site .explore-card::after,
+body.paper-site .pricing-card::after,
+body.paper-site .pricing-card--airbnb::after,
+body.paper-site .payment-chip::after,
+body.paper-site .payment-chip--airbnb::after,
+body.paper-site .color-cell::after,
+body.workflow-lab-page .wf-signal-cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--adaptive-grid-scrim-top) 0%,
+    var(--adaptive-grid-scrim-bottom) 100%
+  );
+  z-index: 0;
+}
+
+body.paper-site .gf-card > *,
+body.paper-site .stat-card > *,
+body.paper-site .stat-card--airbnb > *,
+body.paper-site .workflow-card > *,
+body.paper-site .connector-card > *,
+body.paper-site .connector-card--airbnb > *,
+body.paper-site .explore-card > *,
+body.paper-site .pricing-card > *,
+body.paper-site .pricing-card--airbnb > *,
+body.paper-site .payment-chip > *,
+body.paper-site .payment-chip--airbnb > *,
+body.paper-site .color-cell > *,
+body.workflow-lab-page .wf-signal-cell > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.paper-site .gf-card h2,
+body.paper-site .gf-card h3,
+body.paper-site .gf-card h4,
+body.paper-site .gf-card p,
+body.paper-site .gf-card span,
+body.paper-site .gf-card small,
+body.paper-site .stat-card .value,
+body.paper-site .stat-card .label,
+body.paper-site .workflow-card h3,
+body.paper-site .workflow-card h4,
+body.paper-site .workflow-card p,
+body.paper-site .connector-card summary,
+body.paper-site .connector-card p,
+body.paper-site .connector-card--airbnb summary,
+body.paper-site .connector-card--airbnb p,
+body.paper-site .explore-card__body h3,
+body.paper-site .explore-card__body p,
+body.paper-site .pricing-card h3,
+body.paper-site .pricing-card p,
+body.paper-site .payment-chip h3,
+body.paper-site .payment-chip p,
+body.paper-site .color-cell strong,
+body.paper-site .color-cell small,
+body.workflow-lab-page .wf-signal-cell span,
+body.workflow-lab-page .wf-signal-cell strong,
+body.workflow-lab-page .wf-signal-cell small {
+  color: var(--adaptive-grid-fg) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
+}
+
+body.paper-site .stat-card .label,
+body.paper-site .workflow-card .note,
+body.paper-site .connector-card p,
+body.paper-site .connector-card--airbnb p,
+body.paper-site .explore-card__body p,
+body.paper-site .pricing-card p,
+body.paper-site .payment-chip p,
+body.paper-site .color-cell small,
+body.workflow-lab-page .wf-signal-cell small {
+  color: var(--adaptive-grid-muted) !important;
+}
