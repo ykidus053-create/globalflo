@@ -5717,22 +5717,6 @@ body.paper-site .endtoend-body p,
 body.paper-site .endtoend-copy {
   color: #cfd9e0 !important;
 }
-body.paper-site .eyebrow,
-body.paper-site .brand-copy p,
-body.paper-site .nav a,
-body.paper-site .video-card-top span,
-body.paper-site .video-card-top p,
-body.paper-site .signal-pill,
-body.paper-site .hero-benefit-list li,
-body.paper-site .payment-chip,
-body.paper-site .price-note,
-body.paper-site .method-note,
-body.paper-site .activity-entry .kind,
-body.paper-site .activity-entry .timestamp,
-body.paper-site .stat-card .label,
-body.paper-site .overview-statement__lead {
-  color: rgba(248, 248, 248, 0.44) !important;
-}
 body.paper-site h1,
 body.paper-site h2,
 body.paper-site h3,
@@ -6546,16 +6530,6 @@ body.paper-site .founder-card p {
   line-height: 1.35 !important;
 }
 
-body.paper-site .eyebrow,
-body.paper-site .signal-meta,
-body.paper-site .video-card-top p,
-body.paper-site .video-card-top span,
-body.paper-site .activity-kind,
-body.paper-site .connector-toggle,
-body.paper-site .brand-copy p,
-body.paper-site .footer-top p {
-  color: rgba(248, 248, 248, 0.56) !important;
-}
 
 body.paper-site h1,
 body.paper-site h2,
@@ -7745,4 +7719,67 @@ body.paper-site .operator-rail__links a:focus-visible {
   background: rgba(12, 24, 44, 0.92);
   border-color: rgba(172, 204, 255, 0.64);
   color: #ffffff !important;
+}
+
+/* Layout rhythm source-of-truth: consistent spacing across breakpoints */
+body.paper-site {
+  --rhythm-section: 56px;
+  --rhythm-grid: 20px;
+  --rhythm-stack: 16px;
+}
+
+body.paper-site .landing-main {
+  display: grid;
+  gap: var(--rhythm-section);
+}
+
+body.paper-site .gf-section {
+  margin-block: 0 !important;
+}
+
+body.paper-site .gf-card-grid,
+body.paper-site .stat-grid,
+body.paper-site .workflow-grid,
+body.paper-site .connectors-grid,
+body.paper-site .pricing-grid,
+body.paper-site .subscription-grid,
+body.paper-site .trust-grid,
+body.paper-site .testimonial-grid,
+body.paper-site .explore-grid,
+body.paper-site .payment-strip,
+body.paper-site .wf-board,
+body.paper-site .wf-signal-grid,
+body.paper-site .wf-operator-grid {
+  gap: var(--rhythm-grid) !important;
+}
+
+body.paper-site .hero,
+body.paper-site .workflow,
+body.paper-site .workflow--split,
+body.paper-site .account-layout,
+body.paper-site .checkout-offset,
+body.paper-site .operator-rail {
+  gap: var(--rhythm-grid) !important;
+}
+
+@media (max-width: 1024px) {
+  body.paper-site {
+    --rhythm-section: 40px;
+    --rhythm-grid: 16px;
+    --rhythm-stack: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  body.paper-site {
+    --rhythm-section: 28px;
+    --rhythm-grid: 12px;
+    --rhythm-stack: 8px;
+  }
+
+  body.paper-site .top.top--airbnb .nav a,
+  body.paper-site .top.top--airbnb .nav button.small,
+  body.paper-site .operator-rail__links a {
+    padding: 6px 9px;
+  }
 }
