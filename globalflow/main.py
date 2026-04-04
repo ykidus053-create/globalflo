@@ -34,6 +34,7 @@ except ImportError:  # pragma: no cover - fallback when running as a top-level m
 
 root = Path(__file__).resolve().parent
 AUTH_STATE_MAX_AGE_SECONDS = 900
+PAYMENT_TICKET_MAX_AGE_SECONDS = 3600
 
 logger = logging.getLogger("globalflow.app")
 if not logger.handlers:
@@ -307,6 +308,53 @@ def _display_name_from_email(email: str) -> str:
 
 def _auth_error_redirect(request: Request, provider_label: str, return_to: Optional[str], message: str) -> RedirectResponse:
     return _session_redirect(_safe_return_to(request, return_to), error=f"{provider_label} sign-in {message}")
+
+
+def _build_payment_ticket(
+    request: Request,
+    *,
+    method: str,
+    tier_id: str,
+    amount: str,
+    return_to: Optional[str] = "/automation",
+) -> str:
+    payload = {
+        "kind": "payment_ticket",
+        "method": method.lower().strip(),
+        "tier": str(tier_id).strip().lower(),
+        "amount": str(amount).strip(),
+        "return_to": _safe_return_to(request, return_to),
+        "nonce": secrets.token_urlsafe(18),
+        "ts": int(time.time()),
+    }
+    return _encode_signed_state(payload)
+
+
+def _resolve_payment_ticket(token: str, expected_method: str) -> Dict[str, Any]:
+    data = _decode_signed_state(token)
+    if data.get("kind") != "payment_ticket":
+        raise ValueError("Invalid payment ticket kind")
+    if str(data.get("method", "")).strip().lower() != expected_method.strip().lower():
+        raise ValueError("Payment ticket method mismatch")
+    ts = int(data.get("ts", 0))
+    if int(time.time()) - ts > PAYMENT_TICKET_MAX_AGE_SECONDS:
+        raise ValueError("Payment ticket expired")
+    return data
+
+
+def _secure_tier_payment_links(request: Request, tier: Dict[str, Any]) -> Dict[str, str]:
+    links: Dict[str, str] = {}
+    for method in PAYMENT_METHODS:
+        method_id = method["id"]
+        ticket = _build_payment_ticket(
+            request,
+            method=method_id,
+            tier_id=str(tier.get("id", "starter")),
+            amount=str(tier.get("amount", "0")),
+            return_to="/automation",
+        )
+        links[method_id] = f"/payment/{method_id}?ticket={ticket}"
+    return links
 
 
 async def _post_form_json(url: str, payload: Dict[str, str]) -> Dict[str, Any]:
@@ -623,6 +671,7 @@ PAYMENT_METHODS = [
 
 PAYMENT_LOOKUP = {entry["id"]: entry for entry in PAYMENT_METHODS}
 PAYMENT_HISTORY: List[Dict[str, str]] = []
+PAYMENT_USED_NONCES: set[str] = set()
 
 USER_PROFILE: Dict[str, str] = {
     "name": "Nova Ops",
@@ -885,7 +934,10 @@ async def homepage(request: Request):
             "toolkit": AUTOMATION_TOOLS,
             "autopilot": autopilot_status,
             "connectors": CONNECTORS,
-            "subscription_tiers": SUBSCRIPTION_TIERS,
+            "subscription_tiers": [
+                {**tier, "payment_links": _secure_tier_payment_links(request, tier)}
+                for tier in SUBSCRIPTION_TIERS
+            ],
             "trusted_logos": TRUSTED_LOGOS,
             "testimonials": TESTIMONIALS,
             "founders": FOUNDERS,
@@ -1170,14 +1222,37 @@ async def apple_auth_callback_post(
 
 @app.get("/payment/{method}", response_class=HTMLResponse)
 async def payment_portal(request: Request, method: str):
-    portal = PAYMENT_LOOKUP.get(method.lower())
+    method = method.lower()
+    portal = PAYMENT_LOOKUP.get(method)
     if not portal:
         raise HTTPException(status_code=404, detail="Payment method unavailable")
+    raw_ticket = str(request.query_params.get("ticket", "")).strip()
+    payment_ticket = ""
+    payment_verified = False
+    payment_auth_error = ""
+    preset_tier = str(request.query_params.get("tier", "")).strip()
+    preset_amount = str(request.query_params.get("amount", "")).strip()
+    if raw_ticket:
+        try:
+            ticket_data = _resolve_payment_ticket(raw_ticket, method)
+            payment_ticket = raw_ticket
+            payment_verified = True
+            preset_tier = str(ticket_data.get("tier", preset_tier)).strip()
+            preset_amount = str(ticket_data.get("amount", preset_amount)).strip()
+        except ValueError as exc:
+            payment_auth_error = str(exc)
+    else:
+        payment_auth_error = "Open payment from a valid checkout session to enable verified billing."
     return _render_html(
         "payment.html",
         {
             "request": request,
             "portal": portal,
+            "payment_ticket": payment_ticket,
+            "payment_verified": payment_verified,
+            "payment_auth_error": payment_auth_error,
+            "preset_tier": preset_tier,
+            "preset_amount": preset_amount,
             "theme": _active_theme(),
         },
     )
@@ -1188,12 +1263,28 @@ async def checkout_page(request: Request, tier_id: str):
     tier = SUBSCRIPTION_LOOKUP.get(tier_id.lower())
     if not tier:
         raise HTTPException(status_code=404, detail="Subscription tier unavailable")
+    secure_links = _secure_tier_payment_links(request, tier)
+    preferred_method = str(tier.get("preferred_method", "paypal")).strip().lower()
+    preferred_ticket = ""
+    if preferred_method in secure_links:
+        preferred_ticket = secure_links[preferred_method].split("ticket=", 1)[-1]
+    payment_methods_secure: List[Dict[str, Any]] = []
+    for method in PAYMENT_METHODS:
+        method_id = method["id"]
+        payment_methods_secure.append(
+            {
+                **method,
+                "portal_url": secure_links.get(method_id, method["portal_url"]),
+            }
+        )
     return _render_html(
         "checkout.html",
         {
             "request": request,
             "tier": tier,
-            "payment_methods": PAYMENT_METHODS,
+            "tier_payment_links": secure_links,
+            "preferred_payment_ticket": preferred_ticket,
+            "payment_methods": payment_methods_secure,
             "theme": _active_theme(),
         },
     )
@@ -1205,15 +1296,37 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     portal = PAYMENT_LOOKUP.get(method)
     if not portal:
         raise HTTPException(status_code=404, detail="Payment method unavailable")
+    payment_ticket = str(payload.get("payment_ticket", "")).strip()
+    if not payment_ticket:
+        raise HTTPException(status_code=403, detail="Verified payment auth ticket is required")
+    try:
+        ticket_data = _resolve_payment_ticket(payment_ticket, method)
+    except ValueError as exc:
+        raise HTTPException(status_code=403, detail=f"Payment auth failed: {exc}") from exc
+    nonce = str(ticket_data.get("nonce", "")).strip()
+    if not nonce:
+        raise HTTPException(status_code=403, detail="Payment auth failed: nonce missing")
+    if nonce in PAYMENT_USED_NONCES:
+        raise HTTPException(status_code=409, detail="Payment ticket already used")
+
     email = payload.get("email")
     if not email:
         raise HTTPException(status_code=400, detail="Email is required to issue an invoice")
+    if "@" not in str(email):
+        raise HTTPException(status_code=400, detail="A valid business email is required")
+
+    PAYMENT_USED_NONCES.add(nonce)
+    canonical_tier = str(ticket_data.get("tier", "")).strip() or str(payload.get("tier", "")).strip()
+    canonical_amount = str(ticket_data.get("amount", "")).strip() or str(payload.get("amount", "TBD")).strip()
+
     PAYMENT_HISTORY.append(
         {
             "method": method,
             "email": email,
-            "amount": payload.get("amount", "TBD"),
+            "tier": canonical_tier,
+            "amount": canonical_amount,
             "notes": payload.get("notes", ""),
+            "verified": "true",
             "timestamp": datetime.utcnow().isoformat(),
         }
     )
@@ -1221,7 +1334,7 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     return {
         "status": "ok",
         "message": f"{portal['name']} request received - expect a secure link in your inbox shortly.",
-        "redirect_url": "/automation",
+        "redirect_url": str(ticket_data.get("return_to") or "/automation"),
     }
 
 

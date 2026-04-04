@@ -77,10 +77,16 @@
       <section class="payment-form-section">
         <h2>Send a payment request</h2>
         <p>Enter the tier, business email, amount, and finance notes.</p>
+        {% if payment_auth_error %}
+        <p class="payment-status">{{ payment_auth_error }}</p>
+        {% elif payment_verified %}
+        <p class="payment-status">Verified checkout session active.</p>
+        {% endif %}
         <form id="payment-form" class="payment-form">
+          <input type="hidden" name="payment_ticket" value="{{ payment_ticket }}" />
           <label>
             Selected tier
-            <input name="tier" placeholder="starter / pilot / launch / captain" />
+            <input name="tier" value="{{ preset_tier }}" placeholder="starter / pilot / launch / captain" />
           </label>
           <label>
             Business email
@@ -88,13 +94,13 @@
           </label>
           <label>
             Amount
-            <input name="amount" placeholder="$549" />
+            <input name="amount" value="{{ preset_amount }}" placeholder="$549" />
           </label>
           <label>
             Notes for finance
             <textarea name="notes" rows="3" placeholder="PO number, billing schedule, or payment details"></textarea>
           </label>
-          <button class="primary" type="submit">Send payment request</button>
+          <button class="primary" type="submit" {% if not payment_verified %}disabled{% endif %}>Send payment request</button>
           <p class="payment-status" id="payment-status"></p>
         </form>
       </section>

@@ -60,7 +60,7 @@
           <p class="lead">{{ tier.description }}</p>
           <p class="price">{{ tier.monthly_price }}</p>
           <div class="checkout-links">
-            {% for method, url in tier.payment_links.items() %}
+            {% for method, url in tier_payment_links.items() %}
             <a class="primary small" href="{{ url }}" rel="noreferrer">Pay with {{ method.capitalize() }}</a>
             {% endfor %}
           </div>
@@ -78,6 +78,7 @@
           <h2>Request an invoice</h2>
           <p>Use this flow when procurement or finance needs a manual ticket.</p>
           <form id="invoice-form" data-method="{{ tier.preferred_method }}" data-tier-id="{{ tier.id }}">
+            <input type="hidden" name="payment_ticket" value="{{ preferred_payment_ticket }}" />
             <label>
               Business email
               <input name="email" type="email" placeholder="ops@company.com" required />
