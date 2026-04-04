@@ -196,3 +196,124 @@ body.paper-site textarea:focus-visible {
     transform: none !important;
   }
 }
+
+/* Workflow Elite page */
+body.workflow-elite-page .wf-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  gap: 32px;
+}
+
+body.workflow-elite-page .wf-section {
+  display: grid;
+  gap: 16px;
+}
+
+body.workflow-elite-page .wf-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+body.workflow-elite-page .wf-hero .gf-card {
+  border-radius: var(--ds-radius-card);
+}
+
+body.workflow-elite-page .section-heading h2 {
+  letter-spacing: -0.02em;
+}
+
+body.workflow-elite-page .section-heading p {
+  max-width: 62ch;
+}
+
+body.workflow-elite-page .wf-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+body.workflow-elite-page .wf-signal-cell {
+  min-height: 124px;
+  border-radius: 12px;
+  border: 1px solid rgba(176, 202, 242, 0.35);
+  background: linear-gradient(160deg, rgba(10, 18, 34, 0.82), rgba(8, 14, 28, 0.96));
+  text-align: left;
+  padding: 16px;
+  position: relative;
+}
+
+body.workflow-elite-page .wf-signal-cell:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+body.workflow-elite-page .wf-signal-cell[data-tone="trust"] { box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.38); }
+body.workflow-elite-page .wf-signal-cell[data-tone="urgency"] { box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.42); }
+body.workflow-elite-page .wf-signal-cell[data-tone="speed"] { box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.38); }
+body.workflow-elite-page .wf-signal-cell[data-tone="risk"] { box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.4); }
+body.workflow-elite-page .wf-signal-cell[data-tone="insight"] { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.36); }
+body.workflow-elite-page .wf-signal-cell[data-tone="neutral"] { box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.34); }
+body.workflow-elite-page .wf-signal-cell[data-tone="capacity"] { box-shadow: inset 0 0 0 1px rgba(111, 176, 255, 0.42); }
+body.workflow-elite-page .wf-signal-cell[data-tone="success"] { box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.38); }
+
+body.workflow-elite-page .wf-signal-cell span,
+body.workflow-elite-page .wf-signal-cell small {
+  color: var(--ds-muted) !important;
+}
+
+body.workflow-elite-page .wf-signal-cell strong {
+  color: var(--ds-text) !important;
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+}
+
+body.workflow-elite-page .wf-operator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+body.workflow-elite-page .wf-operator-card {
+  border-radius: 12px;
+  border: 1px solid rgba(176, 202, 242, 0.3);
+  background: linear-gradient(160deg, rgba(10, 18, 34, 0.78), rgba(8, 14, 28, 0.94));
+  padding: 14px;
+}
+
+body.workflow-elite-page .wf-board {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+body.workflow-elite-page .wf-lane {
+  min-height: 230px;
+}
+
+body.workflow-elite-page .activity-grid--single {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 1024px) {
+  body.workflow-elite-page .wf-shell {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 920px) {
+  body.workflow-elite-page .wf-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  body.workflow-elite-page .wf-shell {
+    padding: 14px;
+    gap: 18px;
+  }
+  body.workflow-elite-page .wf-signal-grid,
+  body.workflow-elite-page .wf-operator-grid {
+    gap: 12px;
+  }
+}

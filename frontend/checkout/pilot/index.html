@@ -20,7 +20,8 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=49f5f72" />
+    <link rel="stylesheet" href="/static/flow.css?v=75b1071" />
+    <link rel="stylesheet" href="/static/flow-system.css?v=75b1071" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="checkout-body paper-site top-tier-site is-loading">
@@ -43,7 +44,7 @@
       </div>
       <nav class="nav" aria-label="Checkout navigation">
         <a href="/">Home</a>
-        <a href="/workflow-pro">Workflow</a>
+        <a href="/workflow-elite">Workflow</a>
         <a href="/account">Account</a>
         <a href="#invoice-form">Invoice</a>
       </nav>
@@ -61,11 +62,11 @@
           <p class="price">$349 / month</p>
           <div class="checkout-links">
             
-            <a class="primary small" href="/payment/paypal?tier=pilot&amp;amount=349" rel="noreferrer">Pay with Paypal</a>
+            <a class="primary small" href="/payment/paypal?ticket=eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6ImNEb1Y3WndOUzNEUFBnbTg5RzRLaEpORCIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6InBpbG90IiwidHMiOjE3NzUzMjkwODl9.oIfw3KOV_YwozjJ7gysUmmKRdJCY_GO4kB2zLOhx2J4" rel="noreferrer">Pay with Paypal</a>
             
-            <a class="primary small" href="/payment/mastercard?tier=pilot&amp;amount=349" rel="noreferrer">Pay with Mastercard</a>
+            <a class="primary small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiJKbEFpVTJJSHVNVWhkdjBhZmZmNWh6cFEiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJwaWxvdCIsInRzIjoxNzc1MzI5MDg5fQ.VleVoi_ifgq42RgNj2WAZqpEYIUkaobtmjK6o6YaAKo" rel="noreferrer">Pay with Mastercard</a>
             
-            <a class="primary small" href="/payment/amex?tier=pilot&amp;amount=349" rel="noreferrer">Pay with Amex</a>
+            <a class="primary small" href="/payment/amex?ticket=eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiJXcmxUcU1lcHV3bHd0ZnhwSFRLZVNwUW4iLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJwaWxvdCIsInRzIjoxNzc1MzI5MDg5fQ.Oult7ijWNif3xwO8THUddd9AryVNg_KppME04P2zWsk" rel="noreferrer">Pay with Amex</a>
             
           </div>
         </div>
@@ -82,6 +83,7 @@
           <h2>Request an invoice</h2>
           <p>Use this flow when procurement or finance needs a manual ticket.</p>
           <form id="invoice-form" data-method="paypal" data-tier-id="pilot">
+            <input type="hidden" name="payment_ticket" value="eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6ImNEb1Y3WndOUzNEUFBnbTg5RzRLaEpORCIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6InBpbG90IiwidHMiOjE3NzUzMjkwODl9.oIfw3KOV_YwozjJ7gysUmmKRdJCY_GO4kB2zLOhx2J4" />
             <label>
               Business email
               <input name="email" type="email" placeholder="ops@company.com" required />
@@ -136,7 +138,7 @@
             <p>Digital invoices</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/paypal" rel="noreferrer">Open PayPal</a>
+            <a class="ghost small" href="/payment/paypal?ticket=eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6ImNEb1Y3WndOUzNEUFBnbTg5RzRLaEpORCIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6InBpbG90IiwidHMiOjE3NzUzMjkwODl9.oIfw3KOV_YwozjJ7gysUmmKRdJCY_GO4kB2zLOhx2J4" rel="noreferrer">Open PayPal</a>
           </div>
         </article>
         
@@ -147,7 +149,7 @@
             <p>Recurring billing</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/mastercard" rel="noreferrer">Open Mastercard</a>
+            <a class="ghost small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiJKbEFpVTJJSHVNVWhkdjBhZmZmNWh6cFEiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJwaWxvdCIsInRzIjoxNzc1MzI5MDg5fQ.VleVoi_ifgq42RgNj2WAZqpEYIUkaobtmjK6o6YaAKo" rel="noreferrer">Open Mastercard</a>
           </div>
         </article>
         
@@ -158,7 +160,7 @@
             <p>Card billing</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/amex" rel="noreferrer">Open American Express</a>
+            <a class="ghost small" href="/payment/amex?ticket=eyJhbW91bnQiOiIzNDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiJXcmxUcU1lcHV3bHd0ZnhwSFRLZVNwUW4iLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJwaWxvdCIsInRzIjoxNzc1MzI5MDg5fQ.Oult7ijWNif3xwO8THUddd9AryVNg_KppME04P2zWsk" rel="noreferrer">Open American Express</a>
           </div>
         </article>
         
@@ -169,7 +171,7 @@
       <p>Your workspace unlocks after billing confirmation and connector validation.</p>
     </footer>
 
-    <script src="/static/site-boot.js?v=49f5f72" defer></script>
-    <script type="module" src="/static/checkout.js?v=49f5f72"></script>
+    <script src="/static/site-boot.js?v=75b1071" defer></script>
+    <script type="module" src="/static/checkout.js?v=75b1071"></script>
   </body>
 </html>

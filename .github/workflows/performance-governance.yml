@@ -16,6 +16,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Verify static mirror sync
+        run: python tools/check_static_sync.py
+
       - name: Run static asset budget checks
         run: python tools/perf_budget_check.py
 

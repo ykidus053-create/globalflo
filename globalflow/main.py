@@ -1530,10 +1530,50 @@ async def workflow_workspace(request: Request):
     )
 
 
+@app.get("/workflow-elite", response_class=HTMLResponse)
+async def workflow_workspace_elite(request: Request):
+    workflow_signals = [
+        {"tone": "trust", "label": "Trust index", "value": "98.7%", "detail": "Verified outcomes with operator override"},
+        {"tone": "urgency", "label": "Urgent work", "value": "6", "detail": "Tasks above SLA risk threshold"},
+        {"tone": "speed", "label": "Median runtime", "value": "39s", "detail": "Execution speed over last 200 runs"},
+        {"tone": "risk", "label": "Risk queue", "value": "2", "detail": "Human review required"},
+        {"tone": "insight", "label": "Telemetry coverage", "value": "99%", "detail": "Signals captured and searchable"},
+        {"tone": "capacity", "label": "Team capacity", "value": "74%", "detail": "Healthy throughput utilization"},
+        {"tone": "success", "label": "Completed today", "value": "41", "detail": "Closed workflows and confirmations"},
+        {"tone": "neutral", "label": "Draft scenarios", "value": "9", "detail": "Prepared automations not launched"},
+    ]
+    workflow_operators = [
+        {"name": "Amina Tekle", "role": "Ops lead", "state": "online", "badge": "Live"},
+        {"name": "Noah Rivera", "role": "Billing analyst", "state": "review", "badge": "Review"},
+        {"name": "Liya Solomon", "role": "Compliance owner", "state": "ready", "badge": "Ready"},
+        {"name": "Daniel Kim", "role": "Automation engineer", "state": "online", "badge": "Live"},
+        {"name": "Maya Chen", "role": "Workflow QA", "state": "ready", "badge": "Ready"},
+        {"name": "Rami Yusuf", "role": "Integrations", "state": "offline", "badge": "Idle"},
+    ]
+    workflow_events = [
+        {"kind": "billing", "title": "Invoice recovery run completed", "detail": "11 invoices routed; 2 escalated for manual review."},
+        {"kind": "calls", "title": "Call follow-up orchestration launched", "detail": "Action owners assigned in 32s."},
+        {"kind": "files", "title": "Document routing synchronized", "detail": "16 files classified and attached to active flows."},
+        {"kind": "tax", "title": "Compliance snapshot refreshed", "detail": "Jurisdiction checklist updated with next deadlines."},
+    ]
+    return _render_html(
+        "workflow_elite.html",
+        {
+            "request": request,
+            "autopilot": autopilot.status(),
+            "connectors": CONNECTORS,
+            "workflow_signals": workflow_signals,
+            "workflow_operators": workflow_operators,
+            "workflow_events": workflow_events,
+            "theme": _active_theme(),
+        },
+    )
+
+
 @app.get("/workflow-pro", response_class=HTMLResponse)
 async def workflow_workspace_pro(request: Request):
     # New workflow endpoint alias to keep navigation flexible across deploy targets.
-    return await workflow_workspace(request)
+    return await workflow_workspace_elite(request)
 
 
 @app.post("/api/account", response_class=JSONResponse)
