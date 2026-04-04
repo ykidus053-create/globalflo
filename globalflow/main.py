@@ -207,6 +207,76 @@ def _decode_jwt_payload(token: str) -> Dict[str, Any]:
         return {}
 
 
+def _as_unix_timestamp(value: Any) -> int:
+    try:
+        return int(float(str(value)))
+    except (TypeError, ValueError):
+        return 0
+
+
+def _is_truthy_identity_flag(value: Any) -> bool:
+    return str(value).strip().lower() in {"true", "1", "yes"}
+
+
+async def _verify_google_id_token(id_token: str, expected_client_id: str, expected_nonce: str) -> Dict[str, Any]:
+    payload = _decode_jwt_payload(id_token)
+    if not payload:
+        raise ValueError("Google id token payload missing")
+
+    # Defensive local checks.
+    audience = str(payload.get("aud", "")).strip()
+    issuer = str(payload.get("iss", "")).strip()
+    expires_at = _as_unix_timestamp(payload.get("exp"))
+    if audience != expected_client_id:
+        raise ValueError("Google id token audience mismatch")
+    if issuer not in {"accounts.google.com", "https://accounts.google.com"}:
+        raise ValueError("Google id token issuer mismatch")
+    if expires_at <= int(time.time()):
+        raise ValueError("Google id token expired")
+    if expected_nonce:
+        nonce = str(payload.get("nonce", "")).strip()
+        if nonce != expected_nonce:
+            raise ValueError("Google id token nonce mismatch")
+
+    # Provider-verified check.
+    tokeninfo = await _get_json(
+        "https://oauth2.googleapis.com/tokeninfo?id_token=" + id_token,
+        {
+            "Accept": "application/json",
+        },
+    )
+    verified = tokeninfo
+    if str(verified.get("aud", "")).strip() != expected_client_id:
+        raise ValueError("Google tokeninfo audience mismatch")
+    if str(verified.get("iss", "")).strip() not in {"accounts.google.com", "https://accounts.google.com"}:
+        raise ValueError("Google tokeninfo issuer mismatch")
+    if _as_unix_timestamp(verified.get("exp")) <= int(time.time()):
+        raise ValueError("Google tokeninfo token expired")
+    if expected_nonce:
+        if str(verified.get("nonce", "")).strip() != expected_nonce:
+            raise ValueError("Google tokeninfo nonce mismatch")
+    if not _is_truthy_identity_flag(verified.get("email_verified", "false")):
+        raise ValueError("Google email not verified")
+    return verified
+
+
+def _verify_apple_id_token(payload: Dict[str, Any], expected_client_id: str, expected_nonce: str) -> None:
+    if not payload:
+        raise ValueError("Apple id token payload missing")
+    issuer = str(payload.get("iss", "")).strip()
+    audience = str(payload.get("aud", "")).strip()
+    expires_at = _as_unix_timestamp(payload.get("exp"))
+    nonce = str(payload.get("nonce", "")).strip()
+
+    if issuer != "https://appleid.apple.com":
+        raise ValueError("Apple id token issuer mismatch")
+    if audience != expected_client_id:
+        raise ValueError("Apple id token audience mismatch")
+    if expires_at <= int(time.time()):
+        raise ValueError("Apple id token expired")
+    if expected_nonce and nonce != expected_nonce:
+        raise ValueError("Apple id token nonce mismatch")
+
 def _provider_credentials(provider: str) -> Dict[str, str]:
     upper = provider.upper()
     return {
@@ -917,6 +987,7 @@ async def google_auth_start(request: Request, return_to: Optional[str] = None):
         return _auth_error_redirect(request, "Google", return_to, "is not configured yet.")
 
     state = _build_auth_state(request, "google", return_to)
+    signed_state = _decode_signed_state(state)
     params = {
         "client_id": credentials["client_id"],
         "redirect_uri": _auth_redirect_uri(request, "google"),
@@ -924,6 +995,7 @@ async def google_auth_start(request: Request, return_to: Optional[str] = None):
         "scope": "openid email profile",
         "prompt": "select_account",
         "state": state,
+        "nonce": signed_state.get("nonce", ""),
     }
     return RedirectResponse(
         url=f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}",
@@ -939,9 +1011,11 @@ async def google_auth_callback(
     error: Optional[str] = None,
 ):
     target_url = _default_frontend_url(request)
+    resolved_state: Optional[Dict[str, Any]] = None
     if state:
         try:
-            target_url = _resolve_auth_state(state, "google")["return_to"]
+            resolved_state = _resolve_auth_state(state, "google")
+            target_url = str(resolved_state["return_to"])
         except ValueError as exc:
             return _session_redirect(target_url, error=str(exc))
 
@@ -966,8 +1040,13 @@ async def google_auth_callback(
             },
         )
         access_token = str(token_payload.get("access_token", "")).strip()
+        id_token = str(token_payload.get("id_token", "")).strip()
         if not access_token:
             raise ValueError("Google token exchange returned no access token")
+        if not id_token:
+            raise ValueError("Google token exchange returned no id token")
+        expected_nonce = str((resolved_state or {}).get("nonce", "")).strip()
+        await _verify_google_id_token(id_token, credentials["client_id"], expected_nonce)
         profile = await _get_json(
             "https://openidconnect.googleapis.com/v1/userinfo",
             {
@@ -994,6 +1073,7 @@ async def apple_auth_start(request: Request, return_to: Optional[str] = None):
         return _auth_error_redirect(request, "Apple", return_to, "is not configured yet.")
 
     state = _build_auth_state(request, "apple", return_to)
+    signed_state = _decode_signed_state(state)
     params = {
         "client_id": credentials["client_id"],
         "redirect_uri": _auth_redirect_uri(request, "apple"),
@@ -1001,6 +1081,7 @@ async def apple_auth_start(request: Request, return_to: Optional[str] = None):
         "response_mode": "form_post",
         "scope": "name email",
         "state": state,
+        "nonce": signed_state.get("nonce", ""),
     }
     return RedirectResponse(
         url=f"https://appleid.apple.com/auth/authorize?{urlencode(params)}",
@@ -1017,9 +1098,11 @@ async def _complete_apple_auth(
     user: Optional[str] = None,
 ):
     target_url = _default_frontend_url(request)
+    resolved_state: Optional[Dict[str, Any]] = None
     if state:
         try:
-            target_url = _resolve_auth_state(state, "apple")["return_to"]
+            resolved_state = _resolve_auth_state(state, "apple")
+            target_url = str(resolved_state["return_to"])
         except ValueError as exc:
             return _session_redirect(target_url, error=str(exc))
 
@@ -1048,6 +1131,12 @@ async def _complete_apple_auth(
         return _session_redirect(target_url, error="Apple sign-in could not be completed.")
 
     id_token_payload = _decode_jwt_payload(str(token_payload.get("id_token", "")))
+    expected_nonce = str((resolved_state or {}).get("nonce", "")).strip()
+    try:
+        _verify_apple_id_token(id_token_payload, credentials["client_id"], expected_nonce)
+    except ValueError as exc:
+        logger.warning("Apple sign-in verification failed: %s", exc)
+        return _session_redirect(target_url, error="Apple sign-in token verification failed.")
     user_payload = _parse_apple_user(user)
     email = str(user_payload.get("email") or id_token_payload.get("email") or "").strip()
     if not email:
