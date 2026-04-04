@@ -4618,6 +4618,7 @@ body.paper-site .card-grid > *, body.paper-site .stat-card--airbnb, body.paper-s
 .gf-gap-24 { gap: var(--s-24); }
 .gf-gap-16 { gap: var(--s-16); }
 .gf-span-12 { grid-column: span 12; }
+.gf-span-8 { grid-column: span 8; }
 .gf-span-6 { grid-column: span 6; }
 .gf-span-4 { grid-column: span 4; }
 .gf-span-3 { grid-column: span 3; }
