@@ -5003,6 +5003,20 @@ body.paper-site .use-case-layout {
   align-items: start;
 }
 
+/* Use cases: avoid 12-col card-span rules inside the 8-col rail */
+body.paper-site .use-case-layout .explore-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+body.paper-site .use-case-layout .explore-card {
+  grid-column: auto !important;
+  width: 100%;
+}
+
+body.paper-site .use-case-layout .explore-card__visual {
+  min-height: 140px;
+}
+
 body.paper-site .use-case-preview {
   position: sticky;
   top: 168px;
@@ -5052,6 +5066,11 @@ html[data-device="mobile"] body.paper-site .use-case-preview,
 html[data-device="tablet"] body.paper-site .use-case-preview {
   position: relative;
   top: auto;
+}
+
+html[data-device="mobile"] body.paper-site .use-case-layout .explore-grid,
+html[data-device="tablet"] body.paper-site .use-case-layout .explore-grid {
+  grid-template-columns: 1fr !important;
 }
 
 html[data-device="mobile"] body.paper-site .top .nav {
