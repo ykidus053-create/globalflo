@@ -63,22 +63,24 @@ templates = Jinja2Templates(directory=root / "templates")
 # Disable Jinja template caching to avoid unhashable cache key issues in this environment
 templates.env.cache = None
 
-# Asset version for cache-busting (env > git hash > fallback)
-ASSET_VERSION = os.getenv("ASSET_VERSION")
-if not ASSET_VERSION:
+def _asset_version() -> str:
+    """Resolve current asset version; env override wins for deterministic deploys."""
+    env_value = os.getenv("ASSET_VERSION")
+    if env_value:
+        return env_value
     try:
-        ASSET_VERSION = (
+        return (
             check_output(["git", "rev-parse", "--short", "HEAD"], cwd=root)
             .decode()
             .strip()
         )
     except (CalledProcessError, FileNotFoundError):
-        ASSET_VERSION = "dev"
+        return "dev"
 
 
 def _render_html(template_name: str, context: Dict[str, Any]) -> HTMLResponse:
     context = dict(context)
-    context.setdefault("asset_version", ASSET_VERSION)
+    context.setdefault("asset_version", _asset_version())
     template = templates.get_template(template_name)
     return HTMLResponse(template.render(context))
 
@@ -1324,6 +1326,12 @@ async def workflow_workspace(request: Request):
             "theme": _active_theme(),
         },
     )
+
+
+@app.get("/workflow-pro", response_class=HTMLResponse)
+async def workflow_workspace_pro(request: Request):
+    # New workflow endpoint alias to keep navigation flexible across deploy targets.
+    return await workflow_workspace(request)
 
 
 @app.post("/api/account", response_class=JSONResponse)

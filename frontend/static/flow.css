@@ -7551,3 +7551,96 @@ body.workflow-lab-page .wf-operator-copy p,
 body.workflow-lab-page .wf-operator-note {
   color: var(--read-text-light) !important;
 }
+
+/* Premium minimal density and motion refinement */
+body.top-tier-site main {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 2vw, 28px);
+}
+
+body.top-tier-site .gf-section,
+body.top-tier-site .wf-section,
+body.top-tier-site .payment-form-section,
+body.top-tier-site .checkout-offset,
+body.top-tier-site .checkout-hero,
+body.top-tier-site .payment-hero,
+body.top-tier-site .account-layout {
+  margin-block: clamp(18px, 2.8vw, 36px);
+}
+
+body.top-tier-site .lead,
+body.top-tier-site .modal-note,
+body.top-tier-site .explore-description,
+body.top-tier-site .pricing-summary,
+body.top-tier-site .payment-header p,
+body.top-tier-site .checkout-hero-panel p {
+  max-width: 66ch;
+  line-height: 1.62;
+}
+
+body.top-tier-site {
+  --motion-fast: 180ms;
+  --motion-base: 260ms;
+  --motion-slow: 380ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.top-tier-site .gf-card,
+body.top-tier-site .connector-card,
+body.top-tier-site .workflow-card,
+body.top-tier-site .activity-entry,
+body.top-tier-site .pricing-card,
+body.top-tier-site .testimonial-card,
+body.top-tier-site .explore-card,
+body.top-tier-site .wf-operator-card,
+body.top-tier-site .wf-signal-cell,
+body.top-tier-site .wf-lane-card {
+  transition:
+    transform var(--motion-base) var(--motion-ease),
+    box-shadow var(--motion-base) var(--motion-ease),
+    border-color var(--motion-base) ease,
+    background-color var(--motion-base) ease,
+    opacity var(--motion-slow) var(--motion-ease) !important;
+}
+
+body.top-tier-site .wf-board,
+body.top-tier-site .wf-operator-grid,
+body.top-tier-site .wf-signal-grid {
+  gap: clamp(14px, 2vw, 22px) !important;
+}
+
+body.top-tier-site .wf-hero,
+body.top-tier-site .workflow.workflow--split,
+body.top-tier-site .account-layout,
+body.top-tier-site .checkout-offset {
+  gap: clamp(16px, 2.2vw, 28px) !important;
+}
+
+body.top-tier-site .wf-signal-grid {
+  grid-auto-flow: dense;
+}
+
+body.top-tier-site .section-heading h2,
+body.top-tier-site .payment-form-section h2,
+body.top-tier-site .checkout-card h2,
+body.top-tier-site .checkout-panel h2 {
+  letter-spacing: -0.02em;
+}
+
+body.top-tier-site .wf-lane header h3,
+body.top-tier-site .wf-operator-copy h3,
+body.top-tier-site .workflow-card h4 {
+  letter-spacing: -0.015em;
+}
+
+@media (max-width: 920px) {
+  body.top-tier-site main {
+    padding-inline: 14px;
+  }
+
+  body.top-tier-site .wf-section,
+  body.top-tier-site .gf-section {
+    margin-block: 14px;
+  }
+}
