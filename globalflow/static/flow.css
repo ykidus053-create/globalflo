@@ -4443,12 +4443,6 @@ body.paper-site .primary:hover, body.paper-site .ghost:hover { border-color: var
 .reveal-ready.is-visible { opacity: 1; transform: translateY(0) scale(1); animation: icomat-float 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
 @keyframes icomat-float { 0% { opacity: 0; transform: translateY(26px) scale(0.985); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
-/* FORCE WHITE TEXT + FLOAT ANIMATION */
-body.paper-site, body.paper-site * { color: #ffffff !important; }
-.reveal-ready { opacity: 0; transform: translateY(18px) scale(0.99); transition: opacity 0.32s ease-out, transform 0.36s ease-out; }
-.reveal-ready.is-visible { opacity: 1; transform: translateY(0) scale(1); animation: icomat-float 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-@keyframes icomat-float { 0% { opacity: 0; transform: translateY(26px) scale(0.985);} 100% { opacity:1; transform: translateY(0) scale(1);} }
-
 /* --- De-crowd live workflow & activity feed (keep consistent on dark navy) --- */
 .workflow-grid .workflow-card {
   display: flex;
@@ -4689,39 +4683,6 @@ body.paper-site .card-grid > *, body.paper-site .stat-card--airbnb, body.paper-s
   .gf-card-grid > *,
   .gf-metrics-row > * { grid-column: span 4; }
   .gf-metrics-row { grid-template-columns: repeat(1, minmax(0,1fr)); }
-}
-
-/* Final readability override: every visible text node resolves to white */
-html body.paper-site,
-html body.paper-site *,
-html body.paper-site *::before,
-html body.paper-site *::after,
-html body.paper-site input,
-html body.paper-site textarea,
-html body.paper-site select,
-html body.paper-site option,
-html body.paper-site label,
-html body.paper-site p,
-html body.paper-site span,
-html body.paper-site a,
-html body.paper-site li,
-html body.paper-site strong,
-html body.paper-site em,
-html body.paper-site small,
-html body.paper-site time,
-html body.paper-site h1,
-html body.paper-site h2,
-html body.paper-site h3,
-html body.paper-site h4,
-html body.paper-site h5,
-html body.paper-site h6,
-html body.paper-site button,
-html body.paper-site summary {
-  color: #ffffff !important;
-}
-html body.paper-site input::placeholder,
-html body.paper-site textarea::placeholder {
-  color: rgba(255, 255, 255, 0.82) !important;
 }
 
 body.paper-site .render-layer {
@@ -7416,13 +7377,9 @@ body.top-tier-site [tabindex]:focus-visible {
   }
 }
 
-/* Final readability lock: force clear contrast across all pages */
-body.paper-site,
-body.paper-site * {
-  text-rendering: optimizeLegibility;
-}
-
+/* Final readability lock: scoped contrast without overriding component palettes */
 body.paper-site {
+  text-rendering: optimizeLegibility;
   --read-text-dark: #0b1220;
   --read-text-light: #f8fbff;
   --read-muted-dark: #334155;
@@ -7435,39 +7392,25 @@ html[data-theme="light"] body.paper-site {
   color: var(--read-text-dark);
 }
 
-html[data-theme="dark"] body.paper-site,
-html[data-theme="light"] body.paper-site.top-tier-site[data-theme="dark"] {
+html[data-theme="dark"] body.paper-site {
   color: var(--read-text-light);
 }
 
-/* Primary readable copy */
-html[data-theme="light"] body.paper-site h1,
-html[data-theme="light"] body.paper-site h2,
-html[data-theme="light"] body.paper-site h3,
-html[data-theme="light"] body.paper-site h4,
-html[data-theme="light"] body.paper-site p,
-html[data-theme="light"] body.paper-site li,
-html[data-theme="light"] body.paper-site label,
-html[data-theme="light"] body.paper-site span,
-html[data-theme="light"] body.paper-site strong,
-html[data-theme="light"] body.paper-site small {
-  color: var(--read-text-dark) !important;
+body.paper-site .lead,
+body.paper-site .eyebrow,
+body.paper-site .modal-note,
+body.paper-site .label,
+body.paper-site .note,
+body.paper-site .feature-kicker,
+body.paper-site .signal-meta,
+body.paper-site .search-meta,
+body.paper-site .connector-toggle,
+body.paper-site .payment-status,
+body.paper-site .activity-detail,
+body.paper-site .activity-entry time {
+  color: var(--read-muted-light);
 }
 
-html[data-theme="dark"] body.paper-site h1,
-html[data-theme="dark"] body.paper-site h2,
-html[data-theme="dark"] body.paper-site h3,
-html[data-theme="dark"] body.paper-site h4,
-html[data-theme="dark"] body.paper-site p,
-html[data-theme="dark"] body.paper-site li,
-html[data-theme="dark"] body.paper-site label,
-html[data-theme="dark"] body.paper-site span,
-html[data-theme="dark"] body.paper-site strong,
-html[data-theme="dark"] body.paper-site small {
-  color: var(--read-text-light) !important;
-}
-
-/* Secondary/caption text */
 html[data-theme="light"] body.paper-site .lead,
 html[data-theme="light"] body.paper-site .eyebrow,
 html[data-theme="light"] body.paper-site .modal-note,
@@ -7480,76 +7423,32 @@ html[data-theme="light"] body.paper-site .connector-toggle,
 html[data-theme="light"] body.paper-site .payment-status,
 html[data-theme="light"] body.paper-site .activity-detail,
 html[data-theme="light"] body.paper-site .activity-entry time {
-  color: var(--read-muted-dark) !important;
+  color: var(--read-muted-dark);
 }
 
-html[data-theme="dark"] body.paper-site .lead,
-html[data-theme="dark"] body.paper-site .eyebrow,
-html[data-theme="dark"] body.paper-site .modal-note,
-html[data-theme="dark"] body.paper-site .label,
-html[data-theme="dark"] body.paper-site .note,
-html[data-theme="dark"] body.paper-site .feature-kicker,
-html[data-theme="dark"] body.paper-site .signal-meta,
-html[data-theme="dark"] body.paper-site .search-meta,
-html[data-theme="dark"] body.paper-site .connector-toggle,
-html[data-theme="dark"] body.paper-site .payment-status,
-html[data-theme="dark"] body.paper-site .activity-detail,
-html[data-theme="dark"] body.paper-site .activity-entry time {
-  color: var(--read-muted-light) !important;
+body.paper-site a,
+body.paper-site .text-link,
+body.paper-site .feature-link,
+body.paper-site .footer-links a,
+body.paper-site .footer-link-button {
+  color: var(--read-link-light);
 }
 
-/* Links */
 html[data-theme="light"] body.paper-site a,
 html[data-theme="light"] body.paper-site .text-link,
 html[data-theme="light"] body.paper-site .feature-link,
 html[data-theme="light"] body.paper-site .footer-links a,
 html[data-theme="light"] body.paper-site .footer-link-button {
-  color: var(--read-link-dark) !important;
+  color: var(--read-link-dark);
 }
 
-html[data-theme="dark"] body.paper-site a,
-html[data-theme="dark"] body.paper-site .text-link,
-html[data-theme="dark"] body.paper-site .feature-link,
-html[data-theme="dark"] body.paper-site .footer-links a,
-html[data-theme="dark"] body.paper-site .footer-link-button {
-  color: var(--read-link-light) !important;
-}
-
-/* Inputs and placeholders */
-html[data-theme="light"] body.paper-site input,
-html[data-theme="light"] body.paper-site select,
-html[data-theme="light"] body.paper-site textarea {
-  color: var(--read-text-dark) !important;
-  background: #ffffff !important;
-  border-color: rgba(15, 23, 42, 0.28) !important;
-}
-
-html[data-theme="dark"] body.paper-site input,
-html[data-theme="dark"] body.paper-site select,
-html[data-theme="dark"] body.paper-site textarea {
-  color: var(--read-text-light) !important;
-  background: rgba(10, 17, 30, 0.92) !important;
-  border-color: rgba(255, 255, 255, 0.28) !important;
-}
-
-html[data-theme="light"] body.paper-site input::placeholder,
-html[data-theme="light"] body.paper-site textarea::placeholder {
-  color: #64748b !important;
-}
-
-html[data-theme="dark"] body.paper-site input::placeholder,
-html[data-theme="dark"] body.paper-site textarea::placeholder {
-  color: #b8c5df !important;
-}
-
-/* Specific workflow signal readability */
 body.workflow-lab-page .wf-signal-cell span,
 body.workflow-lab-page .wf-signal-cell strong,
 body.workflow-lab-page .wf-signal-cell small,
 body.workflow-lab-page .wf-operator-copy h3,
 body.workflow-lab-page .wf-operator-copy p,
 body.workflow-lab-page .wf-operator-note {
-  color: var(--read-text-light) !important;
+  color: #f8fbff;
 }
 
 /* Premium minimal density and motion refinement */
