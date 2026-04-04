@@ -7693,3 +7693,56 @@ body.paper-site .color-cell small,
 body.workflow-lab-page .wf-signal-cell small {
   color: var(--adaptive-grid-muted) !important;
 }
+
+/* Header + operator rail micro-text contrast lock */
+body.paper-site .top.top--airbnb .nav a,
+body.paper-site .top.top--airbnb .nav button.small {
+  color: #f6fbff !important;
+  background: rgba(6, 14, 28, 0.74);
+  border: 1px solid rgba(156, 184, 230, 0.34);
+  border-radius: 999px;
+  padding: 8px 12px;
+  line-height: 1.1 !important;
+}
+
+body.paper-site .top.top--airbnb .nav a:hover,
+body.paper-site .top.top--airbnb .nav a.is-active,
+body.paper-site .top.top--airbnb .nav button.small:hover {
+  color: #ffffff !important;
+  background: rgba(10, 22, 42, 0.9);
+  border-color: rgba(172, 204, 255, 0.66);
+}
+
+body.paper-site .operator-rail {
+  background: rgba(6, 14, 28, 0.7) !important;
+  border-color: rgba(156, 184, 230, 0.28) !important;
+}
+
+body.paper-site .operator-rail__status,
+body.paper-site .operator-rail__hint {
+  background: rgba(8, 18, 36, 0.78);
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+body.paper-site .operator-rail__label,
+body.paper-site .operator-rail__hint,
+body.paper-site .operator-rail__status strong {
+  color: #e9f2ff !important;
+}
+
+body.paper-site .operator-rail__links a {
+  color: #f6fbff !important;
+  background: rgba(8, 18, 36, 0.76);
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+body.paper-site .operator-rail__links a:hover,
+body.paper-site .operator-rail__links a:focus-visible {
+  background: rgba(12, 24, 44, 0.92);
+  border-color: rgba(172, 204, 255, 0.64);
+  color: #ffffff !important;
+}
