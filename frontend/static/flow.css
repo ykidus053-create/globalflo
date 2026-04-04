@@ -7075,3 +7075,343 @@ body.workflow-lab-page .wf-operator-note {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Workflow page: advanced system controls */
+body.workflow-lab-page {
+  --wf-bg: #0b0f16;
+  --wf-surface: rgba(10, 17, 30, 0.8);
+  --wf-surface-soft: rgba(10, 17, 30, 0.66);
+  --wf-text: #f8f8f8;
+  --wf-muted: rgba(248, 248, 248, 0.72);
+  --wf-accent: #60a5fa;
+}
+
+body.workflow-lab-page .wf-heading-inline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+body.workflow-lab-page .wf-density-controls {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 4px;
+  background: rgba(8, 12, 20, 0.66);
+}
+
+body.workflow-lab-page .wf-density {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--wf-muted);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+body.workflow-lab-page .wf-density.is-active {
+  background: rgba(96, 165, 250, 0.22);
+  color: var(--wf-text);
+}
+
+body.workflow-lab-page.wf-compact .wf-signal-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+body.workflow-lab-page.wf-compact .wf-signal-cell {
+  min-height: 118px;
+  padding: 14px;
+}
+
+body.workflow-lab-page .wf-badge[data-state="review"] {
+  animation: wf-pulse 2s ease-in-out infinite;
+}
+
+@keyframes wf-pulse {
+  0%,
+  100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.05); }
+  50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.14); }
+}
+
+body.workflow-lab-page .wf-operator-note {
+  max-height: 82px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+body.workflow-lab-page .wf-operator-card.is-expanded .wf-operator-note {
+  max-height: none;
+  -webkit-line-clamp: initial;
+}
+
+body.workflow-lab-page .wf-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+body.workflow-lab-page .wf-lane {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: var(--wf-surface-soft);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+  min-height: 220px;
+}
+
+body.workflow-lab-page .wf-lane header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.workflow-lab-page .wf-lane header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+body.workflow-lab-page .wf-lane header span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(96, 165, 250, 0.22);
+  color: var(--wf-text);
+  font-size: 12px;
+}
+
+body.workflow-lab-page .wf-lane-card {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--wf-text);
+  padding: 12px;
+  cursor: grab;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+body.workflow-lab-page .wf-lane-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(96, 165, 250, 0.65);
+  background: rgba(96, 165, 250, 0.12);
+}
+
+body.workflow-lab-page .wf-lane-card.is-dragging {
+  opacity: 0.55;
+}
+
+body.workflow-lab-page .wf-lane.is-drop-target {
+  border-color: rgba(96, 165, 250, 0.9);
+}
+
+@media (max-width: 920px) {
+  body.workflow-lab-page .wf-heading-inline {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+/* Top-tier site-wide system layer */
+body.top-tier-site {
+  --ui-bg: #0b0f16;
+  --ui-surface: rgba(10, 17, 30, 0.78);
+  --ui-surface-soft: rgba(10, 17, 30, 0.62);
+  --ui-border: rgba(255, 255, 255, 0.12);
+  --ui-text: #f8f8f8;
+  --ui-muted: rgba(248, 248, 248, 0.72);
+  --ui-accent: #60a5fa;
+  --ui-ok: #34d399;
+  --ui-warn: #fbbf24;
+  --ui-danger: #f87171;
+}
+
+html[data-theme="light"] body.top-tier-site {
+  --ui-bg: #f7f9fc;
+  --ui-surface: rgba(255, 255, 255, 0.92);
+  --ui-surface-soft: rgba(255, 255, 255, 0.84);
+  --ui-border: rgba(11, 15, 22, 0.12);
+  --ui-text: #0b0f16;
+  --ui-muted: rgba(11, 15, 22, 0.68);
+  --ui-accent: #2563eb;
+}
+
+body.top-tier-site {
+  color: var(--ui-text);
+}
+
+body.top-tier-site .top,
+body.top-tier-site .operator-rail,
+body.top-tier-site .payment-form-section,
+body.top-tier-site .checkout-card,
+body.top-tier-site .checkout-panel,
+body.top-tier-site .payment-panel,
+body.top-tier-site .hero-copy,
+body.top-tier-site .hero-stage,
+body.top-tier-site .summary,
+body.top-tier-site .workflow-main,
+body.top-tier-site .workflow-side,
+body.top-tier-site .account-panel,
+body.top-tier-site .site-footer,
+body.top-tier-site .flow-modal__content,
+body.top-tier-site .payment-chip {
+  background: var(--ui-surface) !important;
+  border-color: var(--ui-border) !important;
+}
+
+body.top-tier-site .gf-card,
+body.top-tier-site .connector-card,
+body.top-tier-site .workflow-card,
+body.top-tier-site .activity-entry,
+body.top-tier-site .stat-card,
+body.top-tier-site .pricing-card,
+body.top-tier-site .pricing-card--airbnb,
+body.top-tier-site .testimonial-card,
+body.top-tier-site .explore-card,
+body.top-tier-site .trust-card--airbnb {
+  background: var(--ui-surface-soft) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-radius: 14px;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.28s ease;
+}
+
+body.top-tier-site .gf-card:hover,
+body.top-tier-site .connector-card:hover,
+body.top-tier-site .workflow-card:hover,
+body.top-tier-site .activity-entry:hover,
+body.top-tier-site .stat-card:hover,
+body.top-tier-site .pricing-card:hover,
+body.top-tier-site .testimonial-card:hover,
+body.top-tier-site .explore-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in oklab, var(--ui-accent) 45%, var(--ui-border));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+body.top-tier-site .gf-card-grid,
+body.top-tier-site .stat-grid,
+body.top-tier-site .workflow-grid,
+body.top-tier-site .connectors-grid,
+body.top-tier-site .pricing-grid,
+body.top-tier-site .payment-strip,
+body.top-tier-site .subscription-grid,
+body.top-tier-site .trust-grid,
+body.top-tier-site .testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+  gap: 20px !important;
+}
+
+body.top-tier-site .use-case-layout .explore-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+body.top-tier-site .content-body,
+body.top-tier-site p,
+body.top-tier-site li,
+body.top-tier-site .lead,
+body.top-tier-site .modal-note {
+  color: var(--ui-text);
+}
+
+body.top-tier-site .eyebrow,
+body.top-tier-site .label,
+body.top-tier-site .signal-meta,
+body.top-tier-site .feature-kicker,
+body.top-tier-site .connector-toggle,
+body.top-tier-site .search-meta {
+  color: var(--ui-muted) !important;
+}
+
+body.top-tier-site .primary,
+body.top-tier-site .primary.small {
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: #fff;
+}
+
+body.top-tier-site .ghost,
+body.top-tier-site .ghost.small {
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+  background: transparent;
+}
+
+body.top-tier-site .tier-badge,
+body.top-tier-site .wf-badge,
+body.top-tier-site .signal-pill {
+  border-radius: 999px;
+}
+
+body.top-tier-site .wf-badge[data-state="review"],
+body.top-tier-site .workflow-status[data-state="review"],
+body.top-tier-site .status-badge--warn {
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--ui-warn);
+  animation: ui-status-pulse 2.2s ease-in-out infinite;
+}
+
+body.top-tier-site .wf-badge[data-state="online"],
+body.top-tier-site .status-badge--ok {
+  background: rgba(52, 211, 153, 0.2);
+  color: var(--ui-ok);
+}
+
+body.top-tier-site .wf-badge[data-state="offline"],
+body.top-tier-site .status-badge--danger {
+  background: rgba(248, 113, 113, 0.18);
+  color: var(--ui-danger);
+}
+
+@keyframes ui-status-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.04); }
+  50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.12); }
+}
+
+body.top-tier-site a:focus-visible,
+body.top-tier-site button:focus-visible,
+body.top-tier-site input:focus-visible,
+body.top-tier-site select:focus-visible,
+body.top-tier-site textarea:focus-visible,
+body.top-tier-site [tabindex]:focus-visible {
+  outline: 3px solid var(--ui-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 920px) {
+  body.top-tier-site .gf-card-grid,
+  body.top-tier-site .stat-grid,
+  body.top-tier-site .workflow-grid,
+  body.top-tier-site .connectors-grid,
+  body.top-tier-site .pricing-grid,
+  body.top-tier-site .payment-strip,
+  body.top-tier-site .subscription-grid,
+  body.top-tier-site .trust-grid,
+  body.top-tier-site .testimonial-grid,
+  body.top-tier-site .use-case-layout .explore-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.top-tier-site .gf-card,
+  body.top-tier-site .connector-card,
+  body.top-tier-site .workflow-card,
+  body.top-tier-site .activity-entry,
+  body.top-tier-site .stat-card,
+  body.top-tier-site .pricing-card,
+  body.top-tier-site .testimonial-card,
+  body.top-tier-site .explore-card,
+  body.top-tier-site .wf-badge[data-state="review"] {
+    animation: none !important;
+    transition: none !important;
+  }
+}

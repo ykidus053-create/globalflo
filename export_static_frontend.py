@@ -1,8 +1,18 @@
 import os
 import shutil
+from subprocess import CalledProcessError, check_output
 from pathlib import Path
 
 os.environ.setdefault("GLOBALFLOW_AUTOPILOT_ENABLED", "0")
+if not os.getenv("ASSET_VERSION"):
+    try:
+        os.environ["ASSET_VERSION"] = (
+            check_output(["git", "rev-parse", "--short", "HEAD"], cwd=Path(__file__).resolve().parent)
+            .decode()
+            .strip()
+        )
+    except (CalledProcessError, FileNotFoundError):
+        pass
 
 from fastapi.testclient import TestClient
 
