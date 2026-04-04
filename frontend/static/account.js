@@ -3,6 +3,15 @@ const status = document.getElementById("account-status");
 const THEME_KEY = "globalflow_theme";
 const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
 
+function applyDeviceClass() {
+  const width = window.innerWidth;
+  let device = "desktop";
+  if (width < 640) device = "mobile";
+  else if (width < 1024) device = "tablet";
+  else if (width < 1440) device = "laptop";
+  document.documentElement.dataset.device = device;
+}
+
 function apiUrl(path) {
   if (/^https?:\/\//i.test(path)) return path;
   return `${API_BASE}${path}`;
@@ -50,6 +59,9 @@ function applyTheme(theme) {
 }
 
 if (form) {
+  applyDeviceClass();
+  window.addEventListener("resize", applyDeviceClass, { passive: true });
+
   const themeSelect = form.querySelector('select[name="theme"]');
   if (themeSelect) {
     const activeTheme = document.documentElement.getAttribute("data-theme");

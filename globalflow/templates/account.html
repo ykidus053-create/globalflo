@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#080808" />
         <script>
       (function () {
         try {
@@ -13,7 +13,7 @@
       })();
     </script>
     <title>GlobalFlow | Account</title>
-    <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
   </head>
   <body class="paper-site is-loading">
     <div class="site-loader" id="site-loader" aria-hidden="true">
@@ -38,7 +38,52 @@
         <a href="/account">Account</a>
       </nav>
     </header>
-    <main class="account-page">
+    <main class="account-page account-layout">
+      <aside class="user-card gf-card gf-fade" aria-label="Account summary">
+        <header class="user-card__header">
+          <img class="user-card__avatar" src="/static/globalflow-logo.svg" alt="" />
+          <div class="user-card__title">
+            <h2 class="user-card__name">{{ profile.name }}</h2>
+            <p class="user-card__meta">{{ profile.role }} · {{ profile.email }}</p>
+          </div>
+        </header>
+
+        <div class="user-card__body">
+          <ul class="user-card__stats" aria-label="Account signals">
+            <li><span>Timezone</span><strong>{{ profile.timezone }}</strong></li>
+            <li><span>Digest</span><strong>{{ settings.daily_digest }}</strong></li>
+            <li><span>Alerts</span><strong>{{ settings.alert_channel }}</strong></li>
+            <li><span>Tier</span><strong>{{ settings.automation_tier }}</strong></li>
+          </ul>
+
+          <div class="color-grid" role="list" aria-label="Semantic color grid">
+            <div class="color-cell" role="listitem" data-tone="ok">
+              <span>Operational</span><strong>Ok</strong>
+            </div>
+            <div class="color-cell" role="listitem" data-tone="info">
+              <span>Queued</span><strong>Info</strong>
+            </div>
+            <div class="color-cell" role="listitem" data-tone="warn">
+              <span>Needs review</span><strong>Warn</strong>
+            </div>
+            <div class="color-cell" role="listitem" data-tone="err">
+              <span>Blocked</span><strong>Error</strong>
+            </div>
+            <div class="color-cell" role="listitem" data-tone="accent">
+              <span>Verified</span><strong>Accent</strong>
+            </div>
+            <div class="color-cell" role="listitem" data-tone="neutral">
+              <span>Draft</span><strong>Neutral</strong>
+            </div>
+          </div>
+        </div>
+
+        <footer class="user-card__footer">
+          <button class="primary" form="account-form" type="submit">Save changes</button>
+          <p class="user-card__hint">Changes apply immediately and sync to live workflows.</p>
+        </footer>
+      </aside>
+
       <section class="account-panel">
         <div class="panel-heading">
           <h2>Profile settings</h2>
@@ -101,7 +146,7 @@
         </form>
       </section>
     </main>
-    <script src="/static/site-boot.js" defer></script>
-    <script type="module" src="/static/account.js"></script>
+    <script src="/static/site-boot.js?v={{ asset_version }}" defer></script>
+    <script type="module" src="/static/account.js?v={{ asset_version }}"></script>
   </body>
 </html>
