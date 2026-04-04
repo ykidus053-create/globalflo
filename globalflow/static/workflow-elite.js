@@ -5,6 +5,18 @@ const operatorGrid = document.getElementById("operator-grid");
 const workflowBoard = document.getElementById("wf-board");
 const activityFeed = document.getElementById("elite-activity-feed");
 const activitySentinel = document.getElementById("activity-sentinel");
+const immersiveToggles = Array.from(document.querySelectorAll("[data-immersive-mode]"));
+const immersiveModal = document.getElementById("immersive-modal");
+const openImmersiveInspector = document.getElementById("open-immersive-inspector");
+const closeImmersiveModal = document.getElementById("close-immersive-modal");
+const laserCursor = document.getElementById("laser-cursor");
+const laserTrail = document.getElementById("laser-trail");
+
+const immersiveState = {
+  laser: true,
+  depth: true,
+  comfort: false,
+};
 
 const queuedEvents = [
   { kind: "billing", title: "Settlement handoff confirmed", detail: "Finance route acknowledged in 18s." },
@@ -182,9 +194,152 @@ function installHeroActions() {
   if (inspect) inspect.addEventListener("click", () => toast("Telemetry panel synced"));
 }
 
+function updateImmersiveClassState() {
+  document.body.classList.toggle("immersive-laser", immersiveState.laser);
+  document.body.classList.toggle("immersive-depth", immersiveState.depth);
+  document.body.classList.toggle("immersive-comfort", immersiveState.comfort);
+}
+
+function updateImmersiveToggleState() {
+  immersiveToggles.forEach((button) => {
+    const mode = button.dataset.immersiveMode;
+    button.classList.toggle("is-active", Boolean(immersiveState[mode]));
+    button.setAttribute("aria-pressed", immersiveState[mode] ? "true" : "false");
+  });
+}
+
+function applyDepthTilt(target, clientX, clientY) {
+  if (!immersiveState.depth) return;
+  const rect = target.getBoundingClientRect();
+  const x = (clientX - rect.left) / rect.width - 0.5;
+  const y = (clientY - rect.top) / rect.height - 0.5;
+  const max = immersiveState.comfort ? 4 : 7;
+  const rx = (y * -max).toFixed(2);
+  const ry = (x * max).toFixed(2);
+  target.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+}
+
+function installDepthParallax() {
+  const targets = Array.from(
+    document.querySelectorAll(".wf-signal-cell, .wf-operator-card, .wf-lane-card")
+  );
+  targets.forEach((target) => {
+    target.addEventListener("pointermove", (event) => {
+      if (!immersiveState.depth) return;
+      applyDepthTilt(target, event.clientX, event.clientY);
+    });
+    target.addEventListener("pointerleave", () => {
+      target.style.transform = "";
+    });
+  });
+}
+
+function installLaserPointer() {
+  if (!laserCursor || !laserTrail) return;
+  let tx = 0;
+  let ty = 0;
+  let lx = 0;
+  let ly = 0;
+
+  function animateTrail() {
+    lx += (tx - lx) * 0.17;
+    ly += (ty - ly) * 0.17;
+    laserTrail.style.transform = `translate(${lx}px, ${ly}px)`;
+    requestAnimationFrame(animateTrail);
+  }
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      if (!immersiveState.laser) return;
+      tx = event.clientX;
+      ty = event.clientY;
+      laserCursor.style.transform = `translate(${tx}px, ${ty}px)`;
+    },
+    { passive: true }
+  );
+
+  animateTrail();
+}
+
+function setImmersiveMode(mode, value) {
+  immersiveState[mode] = value;
+  updateImmersiveClassState();
+  updateImmersiveToggleState();
+  const label = mode.charAt(0).toUpperCase() + mode.slice(1);
+  toast(`${label} ${value ? "enabled" : "disabled"}`);
+}
+
+function installImmersiveControls() {
+  immersiveToggles.forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.immersiveMode;
+      setImmersiveMode(mode, !immersiveState[mode]);
+    });
+  });
+  updateImmersiveClassState();
+  updateImmersiveToggleState();
+}
+
+function openImmersiveModal() {
+  if (!immersiveModal) return;
+  immersiveModal.classList.add("is-open");
+  immersiveModal.setAttribute("aria-hidden", "false");
+}
+
+function closeImmersiveInspectorModal() {
+  if (!immersiveModal) return;
+  immersiveModal.classList.remove("is-open");
+  immersiveModal.setAttribute("aria-hidden", "true");
+}
+
+function installImmersiveModal() {
+  if (openImmersiveInspector) {
+    openImmersiveInspector.addEventListener("click", openImmersiveModal);
+  }
+  if (closeImmersiveModal) {
+    closeImmersiveModal.addEventListener("click", closeImmersiveInspectorModal);
+  }
+  if (immersiveModal) {
+    immersiveModal.addEventListener("click", (event) => {
+      if (event.target === immersiveModal) closeImmersiveInspectorModal();
+    });
+  }
+}
+
+function installShortcuts() {
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeImmersiveInspectorModal();
+      return;
+    }
+    if (event.key.toLowerCase() === "i") {
+      openImmersiveModal();
+      return;
+    }
+    if (event.key.toLowerCase() === "l") {
+      setImmersiveMode("laser", !immersiveState.laser);
+      return;
+    }
+    if (event.key.toLowerCase() === "d") {
+      setImmersiveMode("depth", !immersiveState.depth);
+      return;
+    }
+    if (event.key.toLowerCase() === "c") {
+      setImmersiveMode("comfort", !immersiveState.comfort);
+      return;
+    }
+  });
+}
+
 installSignalRipples();
 installDensityControls();
 installOperatorDnD();
 installBoardDnD();
 installEventFeedLoader();
 installHeroActions();
+installDepthParallax();
+installLaserPointer();
+installImmersiveControls();
+installImmersiveModal();
+installShortcuts();

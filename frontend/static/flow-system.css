@@ -295,6 +295,94 @@ body.workflow-elite-page .activity-grid--single {
   gap: 14px;
 }
 
+body.workflow-elite-page .wf-immersive-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-toggle {
+  appearance: none;
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  background: rgba(10, 18, 34, 0.72);
+  color: var(--ds-muted);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+body.workflow-elite-page .wf-toggle.is-active {
+  color: #ffffff;
+  border-color: rgba(188, 216, 255, 0.64);
+  background: rgba(12, 26, 48, 0.9);
+}
+
+body.workflow-elite-page .laser-cursor,
+body.workflow-elite-page .laser-trail {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  transform: translate(-9999px, -9999px);
+  border-radius: 50%;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+body.workflow-elite-page.immersive-laser .laser-cursor,
+body.workflow-elite-page.immersive-laser .laser-trail {
+  opacity: 1;
+}
+
+body.workflow-elite-page .laser-cursor {
+  width: 11px;
+  height: 11px;
+  background: radial-gradient(circle, rgba(210, 235, 255, 1) 0%, rgba(102, 171, 255, 0.95) 74%, rgba(102, 171, 255, 0.12) 100%);
+  box-shadow: 0 0 10px rgba(129, 188, 255, 0.8);
+}
+
+body.workflow-elite-page .laser-trail {
+  width: 36px;
+  height: 36px;
+  margin-left: -12px;
+  margin-top: -12px;
+  border: 1px solid rgba(157, 205, 255, 0.48);
+  background: radial-gradient(circle, rgba(107, 171, 255, 0.18) 0%, rgba(107, 171, 255, 0) 72%);
+}
+
+body.workflow-elite-page.immersive-depth .wf-signal-cell,
+body.workflow-elite-page.immersive-depth .wf-operator-card,
+body.workflow-elite-page.immersive-depth .wf-lane-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+body.workflow-elite-page.immersive-comfort .wf-signal-cell,
+body.workflow-elite-page.immersive-comfort .wf-operator-card,
+body.workflow-elite-page.immersive-comfort .wf-lane-card {
+  transition-duration: 140ms !important;
+}
+
+body.workflow-elite-page.immersive-comfort .laser-trail {
+  display: none;
+}
+
+body.workflow-elite-page #immersive-modal {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.workflow-elite-page #immersive-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.workflow-elite-page #immersive-modal .flow-modal__content {
+  max-width: 560px;
+}
+
 @media (max-width: 1024px) {
   body.workflow-elite-page .wf-shell {
     gap: 24px;

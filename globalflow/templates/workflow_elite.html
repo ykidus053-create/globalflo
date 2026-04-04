@@ -30,6 +30,8 @@
     </div>
     <div class="aurora"></div>
     <div class="grid-overlay"></div>
+    <div class="laser-cursor" id="laser-cursor" aria-hidden="true"></div>
+    <div class="laser-trail" id="laser-trail" aria-hidden="true"></div>
 
     <header class="top top--airbnb">
       <div class="brand">
@@ -48,6 +50,7 @@
         <a href="#signals">Signals</a>
         <a href="#operators">Operators</a>
         <a href="#board">Board</a>
+        <a href="#immersive">Immersive</a>
       </nav>
     </header>
 
@@ -108,6 +111,19 @@
             <small>{{ signal.detail }}</small>
           </button>
           {% endfor %}
+        </div>
+      </section>
+
+      <section id="immersive" class="wf-section">
+        <div class="section-heading">
+          <h2>Immersive controls</h2>
+          <p>Toggle laser focus, spatial depth, and comfort mode with immediate visual feedback.</p>
+        </div>
+        <div class="wf-immersive-controls">
+          <button type="button" class="wf-toggle is-active" data-immersive-mode="laser">Laser pointer</button>
+          <button type="button" class="wf-toggle is-active" data-immersive-mode="depth">Spatial depth</button>
+          <button type="button" class="wf-toggle" data-immersive-mode="comfort">Comfort mode</button>
+          <button type="button" class="ghost small" id="open-immersive-inspector">Open inspector</button>
         </div>
       </section>
 
@@ -187,6 +203,18 @@
     </main>
 
     <div class="toast" id="toast" aria-live="polite">Action running...</div>
+    <div class="flow-modal" role="dialog" aria-modal="true" id="immersive-modal" aria-hidden="true">
+      <div class="flow-modal__content">
+        <button class="flow-modal__close" id="close-immersive-modal" type="button">&times;</button>
+        <h3>Immersive inspector</h3>
+        <p class="modal-note">Keyboard: <strong>L</strong> toggle laser, <strong>D</strong> toggle depth, <strong>C</strong> comfort mode, <strong>I</strong> open inspector.</p>
+        <ul class="summary">
+          <li>Laser pointer increases focus precision in dense grids.</li>
+          <li>Spatial depth adds tilt/parallax for hierarchy cues.</li>
+          <li>Comfort mode reduces motion amplitude and blur pressure.</li>
+        </ul>
+      </div>
+    </div>
 
     <script src="/static/site-boot.js?v={{ asset_version }}" defer></script>
     <script type="module" src="/static/workflow-elite.js?v={{ asset_version }}"></script>
