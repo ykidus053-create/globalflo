@@ -7415,3 +7415,139 @@ body.top-tier-site [tabindex]:focus-visible {
     transition: none !important;
   }
 }
+
+/* Final readability lock: force clear contrast across all pages */
+body.paper-site,
+body.paper-site * {
+  text-rendering: optimizeLegibility;
+}
+
+body.paper-site {
+  --read-text-dark: #0b1220;
+  --read-text-light: #f8fbff;
+  --read-muted-dark: #334155;
+  --read-muted-light: #d9e3f5;
+  --read-link-dark: #1d4ed8;
+  --read-link-light: #8cc8ff;
+}
+
+html[data-theme="light"] body.paper-site {
+  color: var(--read-text-dark);
+}
+
+html[data-theme="dark"] body.paper-site,
+html[data-theme="light"] body.paper-site.top-tier-site[data-theme="dark"] {
+  color: var(--read-text-light);
+}
+
+/* Primary readable copy */
+html[data-theme="light"] body.paper-site h1,
+html[data-theme="light"] body.paper-site h2,
+html[data-theme="light"] body.paper-site h3,
+html[data-theme="light"] body.paper-site h4,
+html[data-theme="light"] body.paper-site p,
+html[data-theme="light"] body.paper-site li,
+html[data-theme="light"] body.paper-site label,
+html[data-theme="light"] body.paper-site span,
+html[data-theme="light"] body.paper-site strong,
+html[data-theme="light"] body.paper-site small {
+  color: var(--read-text-dark) !important;
+}
+
+html[data-theme="dark"] body.paper-site h1,
+html[data-theme="dark"] body.paper-site h2,
+html[data-theme="dark"] body.paper-site h3,
+html[data-theme="dark"] body.paper-site h4,
+html[data-theme="dark"] body.paper-site p,
+html[data-theme="dark"] body.paper-site li,
+html[data-theme="dark"] body.paper-site label,
+html[data-theme="dark"] body.paper-site span,
+html[data-theme="dark"] body.paper-site strong,
+html[data-theme="dark"] body.paper-site small {
+  color: var(--read-text-light) !important;
+}
+
+/* Secondary/caption text */
+html[data-theme="light"] body.paper-site .lead,
+html[data-theme="light"] body.paper-site .eyebrow,
+html[data-theme="light"] body.paper-site .modal-note,
+html[data-theme="light"] body.paper-site .label,
+html[data-theme="light"] body.paper-site .note,
+html[data-theme="light"] body.paper-site .feature-kicker,
+html[data-theme="light"] body.paper-site .signal-meta,
+html[data-theme="light"] body.paper-site .search-meta,
+html[data-theme="light"] body.paper-site .connector-toggle,
+html[data-theme="light"] body.paper-site .payment-status,
+html[data-theme="light"] body.paper-site .activity-detail,
+html[data-theme="light"] body.paper-site .activity-entry time {
+  color: var(--read-muted-dark) !important;
+}
+
+html[data-theme="dark"] body.paper-site .lead,
+html[data-theme="dark"] body.paper-site .eyebrow,
+html[data-theme="dark"] body.paper-site .modal-note,
+html[data-theme="dark"] body.paper-site .label,
+html[data-theme="dark"] body.paper-site .note,
+html[data-theme="dark"] body.paper-site .feature-kicker,
+html[data-theme="dark"] body.paper-site .signal-meta,
+html[data-theme="dark"] body.paper-site .search-meta,
+html[data-theme="dark"] body.paper-site .connector-toggle,
+html[data-theme="dark"] body.paper-site .payment-status,
+html[data-theme="dark"] body.paper-site .activity-detail,
+html[data-theme="dark"] body.paper-site .activity-entry time {
+  color: var(--read-muted-light) !important;
+}
+
+/* Links */
+html[data-theme="light"] body.paper-site a,
+html[data-theme="light"] body.paper-site .text-link,
+html[data-theme="light"] body.paper-site .feature-link,
+html[data-theme="light"] body.paper-site .footer-links a,
+html[data-theme="light"] body.paper-site .footer-link-button {
+  color: var(--read-link-dark) !important;
+}
+
+html[data-theme="dark"] body.paper-site a,
+html[data-theme="dark"] body.paper-site .text-link,
+html[data-theme="dark"] body.paper-site .feature-link,
+html[data-theme="dark"] body.paper-site .footer-links a,
+html[data-theme="dark"] body.paper-site .footer-link-button {
+  color: var(--read-link-light) !important;
+}
+
+/* Inputs and placeholders */
+html[data-theme="light"] body.paper-site input,
+html[data-theme="light"] body.paper-site select,
+html[data-theme="light"] body.paper-site textarea {
+  color: var(--read-text-dark) !important;
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.28) !important;
+}
+
+html[data-theme="dark"] body.paper-site input,
+html[data-theme="dark"] body.paper-site select,
+html[data-theme="dark"] body.paper-site textarea {
+  color: var(--read-text-light) !important;
+  background: rgba(10, 17, 30, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+html[data-theme="light"] body.paper-site input::placeholder,
+html[data-theme="light"] body.paper-site textarea::placeholder {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] body.paper-site input::placeholder,
+html[data-theme="dark"] body.paper-site textarea::placeholder {
+  color: #b8c5df !important;
+}
+
+/* Specific workflow signal readability */
+body.workflow-lab-page .wf-signal-cell span,
+body.workflow-lab-page .wf-signal-cell strong,
+body.workflow-lab-page .wf-signal-cell small,
+body.workflow-lab-page .wf-operator-copy h3,
+body.workflow-lab-page .wf-operator-copy p,
+body.workflow-lab-page .wf-operator-note {
+  color: var(--read-text-light) !important;
+}
