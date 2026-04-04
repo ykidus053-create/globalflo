@@ -1,41 +1,119 @@
+const signalGrid = document.querySelector(".wf-signal-grid");
 const signalCells = Array.from(document.querySelectorAll(".wf-signal-cell[data-ripple='true']"));
+const densityButtons = Array.from(document.querySelectorAll(".wf-density"));
 const operatorGrid = document.getElementById("operator-grid");
 const activityFeed = document.getElementById("activity-feed");
+const workflowBoard = document.getElementById("wf-board");
+
+const moreSignals = [
+  { tone: "trust", label: "SLA on track", value: "96%", detail: "Run latency under threshold." },
+  { tone: "urgency", label: "Escalations", value: "3", detail: "High-priority queues." },
+  { tone: "speed", label: "Avg retries", value: "1.2", detail: "Low rerun overhead." },
+  { tone: "insight", label: "Coverage", value: "94%", detail: "Telemetry completeness." },
+];
+let signalCursor = 0;
+
+function createRipple(host, x, y) {
+  const rect = host.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const ripple = document.createElement("span");
+  ripple.className = "ripple";
+  ripple.style.width = `${size}px`;
+  ripple.style.height = `${size}px`;
+  ripple.style.left = `${x - rect.left - size / 2}px`;
+  ripple.style.top = `${y - rect.top - size / 2}px`;
+  host.querySelectorAll(".ripple").forEach((node) => node.remove());
+  host.appendChild(ripple);
+  window.setTimeout(() => ripple.remove(), 700);
+}
+
+function bindRipple(el) {
+  el.addEventListener(
+    "pointerdown",
+    (event) => {
+      if (event.button != null && event.button !== 0) return;
+      const px = event.clientX || el.getBoundingClientRect().left + el.getBoundingClientRect().width / 2;
+      const py = event.clientY || el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2;
+      createRipple(el, px, py);
+    },
+    { passive: true }
+  );
+}
 
 function installSignalRipples() {
   if (!signalCells.length) return;
-  signalCells.forEach((cell) => {
-    cell.addEventListener(
-      "pointerdown",
-      (event) => {
-        if (event.button != null && event.button !== 0) return;
-        const rect = cell.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = (event.clientX || rect.left + rect.width / 2) - rect.left - size / 2;
-        const y = (event.clientY || rect.top + rect.height / 2) - rect.top - size / 2;
+  signalCells.forEach((cell) => bindRipple(cell));
+}
 
-        const ripple = document.createElement("span");
-        ripple.className = "ripple";
-        ripple.style.width = `${size}px`;
-        ripple.style.height = `${size}px`;
-        ripple.style.left = `${x}px`;
-        ripple.style.top = `${y}px`;
-
-        cell.querySelectorAll(".ripple").forEach((node) => node.remove());
-        cell.appendChild(ripple);
-        window.setTimeout(() => ripple.remove(), 700);
-      },
-      { passive: true }
-    );
+function applyDensity(density) {
+  const cozy = density !== "compact";
+  document.body.classList.toggle("wf-compact", !cozy);
+  densityButtons.forEach((button) => {
+    const active = button.dataset.density === (cozy ? "cozy" : "compact");
+    button.classList.toggle("is-active", active);
   });
 }
 
-function installOperatorDragDrop() {
+function installDensityControls() {
+  if (!densityButtons.length) return;
+  densityButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      applyDensity(button.dataset.density || "cozy");
+    });
+  });
+
+  // Adaptive fallback using container width.
+  if (signalGrid && "ResizeObserver" in window) {
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width < 980) {
+          applyDensity("compact");
+        } else {
+          applyDensity("cozy");
+        }
+      }
+    });
+    ro.observe(signalGrid);
+  }
+}
+
+function appendMoreSignals() {
+  if (!signalGrid || signalCursor >= moreSignals.length) return;
+  const item = moreSignals[signalCursor++];
+  const cell = document.createElement("button");
+  cell.className = "wf-signal-cell";
+  cell.type = "button";
+  cell.dataset.tone = item.tone;
+  cell.dataset.tooltip = item.detail;
+  cell.dataset.ripple = "true";
+  cell.setAttribute("aria-label", `${item.label} ${item.value}`);
+  cell.innerHTML = `<span>${item.label}</span><strong>${item.value}</strong><small>${item.detail}</small>`;
+  signalGrid.appendChild(cell);
+  bindRipple(cell);
+}
+
+function installInfiniteSignalScroll() {
+  if (!signalGrid) return;
+  window.addEventListener(
+    "scroll",
+    () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 220;
+      if (nearBottom) appendMoreSignals();
+    },
+    { passive: true }
+  );
+}
+
+function installOperatorCards() {
   if (!operatorGrid) return;
   const cards = () => Array.from(operatorGrid.querySelectorAll(".wf-operator-card"));
   let dragSource = null;
 
   cards().forEach((card) => {
+    card.addEventListener("click", () => {
+      card.classList.toggle("is-expanded");
+    });
+
     card.addEventListener("dragstart", () => {
       dragSource = card;
       card.classList.add("is-dragging");
@@ -70,6 +148,47 @@ function installOperatorDragDrop() {
   });
 }
 
+function installBoardDragDrop() {
+  if (!workflowBoard) return;
+  let source = null;
+  const cards = workflowBoard.querySelectorAll(".wf-lane-card");
+  const lanes = workflowBoard.querySelectorAll(".wf-lane");
+
+  cards.forEach((card) => {
+    card.addEventListener("dragstart", () => {
+      source = card;
+      card.classList.add("is-dragging");
+    });
+
+    card.addEventListener("dragend", () => {
+      card.classList.remove("is-dragging");
+      lanes.forEach((lane) => lane.classList.remove("is-drop-target"));
+      source = null;
+    });
+  });
+
+  lanes.forEach((lane) => {
+    lane.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      lane.classList.add("is-drop-target");
+    });
+
+    lane.addEventListener("dragleave", () => {
+      lane.classList.remove("is-drop-target");
+    });
+
+    lane.addEventListener("drop", (event) => {
+      event.preventDefault();
+      lane.classList.remove("is-drop-target");
+      if (!source) return;
+      lane.appendChild(source);
+      const count = lane.querySelectorAll(".wf-lane-card").length;
+      const chip = lane.querySelector("header span");
+      if (chip) chip.textContent = String(count);
+    });
+  });
+}
+
 function syncOperatorBadgesFromActivity() {
   if (!activityFeed || !operatorGrid) return;
   const entries = activityFeed.querySelectorAll(".activity-entry");
@@ -100,5 +219,8 @@ function syncOperatorBadgesFromActivity() {
 }
 
 installSignalRipples();
-installOperatorDragDrop();
+installDensityControls();
+installInfiniteSignalScroll();
+installOperatorCards();
+installBoardDragDrop();
 window.setInterval(syncOperatorBadgesFromActivity, 6000);

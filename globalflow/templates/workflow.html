@@ -20,7 +20,7 @@
     />
     <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
   </head>
-  <body class="paper-site workflow-lab-page is-loading">
+  <body class="paper-site top-tier-site workflow-lab-page is-loading">
     <div class="site-loader" id="site-loader" aria-hidden="true">
       <div class="site-loader__inner">
         <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
@@ -82,9 +82,13 @@
       </section>
 
       <section id="signals" class="wf-section">
-        <div class="section-heading">
+        <div class="section-heading wf-heading-inline">
           <h2>Adaptive color grid</h2>
           <p>Semantic signals tuned for rapid scan and action.</p>
+          <div class="wf-density-controls" role="group" aria-label="Grid density controls">
+            <button type="button" class="wf-density is-active" data-density="cozy">Cozy</button>
+            <button type="button" class="wf-density" data-density="compact">Compact</button>
+          </div>
         </div>
         <div class="wf-signal-grid" role="list" aria-label="Workflow signal grid">
           {% for signal in workflow_signals %}
@@ -124,6 +128,41 @@
             <p class="wf-operator-note">Owner for workflow transitions, retries, and approvals.</p>
           </article>
           {% endfor %}
+        </div>
+      </section>
+
+      <section class="wf-section">
+        <div class="section-heading">
+          <h2>Drag-and-drop workflow board</h2>
+          <p>Reorder and move live items between lanes. Changes update instantly in the interface.</p>
+        </div>
+        <div class="wf-board" id="wf-board" aria-label="Workflow board">
+          <section class="wf-lane" data-lane="incoming">
+            <header><h3>Incoming</h3><span>4</span></header>
+            <article class="wf-lane-card" draggable="true">Call transcript review</article>
+            <article class="wf-lane-card" draggable="true">Invoice exception triage</article>
+            <article class="wf-lane-card" draggable="true">Tax deadline reminder</article>
+            <article class="wf-lane-card" draggable="true">Document mismatch alert</article>
+          </section>
+          <section class="wf-lane" data-lane="running">
+            <header><h3>Running</h3><span>3</span></header>
+            <article class="wf-lane-card" draggable="true">CRM enrichment batch</article>
+            <article class="wf-lane-card" draggable="true">Payment reconciliation</article>
+            <article class="wf-lane-card" draggable="true">Compliance packet build</article>
+          </section>
+          <section class="wf-lane" data-lane="review">
+            <header><h3>Review</h3><span>2</span></header>
+            <article class="wf-lane-card" draggable="true">Escalated billing thread</article>
+            <article class="wf-lane-card" draggable="true">Operator override check</article>
+          </section>
+          <section class="wf-lane" data-lane="complete">
+            <header><h3>Complete</h3><span>5</span></header>
+            <article class="wf-lane-card" draggable="true">Follow-up dispatch complete</article>
+            <article class="wf-lane-card" draggable="true">File routing complete</article>
+            <article class="wf-lane-card" draggable="true">Tax status sync complete</article>
+            <article class="wf-lane-card" draggable="true">Call owner assignment complete</article>
+            <article class="wf-lane-card" draggable="true">Webhook delivery confirmed</article>
+          </section>
         </div>
       </section>
 
