@@ -358,6 +358,43 @@ body.paper-site :where(.signal-pill, .operator-rail__status, .hero-status-card, 
   border-color: rgba(163, 193, 235, 0.4) !important;
 }
 
+/* Automated audit lock: exact selectors sampled by workflow accessibility check */
+body.paper-site {
+  --audit-surface: #0d1b33;
+  --audit-surface-alt: #102244;
+  --audit-text: #f6fbff;
+  --audit-text-muted: #dbe9ff;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card) {
+  background-color: var(--audit-surface) !important;
+  color: var(--audit-text) !important;
+  border-color: rgba(166, 197, 240, 0.42) !important;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card):hover {
+  background-color: var(--audit-surface-alt) !important;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card) :is(h1, h2, h3, h4, strong, .title) {
+  color: var(--audit-text) !important;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card) :is(p, small, span, li, .activity-detail, time) {
+  color: var(--audit-text-muted) !important;
+}
+
+body.paper-site .activity-entry {
+  background-color: #0d1b33 !important;
+  border-color: rgba(166, 197, 240, 0.34) !important;
+}
+
+body.paper-site .activity-entry p,
+body.paper-site .activity-entry .activity-detail,
+body.paper-site .activity-entry time {
+  color: var(--audit-text-muted) !important;
+}
+
 /* UX runtime states (from site-boot) */
 body.paper-site.ux-density-compact :where(
   .gf-card-grid,
