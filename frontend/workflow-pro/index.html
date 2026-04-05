@@ -18,8 +18,8 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=ee67009" />
-    <link rel="stylesheet" href="/static/flow-system.css?v=ee67009" />
+    <link rel="stylesheet" href="/static/flow.css?v=4854e6f" />
+    <link rel="stylesheet" href="/static/flow-system.css?v=4854e6f" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site top-tier-site workflow-lab-page workflow-elite-page is-loading">
@@ -224,6 +224,15 @@
           <button type="button" class="wf-toggle" data-immersive-mode="comfort">Comfort mode</button>
           <button type="button" class="ghost small" id="open-immersive-inspector">Open inspector</button>
         </div>
+        <div class="wf-vr-panel" aria-live="polite">
+          <h3>Real VR session</h3>
+          <p class="modal-note" id="vr-status">Checking WebXR support...</p>
+          <div class="wf-vr-actions">
+            <button type="button" class="primary small" id="enter-vr">Enter VR</button>
+            <button type="button" class="ghost small" id="exit-vr" disabled>Exit VR</button>
+          </div>
+          <canvas id="vr-canvas" class="wf-vr-canvas" aria-hidden="true"></canvas>
+        </div>
       </section>
 
       <section id="operators" class="wf-section">
@@ -393,7 +402,7 @@
       </div>
     </div>
 
-    <script src="/static/site-boot.js?v=ee67009" defer></script>
-    <script type="module" src="/static/workflow-elite.js?v=ee67009"></script>
+    <script src="/static/site-boot.js?v=4854e6f" defer></script>
+    <script type="module" src="/static/workflow-elite.js?v=4854e6f"></script>
   </body>
 </html>
