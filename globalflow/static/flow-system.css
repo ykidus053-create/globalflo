@@ -792,6 +792,46 @@ body.paper-site .wf-operator-card.is-dragging {
 
 /* Final phone-only text-fit lock (no laptop/tablet changes) */
 @media (max-width: 767px) {
+  html {
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
+
+  body.paper-site {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+  }
+
+  body.paper-site h1 {
+    font-size: clamp(1.45rem, 5.2vw, 1.9rem) !important;
+    line-height: 1.18 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  body.paper-site h2 {
+    font-size: clamp(1.2rem, 4.3vw, 1.5rem) !important;
+    line-height: 1.24 !important;
+  }
+
+  body.paper-site h3 {
+    font-size: clamp(1rem, 3.8vw, 1.2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  body.paper-site p,
+  body.paper-site li,
+  body.paper-site span,
+  body.paper-site small,
+  body.paper-site a,
+  body.paper-site button,
+  body.paper-site label,
+  body.paper-site input,
+  body.paper-site textarea,
+  body.paper-site select {
+    font-size: 0.92rem !important;
+    line-height: 1.45 !important;
+  }
+
   body.paper-site .explore-grid,
   body.paper-site .feature-grid,
   body.paper-site .connectors-grid,
@@ -957,12 +997,18 @@ body.paper-site .wf-operator-card.is-dragging {
     .wf-operator-note,
     .explore-card__body p,
     .feature-card p,
-    .workflow-card p
+    .workflow-card p,
+    .activity-entry,
+    .activity-entry p,
+    .activity-entry .activity-detail,
+    .activity-entry time
   ) {
     display: block !important;
     -webkit-line-clamp: unset !important;
     line-clamp: unset !important;
     -webkit-box-orient: initial !important;
+    overflow: visible !important;
+    max-height: none !important;
   }
 
   body.paper-site :where(

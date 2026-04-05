@@ -927,4 +927,54 @@ body.paper-site .wf-operator-card.is-dragging {
     max-width: 92vw !important;
     box-sizing: border-box !important;
   }
+
+  /* Force full text visibility on phone cards */
+  body.paper-site :where(
+    h1, h2, h3, h4, h5, h6,
+    p, span, small, strong, a, button, label, li
+  ) {
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  body.paper-site :where(
+    .content-body,
+    .explore-card__body,
+    .feature-card,
+    .workflow-card,
+    .wf-lane-card,
+    .wf-operator-note,
+    .use-case-preview
+  ) {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  body.paper-site :where(
+    .wf-operator-note,
+    .explore-card__body p,
+    .feature-card p,
+    .workflow-card p
+  ) {
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    -webkit-box-orient: initial !important;
+  }
+
+  body.paper-site :where(
+    .workflow-card,
+    .feature-card,
+    .explore-card,
+    .connector-card,
+    .pricing-card,
+    .wf-signal-cell,
+    .wf-operator-card,
+    .wf-lane-card
+  ) {
+    padding-inline: 12px !important;
+  }
 }
