@@ -95,6 +95,57 @@
   }
 }
 
+/* UX runtime states (from site-boot) */
+body.paper-site.ux-density-compact :where(
+  .gf-card-grid,
+  .stat-grid,
+  .explore-grid,
+  .feature-grid,
+  .connectors-grid,
+  .subscription-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid,
+  .wf-board,
+  .wf-lanes,
+  .payment-strip,
+  .testimonial-grid,
+  .trust-signal-grid
+) {
+  gap: 12px !important;
+}
+
+body.paper-site.ux-density-comfortable :where(
+  .gf-card-grid,
+  .stat-grid,
+  .explore-grid,
+  .feature-grid,
+  .connectors-grid,
+  .subscription-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid,
+  .wf-board,
+  .wf-lanes,
+  .payment-strip,
+  .testimonial-grid,
+  .trust-signal-grid
+) {
+  gap: 16px !important;
+}
+
+body.paper-site.ux-high-contrast {
+  --read-fg: #ffffff;
+  --read-muted: #e8f0ff;
+  --read-link: #dff0ff;
+  --read-link-hover: #ffffff;
+}
+
+body.paper-site .ux-low-contrast {
+  color: #f6fbff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.48);
+}
+
 html[data-theme="light"] {
   --ds-bg: #0a1731;
   --ds-surface: rgba(10, 20, 38, 0.74);
@@ -1240,4 +1291,184 @@ body.paper-site :where(
 ) {
   background-color: color-mix(in srgb, rgba(8, 16, 30, 0.82) 88%, transparent) !important;
   border-color: rgba(173, 195, 230, 0.3) !important;
+}
+
+/* ==========================================================================
+   Unified UI Command Layer (global redesign behavior)
+   Design Thinking + UCD + Accessibility + Scalable systemization
+   ========================================================================== */
+body.paper-site {
+  --ui-space-8: 8px;
+  --ui-space-16: 16px;
+  --ui-space-24: 24px;
+  --ui-space-32: 32px;
+  --ui-space-48: 48px;
+  --ui-space-64: 64px;
+  --ui-space-96: 96px;
+
+  --ui-max-width: 1200px;
+  --ui-radius-card: 14px;
+  --ui-radius-pill: 999px;
+  --ui-border: rgba(176, 202, 242, 0.34);
+  --ui-surface: rgba(10, 20, 38, 0.72);
+  --ui-surface-strong: rgba(8, 16, 30, 0.86);
+
+  --ui-h1: clamp(2rem, 5vw, 3.4rem);
+  --ui-h2: clamp(1.45rem, 3vw, 2.2rem);
+  --ui-h3: clamp(1.1rem, 2vw, 1.45rem);
+  --ui-body: 1rem;
+  --ui-line: 1.55;
+}
+
+body.paper-site :where(main, .landing-main, #workspace, .payment-page, .checkout-page, .account-page) {
+  max-width: var(--ui-max-width) !important;
+  margin-inline: auto !important;
+  padding-inline: var(--ui-space-24) !important;
+}
+
+body.paper-site :where(main > section, .gf-section, .wf-section, .site-footer, .checkout-foot) {
+  padding-block: var(--ui-space-48) !important;
+  border-top: 1px solid rgba(176, 202, 242, 0.18) !important;
+}
+
+body.paper-site :where(h1) {
+  font-size: var(--ui-h1) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.02em !important;
+}
+
+body.paper-site :where(h2) {
+  font-size: var(--ui-h2) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+}
+
+body.paper-site :where(h3) {
+  font-size: var(--ui-h3) !important;
+  line-height: 1.26 !important;
+}
+
+body.paper-site :where(p, li, label, input, textarea, select, button, a) {
+  font-size: var(--ui-body) !important;
+  line-height: var(--ui-line) !important;
+}
+
+body.paper-site :where(.primary, .ghost, .wf-toggle, .toggle-option, .oauth-button, .footer-link-button) {
+  min-height: 44px !important;
+  padding: 10px 14px !important;
+  border-radius: var(--ui-radius-pill) !important;
+  border: 1px solid var(--ui-border) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .workflow-card,
+  .explore-card,
+  .feature-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane,
+  .wf-lane-card,
+  .use-case-preview,
+  .hero-status-card,
+  .wf-ai-card
+) {
+  border-radius: var(--ui-radius-card) !important;
+  background: var(--ui-surface) !important;
+  border: 1px solid var(--ui-border) !important;
+  box-shadow: 0 10px 24px rgba(4, 10, 20, 0.34);
+}
+
+body.paper-site :where(
+  .hero,
+  .workflow,
+  .workflow--split,
+  .use-case-layout,
+  .founder-grid,
+  .demo-showcase-grid,
+  .wf-hero,
+  .wf-board,
+  .wf-lanes
+) {
+  gap: var(--ui-space-24) !important;
+}
+
+body.paper-site :where(
+  .stat-grid,
+  .explore-grid,
+  .feature-grid,
+  .connectors-grid,
+  .subscription-grid,
+  .testimonial-grid,
+  .trust-signal-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid,
+  .payment-strip,
+  .wf-ai-grid
+) {
+  gap: var(--ui-space-16) !important;
+}
+
+/* Accessibility-first defaults */
+body.paper-site :where(a, button, input, select, textarea, summary, [draggable="true"]) {
+  outline-offset: 2px;
+}
+
+body.paper-site :where(a, button, input, select, textarea, summary, [draggable="true"]):focus-visible {
+  outline: 3px solid #96c7ff !important;
+}
+
+@media (max-width: 1024px) {
+  body.paper-site :where(main, .landing-main, #workspace, .payment-page, .checkout-page, .account-page) {
+    padding-inline: var(--ui-space-16) !important;
+  }
+
+  body.paper-site :where(main > section, .gf-section, .wf-section, .site-footer, .checkout-foot) {
+    padding-block: var(--ui-space-32) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body.paper-site {
+    --ui-h1: clamp(1.5rem, 7vw, 1.9rem);
+    --ui-h2: clamp(1.2rem, 5vw, 1.45rem);
+    --ui-h3: clamp(1rem, 4vw, 1.15rem);
+    --ui-body: 0.92rem;
+    --ui-line: 1.45;
+  }
+
+  body.paper-site :where(main, .landing-main, #workspace, .payment-page, .checkout-page, .account-page) {
+    padding-inline: 12px !important;
+  }
+
+  body.paper-site :where(
+    .hero,
+    .workflow,
+    .workflow--split,
+    .use-case-layout,
+    .founder-grid,
+    .demo-showcase-grid,
+    .wf-hero,
+    .wf-board,
+    .wf-lanes,
+    .stat-grid,
+    .explore-grid,
+    .feature-grid,
+    .connectors-grid,
+    .subscription-grid,
+    .testimonial-grid,
+    .trust-signal-grid,
+    .workflow-grid,
+    .wf-signal-grid,
+    .wf-operator-grid,
+    .payment-strip,
+    .wf-ai-grid
+  ) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--ui-space-12, 12px) !important;
+  }
 }
