@@ -348,6 +348,61 @@
     background: var(--gf-card-bg-b);
   }
 
+  /* Two-color surface system across all non-text UI layers */
+  .gf-polish :is(
+      .top,
+      .top--airbnb,
+      .nav,
+      .mobile-dock,
+      .site-footer--airbnb,
+      .flow-modal__content,
+      .lead-capture--airbnb,
+      .summary,
+      .autopilot-panel--airbnb,
+      .demo-showcase,
+      .comparison-table-wrap--airbnb,
+      .workflow-journey-card,
+      .workflow-guidance-card,
+      .workflow-journey-step,
+      .explore-section,
+      .features--airbnb,
+      .workflow--airbnb,
+      .integrations--airbnb,
+      .under-the-hood--airbnb,
+      .pricing--airbnb,
+      .trust--airbnb,
+      .proof--quiet,
+      .hero,
+      .wf-section,
+      .workflow,
+      .integrations,
+      .capabilities,
+      .proof,
+      .pricing,
+      .demo
+    ) {
+    background: var(--gf-card-bg-a) !important;
+    border-color: rgba(243, 243, 244, 0.16) !important;
+  }
+
+  .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo):nth-of-type(even) {
+    background: var(--gf-card-bg-b) !important;
+  }
+
+  .gf-polish :is(input, select, textarea, summary, .payment-chip, .tier-badge, .workflow-status, .signal-pill, .connector-toggle, .hero-chip-row span, .built-with--airbnb span) {
+    background: var(--gf-card-bg-a) !important;
+    border-color: rgba(243, 243, 244, 0.2) !important;
+  }
+
+  .gf-polish :is(button, .primary, .ghost, .pill, .wf-density, .wf-toggle, .footer-link-button, .connector-form button, .pricing-card button, .workflow-card button, .mobile-dock a) {
+    background: var(--gf-card-bg-b) !important;
+    border-color: rgba(243, 243, 244, 0.24) !important;
+  }
+
+  .gf-polish :is(button, .primary, .ghost, .pill, .wf-density, .wf-toggle, .footer-link-button, .connector-form button, .pricing-card button, .workflow-card button, .mobile-dock a):hover {
+    background: var(--gf-card-bg-a) !important;
+  }
+
   @media (min-width: 1024px) and (max-width: 1599px) {
     .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo) {
       margin-block: var(--gf-space-section-laptop);
