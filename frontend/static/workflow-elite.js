@@ -22,6 +22,18 @@ const aiAuditOutput = document.getElementById("ai-audit-output");
 const aiHandoffOutput = document.getElementById("ai-handoff-output");
 const aiMethodButtons = Array.from(document.querySelectorAll("[data-ai-method]"));
 const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
+const liveAnnouncer = (() => {
+  let node = document.getElementById("wf-live-announcer");
+  if (!node) {
+    node = document.createElement("div");
+    node.id = "wf-live-announcer";
+    node.setAttribute("aria-live", "polite");
+    node.setAttribute("aria-atomic", "true");
+    node.className = "sr-only";
+    document.body.appendChild(node);
+  }
+  return node;
+})();
 
 const immersiveState = {
   laser: true,
@@ -63,6 +75,7 @@ const toneRules = [
 
 function toast(message) {
   const el = document.getElementById("toast");
+  if (liveAnnouncer) liveAnnouncer.textContent = message;
   if (!el) return;
   el.textContent = message;
   el.classList.add("is-visible");
@@ -154,6 +167,14 @@ function installDensityControls() {
 function installOperatorDnD() {
   if (!operatorGrid) return;
   const cards = () => Array.from(operatorGrid.querySelectorAll(".wf-operator-card"));
+  const refreshOperatorA11yOrder = () => {
+    const ordered = cards();
+    const total = ordered.length;
+    ordered.forEach((card, index) => {
+      card.setAttribute("aria-posinset", String(index + 1));
+      card.setAttribute("aria-setsize", String(total));
+    });
+  };
   let source = null;
 
   cards().forEach((card) => {
@@ -195,10 +216,12 @@ function installOperatorDnD() {
       } else {
         operatorGrid.insertBefore(card, target.nextSibling);
       }
+      refreshOperatorA11yOrder();
       card.focus();
       toast("Operator priority updated");
     });
   });
+  refreshOperatorA11yOrder();
 }
 
 function installBoardDnD() {
@@ -220,10 +243,26 @@ function installBoardDnD() {
     });
 
     card.addEventListener("keydown", (event) => {
-      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
       const lane = card.closest(".wf-lane");
       if (!lane) return;
+
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        const laneIndex = lanes.indexOf(lane);
+        const targetIndex = event.key === "ArrowLeft" ? laneIndex - 1 : laneIndex + 1;
+        if (targetIndex < 0 || targetIndex >= lanes.length) return;
+        const targetLane = lanes[targetIndex];
+        targetLane.appendChild(card);
+        const sourceBadge = lane.querySelector("header span");
+        const targetBadge = targetLane.querySelector("header span");
+        if (sourceBadge) sourceBadge.textContent = String(lane.querySelectorAll(".wf-lane-card").length);
+        if (targetBadge) targetBadge.textContent = String(targetLane.querySelectorAll(".wf-lane-card").length);
+        card.focus();
+        toast(`Moved to ${targetLane.querySelector("h3")?.textContent || "lane"}`);
+        return;
+      }
+
       const laneCards = Array.from(lane.querySelectorAll(".wf-lane-card"));
       const current = laneCards.indexOf(card);
       const nextIndex = event.key === "ArrowUp" ? current - 1 : current + 1;
@@ -245,7 +284,7 @@ function installBoardDnD() {
       lane.classList.add("is-drop-target");
     });
     lane.addEventListener("dragleave", () => lane.classList.remove("is-drop-target"));
-    lane.addEventListener("drop", (event) => {
+      lane.addEventListener("drop", (event) => {
       event.preventDefault();
       lane.classList.remove("is-drop-target");
       if (!source) return;
@@ -857,6 +896,17 @@ function installAIMethods() {
   runPredictiveMethod().catch(() => {});
 }
 
+function installLandmarkA11y() {
+  if (workflowBoard && !workflowBoard.hasAttribute("role")) {
+    workflowBoard.setAttribute("role", "region");
+    workflowBoard.setAttribute("aria-label", "Workflow lanes");
+  }
+  if (operatorGrid && !operatorGrid.hasAttribute("role")) {
+    operatorGrid.setAttribute("role", "list");
+    operatorGrid.querySelectorAll(".wf-operator-card").forEach((card) => card.setAttribute("role", "listitem"));
+  }
+}
+
 installSignalRipples();
 installDensityControls();
 installOperatorDnD();
@@ -872,3 +922,4 @@ installShortcuts();
 installRealVR();
 installElitePointerTracking();
 installAIMethods();
+installLandmarkA11y();
