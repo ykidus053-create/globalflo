@@ -684,7 +684,7 @@ USER_SETTINGS: Dict[str, str] = {
     "daily_digest": "enabled",
     "alert_channel": "Slack",
     "automation_tier": "High trust",
-    "theme": "light",
+    "theme": "dark",
 }
 
 SUBSCRIPTIONS: List[Dict[str, str]] = []
@@ -909,8 +909,8 @@ def _tasks_list() -> List[Dict[str, str]]:
 
 
 def _active_theme() -> str:
-    theme = USER_SETTINGS.get("theme", "light")
-    return theme if theme in {"light", "dark"} else "light"
+    theme = USER_SETTINGS.get("theme", "dark")
+    return theme if theme in {"light", "dark"} else "dark"
 
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def homepage(request: Request):
@@ -1854,8 +1854,8 @@ async def update_account(payload: Dict[str, str]):
     USER_SETTINGS["daily_digest"] = payload.get("daily_digest", USER_SETTINGS["daily_digest"])
     USER_SETTINGS["alert_channel"] = payload.get("alert_channel", USER_SETTINGS["alert_channel"])
     USER_SETTINGS["automation_tier"] = payload.get("automation_tier", USER_SETTINGS["automation_tier"])
-    theme = payload.get("theme", USER_SETTINGS.get("theme", "light"))
-    USER_SETTINGS["theme"] = theme if theme in {"light", "dark"} else "light"
+    theme = payload.get("theme", USER_SETTINGS.get("theme", "dark"))
+    USER_SETTINGS["theme"] = theme if theme in {"light", "dark"} else "dark"
     return {"status": "updated", "profile": USER_PROFILE, "settings": USER_SETTINGS}
 
 
