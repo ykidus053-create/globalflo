@@ -836,6 +836,9 @@ FOOTER_LINKS = [
     {"label": "Contact", "href": "mailto:hello@globalflow.ai"},
 ]
 
+UX_TELEMETRY: List[Dict[str, Any]] = []
+UX_TELEMETRY_LIMIT = 1200
+
 SOCIAL_LINKS = [
     {"label": "GitHub", "href": "https://github.com/ykidus053-create/globalflo"},
     {"label": "Roadmap", "href": "https://github.com/ykidus053-create/globalflo/issues"},
@@ -982,6 +985,77 @@ async def list_tasks():
 @app.get("/api/metrics", response_class=JSONResponse)
 async def metrics():
     return monitoring.snapshot()
+
+
+@app.post("/api/ux/telemetry", response_class=JSONResponse)
+async def ux_telemetry(payload: Dict[str, Any]):
+    event_type = str(payload.get("event_type", "")).strip() or "unknown"
+    session_id = str(payload.get("session_id", "")).strip() or "anonymous"
+    route = str(payload.get("route", "")).strip() or "/"
+    event_payload = payload.get("payload", {})
+    if not isinstance(event_payload, dict):
+        event_payload = {"value": str(event_payload)}
+
+    record = {
+        "event_type": event_type[:80],
+        "session_id": session_id[:120],
+        "route": route[:180],
+        "payload": event_payload,
+        "time": datetime.utcnow().isoformat(),
+    }
+    UX_TELEMETRY.append(record)
+    if len(UX_TELEMETRY) > UX_TELEMETRY_LIMIT:
+        del UX_TELEMETRY[: len(UX_TELEMETRY) - UX_TELEMETRY_LIMIT]
+    return {"status": "ok"}
+
+
+@app.get("/api/ux/report", response_class=JSONResponse)
+async def ux_report():
+    telemetry = list(UX_TELEMETRY)
+    if not telemetry:
+        return {
+            "events": 0,
+            "top_routes": [],
+            "top_actions": [],
+            "contrast_warnings": 0,
+            "recommendations": [
+                "Collect at least one session to generate Design Thinking/UCD insight loops."
+            ],
+        }
+
+    route_counts: Dict[str, int] = {}
+    action_counts: Dict[str, int] = {}
+    contrast_warnings = 0
+    for item in telemetry:
+        route = str(item.get("route", "") or "/")
+        route_counts[route] = route_counts.get(route, 0) + 1
+
+        payload = item.get("payload", {})
+        if isinstance(payload, dict):
+            action = str(payload.get("action", "")).strip()
+            if action:
+                action_counts[action] = action_counts.get(action, 0) + 1
+            warning_value = int(payload.get("contrast_warnings", 0) or 0)
+            contrast_warnings += max(0, warning_value)
+
+    top_routes = sorted(route_counts.items(), key=lambda kv: kv[1], reverse=True)[:8]
+    top_actions = sorted(action_counts.items(), key=lambda kv: kv[1], reverse=True)[:12]
+
+    recommendations: List[str] = []
+    if contrast_warnings > 0:
+        recommendations.append("Increase default contrast tokens on high-traffic surfaces.")
+    if len(top_routes) > 0 and top_routes[0][1] > 40:
+        recommendations.append(f"Prioritize UX iteration on {top_routes[0][0]} (highest traffic).")
+    if not recommendations:
+        recommendations.append("Continue iterative testing and collect broader user segments.")
+
+    return {
+        "events": len(telemetry),
+        "top_routes": [{"route": route, "count": count} for route, count in top_routes],
+        "top_actions": [{"action": action, "count": count} for action, count in top_actions],
+        "contrast_warnings": contrast_warnings,
+        "recommendations": recommendations,
+    }
 
 
 @app.get("/health", response_class=JSONResponse)

@@ -2,6 +2,8 @@ const LOADER_MIN_MS = 700;
 const loader = document.getElementById("site-loader");
 const loaderStart = performance.now();
 const UX_STORE_KEY = "globalflow_ux_state_v2";
+const UX_SESSION_KEY = "globalflow_ux_session_id";
+const UX_VARIANT_KEY = "globalflow_ux_variant";
 
 function safeParse(value, fallback) {
   try {
@@ -35,6 +37,62 @@ function saveUxState(state) {
   } catch (_) {}
 }
 
+function getApiBase() {
+  const base = String(window.GLOBALFLOW_API_BASE || "").trim();
+  return base ? base.replace(/\/$/, "") : "";
+}
+
+function apiUrl(path) {
+  const base = getApiBase();
+  return base ? `${base}${path}` : path;
+}
+
+function getSessionId() {
+  try {
+    const existing = sessionStorage.getItem(UX_SESSION_KEY);
+    if (existing) return existing;
+    const id = `ux_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    sessionStorage.setItem(UX_SESSION_KEY, id);
+    return id;
+  } catch (_) {
+    return "ux_anonymous";
+  }
+}
+
+function postTelemetry(eventType, payload = {}) {
+  const body = {
+    event_type: eventType,
+    session_id: getSessionId(),
+    route: location.pathname || "/",
+    payload,
+  };
+  fetch(apiUrl("/api/ux/telemetry"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    keepalive: true,
+  }).catch(() => {});
+}
+
+function installVariantSystem() {
+  const body = document.body;
+  if (!body) return;
+  const allowed = ["A", "B", "C"];
+  let chosen = "A";
+  try {
+    const saved = localStorage.getItem(UX_VARIANT_KEY);
+    if (saved && allowed.includes(saved)) {
+      chosen = saved;
+    } else {
+      const index = Math.floor(Math.random() * allowed.length);
+      chosen = allowed[index];
+      localStorage.setItem(UX_VARIANT_KEY, chosen);
+    }
+  } catch (_) {}
+  body.dataset.uxVariant = chosen;
+  postTelemetry("variant_assigned", { variant: chosen });
+}
+
 function applyAdaptiveDensity(state) {
   const body = document.body;
   if (!body) return;
@@ -56,6 +114,7 @@ function installInteractionTelemetry(state) {
           "unknown";
         state.interactions[id] = (state.interactions[id] || 0) + 1;
         saveUxState(state);
+        postTelemetry("interaction", { action: id, count: state.interactions[id] });
       },
       { passive: true }
     );
@@ -115,6 +174,7 @@ function runAccessibilityPass(state) {
     body.classList.remove("ux-high-contrast");
   }
   saveUxState(state);
+  postTelemetry("accessibility_scan", { contrast_warnings: warnings, scans: state.scans });
 }
 
 function applyResponsiveUxState(state) {
@@ -129,9 +189,11 @@ function applyResponsiveUxState(state) {
 
 function installUxEngine() {
   const state = loadUxState();
+  installVariantSystem();
   applyResponsiveUxState(state);
   installInteractionTelemetry(state);
   runAccessibilityPass(state);
+  postTelemetry("page_view", { density: state.preferredDensity });
   window.addEventListener(
     "resize",
     () => {

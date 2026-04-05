@@ -146,6 +146,39 @@ body.paper-site .ux-low-contrast {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.48);
 }
 
+/* Variant engine (Design Thinking ideate/prototype/test loop) */
+body.paper-site[data-ux-variant="A"] :where(.hero, .wf-hero) {
+  gap: 24px !important;
+}
+
+body.paper-site[data-ux-variant="B"] :where(.hero, .wf-hero) {
+  gap: 16px !important;
+}
+
+body.paper-site[data-ux-variant="B"] :where(.hero-copy, .wf-hero-copy) {
+  background: linear-gradient(145deg, rgba(11, 24, 46, 0.88), rgba(7, 14, 28, 0.82)) !important;
+}
+
+body.paper-site[data-ux-variant="C"] :where(
+  .explore-grid,
+  .feature-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid
+) {
+  gap: 12px !important;
+}
+
+body.paper-site[data-ux-variant="C"] :where(
+  .wf-signal-cell,
+  .wf-operator-card,
+  .workflow-card,
+  .feature-card,
+  .explore-card
+) {
+  border-color: rgba(146, 186, 244, 0.5) !important;
+}
+
 html[data-theme="light"] {
   --ds-bg: #0a1731;
   --ds-surface: rgba(10, 20, 38, 0.74);
