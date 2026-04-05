@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+        <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>Checkout | GlobalFlow</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/flow.css?v=4854e6f" />
+    <link rel="stylesheet" href="/static/flow-system.css?v=4854e6f" />
+      <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
+  </head>
+  <body class="checkout-body paper-site top-tier-site is-loading">
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader__inner">
+        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
+        <p class="site-loader__word">GlobalFlow</p>
+      </div>
+    </div>
+    <div class="aurora"></div>
+    <a class="skip-link" href="#main-content">Skip to checkout content</a>
+    <header class="top">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow Checkout</span>
+          <p>Simple activation for automation plans</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Checkout navigation">
+        <a href="/">Home</a>
+        <a href="/workflow-elite">Workflow</a>
+        <a href="/account">Account</a>
+        <a href="#invoice-form">Invoice</a>
+      </nav>
+    </header>
+
+    <main id="main-content" class="checkout-page" tabindex="-1">
+      <section class="checkout-hero">
+        <div class="checkout-hero-copy">
+          
+          <p class="eyebrow">Checkout</p>
+          <h1>Launch</h1>
+          <p class="lead">Multiple workflows for growing teams.</p>
+          <p class="price">$549 / month</p>
+          <div class="checkout-links">
+            
+            <a class="primary small" href="/payment/paypal?ticket=eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6Ikp4YnYyQlhLWm50dEtNMmp5a2dlQmJuOSIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6ImxhdW5jaCIsInRzIjoxNzc1MzI5NTQ2fQ.Q_wYY0TzRmh-qWP4uGPfub7cdoyVsbrTxd1Uk8hIwI8" rel="noreferrer">Pay with Paypal</a>
+            
+            <a class="primary small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiJpZExVUk5HMkNnUXhNZHFLX2piWUFmNTAiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJsYXVuY2giLCJ0cyI6MTc3NTMyOTU0Nn0.zzWbF9OIF5uFae_F6dcghDVBywqw-vUHOs0OT8-REfk" rel="noreferrer">Pay with Mastercard</a>
+            
+            <a class="primary small" href="/payment/amex?ticket=eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiJfSEVsLTNITnZrS2x3N0lSYnI3ZkJtY1MiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJsYXVuY2giLCJ0cyI6MTc3NTMyOTU0Nn0.P1mGih-RaIekTlAhdwEhbzuHIzDpSOOjreZr8w2Iyt0" rel="noreferrer">Pay with Amex</a>
+            
+          </div>
+        </div>
+        <div class="checkout-hero-panel">
+          <p><strong>Best fit:</strong> Best for growing teams with clear process ownership and active cross-team coordination.</p>
+          <p><strong>Typical outcome:</strong> Launch teams usually recover 120+ hours each month while improving response and billing speed.</p>
+          <p><strong>Low-risk rollout:</strong> Structured onboarding with connector validation and milestone-based rollout.</p>
+          <p><strong>Certainty:</strong> You get a clear KPI baseline and verified automation gains before expansion.</p>
+        </div>
+      </section>
+
+      <section class="checkout-offset">
+        <div class="checkout-card">
+          <h2>Request an invoice</h2>
+          <p>Use this flow when procurement or finance needs a manual ticket.</p>
+          <form id="invoice-form" data-method="mastercard" data-tier-id="launch">
+            <input type="hidden" name="payment_ticket" value="eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiJpZExVUk5HMkNnUXhNZHFLX2piWUFmNTAiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJsYXVuY2giLCJ0cyI6MTc3NTMyOTU0Nn0.zzWbF9OIF5uFae_F6dcghDVBywqw-vUHOs0OT8-REfk" />
+            <label>
+              Business email
+              <input name="email" type="email" placeholder="ops@company.com" required />
+            </label>
+            <label>
+              Amount
+              <input name="amount" value="549" />
+            </label>
+            <label>
+              Notes
+              <textarea name="notes" rows="3" placeholder="PO number, billing cadence, or payment notes"></textarea>
+            </label>
+            <button class="primary" type="submit">Send payment request</button>
+            <p class="payment-status" id="invoice-status"></p>
+          </form>
+        </div>
+
+        <div class="checkout-panel">
+          <h2>Included in Launch</h2>
+          <ul class="method-grid">
+            
+            <li>
+              <h4>8 production integrations</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+            <li>
+              <h4>Dedicated automations for billing, taxes, and files</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+            <li>
+              <h4>Live dashboards and team approvals</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+            <li>
+              <h4>Slack implementation channel</h4>
+              <p>Included at activation.</p>
+            </li>
+            
+          </ul>
+        </div>
+      </section>
+
+      <section class="payment-strip">
+        
+        <article class="payment-chip">
+          <div class="payment-icon paypal"></div>
+          <div>
+            <h3>PayPal</h3>
+            <p>Digital invoices</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="/payment/paypal?ticket=eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6Ikp4YnYyQlhLWm50dEtNMmp5a2dlQmJuOSIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6ImxhdW5jaCIsInRzIjoxNzc1MzI5NTQ2fQ.Q_wYY0TzRmh-qWP4uGPfub7cdoyVsbrTxd1Uk8hIwI8" rel="noreferrer">Open PayPal</a>
+          </div>
+        </article>
+        
+        <article class="payment-chip">
+          <div class="payment-icon mastercard"></div>
+          <div>
+            <h3>Mastercard</h3>
+            <p>Recurring billing</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiJpZExVUk5HMkNnUXhNZHFLX2piWUFmNTAiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJsYXVuY2giLCJ0cyI6MTc3NTMyOTU0Nn0.zzWbF9OIF5uFae_F6dcghDVBywqw-vUHOs0OT8-REfk" rel="noreferrer">Open Mastercard</a>
+          </div>
+        </article>
+        
+        <article class="payment-chip">
+          <div class="payment-icon amex"></div>
+          <div>
+            <h3>American Express</h3>
+            <p>Card billing</p>
+          </div>
+          <div class="payment-actions-links">
+            <a class="ghost small" href="/payment/amex?ticket=eyJhbW91bnQiOiI1NDkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiJfSEVsLTNITnZrS2x3N0lSYnI3ZkJtY1MiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJsYXVuY2giLCJ0cyI6MTc3NTMyOTU0Nn0.P1mGih-RaIekTlAhdwEhbzuHIzDpSOOjreZr8w2Iyt0" rel="noreferrer">Open American Express</a>
+          </div>
+        </article>
+        
+      </section>
+    </main>
+
+    <footer class="checkout-foot">
+      <p>Your workspace unlocks after billing confirmation and connector validation.</p>
+    </footer>
+
+    <script src="/static/site-boot.js?v=4854e6f" defer></script>
+    <script type="module" src="/static/checkout.js?v=4854e6f"></script>
+  </body>
+</html>
+

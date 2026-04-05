@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0f16" />
+    <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>GlobalFlow | Workflow Elite</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/flow.css?v=4854e6f" />
+    <link rel="stylesheet" href="/static/flow-system.css?v=4854e6f" />
+      <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
+  </head>
+  <body class="paper-site top-tier-site workflow-lab-page workflow-elite-page is-loading">
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader__inner">
+        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
+        <p class="site-loader__word">GlobalFlow</p>
+      </div>
+    </div>
+    <div class="aurora"></div>
+    <div class="grid-overlay"></div>
+    <div class="laser-cursor" id="laser-cursor" aria-hidden="true"></div>
+    <div class="laser-trail" id="laser-trail" aria-hidden="true"></div>
+
+    <header class="top top--airbnb">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow</span>
+          <p>Workflow Elite</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Workflow navigation">
+        <a href="/">Home</a>
+        <a href="/workflow-elite">Workflow</a>
+        <a href="/account">Account</a>
+        <a href="#signals">Signals</a>
+        <a href="#operators">Operators</a>
+        <a href="#board">Board</a>
+        <a href="#ai-integration">AI Methods</a>
+        <a href="#immersive">Immersive</a>
+      </nav>
+    </header>
+
+    <main id="workspace" class="wf-shell">
+      <section class="wf-hero">
+        <div class="wf-hero-copy gf-card">
+          <p class="eyebrow">Workflow command center</p>
+          <h1>Adaptive operations grid with verified execution control.</h1>
+          <p class="lead">
+            Prioritize urgency, trust, and throughput from one page. Route work, monitor state changes, and keep every action auditable.
+          </p>
+          <div class="workflow-actions">
+            <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
+            <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
+          </div>
+        </div>
+
+        <aside class="wf-hero-side gf-card">
+          <article class="hero-status-card">
+            <div>
+              <span>Operator confidence</span>
+              <strong>98.4%</strong>
+            </div>
+            <div>
+              <span>Queue pressure</span>
+              <strong>High flow</strong>
+            </div>
+            <div>
+              <span>Activity logged</span>
+              <strong>32 events</strong>
+            </div>
+          </article>
+          <div class="wf-density-controls" role="group" aria-label="Density mode">
+            <button type="button" class="wf-density is-active" data-density="cozy">Cozy</button>
+            <button type="button" class="wf-density" data-density="compact">Compact</button>
+          </div>
+        </aside>
+      </section>
+
+      <section id="signals" class="wf-section">
+        <div class="section-heading">
+          <h2>Adaptive color grid</h2>
+          <p>Semantic tones map trust, urgency, speed, and risk for sub-second scan.</p>
+        </div>
+        <div class="wf-signal-grid" role="list" aria-label="Adaptive signal grid">
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="trust"
+            data-tooltip="Verified outcomes with operator override"
+            data-ripple="true"
+            aria-label="Trust index 98.7%"
+          >
+            <span>Trust index</span>
+            <strong>98.7%</strong>
+            <small>Verified outcomes with operator override</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="urgency"
+            data-tooltip="Tasks above SLA risk threshold"
+            data-ripple="true"
+            aria-label="Urgent work 6"
+          >
+            <span>Urgent work</span>
+            <strong>6</strong>
+            <small>Tasks above SLA risk threshold</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="speed"
+            data-tooltip="Execution speed over last 200 runs"
+            data-ripple="true"
+            aria-label="Median runtime 39s"
+          >
+            <span>Median runtime</span>
+            <strong>39s</strong>
+            <small>Execution speed over last 200 runs</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="risk"
+            data-tooltip="Human review required"
+            data-ripple="true"
+            aria-label="Risk queue 2"
+          >
+            <span>Risk queue</span>
+            <strong>2</strong>
+            <small>Human review required</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="insight"
+            data-tooltip="Signals captured and searchable"
+            data-ripple="true"
+            aria-label="Telemetry coverage 99%"
+          >
+            <span>Telemetry coverage</span>
+            <strong>99%</strong>
+            <small>Signals captured and searchable</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="capacity"
+            data-tooltip="Healthy throughput utilization"
+            data-ripple="true"
+            aria-label="Team capacity 74%"
+          >
+            <span>Team capacity</span>
+            <strong>74%</strong>
+            <small>Healthy throughput utilization</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="success"
+            data-tooltip="Closed workflows and confirmations"
+            data-ripple="true"
+            aria-label="Completed today 41"
+          >
+            <span>Completed today</span>
+            <strong>41</strong>
+            <small>Closed workflows and confirmations</small>
+          </button>
+          
+          <button
+            class="wf-signal-cell"
+            type="button"
+            role="listitem"
+            data-tone="neutral"
+            data-tooltip="Prepared automations not launched"
+            data-ripple="true"
+            aria-label="Draft scenarios 9"
+          >
+            <span>Draft scenarios</span>
+            <strong>9</strong>
+            <small>Prepared automations not launched</small>
+          </button>
+          
+        </div>
+      </section>
+
+      <section id="immersive" class="wf-section">
+        <div class="section-heading">
+          <h2>Immersive controls</h2>
+          <p>Toggle laser focus, spatial depth, and comfort mode with immediate visual feedback.</p>
+        </div>
+        <div class="wf-immersive-controls">
+          <button type="button" class="wf-toggle is-active" data-immersive-mode="laser">Laser pointer</button>
+          <button type="button" class="wf-toggle is-active" data-immersive-mode="depth">Spatial depth</button>
+          <button type="button" class="wf-toggle" data-immersive-mode="comfort">Comfort mode</button>
+          <button type="button" class="ghost small" id="open-immersive-inspector">Open inspector</button>
+        </div>
+        <div class="wf-vr-panel" aria-live="polite">
+          <h3>Real VR session</h3>
+          <p class="modal-note" id="vr-status">Checking WebXR support...</p>
+          <div class="wf-vr-actions">
+            <button type="button" class="primary small" id="enter-vr">Enter VR</button>
+            <button type="button" class="ghost small" id="exit-vr" disabled>Exit VR</button>
+          </div>
+          <canvas id="vr-canvas" class="wf-vr-canvas" aria-hidden="true"></canvas>
+        </div>
+      </section>
+
+      <section id="ai-integration" class="wf-section">
+        <div class="section-heading">
+          <h2>AI Integration Methods</h2>
+          <p>Generative prototyping, predictive flow modeling, automated accessibility checks, and AI collaboration handoff.</p>
+        </div>
+        <div class="wf-ai-grid" id="ai-method-grid">
+          <article class="wf-ai-card">
+            <header>
+              <h3>1. Generative Prototyping</h3>
+              <span class="wf-badge" data-state="online">Active</span>
+            </header>
+            <p>Generate rapid layout/content variants from a prompt to speed ideation and A/B testing.</p>
+            <div class="wf-ai-actions">
+              <input id="ai-prompt" type="text" placeholder="Prompt: minimalist billing recovery dashboard" />
+              <button class="primary small" type="button" data-ai-method="generate">Generate variants</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-generate-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="wf-ai-card">
+            <header>
+              <h3>2. Predictive Flow Modeling</h3>
+              <span class="wf-badge" data-state="ready">Ready</span>
+            </header>
+            <p>Analyze lane pressure and event cadence to suggest next best workflow routing actions.</p>
+            <div class="wf-ai-actions">
+              <button class="ghost small" type="button" data-ai-method="predict">Run prediction</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-predict-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="wf-ai-card">
+            <header>
+              <h3>3. Automated UX + Accessibility Audit</h3>
+              <span class="wf-badge" data-state="review">Audit</span>
+            </header>
+            <p>Scan the current interface for readability, contrast, and usability risk signals.</p>
+            <div class="wf-ai-actions">
+              <button class="ghost small" type="button" data-ai-method="audit">Run accessibility check</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-audit-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="wf-ai-card">
+            <header>
+              <h3>4. AI Collaboration Handoff</h3>
+              <span class="wf-badge" data-state="online">Live</span>
+            </header>
+            <p>Generate a developer-ready handoff spec from current board/operator/signal state.</p>
+            <div class="wf-ai-actions">
+              <button class="primary small" type="button" data-ai-method="handoff">Generate handoff</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-handoff-output" aria-live="polite"></pre>
+          </article>
+        </div>
+      </section>
+
+      <section id="operators" class="wf-section">
+        <div class="section-heading">
+          <h2>AI operator cards</h2>
+          <p>Drag to reprioritize. Dynamic badges adapt to queue state and review load.</p>
+        </div>
+        <div class="wf-operator-grid" id="operator-grid">
+          
+          <article class="wf-operator-card" draggable="true" data-state="online" aria-label="Amina Tekle">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">A</div>
+              <div class="wf-operator-copy">
+                <h3>Amina Tekle</h3>
+                <p>Ops lead</p>
+              </div>
+              <span class="wf-badge" data-state="online">Live</span>
+            </header>
+            <p class="wf-operator-note">Handles approvals, retries, and escalations for assigned workflow lanes.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="review" aria-label="Noah Rivera">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">N</div>
+              <div class="wf-operator-copy">
+                <h3>Noah Rivera</h3>
+                <p>Billing analyst</p>
+              </div>
+              <span class="wf-badge" data-state="review">Review</span>
+            </header>
+            <p class="wf-operator-note">Handles approvals, retries, and escalations for assigned workflow lanes.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="ready" aria-label="Liya Solomon">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">L</div>
+              <div class="wf-operator-copy">
+                <h3>Liya Solomon</h3>
+                <p>Compliance owner</p>
+              </div>
+              <span class="wf-badge" data-state="ready">Ready</span>
+            </header>
+            <p class="wf-operator-note">Handles approvals, retries, and escalations for assigned workflow lanes.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="online" aria-label="Daniel Kim">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">D</div>
+              <div class="wf-operator-copy">
+                <h3>Daniel Kim</h3>
+                <p>Automation engineer</p>
+              </div>
+              <span class="wf-badge" data-state="online">Live</span>
+            </header>
+            <p class="wf-operator-note">Handles approvals, retries, and escalations for assigned workflow lanes.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="ready" aria-label="Maya Chen">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">M</div>
+              <div class="wf-operator-copy">
+                <h3>Maya Chen</h3>
+                <p>Workflow QA</p>
+              </div>
+              <span class="wf-badge" data-state="ready">Ready</span>
+            </header>
+            <p class="wf-operator-note">Handles approvals, retries, and escalations for assigned workflow lanes.</p>
+          </article>
+          
+          <article class="wf-operator-card" draggable="true" data-state="offline" aria-label="Rami Yusuf">
+            <header>
+              <div class="wf-avatar" aria-hidden="true">R</div>
+              <div class="wf-operator-copy">
+                <h3>Rami Yusuf</h3>
+                <p>Integrations</p>
+              </div>
+              <span class="wf-badge" data-state="offline">Idle</span>
+            </header>
+            <p class="wf-operator-note">Handles approvals, retries, and escalations for assigned workflow lanes.</p>
+          </article>
+          
+        </div>
+      </section>
+
+      <section id="board" class="wf-section">
+        <div class="section-heading">
+          <h2>Drag-and-drop workflow board</h2>
+          <p>Move tasks between lanes with immediate visual state updates and count refresh.</p>
+        </div>
+        <div class="wf-board" id="wf-board" aria-label="Workflow board">
+          <section class="wf-lane" data-lane="incoming">
+            <header><h3>Incoming</h3><span>4</span></header>
+            <article class="wf-lane-card" draggable="true">Call transcript review</article>
+            <article class="wf-lane-card" draggable="true">Invoice exception triage</article>
+            <article class="wf-lane-card" draggable="true">Compliance packet check</article>
+            <article class="wf-lane-card" draggable="true">Document mismatch alert</article>
+          </section>
+          <section class="wf-lane" data-lane="running">
+            <header><h3>Running</h3><span>3</span></header>
+            <article class="wf-lane-card" draggable="true">CRM enrichment batch</article>
+            <article class="wf-lane-card" draggable="true">Payment reconciliation</article>
+            <article class="wf-lane-card" draggable="true">Tax readiness sync</article>
+          </section>
+          <section class="wf-lane" data-lane="review">
+            <header><h3>Review</h3><span>2</span></header>
+            <article class="wf-lane-card" draggable="true">Escalated billing thread</article>
+            <article class="wf-lane-card" draggable="true">Manual compliance check</article>
+          </section>
+          <section class="wf-lane" data-lane="complete">
+            <header><h3>Complete</h3><span>5</span></header>
+            <article class="wf-lane-card" draggable="true">Follow-up dispatch complete</article>
+            <article class="wf-lane-card" draggable="true">File routing complete</article>
+            <article class="wf-lane-card" draggable="true">Tax status synced</article>
+            <article class="wf-lane-card" draggable="true">Owner assignment complete</article>
+            <article class="wf-lane-card" draggable="true">Webhook delivery confirmed</article>
+          </section>
+        </div>
+      </section>
+
+      <section class="wf-section">
+        <div class="section-heading">
+          <h2>Live event stream</h2>
+          <p>Adaptive feed loads incrementally to preserve speed and keep operators focused.</p>
+        </div>
+        <div class="activity-grid activity-grid--single" id="elite-activity-feed">
+          
+          <article class="activity-entry">
+            <p class="kind">billing</p>
+            <h4>Invoice recovery run completed</h4>
+            <p class="activity-detail">11 invoices routed; 2 escalated for manual review.</p>
+          </article>
+          
+          <article class="activity-entry">
+            <p class="kind">calls</p>
+            <h4>Call follow-up orchestration launched</h4>
+            <p class="activity-detail">Action owners assigned in 32s.</p>
+          </article>
+          
+          <article class="activity-entry">
+            <p class="kind">files</p>
+            <h4>Document routing synchronized</h4>
+            <p class="activity-detail">16 files classified and attached to active flows.</p>
+          </article>
+          
+          <article class="activity-entry">
+            <p class="kind">tax</p>
+            <h4>Compliance snapshot refreshed</h4>
+            <p class="activity-detail">Jurisdiction checklist updated with next deadlines.</p>
+          </article>
+          
+        </div>
+        <div id="activity-sentinel" aria-hidden="true"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" aria-live="polite">Action running...</div>
+    <div class="flow-modal" role="dialog" aria-modal="true" id="immersive-modal" aria-hidden="true">
+      <div class="flow-modal__content">
+        <button class="flow-modal__close" id="close-immersive-modal" type="button">&times;</button>
+        <h3>Immersive inspector</h3>
+        <p class="modal-note">Keyboard: <strong>L</strong> toggle laser, <strong>D</strong> toggle depth, <strong>C</strong> comfort mode, <strong>I</strong> open inspector.</p>
+        <ul class="summary">
+          <li>Laser pointer increases focus precision in dense grids.</li>
+          <li>Spatial depth adds tilt/parallax for hierarchy cues.</li>
+          <li>Comfort mode reduces motion amplitude and blur pressure.</li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="/static/site-boot.js?v=4854e6f" defer></script>
+    <script type="module" src="/static/workflow-elite.js?v=4854e6f"></script>
+  </body>
+</html>

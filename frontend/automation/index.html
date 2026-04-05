@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+        <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>GlobalFlow | Automation Workspace</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/flow.css?v=4854e6f" />
+    <link rel="stylesheet" href="/static/flow-system.css?v=4854e6f" />
+      <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
+  </head>
+  <body class="paper-site top-tier-site is-loading">
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader__inner">
+        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
+        <p class="site-loader__word">GlobalFlow</p>
+      </div>
+    </div>
+    <div class="aurora"></div>
+    <div class="grid-overlay"></div>
+
+    <header class="top">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+        </div>
+        <div class="brand-copy">
+          <span>GlobalFlow</span>
+          <p>Automation workspace</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Automation navigation">
+        <a href="/#hero">Home</a>
+        <a href="/workflow-elite">Workflow</a>
+        <a href="#workspace">Workspace</a>
+        <a href="#connectors">Connectors</a>
+        <a href="#activity">Activity</a>
+        <a href="/account">Account</a>
+      </nav>
+    </header>
+
+    <main id="workspace">
+      <section class="hero hero--landing">
+        <div class="hero-copy">
+          <div class="signal-bar" aria-live="polite">
+            <div class="signal-pill">
+              <span class="signal-dot" id="signal-dot"></span>
+              <span id="reliability-state">System healthy</span>
+            </div>
+            <span class="signal-meta" id="last-sync">Waiting for first sync</span>
+          </div>
+          <p class="eyebrow">Paid workspace</p>
+          <h1>Automation only control room</h1>
+          <p class="lead">
+            This page is focused on running workflows, inspecting telemetry, and managing connector automation without checkout distractions.
+          </p>
+          <div class="workflow-actions">
+            <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
+            <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
+          </div>
+        </div>
+        <div class="hero-stage">
+          <article class="hero-status-card">
+            <div>
+              <span>Operator confidence</span>
+              <strong id="system-confidence">99.2%</strong>
+            </div>
+            <div>
+              <span>Workflow pressure</span>
+              <strong id="queue-pressure">Stable</strong>
+            </div>
+            <div>
+              <span>Activity logged</span>
+              <strong id="activity-total">0 events</strong>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div
+        id="autopilot-data"
+        data-enabled="false"
+        data-next-run=""
+        data-last-run=""
+        data-cycles="0"
+      ></div>
+
+      <section class="workflow workflow--split">
+        <div class="workflow-main">
+          <div class="section-heading">
+            <h2>Workflow engine</h2>
+            <p>Run and monitor your live automations.</p>
+          </div>
+          <div id="workflow-grid" class="workflow-grid"></div>
+          <div class="summary">
+            <h3>Next steps</h3>
+            <ul id="flow-next-steps"></ul>
+          </div>
+        </div>
+        <div class="workflow-side" id="activity">
+          <div class="section-heading">
+            <h2>Activity</h2>
+            <p>Real-time execution visibility.</p>
+          </div>
+          <div id="activity-feed" class="activity-grid activity-grid--single" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="connectors" class="integrations">
+        <div class="section-heading">
+          <h2>Connector actions</h2>
+          <p>Trigger external systems directly from the automation workspace.</p>
+        </div>
+        <div class="connectors-grid">
+          
+          <details class="connector-card" open>
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--slack" aria-hidden="true"></div>
+                <div>
+                  <h3>Slack Alert</h3>
+                  <p>Post automation summaries, anomalies, and approvals straight into a Slack channel.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="slack">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://hooks.example.com/slack/globalflow" />
+              </label>
+              <label>
+                Text
+                <input name="text" placeholder="GlobalFlow finished a billing automation - review the results in Prefect." />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger Slack Alert</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--hubspot" aria-hidden="true"></div>
+                <div>
+                  <h3>HubSpot CRM</h3>
+                  <p>Create or update deals and contacts with the automation outcome metadata.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="hubspot">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.hubapi.com/crm/v3/objects/deals" />
+              </label>
+              <label>
+                Properties
+                <input name="properties" placeholder="{&#39;stage&#39;: &#39;automation complete&#39;, &#39;amount&#39;: &#39;12500&#39;}" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger HubSpot CRM</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--quickbooks" aria-hidden="true"></div>
+                <div>
+                  <h3>QuickBooks Sync</h3>
+                  <p>Send reconciliation and invoice metadata into QuickBooks Online for downstream finance teams.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="quickbooks">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.intuit.com/v3/company/1234567890/payment" />
+              </label>
+              <label>
+                Invoice_id
+                <input name="invoice_id" placeholder="GLFLOW-689 reconciliation processed" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger QuickBooks Sync</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--airtable" aria-hidden="true"></div>
+                <div>
+                  <h3>Airtable Sync</h3>
+                  <p>Stream updates into Airtable bases for ops teams that track statuses visually.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="airtable">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.airtable.com/v0/appXXXXXXXXX/GlobalFlow" />
+              </label>
+              <label>
+                Fields
+                <input name="fields" placeholder="{&#39;Name&#39;: &#39;GlobalFlow billing automation&#39;, &#39;Status&#39;: &#39;Complete&#39;}" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="GlobalFlow paid workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger Airtable Sync</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+        </div>
+      </section>
+
+      <div class="flow-modal" role="dialog" aria-modal="true" id="flow-modal">
+        <div class="flow-modal__content">
+          <button class="flow-modal__close" id="flow-modal-close" type="button">&times;</button>
+          <h3>Live workflow summary</h3>
+          <pre id="flow-modal-body">Fetching...</pre>
+        </div>
+      </div>
+    </main>
+
+    <div class="toast" id="toast" aria-live="polite">Action running...</div>
+    <script src="/static/site-boot.js?v=4854e6f" defer></script>
+    <script type="module" src="/static/flow.js?v=4854e6f"></script>
+  </body>
+</html>

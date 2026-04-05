@@ -1,0 +1,50 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://127.0.0.1:4173/",
+        "http://127.0.0.1:4173/workflow-pro"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "desktop",
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices"
+        ]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "warn",
+          {
+            "minScore": 0.7
+          }
+        ],
+        "largest-contentful-paint": [
+          "warn",
+          {
+            "maxNumericValue": 3500
+          }
+        ],
+        "cumulative-layout-shift": [
+          "warn",
+          {
+            "maxNumericValue": 0.12
+          }
+        ],
+        "total-byte-weight": [
+          "warn",
+          {
+            "maxNumericValue": 1200000
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

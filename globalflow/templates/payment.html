@@ -3,65 +3,104 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ portal.name }} | Payment</title>
-    <link rel="stylesheet" href="/static/flow.css" />
+    <meta name="theme-color" content="#ffffff" />
+<title>{{ portal.name }} | GlobalFlow</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
+    <link rel="stylesheet" href="/static/flow-system.css?v={{ asset_version }}" />
+    <link rel="stylesheet" href="/static/flow-polish.css?v={{ asset_version }}" />
   </head>
-  <body class="payment-body">
+  <body class="gf-polish payment-body paper-site top-tier-site is-loading">
+    <div class="site-loader" id="site-loader" aria-hidden="true">
+      <div class="site-loader__inner">
+        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
+        <p class="site-loader__word">GlobalFlow</p>
+      </div>
+    </div>
+    <div class="aurora"></div>
+    <a class="skip-link" href="#main-content">Skip to payment content</a>
     <header class="top">
       <div class="brand">
-        <span>GlobalFlow</span>
-        <p>Payment center</p>
+        <div class="brand-mark" aria-hidden="true">
+          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+        </div>
+        <div class="brand-copy">
+          <span>{{ portal.name }}</span>
+          <p>Billing desk</p>
+        </div>
       </div>
       <nav class="nav" aria-label="Payment navigation">
-        <a href="/">Dashboard</a>
+        <a href="/">Home</a>
+        <a href="/workflow-elite">Workflow</a>
         <a href="/account">Account</a>
+        <a href="#payment-form">Invoice request</a>
       </nav>
     </header>
-    <main class="payment-page">
-      <header class="payment-header">
-        <p class="eyebrow">{{ portal.name }} payment</p>
-        <h1>Secure {{ portal.name }} billing</h1>
-        <p>
-          {{ portal.description }} {{ portal.note }}
-        </p>
-      </header>
 
-      <section class="payment-panel">
-        <div class="payment-icon {{ portal.id }}"></div>
-        <div class="payment-details">
-          <p class="payment-note">{{ portal.note }}</p>
-          <ol>
-            {% for step in portal.instructions %}
-            <li>{{ step }}</li>
-            {% endfor %}
-          </ol>
+    <main id="main-content" class="payment-page" tabindex="-1">
+      <section class="payment-hero">
+        <div class="payment-header">
+          <p class="eyebrow">{{ portal.name }} billing</p>
+          <h1>Secure {{ portal.name }} payment handoff</h1>
+          <p>{{ portal.description }} {{ portal.note }}</p>
           <div class="payment-actions">
-            <a class="primary" href="{{ portal.portal_url }}" target="_blank" rel="noreferrer">{{ portal.action }}</a>
-            <button class="ghost" type="button" id="payment-form-trigger">Request invoice</button>
+            <button class="primary small" type="button" id="payment-form-trigger">Request invoice</button>
+            <a class="ghost small" href="{{ portal.help_url }}" target="_blank" rel="noreferrer">Open {{ portal.name }} reference</a>
           </div>
         </div>
+
+        <section class="payment-panel">
+          <div class="payment-icon {{ portal.id }}"></div>
+          <div class="payment-details">
+            <p class="payment-note">{{ portal.note }}</p>
+            <ol>
+              {% for step in portal.instructions %}
+              <li>{{ step }}</li>
+              {% endfor %}
+            </ol>
+          </div>
+        </section>
       </section>
 
       <section class="payment-form-section">
-        <h3>Need a custom invoice?</h3>
-        <form id="payment-form">
+        <h2>Send a payment request</h2>
+        <p>Enter the tier, business email, amount, and finance notes.</p>
+        {% if payment_auth_error %}
+        <p class="payment-status" role="alert">{{ payment_auth_error }}</p>
+        {% elif payment_verified %}
+        <p class="payment-status" role="status" aria-live="polite">Verified checkout session active.</p>
+        {% endif %}
+        <form id="payment-form" class="payment-form">
+          <input type="hidden" name="payment_ticket" value="{{ payment_ticket }}" />
+          <label>
+            Selected tier
+            <input name="tier" value="{{ preset_tier }}" placeholder="starter / pilot / launch / captain" />
+          </label>
           <label>
             Business email
             <input name="email" type="email" placeholder="ops@globalflow.ai" required />
           </label>
           <label>
             Amount
-            <input name="amount" placeholder="$1,200" />
+            <input name="amount" value="{{ preset_amount }}" placeholder="$549" />
           </label>
           <label>
-            Notes for the finance team
-            <textarea name="notes" rows="3" placeholder="Add a project name, tiers, or billing cadence"></textarea>
+            Notes for finance
+            <textarea name="notes" rows="3" placeholder="PO number, billing schedule, or payment details"></textarea>
           </label>
-          <button class="primary" type="submit">Send request</button>
-          <p class="payment-status" id="payment-status" aria-live="polite"></p>
+          <button class="primary" type="submit" {% if not payment_verified %}disabled{% endif %}>Send payment request</button>
+          <p class="payment-status" id="payment-status" role="status" aria-live="polite"></p>
         </form>
       </section>
     </main>
-    <script type="module" src="/static/payment.js"></script>
+
+    <script src="/static/site-boot.js?v={{ asset_version }}" defer></script>
+    <script type="module" src="/static/payment.js?v={{ asset_version }}"></script>
   </body>
 </html>

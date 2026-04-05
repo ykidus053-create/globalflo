@@ -1,0 +1,51 @@
+name: Performance Governance
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  asset-budgets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify static mirror sync
+        run: python tools/check_static_sync.py
+
+      - name: Run static asset budget checks
+        run: python tools/perf_budget_check.py
+
+  lighthouse-audit:
+    runs-on: ubuntu-latest
+    needs: asset-budgets
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install app dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install LHCI
+        run: npm install -g @lhci/cli
+
+      - name: Start app
+        run: |
+          nohup uvicorn globalflow.main:app --host 127.0.0.1 --port 4173 >/tmp/uvicorn.log 2>&1 &
+          sleep 8
+
+      - name: Lighthouse CI
+        run: lhci autorun --config=./lighthouserc.json

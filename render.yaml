@@ -6,7 +6,25 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.11
+<<<<<<< HEAD
     buildCommand: pip install -r globalflow/requirements.txt
     startCommand: uvicorn globalflow.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /
+=======
+      - key: GLOBALFLOW_PUBLIC_BASE_URL
+        value: https://globalflow.onrender.com
+      - key: GLOBALFLOW_FRONTEND_BASE_URL
+        value: https://globalflow.onrender.com
+      - key: GLOBALFLOW_GOOGLE_CLIENT_ID
+        sync: false
+      - key: GLOBALFLOW_GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GLOBALFLOW_APPLE_CLIENT_ID
+        sync: false
+      - key: GLOBALFLOW_APPLE_CLIENT_SECRET
+        sync: false
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+>>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
     autoDeploy: true

@@ -1,1 +1,5 @@
--r globalflow/requirements.txt
+fastapi>=0.110
+uvicorn[standard]>=0.23
+jinja2>=3.1
+httpx>=0.25
+python-multipart>=0.0.9

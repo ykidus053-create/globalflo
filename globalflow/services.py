@@ -3,7 +3,12 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from .automations import FlowOrchestrator
+try:
+    from .activity import ActivityLog
+    from .automations import FlowOrchestrator
+except ImportError:  # pragma: no cover - fallback when running as a top-level module
+    from activity import ActivityLog
+    from automations import FlowOrchestrator
 
 logger = logging.getLogger("globalflow.services")
 if not logger.handlers:
@@ -96,7 +101,7 @@ class TaskManager:
 
 
 class AutoPilot:
-    def __init__(self, task_manager: TaskManager, monitoring: Monitoring, interval_seconds: int = 45):
+    def __init__(self, task_manager: TaskManager, monitoring: Monitoring, activity_log: ActivityLog, interval_seconds: int = 45):
         self.task_manager = task_manager
         self.monitoring = monitoring
         self.interval_seconds = interval_seconds
@@ -104,6 +109,7 @@ class AutoPilot:
         self.cycle_count = 0
         self.last_run: Optional[datetime] = None
         self._loop_task: Optional[asyncio.Task] = None
+        self.activity_log = activity_log
 
     def status(self) -> Dict[str, Optional[str]]:
         next_run = None
@@ -139,7 +145,11 @@ class AutoPilot:
     async def _loop(self) -> None:
         try:
             while self.enabled:
-                await self._execute_cycle()
+                try:
+                    await self._execute_cycle()
+                except Exception:
+                    self.monitoring.record("errors")
+                    logger.exception("Autopilot cycle failed")
                 await asyncio.sleep(self.interval_seconds)
         except asyncio.CancelledError:
             pass
@@ -153,6 +163,17 @@ class AutoPilot:
                 await self.task_manager.kickoff(task["id"])
             except KeyError:
                 continue
+            except Exception:
+                self.monitoring.record("errors")
+                logger.exception("Autopilot task failed: %s", task.get("id"))
+                continue
         self.cycle_count += 1
         self.last_run = datetime.utcnow()
         self.monitoring.record("autopilot_cycles")
+        if self.activity_log:
+            self.activity_log.record(
+                kind="autopilot",
+                source="autopilot",
+                message=f"Cycle {self.cycle_count} completed",
+                detail=f"{len(tasks)} automation(s) executed",
+            )

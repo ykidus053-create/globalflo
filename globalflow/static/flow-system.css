@@ -1,0 +1,2026 @@
+/* GlobalFlow design system layer: tokens + motion + rhythm + contrast */
+
+:root {
+  --ds-bg: #080808;
+  --ds-surface: rgba(255, 255, 255, 0.03);
+  --ds-surface-strong: rgba(255, 255, 255, 0.06);
+  --ds-border: rgba(168, 196, 238, 0.28);
+  --ds-text: #f8fbff;
+  --ds-muted: #d3dff4;
+  --ds-link: #93c5fd;
+  --ds-focus: #7db5ff;
+
+  --ds-radius-pill: 999px;
+  --ds-radius-card: 14px;
+
+  --ds-motion-fast: 200ms;
+  --ds-motion-base: 300ms;
+  --ds-motion-slow: 380ms;
+  --ds-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --ds-space-8: 8px;
+  --ds-space-12: 12px;
+  --ds-space-16: 16px;
+  --ds-space-20: 20px;
+  --ds-space-28: 28px;
+  --ds-space-40: 40px;
+  --ds-space-56: 56px;
+}
+
+/* Absolute final mobile text-fit guardrail */
+@media (max-width: 767px) {
+  html,
+  body,
+  body.paper-site {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  body.paper-site :where(
+    .top,
+    .brand,
+    .brand-copy,
+    .nav,
+    .landing-main,
+    .gf-section,
+    .content-body,
+    .workflow-main,
+    .workflow-side,
+    .summary,
+    .flow-modal__content,
+    .site-footer
+  ) {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  body.paper-site :where(
+    h1, h2, h3, h4, h5, h6,
+    p, li, span, small, strong, a, button, label
+  ) {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    text-overflow: clip !important;
+  }
+
+  body.paper-site h1 { font-size: 1.6rem !important; line-height: 1.2 !important; }
+  body.paper-site h2 { font-size: 1.3rem !important; line-height: 1.25 !important; }
+  body.paper-site h3 { font-size: 1.12rem !important; line-height: 1.3 !important; }
+  body.paper-site p,
+  body.paper-site li,
+  body.paper-site span,
+  body.paper-site a,
+  body.paper-site button,
+  body.paper-site label { font-size: 0.92rem !important; line-height: 1.45 !important; }
+
+  body.paper-site :where(
+    .explore-card__body p,
+    .feature-card p,
+    .workflow-card p,
+    .wf-operator-note,
+    .activity-entry p,
+    .activity-detail,
+    .use-case-preview p
+  ) {
+    display: block !important;
+    overflow: visible !important;
+    max-height: none !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+  }
+}
+
+/* ==========================================================================
+   Research-driven UX layer:
+   Art direction + motion pacing + first-glance hierarchy
+   ========================================================================== */
+body.paper-site {
+  --rd-accent-a: #7cb4ff;
+  --rd-accent-b: #6ee7c8;
+  --rd-accent-c: #a5b4fc;
+  --rd-zone-hero: rgba(7, 17, 34, 0.9);
+  --rd-zone-primary: rgba(10, 22, 43, 0.84);
+  --rd-zone-secondary: rgba(13, 27, 51, 0.72);
+  --rd-text-strong: #f7fbff;
+  --rd-text-soft: #d7e6fd;
+  --rd-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rd-t-fast: 200ms;
+  --rd-t-base: 300ms;
+  --rd-t-slow: 400ms;
+}
+
+/* Art direction: abstract non-literal atmosphere */
+body.paper-site #hero,
+body.paper-site .wf-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+body.paper-site #hero::before,
+body.paper-site .wf-hero::before {
+  content: "";
+  position: absolute;
+  inset: -6% -2% auto -2%;
+  height: 72%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(34rem 20rem at 12% 18%, color-mix(in srgb, var(--rd-accent-a) 36%, transparent), transparent 68%),
+    radial-gradient(28rem 18rem at 86% 22%, color-mix(in srgb, var(--rd-accent-c) 32%, transparent), transparent 70%),
+    radial-gradient(26rem 16rem at 56% 5%, color-mix(in srgb, var(--rd-accent-b) 24%, transparent), transparent 72%);
+  filter: saturate(110%);
+}
+
+/* Hierarchy zones: first-glance comprehension */
+body.paper-site :where(.hero-copy--unified, .wf-hero-copy, .hero-status-card, .wf-hero-side, .operator-rail) {
+  background: var(--rd-zone-hero) !important;
+  border-color: rgba(170, 197, 236, 0.38) !important;
+}
+
+body.paper-site :where(
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card
+) {
+  background: var(--rd-zone-primary) !important;
+  border-color: rgba(164, 196, 238, 0.34) !important;
+}
+
+body.paper-site :where(.trust-card, .testimonial-card, .use-case-preview, .logo-pill, .endtoend-step) {
+  background: var(--rd-zone-secondary) !important;
+}
+
+body.paper-site :where(
+  .hero-copy--unified h1,
+  .wf-hero-copy h1,
+  .hero-proof-card h2,
+  .section-heading h2,
+  .wf-section h2
+) {
+  color: var(--rd-text-strong) !important;
+}
+
+body.paper-site :where(
+  .lead,
+  .hero-copy--unified p,
+  .wf-hero-copy p,
+  .section-heading p,
+  .hero-trust-list p,
+  .activity-detail
+) {
+  color: var(--rd-text-soft) !important;
+}
+
+/* Motion polish: single pacing system across components */
+body.paper-site :where(
+  .primary,
+  .ghost,
+  .wf-toggle,
+  .wf-density,
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .motion-track,
+  .reveal-ready,
+  .gf-fade
+) {
+  transition-timing-function: var(--rd-ease) !important;
+}
+
+body.paper-site :where(
+  .primary,
+  .ghost,
+  .wf-toggle,
+  .wf-density,
+  .feature-link,
+  .text-link,
+  .footer-link-button
+) {
+  transition-duration: var(--rd-t-fast) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .motion-track,
+  .reveal-ready,
+  .gf-fade
+) {
+  transition-duration: var(--rd-t-base) !important;
+}
+
+/* Fatigue control: slow decorative loops, keep functional motion responsive */
+body.paper-site :where(.aurora, .grid-overlay, .vfx-cursor) {
+  animation-duration: 30s !important;
+  animation-timing-function: linear !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.paper-site :where(.aurora, .grid-overlay, .vfx-cursor, .motion-track, .gf-fade, .reveal-ready) {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 2025 visual system additions: glass layer + personalization emphasis */
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card
+) {
+  backdrop-filter: blur(10px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
+}
+
+body.paper-site .is-personalized-focus {
+  border-color: rgba(138, 188, 255, 0.62) !important;
+  box-shadow: 0 0 0 1px rgba(138, 188, 255, 0.42), 0 14px 32px rgba(8, 19, 38, 0.52) !important;
+}
+
+body.paper-site.ux-segment-finance .is-personalized-focus::after,
+body.paper-site.ux-segment-workflow .is-personalized-focus::after,
+body.paper-site.ux-segment-compliance .is-personalized-focus::after,
+body.paper-site.ux-segment-documents .is-personalized-focus::after {
+  content: "Recommended";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #e9f3ff;
+  background: rgba(40, 40, 43, 0.42);
+  border: 1px solid rgba(164, 200, 246, 0.5);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+/* Final card readability lock: card text must never camouflage with card background */
+body.paper-site {
+  --card-surface: rgba(12, 24, 46, 0.9);
+  --card-surface-soft: rgba(16, 31, 58, 0.86);
+  --card-border: rgba(167, 196, 236, 0.32);
+  --card-fg-strong: #f6f9ff;
+  --card-fg-muted: #cfdef4;
+  --card-link: #b6d4ff;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) {
+  background: var(--card-surface) !important;
+  border-color: var(--card-border) !important;
+}
+
+body.paper-site :where(
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card
+):hover {
+  background: var(--card-surface-soft) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(h1, h2, h3, h4, h5, h6, strong, b, dt) {
+  color: var(--card-fg-strong) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(p, li, small, span, em, dd, label, pre) {
+  color: var(--card-fg-muted) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(a) {
+  color: var(--card-link) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(input, textarea, select) {
+  color: var(--card-fg-strong) !important;
+  background: rgba(8, 18, 35, 0.9) !important;
+  border-color: rgba(161, 193, 238, 0.38) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(input, textarea, select)::placeholder {
+  color: rgba(206, 221, 246, 0.86) !important;
+}
+
+/* High-traffic view contrast priority: nav, status rails, workflow controls */
+body.paper-site :where(header.top, .operator-rail, .signal-bar, .wf-density-controls, .wf-immersive-controls, .wf-ai-actions) {
+  color: var(--card-fg-strong) !important;
+}
+
+body.paper-site :where(header.top .nav a, .operator-rail a, .workflow-actions .ghost, .wf-toggle, .wf-density) {
+  color: #e9f2ff !important;
+  border-color: rgba(165, 194, 236, 0.42) !important;
+  background: rgba(40, 40, 43, 0.7) !important;
+}
+
+body.paper-site :where(header.top .nav a:hover, header.top .nav a:focus-visible, .operator-rail a:hover, .operator-rail a:focus-visible) {
+  color: #ffffff !important;
+  background: rgba(40, 40, 43, 0.82) !important;
+}
+
+body.paper-site :where(.signal-pill, .operator-rail__status, .hero-status-card, .wf-hero-side .hero-status-card) {
+  background: rgba(15, 11, 10, 0.82) !important;
+  color: #f5f9ff !important;
+  border-color: rgba(163, 193, 235, 0.4) !important;
+}
+
+/* Automated audit lock: exact selectors sampled by workflow accessibility check */
+body.paper-site {
+  --audit-surface: #0d1b33;
+  --audit-surface-alt: #102244;
+  --audit-text: #f6fbff;
+  --audit-text-muted: #dbe9ff;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card) {
+  background-color: var(--audit-surface) !important;
+  color: var(--audit-text) !important;
+  border-color: rgba(166, 197, 240, 0.42) !important;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card):hover {
+  background-color: var(--audit-surface-alt) !important;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card) :is(h1, h2, h3, h4, strong, .title) {
+  color: var(--audit-text) !important;
+}
+
+body.paper-site :is(.wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card) :is(p, small, span, li, .activity-detail, time) {
+  color: var(--audit-text-muted) !important;
+}
+
+body.paper-site .activity-entry {
+  background-color: #0d1b33 !important;
+  border-color: rgba(166, 197, 240, 0.34) !important;
+}
+
+body.paper-site .activity-entry p,
+body.paper-site .activity-entry .activity-detail,
+body.paper-site .activity-entry time {
+  color: var(--audit-text-muted) !important;
+}
+
+/* UX runtime states (from site-boot) */
+body.paper-site.ux-density-compact :where(
+  .gf-card-grid,
+  .stat-grid,
+  .explore-grid,
+  .feature-grid,
+  .connectors-grid,
+  .subscription-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid,
+  .wf-board,
+  .wf-lanes,
+  .payment-strip,
+  .testimonial-grid,
+  .trust-signal-grid
+) {
+  gap: 12px !important;
+}
+
+body.paper-site.ux-density-comfortable :where(
+  .gf-card-grid,
+  .stat-grid,
+  .explore-grid,
+  .feature-grid,
+  .connectors-grid,
+  .subscription-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid,
+  .wf-board,
+  .wf-lanes,
+  .payment-strip,
+  .testimonial-grid,
+  .trust-signal-grid
+) {
+  gap: 16px !important;
+}
+
+body.paper-site.ux-high-contrast {
+  --read-fg: #ffffff;
+  --read-muted: #e8f0ff;
+  --read-link: #dff0ff;
+  --read-link-hover: #ffffff;
+}
+
+body.paper-site .ux-low-contrast {
+  color: #f6fbff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.48);
+}
+
+/* Variant engine (Design Thinking ideate/prototype/test loop) */
+body.paper-site[data-ux-variant="A"] :where(.hero, .wf-hero) {
+  gap: 24px !important;
+}
+
+body.paper-site[data-ux-variant="B"] :where(.hero, .wf-hero) {
+  gap: 16px !important;
+}
+
+body.paper-site[data-ux-variant="B"] :where(.hero-copy, .wf-hero-copy) {
+  background: linear-gradient(145deg, rgba(11, 24, 46, 0.88), rgba(7, 14, 28, 0.82)) !important;
+}
+
+body.paper-site[data-ux-variant="C"] :where(
+  .explore-grid,
+  .feature-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid
+) {
+  gap: 12px !important;
+}
+
+body.paper-site[data-ux-variant="C"] :where(
+  .wf-signal-cell,
+  .wf-operator-card,
+  .workflow-card,
+  .feature-card,
+  .explore-card
+) {
+  border-color: rgba(146, 186, 244, 0.5) !important;
+}
+
+html[data-theme="light"] {
+  --ds-bg: #28282b;
+  --ds-surface: rgba(10, 20, 38, 0.74);
+  --ds-surface-strong: rgba(10, 20, 38, 0.9);
+  --ds-border: rgba(176, 202, 242, 0.4);
+  --ds-text: #f4f8ff;
+  --ds-muted: #d5e0f3;
+  --ds-link: #b8dbff;
+}
+
+body.paper-site.top-tier-site {
+  --motion-fast: var(--ds-motion-fast);
+  --motion-base: var(--ds-motion-base);
+  --motion-slow: var(--ds-motion-slow);
+  --motion-ease: var(--ds-ease-standard);
+}
+
+/* Unified spacing rhythm */
+body.paper-site .landing-main {
+  gap: var(--ds-space-56);
+}
+
+body.paper-site .gf-card-grid,
+body.paper-site .stat-grid,
+body.paper-site .workflow-grid,
+body.paper-site .connectors-grid,
+body.paper-site .pricing-grid,
+body.paper-site .subscription-grid,
+body.paper-site .trust-grid,
+body.paper-site .testimonial-grid,
+body.paper-site .explore-grid,
+body.paper-site .payment-strip,
+body.paper-site .wf-signal-grid,
+body.paper-site .wf-operator-grid,
+body.paper-site .wf-board {
+  gap: var(--ds-space-20) !important;
+}
+
+/* Motion consistency */
+body.paper-site .primary,
+body.paper-site .ghost,
+body.paper-site .nav a,
+body.paper-site .operator-rail__links a,
+body.paper-site .gf-card,
+body.paper-site .workflow-card,
+body.paper-site .connector-card,
+body.paper-site .pricing-card,
+body.paper-site .explore-card,
+body.paper-site .stat-card,
+body.paper-site .payment-chip,
+body.paper-site .wf-signal-cell,
+body.paper-site .wf-operator-card,
+body.paper-site .wf-lane-card {
+  transition:
+    transform var(--ds-motion-base) var(--ds-ease-standard),
+    box-shadow var(--ds-motion-base) var(--ds-ease-standard),
+    border-color var(--ds-motion-fast) ease,
+    background-color var(--ds-motion-fast) ease,
+    color var(--ds-motion-fast) ease;
+}
+
+/* Harden tiny text contrast in nav/rail */
+body.paper-site .top.top--airbnb .nav a,
+body.paper-site .top.top--airbnb .nav button.small,
+body.paper-site .operator-rail__links a,
+body.paper-site .operator-rail__status,
+body.paper-site .operator-rail__hint {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-border);
+  color: var(--ds-text) !important;
+}
+
+body.paper-site .top.top--airbnb .nav a,
+body.paper-site .top.top--airbnb .nav button.small,
+body.paper-site .operator-rail__links a {
+  border-radius: var(--ds-radius-pill);
+  padding: var(--ds-space-8) var(--ds-space-12);
+}
+
+body.paper-site .operator-rail {
+  background: var(--ds-surface-strong) !important;
+  border: 1px solid var(--ds-border) !important;
+}
+
+body.paper-site .operator-rail__status,
+body.paper-site .operator-rail__hint {
+  border-radius: var(--ds-radius-pill);
+  padding: 6px 10px;
+}
+
+body.paper-site .operator-rail__label,
+body.paper-site .operator-rail__hint,
+body.paper-site .operator-rail__status strong {
+  color: var(--ds-muted) !important;
+}
+
+body.paper-site .top.top--airbnb .nav a:hover,
+body.paper-site .top.top--airbnb .nav a.is-active,
+body.paper-site .top.top--airbnb .nav button.small:hover,
+body.paper-site .operator-rail__links a:hover,
+body.paper-site .operator-rail__links a:focus-visible {
+  color: #ffffff !important;
+  background: rgba(12, 24, 44, 0.92);
+  border-color: rgba(188, 216, 255, 0.74);
+}
+
+body.paper-site a:focus-visible,
+body.paper-site button:focus-visible,
+body.paper-site input:focus-visible,
+body.paper-site select:focus-visible,
+body.paper-site textarea:focus-visible {
+  outline: 2px solid var(--ds-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1024px) {
+  body.paper-site .landing-main {
+    gap: var(--ds-space-40);
+  }
+
+  body.paper-site .gf-card-grid,
+  body.paper-site .stat-grid,
+  body.paper-site .workflow-grid,
+  body.paper-site .connectors-grid,
+  body.paper-site .pricing-grid,
+  body.paper-site .subscription-grid,
+  body.paper-site .trust-grid,
+  body.paper-site .testimonial-grid,
+  body.paper-site .explore-grid,
+  body.paper-site .payment-strip,
+  body.paper-site .wf-signal-grid,
+  body.paper-site .wf-operator-grid,
+  body.paper-site .wf-board {
+    gap: var(--ds-space-16) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body.paper-site .landing-main {
+    gap: var(--ds-space-28);
+  }
+
+  body.paper-site .top.top--airbnb .nav a,
+  body.paper-site .top.top--airbnb .nav button.small,
+  body.paper-site .operator-rail__links a {
+    padding: 6px 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.paper-site .primary,
+  body.paper-site .ghost,
+  body.paper-site .nav a,
+  body.paper-site .operator-rail__links a,
+  body.paper-site .gf-card,
+  body.paper-site .workflow-card,
+  body.paper-site .connector-card,
+  body.paper-site .pricing-card,
+  body.paper-site .explore-card,
+  body.paper-site .stat-card,
+  body.paper-site .payment-chip,
+  body.paper-site .wf-signal-cell,
+  body.paper-site .wf-operator-card,
+  body.paper-site .wf-lane-card {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Workflow Elite page */
+body.workflow-elite-page .wf-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  gap: 32px;
+}
+
+body.workflow-elite-page .wf-section {
+  display: grid;
+  gap: 16px;
+}
+
+body.workflow-elite-page .wf-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+body.workflow-elite-page .wf-hero .gf-card {
+  border-radius: var(--ds-radius-card);
+}
+
+body.workflow-elite-page .section-heading h2 {
+  letter-spacing: -0.02em;
+}
+
+body.workflow-elite-page .section-heading p {
+  max-width: 62ch;
+}
+
+body.workflow-elite-page .wf-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+body.workflow-elite-page .wf-signal-cell {
+  min-height: 124px;
+  border-radius: 12px;
+  border: 1px solid rgba(176, 202, 242, 0.35);
+  background: linear-gradient(160deg, rgba(10, 18, 34, 0.82), rgba(8, 14, 28, 0.96));
+  text-align: left;
+  padding: 16px;
+  position: relative;
+}
+
+body.workflow-elite-page .wf-signal-cell:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+body.workflow-elite-page .wf-signal-cell[data-tone="trust"] { box-shadow: inset 0 0 0 1px rgba(40, 40, 43, 0.38); }
+body.workflow-elite-page .wf-signal-cell[data-tone="urgency"] { box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.42); }
+body.workflow-elite-page .wf-signal-cell[data-tone="speed"] { box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.38); }
+body.workflow-elite-page .wf-signal-cell[data-tone="risk"] { box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.4); }
+body.workflow-elite-page .wf-signal-cell[data-tone="insight"] { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.36); }
+body.workflow-elite-page .wf-signal-cell[data-tone="neutral"] { box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.34); }
+body.workflow-elite-page .wf-signal-cell[data-tone="capacity"] { box-shadow: inset 0 0 0 1px rgba(111, 176, 255, 0.42); }
+body.workflow-elite-page .wf-signal-cell[data-tone="success"] { box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.38); }
+
+body.workflow-elite-page .wf-signal-cell span,
+body.workflow-elite-page .wf-signal-cell small {
+  color: var(--ds-muted) !important;
+}
+
+body.workflow-elite-page .wf-signal-cell strong {
+  color: var(--ds-text) !important;
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+}
+
+body.workflow-elite-page .wf-operator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+body.workflow-elite-page .wf-operator-card {
+  border-radius: 12px;
+  border: 1px solid rgba(176, 202, 242, 0.3);
+  background: linear-gradient(160deg, rgba(10, 18, 34, 0.78), rgba(8, 14, 28, 0.94));
+  padding: 14px;
+}
+
+body.workflow-elite-page .wf-board {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+body.workflow-elite-page .wf-lane {
+  min-height: 230px;
+}
+
+body.workflow-elite-page .activity-grid--single {
+  display: grid;
+  gap: 14px;
+}
+
+body.workflow-elite-page .wf-immersive-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-vr-panel {
+  margin-top: 10px;
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  border-radius: 12px;
+  background: rgba(10, 18, 34, 0.72);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-ai-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+body.workflow-elite-page .wf-governance {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(164, 196, 238, 0.36);
+  border-radius: 12px;
+  background: rgba(13, 27, 51, 0.88);
+}
+
+body.workflow-elite-page .wf-governance__toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #eef5ff;
+  font-weight: 600;
+}
+
+body.workflow-elite-page .wf-governance__toggle input[type="checkbox"] {
+  margin-top: 2px;
+}
+
+body.workflow-elite-page .wf-ai-card {
+  border: 1px solid rgba(156, 184, 230, 0.32);
+  border-radius: 14px;
+  background: rgba(10, 18, 34, 0.8);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-ai-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-ai-card h3 {
+  margin: 0;
+}
+
+body.workflow-elite-page .wf-ai-actions {
+  display: grid;
+  gap: 8px;
+}
+
+body.workflow-elite-page .wf-ai-actions input {
+  width: 100%;
+  min-width: 0;
+  background: rgba(10, 18, 34, 0.7);
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  border-radius: 10px;
+  color: #f3f8ff;
+  padding: 10px 12px;
+}
+
+body.workflow-elite-page .wf-ai-output {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  border: 1px solid rgba(156, 184, 230, 0.22);
+  border-radius: 10px;
+  background: rgba(6, 12, 24, 0.72);
+  color: #d9e7ff;
+  padding: 10px 12px;
+  min-height: 84px;
+  font: 500 12px/1.45 "Manrope", sans-serif;
+}
+
+body.workflow-elite-page .wf-vr-panel h3 {
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+body.workflow-elite-page .wf-vr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-vr-canvas {
+  width: 100%;
+  min-height: 240px;
+  border-radius: 10px;
+  border: 1px solid rgba(156, 184, 230, 0.28);
+  background: radial-gradient(circle at 30% 30%, rgba(67, 132, 219, 0.25), rgba(6, 12, 24, 0.95));
+  box-shadow: inset 0 0 0 1px rgba(175, 206, 255, 0.18), 0 14px 34px rgba(3, 8, 20, 0.52);
+  cursor: crosshair;
+  image-rendering: auto;
+}
+
+body.workflow-elite-page .wf-toggle {
+  appearance: none;
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  background: rgba(10, 18, 34, 0.72);
+  color: var(--ds-muted);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+body.workflow-elite-page .wf-toggle.is-active {
+  color: #ffffff;
+  border-color: rgba(188, 216, 255, 0.64);
+  background: rgba(12, 26, 48, 0.9);
+}
+
+body.workflow-elite-page .laser-cursor,
+body.workflow-elite-page .laser-trail {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  transform: translate(-9999px, -9999px);
+  border-radius: 50%;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+
+body.workflow-elite-page.immersive-laser .laser-cursor,
+body.workflow-elite-page.immersive-laser .laser-trail {
+  opacity: 1;
+}
+
+body.workflow-elite-page .laser-cursor {
+  width: 11px;
+  height: 11px;
+  background: radial-gradient(circle, rgba(210, 235, 255, 1) 0%, rgba(102, 171, 255, 0.95) 74%, rgba(102, 171, 255, 0.12) 100%);
+  box-shadow: 0 0 10px rgba(129, 188, 255, 0.8);
+}
+
+body.workflow-elite-page .laser-trail {
+  width: 36px;
+  height: 36px;
+  margin-left: -12px;
+  margin-top: -12px;
+  border: 1px solid rgba(157, 205, 255, 0.48);
+  background: radial-gradient(circle, rgba(107, 171, 255, 0.18) 0%, rgba(107, 171, 255, 0) 72%);
+}
+
+body.workflow-elite-page.immersive-depth .wf-signal-cell,
+body.workflow-elite-page.immersive-depth .wf-operator-card,
+body.workflow-elite-page.immersive-depth .wf-lane-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+body.workflow-elite-page.immersive-comfort .wf-signal-cell,
+body.workflow-elite-page.immersive-comfort .wf-operator-card,
+body.workflow-elite-page.immersive-comfort .wf-lane-card {
+  transition-duration: 140ms !important;
+}
+
+body.workflow-elite-page.immersive-comfort .laser-trail {
+  display: none;
+}
+
+body.workflow-elite-page #immersive-modal {
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.workflow-elite-page #immersive-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.workflow-elite-page #immersive-modal .flow-modal__content {
+  max-width: 560px;
+}
+
+@media (max-width: 1024px) {
+  body.workflow-elite-page .wf-shell {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 920px) {
+  body.workflow-elite-page .wf-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  body.workflow-elite-page .wf-shell {
+    padding: 14px;
+    gap: 18px;
+  }
+  body.workflow-elite-page .wf-signal-grid,
+  body.workflow-elite-page .wf-operator-grid {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  body.paper-site .site-shell,
+  body.paper-site .section-block,
+  body.paper-site .hero,
+  body.paper-site .overview-grid,
+  body.paper-site .capability-grid,
+  body.paper-site .workflow-grid,
+  body.paper-site .use-case-grid,
+  body.paper-site .proof-grid,
+  body.paper-site .operator-rail {
+    min-width: 0;
+    width: 100%;
+  }
+
+  body.paper-site header.top .nav a,
+  body.paper-site header.top .nav button {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  body.workflow-elite-page .wf-shell {
+    padding: 12px;
+    gap: 16px;
+  }
+
+  body.workflow-elite-page .wf-hero,
+  body.workflow-elite-page .wf-signal-grid,
+  body.workflow-elite-page .wf-operator-grid,
+  body.workflow-elite-page .wf-board,
+  body.workflow-elite-page .wf-lanes {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  body.workflow-elite-page .wf-lane-card,
+  body.workflow-elite-page .wf-operator-card,
+  body.workflow-elite-page .wf-signal-cell {
+    min-width: 0;
+    width: 100%;
+  }
+
+  body.workflow-elite-page .wf-vr-actions,
+  body.workflow-elite-page .wf-immersive-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (pointer: coarse) {
+  body.workflow-elite-page .laser-cursor,
+  body.workflow-elite-page .laser-trail {
+    display: none !important;
+  }
+}
+
+/* Mobile-only final override: keep laptop/tablet layout untouched */
+@media (max-width: 767px) {
+  body.paper-site .top.top--airbnb {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+    padding: 12px !important;
+  }
+
+  body.paper-site .top.top--airbnb .brand {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  body.paper-site .top.top--airbnb .brand-copy p {
+    white-space: normal !important;
+  }
+
+  body.paper-site .top.top--airbnb .nav {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  body.paper-site .top.top--airbnb .nav a,
+  body.paper-site .top.top--airbnb .nav button {
+    min-width: 0 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 12px !important;
+    padding: 8px !important;
+  }
+
+  body.paper-site .landing-main,
+  body.paper-site .gf-container,
+  body.paper-site .use-case-grid,
+  body.paper-site .proof-grid,
+  body.paper-site .workflow-grid,
+  body.paper-site .connectors-grid,
+  body.paper-site .pricing-grid,
+  body.paper-site .testimonial-grid,
+  body.paper-site .trust-grid,
+  body.paper-site .operator-rail {
+    width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body.paper-site .use-case-grid > *,
+  body.paper-site .proof-grid > *,
+  body.paper-site .workflow-grid > *,
+  body.paper-site .connectors-grid > *,
+  body.paper-site .pricing-grid > *,
+  body.paper-site .testimonial-grid > *,
+  body.paper-site .trust-grid > * {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  body.paper-site .operator-rail__links {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  body.paper-site .operator-rail__links a {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  body.workflow-elite-page .wf-shell,
+  body.workflow-elite-page .wf-board,
+  body.workflow-elite-page .wf-lanes,
+  body.workflow-elite-page .wf-signal-grid,
+  body.workflow-elite-page .wf-operator-grid,
+  body.workflow-elite-page .wf-hero {
+    width: 100% !important;
+    min-width: 0 !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body.workflow-elite-page .wf-lane-card,
+  body.workflow-elite-page .wf-operator-card,
+  body.workflow-elite-page .wf-signal-cell {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   Elite UX system layer: adaptive grids, semantic states, consistency, a11y
+   ========================================================================== */
+body.paper-site {
+  --ux-trust: #4ea8ff;
+  --ux-urgency: #ff6b6b;
+  --ux-success: #32d296;
+  --ux-warning: #ffb54d;
+  --ux-insight: #7a87ff;
+  --ux-surface: rgba(10, 20, 38, 0.84);
+  --ux-surface-soft: rgba(12, 24, 46, 0.72);
+  --ux-border: rgba(163, 190, 236, 0.34);
+  --ux-fg: #f3f8ff;
+  --ux-muted: #bfd0e8;
+  --ux-focus: #8dc4ff;
+  --ux-motion-fast: 220ms;
+  --ux-motion-base: 320ms;
+  --ux-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Consistent interaction motion */
+body.paper-site .gf-card,
+body.paper-site .explore-card,
+body.paper-site .wf-signal-cell,
+body.paper-site .wf-operator-card,
+body.paper-site .wf-lane-card,
+body.paper-site .connector-card,
+body.paper-site .pricing-card {
+  transition:
+    transform var(--ux-motion-base) var(--ux-ease),
+    box-shadow var(--ux-motion-base) var(--ux-ease),
+    border-color var(--ux-motion-fast) ease,
+    background-color var(--ux-motion-fast) ease;
+}
+
+body.paper-site .gf-card:hover,
+body.paper-site .explore-card:hover,
+body.paper-site .wf-operator-card:hover,
+body.paper-site .wf-lane-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Adaptive grid algorithms (dense packing + responsive fitting) */
+body.paper-site .explore-grid,
+body.paper-site .feature-grid,
+body.paper-site .connectors-grid,
+body.paper-site .subscription-grid,
+body.paper-site .testimonial-grid,
+body.paper-site .trust-signal-grid,
+body.paper-site .wf-signal-grid,
+body.paper-site .wf-operator-grid,
+body.paper-site .wf-board,
+body.paper-site .wf-lanes {
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+html[data-grid-density="compact"] body.paper-site .explore-grid,
+html[data-grid-density="compact"] body.paper-site .feature-grid,
+html[data-grid-density="compact"] body.paper-site .wf-signal-grid,
+html[data-grid-density="compact"] body.paper-site .wf-operator-grid {
+  gap: 14px;
+}
+
+html[data-grid-density="mobile"] body.paper-site .explore-grid,
+html[data-grid-density="mobile"] body.paper-site .feature-grid,
+html[data-grid-density="mobile"] body.paper-site .wf-signal-grid,
+html[data-grid-density="mobile"] body.paper-site .wf-operator-grid {
+  gap: 10px;
+}
+
+/* Performance: render only visible card content where supported */
+body.paper-site .gf-card,
+body.paper-site .explore-card,
+body.paper-site .wf-operator-card,
+body.paper-site .wf-lane-card,
+body.paper-site .connector-card,
+body.paper-site .pricing-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 260px;
+}
+
+/* Semantic state surfaces */
+body.paper-site .explore-card[data-tone="trust"],
+body.paper-site .wf-signal-cell[data-tone="trust"] {
+  border-color: color-mix(in srgb, var(--ux-trust) 45%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(78, 168, 255, 0.22);
+}
+
+body.paper-site .explore-card[data-tone="urgency"],
+body.paper-site .wf-signal-cell[data-tone="urgency"] {
+  border-color: color-mix(in srgb, var(--ux-urgency) 48%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(255, 107, 107, 0.2);
+}
+
+body.paper-site .explore-card[data-tone="success"],
+body.paper-site .wf-signal-cell[data-tone="success"] {
+  border-color: color-mix(in srgb, var(--ux-success) 44%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(50, 210, 150, 0.2);
+}
+
+body.paper-site .explore-card[data-tone="insight"],
+body.paper-site .wf-signal-cell[data-tone="insight"] {
+  border-color: color-mix(in srgb, var(--ux-insight) 48%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(122, 135, 255, 0.22);
+}
+
+/* Intelligent user card badges */
+body.paper-site .ux-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ux-border);
+  background: var(--ux-surface-soft);
+  color: var(--ux-fg);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+body.paper-site .ux-badge[data-state="trust"] {
+  border-color: rgba(78, 168, 255, 0.6);
+  color: #e9f4ff;
+}
+
+body.paper-site .ux-badge[data-state="urgency"] {
+  border-color: rgba(255, 107, 107, 0.66);
+  color: #ffe8e8;
+}
+
+body.paper-site .ux-badge[data-state="success"] {
+  border-color: rgba(50, 210, 150, 0.62);
+  color: #e7fff5;
+}
+
+body.paper-site .ux-badge[data-state="insight"] {
+  border-color: rgba(122, 135, 255, 0.62);
+  color: #eff1ff;
+}
+
+/* Readability controls */
+body.paper-site .explore-card__body h3,
+body.paper-site .feature-card h3,
+body.paper-site .wf-operator-copy h3,
+body.paper-site .wf-lane-card {
+  color: var(--ux-fg) !important;
+}
+
+body.paper-site .explore-card__body p,
+body.paper-site .feature-card p,
+body.paper-site .wf-operator-note,
+body.paper-site .connector-card p {
+  color: var(--ux-muted) !important;
+}
+
+body.paper-site .explore-card__body p,
+body.paper-site .feature-card p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Keyboard + focus a11y */
+body.paper-site :where(a, button, input, summary, [draggable="true"]):focus-visible {
+  outline: 3px solid var(--ux-focus);
+  outline-offset: 2px;
+}
+
+body.paper-site [aria-live="polite"] {
+  min-height: 1em;
+}
+
+/* Workflow drag/drop active states */
+body.paper-site .wf-lane.is-drop-target,
+body.paper-site .wf-operator-card.is-drop-target {
+  border-color: rgba(141, 196, 255, 0.76) !important;
+  box-shadow: 0 0 0 2px rgba(141, 196, 255, 0.24);
+}
+
+body.paper-site .wf-lane-card.is-dragging,
+body.paper-site .wf-operator-card.is-dragging {
+  opacity: 0.76;
+  transform: scale(0.98);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  body.paper-site .gf-card,
+  body.paper-site .explore-card,
+  body.paper-site .wf-signal-cell,
+  body.paper-site .wf-operator-card,
+  body.paper-site .wf-lane-card,
+  body.paper-site .connector-card,
+  body.paper-site .pricing-card {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Final phone-only text-fit lock (no laptop/tablet changes) */
+@media (max-width: 767px) {
+  html {
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+  }
+
+  body.paper-site {
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+  }
+
+  body.paper-site h1 {
+    font-size: clamp(1.45rem, 5.2vw, 1.9rem) !important;
+    line-height: 1.18 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  body.paper-site h2 {
+    font-size: clamp(1.2rem, 4.3vw, 1.5rem) !important;
+    line-height: 1.24 !important;
+  }
+
+  body.paper-site h3 {
+    font-size: clamp(1rem, 3.8vw, 1.2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  body.paper-site p,
+  body.paper-site li,
+  body.paper-site span,
+  body.paper-site small,
+  body.paper-site a,
+  body.paper-site button,
+  body.paper-site label,
+  body.paper-site input,
+  body.paper-site textarea,
+  body.paper-site select {
+    font-size: 0.92rem !important;
+    line-height: 1.45 !important;
+  }
+
+  body.paper-site .explore-grid,
+  body.paper-site .feature-grid,
+  body.paper-site .connectors-grid,
+  body.paper-site .subscription-grid,
+  body.paper-site .testimonial-grid,
+  body.paper-site .trust-signal-grid,
+  body.paper-site .wf-signal-grid,
+  body.paper-site .wf-operator-grid,
+  body.paper-site .wf-board,
+  body.paper-site .wf-lanes,
+  body.paper-site .workflow-grid,
+  body.paper-site .proof-grid,
+  body.paper-site .use-case-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  body.paper-site .gf-card,
+  body.paper-site .explore-card,
+  body.paper-site .feature-card,
+  body.paper-site .connector-card,
+  body.paper-site .pricing-card,
+  body.paper-site .testimonial-card,
+  body.paper-site .trust-card,
+  body.paper-site .workflow-card,
+  body.paper-site .wf-signal-cell,
+  body.paper-site .wf-operator-card,
+  body.paper-site .wf-lane-card,
+  body.paper-site .use-case-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.paper-site .gf-card *,
+  body.paper-site .explore-card *,
+  body.paper-site .feature-card *,
+  body.paper-site .connector-card *,
+  body.paper-site .pricing-card *,
+  body.paper-site .workflow-card *,
+  body.paper-site .wf-signal-cell *,
+  body.paper-site .wf-operator-card *,
+  body.paper-site .wf-lane-card *,
+  body.paper-site .use-case-preview * {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    hyphens: auto;
+  }
+
+  body.paper-site .explore-card__body p,
+  body.paper-site .feature-card p,
+  body.paper-site .connector-card p,
+  body.paper-site .workflow-card p,
+  body.paper-site .use-case-preview p {
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  body.paper-site > * {
+    max-width: 100vw !important;
+  }
+
+  body.paper-site .render-layer,
+  body.paper-site .aurora,
+  body.paper-site .grid-overlay,
+  body.paper-site header.top,
+  body.paper-site .landing-main,
+  body.paper-site .site-footer,
+  body.paper-site .mobile-dock {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: clip !important;
+  }
+
+  body.paper-site .mobile-dock {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    padding-inline: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  body.paper-site .mobile-dock a {
+    min-width: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  body.paper-site .comparison-table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.paper-site .comparison-table {
+    min-width: 0 !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  body.paper-site .comparison-table th,
+  body.paper-site .comparison-table td {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  body.paper-site .payment-strip {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body.paper-site .payment-chip {
+    grid-template-columns: 40px minmax(0, 1fr) auto !important;
+    min-width: 0 !important;
+  }
+
+  body.paper-site .flow-modal__content {
+    width: min(92vw, 560px) !important;
+    min-width: 0 !important;
+    max-width: 92vw !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Force full text visibility on phone cards */
+  body.paper-site :where(
+    h1, h2, h3, h4, h5, h6,
+    p, span, small, strong, a, button, label, li
+  ) {
+    white-space: normal !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+
+  body.paper-site :where(
+    .content-body,
+    .explore-card__body,
+    .feature-card,
+    .workflow-card,
+    .wf-lane-card,
+    .wf-operator-note,
+    .use-case-preview
+  ) {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+
+  body.paper-site :where(
+    .wf-operator-note,
+    .explore-card__body p,
+    .feature-card p,
+    .workflow-card p,
+    .activity-entry,
+    .activity-entry p,
+    .activity-entry .activity-detail,
+    .activity-entry time
+  ) {
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    -webkit-box-orient: initial !important;
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  body.paper-site :where(
+    .workflow-card,
+    .feature-card,
+    .explore-card,
+    .connector-card,
+    .pricing-card,
+    .wf-signal-cell,
+    .wf-operator-card,
+    .wf-lane-card
+  ) {
+    padding-inline: 12px !important;
+  }
+}
+
+/* Global readability lock (desktop + mobile) */
+body.paper-site {
+  --read-fg: #f4f8ff;
+  --read-muted: #d3deef;
+  --read-link: #e8f1ff;
+  --read-link-hover: #ffffff;
+}
+
+body.paper-site :where(
+  h1, h2, h3, h4, h5, h6,
+  .brand-copy span,
+  .hero-copy .lead,
+  .content-body h3,
+  .content-body h4,
+  .workflow-card h3,
+  .workflow-card h4,
+  .activity-entry .title,
+  .activity-entry h4,
+  .use-case-preview h3,
+  .feature-card h3,
+  .connector-card summary,
+  .pricing-card h3,
+  .operator-rail__label,
+  .operator-rail__status strong
+) {
+  color: var(--read-fg) !important;
+}
+
+body.paper-site :where(
+  p,
+  li,
+  small,
+  .brand-copy p,
+  .note,
+  .label,
+  .modal-note,
+  .activity-detail,
+  .activity-entry time,
+  .use-case-preview-domain,
+  .use-case-preview-copy,
+  .feature-card p,
+  .connector-card p,
+  .pricing-card p,
+  .workflow-card p,
+  .wf-operator-note,
+  .operator-rail__hint,
+  .operator-rail__links a
+) {
+  color: var(--read-muted) !important;
+}
+
+body.paper-site :where(
+  a,
+  .nav a,
+  .footer-links a,
+  .feature-link,
+  .text-link,
+  .mobile-dock a
+) {
+  color: var(--read-link) !important;
+}
+
+body.paper-site :where(
+  a:hover,
+  .nav a:hover,
+  .nav a.is-active,
+  .footer-links a:hover,
+  .feature-link:hover,
+  .text-link:hover,
+  .mobile-dock a:hover
+) {
+  color: var(--read-link-hover) !important;
+}
+
+body.paper-site :where(
+  .top,
+  .operator-rail,
+  .workflow-card,
+  .feature-card,
+  .explore-card,
+  .connector-card,
+  .pricing-card,
+  .activity-entry,
+  .use-case-preview,
+  .flow-modal__content,
+  .mobile-dock
+) {
+  background-color: color-mix(in srgb, rgba(8, 16, 30, 0.82) 88%, transparent) !important;
+  border-color: rgba(173, 195, 230, 0.3) !important;
+}
+
+/* ==========================================================================
+   Unified UI Command Layer (global redesign behavior)
+   Design Thinking + UCD + Accessibility + Scalable systemization
+   ========================================================================== */
+body.paper-site {
+  --ui-space-8: 8px;
+  --ui-space-16: 16px;
+  --ui-space-24: 24px;
+  --ui-space-32: 32px;
+  --ui-space-48: 48px;
+  --ui-space-64: 64px;
+  --ui-space-96: 96px;
+
+  --ui-max-width: 1200px;
+  --ui-radius-card: 14px;
+  --ui-radius-pill: 999px;
+  --ui-border: rgba(176, 202, 242, 0.34);
+  --ui-surface: rgba(10, 20, 38, 0.72);
+  --ui-surface-strong: rgba(8, 16, 30, 0.86);
+
+  --ui-h1: clamp(2rem, 5vw, 3.4rem);
+  --ui-h2: clamp(1.45rem, 3vw, 2.2rem);
+  --ui-h3: clamp(1.1rem, 2vw, 1.45rem);
+  --ui-body: 1rem;
+  --ui-line: 1.55;
+}
+
+body.paper-site :where(main, .landing-main, #workspace, .payment-page, .checkout-page, .account-page) {
+  max-width: var(--ui-max-width) !important;
+  margin-inline: auto !important;
+  padding-inline: var(--ui-space-24) !important;
+}
+
+body.paper-site :where(main > section, .gf-section, .wf-section, .site-footer, .checkout-foot) {
+  padding-block: var(--ui-space-48) !important;
+  border-top: 1px solid rgba(176, 202, 242, 0.18) !important;
+}
+
+body.paper-site :where(h1) {
+  font-size: var(--ui-h1) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.02em !important;
+}
+
+body.paper-site :where(h2) {
+  font-size: var(--ui-h2) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em !important;
+}
+
+body.paper-site :where(h3) {
+  font-size: var(--ui-h3) !important;
+  line-height: 1.26 !important;
+}
+
+body.paper-site :where(p, li, label, input, textarea, select, button, a) {
+  font-size: var(--ui-body) !important;
+  line-height: var(--ui-line) !important;
+}
+
+body.paper-site :where(.primary, .ghost, .wf-toggle, .toggle-option, .oauth-button, .footer-link-button) {
+  min-height: 44px !important;
+  padding: 10px 14px !important;
+  border-radius: var(--ui-radius-pill) !important;
+  border: 1px solid var(--ui-border) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .workflow-card,
+  .explore-card,
+  .feature-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane,
+  .wf-lane-card,
+  .use-case-preview,
+  .hero-status-card,
+  .wf-ai-card
+) {
+  border-radius: var(--ui-radius-card) !important;
+  background: var(--ui-surface) !important;
+  border: 1px solid var(--ui-border) !important;
+  box-shadow: 0 10px 24px rgba(4, 10, 20, 0.34);
+}
+
+body.paper-site :where(
+  .hero,
+  .workflow,
+  .workflow--split,
+  .use-case-layout,
+  .founder-grid,
+  .demo-showcase-grid,
+  .wf-hero,
+  .wf-board,
+  .wf-lanes
+) {
+  gap: var(--ui-space-24) !important;
+}
+
+body.paper-site :where(
+  .stat-grid,
+  .explore-grid,
+  .feature-grid,
+  .connectors-grid,
+  .subscription-grid,
+  .testimonial-grid,
+  .trust-signal-grid,
+  .workflow-grid,
+  .wf-signal-grid,
+  .wf-operator-grid,
+  .payment-strip,
+  .wf-ai-grid
+) {
+  gap: var(--ui-space-16) !important;
+}
+
+/* Accessibility-first defaults */
+body.paper-site :where(a, button, input, select, textarea, summary, [draggable="true"]) {
+  outline-offset: 2px;
+}
+
+body.paper-site :where(a, button, input, select, textarea, summary, [draggable="true"]):focus-visible {
+  outline: 3px solid #96c7ff !important;
+}
+
+@media (max-width: 1024px) {
+  body.paper-site :where(main, .landing-main, #workspace, .payment-page, .checkout-page, .account-page) {
+    padding-inline: var(--ui-space-16) !important;
+  }
+
+  body.paper-site :where(main > section, .gf-section, .wf-section, .site-footer, .checkout-foot) {
+    padding-block: var(--ui-space-32) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  body.paper-site {
+    --ui-h1: clamp(1.5rem, 7vw, 1.9rem);
+    --ui-h2: clamp(1.2rem, 5vw, 1.45rem);
+    --ui-h3: clamp(1rem, 4vw, 1.15rem);
+    --ui-body: 0.92rem;
+    --ui-line: 1.45;
+  }
+
+  body.paper-site :where(main, .landing-main, #workspace, .payment-page, .checkout-page, .account-page) {
+    padding-inline: 12px !important;
+  }
+
+  body.paper-site :where(
+    .hero,
+    .workflow,
+    .workflow--split,
+    .use-case-layout,
+    .founder-grid,
+    .demo-showcase-grid,
+    .wf-hero,
+    .wf-board,
+    .wf-lanes,
+    .stat-grid,
+    .explore-grid,
+    .feature-grid,
+    .connectors-grid,
+    .subscription-grid,
+    .testimonial-grid,
+    .trust-signal-grid,
+    .workflow-grid,
+    .wf-signal-grid,
+    .wf-operator-grid,
+    .payment-strip,
+    .wf-ai-grid
+  ) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: var(--ui-space-12, 12px) !important;
+  }
+}

@@ -1,0 +1,715 @@
+@layer gfpolish {
+  .gf-polish {
+    --gf-space-compact: 16px;
+    --gf-space-base: 24px;
+    --gf-space-roomy: 32px;
+    --gf-space-section-mobile: 48px;
+    --gf-space-section-laptop: 64px;
+    --gf-space-section-desktop: 80px;
+
+    --gf-card-padding-mobile: 16px;
+    --gf-card-padding-laptop: 20px;
+    --gf-card-padding-desktop: 24px;
+    --gf-card-radius: 18px;
+
+    --gf-body-max-read: 72ch;
+    --gf-title-tight: 1.14;
+    --gf-body-tight: 1.55;
+    --gf-card-heading-size: clamp(20px, 2.1vw, 28px);
+    --gf-card-body-size: clamp(15px, 1.2vw, 18px);
+
+    --gf-video-ink: #f3f3f4;
+    --gf-card-bg-a: #28282b;
+    --gf-card-bg-b: #0f0b0a;
+    --gf-card-text: #f3f3f4;
+    --gf-card-muted: #d3d3d6;
+    --bg: #0f0b0a;
+    --bg-soft: #28282b;
+    --panel: #28282b;
+    --panel-strong: #0f0b0a;
+    --text: #f3f3f4;
+    --muted: #d3d3d6;
+    --gf-page-bg: #0f0b0a;
+    --gf-page-bg-alt: #121213;
+    --gf-overlay-dot: rgba(243, 243, 244, 0.08);
+    --gf-card-border: 1px solid rgba(243, 243, 244, 0.16);
+    --gf-card-shadow: 0 12px 34px rgba(15, 11, 10, 0.42);
+    --gf-card-shadow-hover: 0 20px 54px rgba(15, 11, 10, 0.56);
+
+    overflow-x: clip;
+  }
+
+  .gf-polish,
+  .gf-polish.payment-body,
+  .gf-polish.checkout-body {
+    background: linear-gradient(180deg, var(--gf-page-bg-alt) 0%, var(--gf-page-bg) 100%);
+  }
+
+  .gf-polish :is(.aurora, .grid-overlay, .backdrop) {
+    background: transparent;
+    opacity: 0.34;
+  }
+
+  .gf-polish .grid-overlay {
+    background-image: radial-gradient(var(--gf-overlay-dot) 1px, transparent 1px);
+    background-size: 120px 120px;
+  }
+
+  .gf-polish main {
+    padding-inline: clamp(16px, 2.6vw, 28px);
+  }
+
+  .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo) {
+    margin-block: var(--gf-space-section-mobile);
+    background: transparent;
+  }
+
+  .gf-polish :is(.section-heading, .wf-heading-inline) {
+    margin-bottom: var(--gf-space-roomy);
+  }
+
+  .gf-polish :is(.hero h1, .wf-hero h1, .section-heading h2, .wf-section h2, .pricing h2, .capabilities h2) {
+    line-height: var(--gf-title-tight);
+    letter-spacing: -0.01em;
+    background: linear-gradient(180deg, var(--gf-video-ink) 0%, #d8d8da 62%, #bdbdc3 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gf-polish :is(.hero p, .lead, .section-heading p, .wf-hero-copy p, .wf-section p, .workflow-main p, .workflow-side p, .modal-note) {
+    max-width: var(--gf-body-max-read);
+    line-height: var(--gf-body-tight);
+    color: rgba(243, 243, 244, 0.86);
+  }
+
+  .gf-polish :is(.workflow-grid, .connectors-grid, .pricing-grid, .explore-grid, .wf-signal-grid, .wf-operator-grid, .wf-board) {
+    min-width: 0;
+    gap: var(--gf-space-base);
+    align-items: stretch;
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .video-card-top,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ) {
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+    padding: var(--gf-card-padding-mobile);
+    background: var(--gf-card-bg-a);
+    border-radius: var(--gf-card-radius);
+    border: var(--gf-card-border);
+    box-shadow: var(--gf-card-shadow);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: box-shadow 280ms ease, transform 280ms ease, border-color 280ms ease;
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .video-card-top,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    )::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+    opacity: 0.5;
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .trust-card,
+      .stat-card,
+      .testimonial-card,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card
+    ):hover {
+    box-shadow: var(--gf-card-shadow-hover);
+    transform: translateY(-2px);
+    border-color: rgba(243, 243, 244, 0.28);
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .video-card-top,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ) :is(h2, h3, h4) {
+    font-size: var(--gf-card-heading-size);
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px;
+    text-wrap: balance;
+    color: var(--gf-card-text);
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .video-card-top,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ) :is(p, li, span, small, .detail, .modal-note, .activity-detail, .user-card__meta, .user-card__hint) {
+    color: var(--gf-card-muted);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: var(--gf-card-body-size);
+    line-height: 1.62;
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .video-card-top,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ) > * + * {
+    margin-top: 12px;
+  }
+
+  .gf-polish :is(
+      .feature-grid,
+      .explore-grid,
+      .workflow-grid,
+      .connectors-grid,
+      .pricing-grid,
+      .trust-signal-grid,
+      .testimonial-grid,
+      .logo-bar,
+      .subscription-grid,
+      .wf-signal-grid,
+      .wf-operator-grid,
+      .activity-feed
+    ) > :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ):nth-child(even) {
+    background: var(--gf-card-bg-b);
+  }
+
+  .gf-polish .wf-lane-card:nth-child(even) {
+    background: var(--gf-card-bg-b);
+  }
+
+  /* Two-color surface system across all non-text UI layers */
+  .gf-polish :is(
+      .top,
+      .top--airbnb,
+      .nav,
+      .mobile-dock,
+      .site-footer--airbnb,
+      .flow-modal__content,
+      .lead-capture--airbnb,
+      .summary,
+      .autopilot-panel--airbnb,
+      .demo-showcase,
+      .comparison-table-wrap--airbnb,
+      .workflow-journey-card,
+      .workflow-guidance-card,
+      .workflow-journey-step,
+      .explore-section,
+      .features--airbnb,
+      .workflow--airbnb,
+      .integrations--airbnb,
+      .under-the-hood--airbnb,
+      .pricing--airbnb,
+      .trust--airbnb,
+      .proof--quiet,
+      .hero,
+      .wf-section,
+      .workflow,
+      .integrations,
+      .capabilities,
+      .proof,
+      .pricing,
+      .demo
+    ) {
+    background: var(--gf-card-bg-a) !important;
+    border-color: rgba(243, 243, 244, 0.16) !important;
+  }
+
+  .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo):nth-of-type(even) {
+    background: var(--gf-card-bg-b) !important;
+  }
+
+  .gf-polish :is(input, select, textarea, summary, .payment-chip, .tier-badge, .workflow-status, .signal-pill, .connector-toggle, .hero-chip-row span, .built-with--airbnb span) {
+    background: var(--gf-card-bg-a) !important;
+    border-color: rgba(243, 243, 244, 0.2) !important;
+  }
+
+  .gf-polish :is(button, .primary, .ghost, .pill, .wf-density, .wf-toggle, .footer-link-button, .connector-form button, .pricing-card button, .workflow-card button, .mobile-dock a) {
+    background: var(--gf-card-bg-b) !important;
+    border-color: rgba(243, 243, 244, 0.24) !important;
+  }
+
+  .gf-polish :is(button, .primary, .ghost, .pill, .wf-density, .wf-toggle, .footer-link-button, .connector-form button, .pricing-card button, .workflow-card button, .mobile-dock a):hover {
+    background: var(--gf-card-bg-a) !important;
+  }
+
+  /* Workflow Elite explicit de-navy overrides (legacy selectors use !important) */
+  body.gf-polish.workflow-elite-page {
+    --rd-zone-hero: #28282b;
+    --rd-zone-primary: #0f0b0a;
+    --rd-zone-secondary: #28282b;
+    --card-surface: #28282b;
+    --card-surface-soft: #0f0b0a;
+    --ui-surface: #28282b;
+    --ui-surface-soft: #0f0b0a;
+    --wf-surface-soft: #0f0b0a;
+    --audit-surface: #28282b;
+    --audit-surface-alt: #0f0b0a;
+  }
+
+  body.gf-polish.workflow-elite-page :is(.wf-hero, .wf-section, .wf-governance, .wf-hero-copy, .wf-hero-side, .wf-board, .wf-lane, .wf-ai-card, .wf-operator-card, .wf-signal-cell, .wf-vr-panel, .wf-immersive-controls, .wf-ai-output) {
+    background: #28282b !important;
+  }
+
+  body.gf-polish.workflow-elite-page :is(.wf-lane-card, .wf-signal-cell:nth-child(even), .wf-operator-card:nth-child(even), .wf-ai-card:nth-child(even), .wf-toggle, .wf-density, .wf-ai-actions input, .wf-ai-actions button, .wf-vr-actions button) {
+    background: #0f0b0a !important;
+  }
+
+  body.gf-polish.workflow-elite-page :is(.wf-hero-copy, .wf-hero-side, .wf-governance, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .wf-vr-panel, .wf-ai-output) {
+    border-color: rgba(243, 243, 244, 0.2) !important;
+  }
+
+  @media (min-width: 1024px) and (max-width: 1599px) {
+    .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo) {
+      margin-block: var(--gf-space-section-laptop);
+    }
+
+    .gf-polish :is(
+        .gf-card,
+        .feature-card,
+        .explore-card,
+        .workflow-card,
+        .hero-status-card,
+        .wf-ai-card,
+        .wf-operator-card,
+        .wf-lane-card,
+        .wf-signal-cell,
+        .connector-card,
+        .pricing-card
+      ) {
+      padding: var(--gf-card-padding-laptop);
+    }
+  }
+
+  @media (min-width: 1600px) {
+    .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo) {
+      margin-block: var(--gf-space-section-desktop);
+    }
+
+    .gf-polish :is(
+        .gf-card,
+        .feature-card,
+        .explore-card,
+        .workflow-card,
+        .hero-status-card,
+        .wf-ai-card,
+        .wf-operator-card,
+        .wf-lane-card,
+        .wf-signal-cell,
+        .connector-card,
+        .pricing-card
+      ) {
+      padding: var(--gf-card-padding-desktop);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .gf-polish :is(.top, .top--airbnb) {
+      padding-block: var(--gf-space-compact);
+    }
+
+    .gf-polish .nav {
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .gf-polish :is(.hero h1, .wf-hero h1) {
+      font-size: clamp(30px, 8.4vw, 44px);
+      line-height: 1.12;
+    }
+
+    .gf-polish :is(.section-heading h2, .wf-section h2) {
+      font-size: clamp(24px, 6.6vw, 34px);
+    }
+
+    .gf-polish :is(.hero p, .lead, .section-heading p, .wf-hero-copy p, .wf-section p, .workflow-main p, .workflow-side p, .modal-note) {
+      font-size: clamp(14px, 3.6vw, 17px);
+      max-width: 100%;
+    }
+
+    .gf-polish :is(.workflow-grid, .connectors-grid, .pricing-grid, .explore-grid, .wf-signal-grid, .wf-operator-grid, .wf-board) {
+      grid-template-columns: 1fr;
+    }
+
+    .gf-polish :is(.wf-lane, .wf-lane-card, .workflow-main, .workflow-side, .wf-hero, .wf-hero-copy, .wf-hero-side) {
+      min-width: 0;
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+
+  /* HARD SURFACE LOCK: only #28282b and #0f0b0a for non-text UI */
+  .gf-polish {
+    --surface-a: #28282b;
+    --surface-b: #0f0b0a;
+  }
+
+  .gf-polish :is(.aurora, .grid-overlay, .backdrop, .laser-trail, .laser-cursor, .render-layer) {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+  }
+
+  .gf-polish :is(
+      .top,
+      .top--airbnb,
+      .nav,
+      .mobile-dock,
+      .site-footer--airbnb,
+      .flow-modal,
+      .flow-modal__content,
+      .lead-capture--airbnb,
+      .summary,
+      .autopilot-panel--airbnb,
+      .demo-showcase,
+      .comparison-table-wrap--airbnb,
+      .workflow-journey-card,
+      .workflow-guidance-card,
+      .workflow-journey-step,
+      .explore-section,
+      .features--airbnb,
+      .workflow--airbnb,
+      .integrations--airbnb,
+      .under-the-hood--airbnb,
+      .pricing--airbnb,
+      .trust--airbnb,
+      .proof--quiet,
+      .hero,
+      .wf-section,
+      .workflow,
+      .integrations,
+      .capabilities,
+      .proof,
+      .pricing,
+      .demo,
+      .wf-shell,
+      .wf-board,
+      .wf-lane
+    ) {
+    background: var(--surface-a) !important;
+    background-image: none !important;
+    border-color: var(--surface-b) !important;
+    box-shadow: none !important;
+  }
+
+  .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo):nth-of-type(even) {
+    background: var(--surface-b) !important;
+    background-image: none !important;
+    border-color: var(--surface-a) !important;
+  }
+
+  .gf-polish :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .checkout-card,
+      .video-card-top,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ) {
+    background: var(--surface-a) !important;
+    background-image: none !important;
+    border-color: var(--surface-b) !important;
+    box-shadow: none !important;
+  }
+
+  .gf-polish :is(
+      .feature-grid,
+      .explore-grid,
+      .workflow-grid,
+      .connectors-grid,
+      .pricing-grid,
+      .trust-signal-grid,
+      .testimonial-grid,
+      .logo-bar,
+      .subscription-grid,
+      .wf-signal-grid,
+      .wf-operator-grid,
+      .activity-feed,
+      .wf-board
+    ) > :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ):nth-child(even) {
+    background: var(--surface-b) !important;
+    background-image: none !important;
+    border-color: var(--surface-a) !important;
+  }
+
+  .gf-polish :is(
+      input,
+      select,
+      textarea,
+      summary,
+      .payment-chip,
+      .tier-badge,
+      .workflow-status,
+      .signal-pill,
+      .connector-toggle,
+      .hero-chip-row span,
+      .built-with--airbnb span,
+      .wf-badge
+    ) {
+    background: var(--surface-b) !important;
+    background-image: none !important;
+    border-color: var(--surface-a) !important;
+    box-shadow: none !important;
+  }
+
+  .gf-polish :is(
+      button,
+      .primary,
+      .ghost,
+      .pill,
+      .wf-density,
+      .wf-toggle,
+      .footer-link-button,
+      .connector-form button,
+      .pricing-card button,
+      .workflow-card button,
+      .mobile-dock a,
+      .wf-ai-actions button,
+      .wf-vr-actions button
+    ) {
+    background: var(--surface-a) !important;
+    background-image: none !important;
+    border-color: var(--surface-b) !important;
+    box-shadow: none !important;
+  }
+
+  .gf-polish :is(
+      button,
+      .primary,
+      .ghost,
+      .pill,
+      .wf-density,
+      .wf-toggle,
+      .footer-link-button,
+      .connector-form button,
+      .pricing-card button,
+      .workflow-card button,
+      .mobile-dock a,
+      .wf-ai-actions button,
+      .wf-vr-actions button
+    ):hover {
+    background: var(--surface-b) !important;
+    background-image: none !important;
+    border-color: var(--surface-a) !important;
+  }
+}
