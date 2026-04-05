@@ -21,6 +21,7 @@ const aiPredictOutput = document.getElementById("ai-predict-output");
 const aiAuditOutput = document.getElementById("ai-audit-output");
 const aiHandoffOutput = document.getElementById("ai-handoff-output");
 const aiMethodButtons = Array.from(document.querySelectorAll("[data-ai-method]"));
+const aiReviewGate = document.getElementById("ai-review-gate");
 const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
 const liveAnnouncer = (() => {
   let node = document.getElementById("wf-live-announcer");
@@ -882,6 +883,15 @@ function installAIMethods() {
   aiMethodButtons.forEach((button) => {
     button.addEventListener("click", async () => {
       const method = button.dataset.aiMethod;
+      const isGatedMethod = method === "generate" || method === "predict" || method === "handoff";
+      if (isGatedMethod && aiReviewGate && !aiReviewGate.checked) {
+        const message = "Enable human review gate before running this AI action.";
+        if (method === "generate" && aiGenerateOutput) aiGenerateOutput.textContent = message;
+        if (method === "predict" && aiPredictOutput) aiPredictOutput.textContent = message;
+        if (method === "handoff" && aiHandoffOutput) aiHandoffOutput.textContent = message;
+        toast(message);
+        return;
+      }
       button.disabled = true;
       try {
         if (method === "generate") await runGenerativeMethod();

@@ -769,6 +769,28 @@ body.workflow-elite-page .wf-ai-grid {
   gap: 16px;
 }
 
+body.workflow-elite-page .wf-governance {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(164, 196, 238, 0.36);
+  border-radius: 12px;
+  background: rgba(13, 27, 51, 0.88);
+}
+
+body.workflow-elite-page .wf-governance__toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #eef5ff;
+  font-weight: 600;
+}
+
+body.workflow-elite-page .wf-governance__toggle input[type="checkbox"] {
+  margin-top: 2px;
+}
+
 body.workflow-elite-page .wf-ai-card {
   border: 1px solid rgba(156, 184, 230, 0.32);
   border-radius: 14px;
