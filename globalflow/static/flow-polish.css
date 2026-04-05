@@ -30,12 +30,41 @@
     overflow-x: clip;
   }
 
+  .gf-polish,
+  html .gf-polish {
+    background: #0f0b0a !important;
+  }
+
+  html:has(body.gf-polish) {
+    background: #0f0b0a !important;
+  }
+
+  .gf-polish,
+  .gf-polish.payment-body,
+  .gf-polish.checkout-body {
+    background:
+      radial-gradient(circle at 18% 10%, rgba(40, 40, 43, 0.56), transparent 42%),
+      radial-gradient(circle at 82% 14%, rgba(27, 24, 19, 0.52), transparent 44%),
+      linear-gradient(180deg, #121213 0%, #0f0b0a 100%) !important;
+  }
+
+  .gf-polish :is(.aurora, .grid-overlay, .backdrop) {
+    background: transparent !important;
+    opacity: 0.34 !important;
+  }
+
+  .gf-polish .grid-overlay {
+    background-image: radial-gradient(rgba(243, 243, 244, 0.08) 1px, transparent 1px) !important;
+    background-size: 120px 120px !important;
+  }
+
   .gf-polish main {
     padding-inline: clamp(16px, 2.6vw, 28px);
   }
 
   .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo) {
     margin-block: var(--gf-space-section-mobile);
+    background: transparent !important;
   }
 
   .gf-polish :is(.section-heading, .wf-heading-inline) {
