@@ -286,7 +286,7 @@ body.paper-site.ux-segment-documents .is-personalized-focus::after {
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #e9f3ff;
-  background: rgba(51, 113, 201, 0.42);
+  background: rgba(40, 40, 43, 0.42);
   border: 1px solid rgba(164, 200, 246, 0.5);
   border-radius: 999px;
   padding: 4px 8px;
@@ -541,16 +541,16 @@ body.paper-site :where(header.top, .operator-rail, .signal-bar, .wf-density-cont
 body.paper-site :where(header.top .nav a, .operator-rail a, .workflow-actions .ghost, .wf-toggle, .wf-density) {
   color: #e9f2ff !important;
   border-color: rgba(165, 194, 236, 0.42) !important;
-  background: rgba(11, 23, 43, 0.7) !important;
+  background: rgba(40, 40, 43, 0.7) !important;
 }
 
 body.paper-site :where(header.top .nav a:hover, header.top .nav a:focus-visible, .operator-rail a:hover, .operator-rail a:focus-visible) {
   color: #ffffff !important;
-  background: rgba(24, 43, 74, 0.82) !important;
+  background: rgba(40, 40, 43, 0.82) !important;
 }
 
 body.paper-site :where(.signal-pill, .operator-rail__status, .hero-status-card, .wf-hero-side .hero-status-card) {
-  background: rgba(13, 26, 48, 0.82) !important;
+  background: rgba(15, 11, 10, 0.82) !important;
   color: #f5f9ff !important;
   border-color: rgba(163, 193, 235, 0.4) !important;
 }
@@ -677,7 +677,7 @@ body.paper-site[data-ux-variant="C"] :where(
 }
 
 html[data-theme="light"] {
-  --ds-bg: #0a1731;
+  --ds-bg: #28282b;
   --ds-surface: rgba(10, 20, 38, 0.74);
   --ds-surface-strong: rgba(10, 20, 38, 0.9);
   --ds-border: rgba(176, 202, 242, 0.4);
@@ -899,7 +899,7 @@ body.workflow-elite-page .wf-signal-cell:hover {
   transform: translateY(-2px) scale(1.01);
 }
 
-body.workflow-elite-page .wf-signal-cell[data-tone="trust"] { box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.38); }
+body.workflow-elite-page .wf-signal-cell[data-tone="trust"] { box-shadow: inset 0 0 0 1px rgba(40, 40, 43, 0.38); }
 body.workflow-elite-page .wf-signal-cell[data-tone="urgency"] { box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.42); }
 body.workflow-elite-page .wf-signal-cell[data-tone="speed"] { box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.38); }
 body.workflow-elite-page .wf-signal-cell[data-tone="risk"] { box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.4); }
