@@ -37,6 +37,16 @@ let xrMode = "none";
 let inlineFallbackRaf = null;
 let inlineFallbackActive = false;
 let inlineFallbackYaw = 0;
+let inlineFallbackPitch = 0;
+let pointerLockActive = false;
+let pointerLockNoticeShown = false;
+let eliteStars = [];
+const ELITE_VR = {
+  framebufferScaleFactor: 1.45,
+  maxDpr: 2.2,
+  starCount: 140,
+  cameraSmoothing: 0.08,
+};
 const toneRules = [
   { tone: "urgency", pattern: /deadline|risk|blocked|escal|retry|alert/i },
   { tone: "trust", pattern: /billing|invoice|payment|audit|compliance/i },
@@ -50,6 +60,15 @@ function toast(message) {
   el.textContent = message;
   el.classList.add("is-visible");
   window.setTimeout(() => el.classList.remove("is-visible"), 2200);
+}
+
+function initEliteStars() {
+  eliteStars = Array.from({ length: ELITE_VR.starCount }).map(() => ({
+    x: Math.random(),
+    y: Math.random(),
+    z: 0.2 + Math.random() * 0.8,
+    drift: -0.0005 - Math.random() * 0.0015,
+  }));
 }
 
 function createRipple(host, x, y) {
@@ -430,7 +449,7 @@ async function ensureXRSupport() {
   const supportsImmersiveVR = await navigator.xr.isSessionSupported("immersive-vr").catch(() => false);
   if (supportsImmersiveVR) {
     xrMode = "immersive-vr";
-    setVRStatus("Immersive VR ready. Connect headset and click Enter VR.");
+    setVRStatus("Elite immersive VR ready.");
     toggleVRButtons(false);
     return true;
   }
@@ -438,7 +457,7 @@ async function ensureXRSupport() {
   const supportsImmersiveAR = await navigator.xr.isSessionSupported("immersive-ar").catch(() => false);
   if (supportsImmersiveAR) {
     xrMode = "immersive-ar";
-    setVRStatus("Immersive AR available on this device. Click Enter VR to start.");
+    setVRStatus("Elite immersive AR available.");
     toggleVRButtons(false);
     return true;
   }
@@ -446,7 +465,7 @@ async function ensureXRSupport() {
   const supportsInline = await navigator.xr.isSessionSupported("inline").catch(() => false);
   if (supportsInline) {
     xrMode = "inline";
-    setVRStatus("Inline XR mode ready.");
+    setVRStatus("Elite inline XR mode ready.");
     toggleVRButtons(false);
     return true;
   }
@@ -483,8 +502,8 @@ function renderXRFrame(time, frame) {
     const viewport = layer.getViewport(view);
     if (!viewport) continue;
     xrGl.viewport(viewport.x, viewport.y, viewport.width, viewport.height);
-    const hue = view.eye === "left" ? 0.14 : 0.18;
-    xrGl.clearColor(hue, 0.08, 0.2, 1.0);
+    const hue = view.eye === "left" ? 0.12 : 0.18;
+    xrGl.clearColor(hue, 0.08, 0.24, 1.0);
     xrGl.clear(xrGl.COLOR_BUFFER_BIT | xrGl.DEPTH_BUFFER_BIT);
   }
 }
@@ -502,7 +521,15 @@ async function enterVR() {
     const requiredFeatures = requestedMode === "inline" ? [] : ["local-floor"];
     xrSession = await navigator.xr.requestSession(requestedMode, {
       requiredFeatures,
-      optionalFeatures: ["bounded-floor", "hand-tracking", "layers"],
+      optionalFeatures: [
+        "bounded-floor",
+        "hand-tracking",
+        "layers",
+        "anchors",
+        "hit-test",
+        "plane-detection",
+        "depth-sensing",
+      ],
     });
     xrSession.addEventListener("end", () => {
       xrSession = null;
@@ -520,10 +547,12 @@ async function enterVR() {
     if (!xrGl) throw new Error("WebGL context unavailable");
 
     await xrGl.makeXRCompatible();
-    await xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, xrGl) });
+    await xrSession.updateRenderState({
+      baseLayer: new XRWebGLLayer(xrSession, xrGl, { framebufferScaleFactor: ELITE_VR.framebufferScaleFactor }),
+    });
     xrRefSpace = await xrSession.requestReferenceSpace(requestedMode === "inline" ? "viewer" : "local-floor");
     toggleVRButtons(true);
-    setVRStatus(`XR session active (${requestedMode}).`);
+    setVRStatus(`XR session active (${requestedMode}, elite profile).`);
     toast(`Entered ${requestedMode}`);
     xrSession.requestAnimationFrame(renderXRFrame);
   } catch (error) {
@@ -551,28 +580,49 @@ function drawInlineFallbackFrame() {
   const gl = vrCanvas.getContext("2d");
   if (!gl) return;
 
-  const width = vrCanvas.clientWidth || 640;
-  const height = vrCanvas.clientHeight || 240;
+  const dpr = Math.min(window.devicePixelRatio || 1, ELITE_VR.maxDpr);
+  const width = Math.max(640, Math.floor((vrCanvas.clientWidth || 640) * dpr));
+  const height = Math.max(240, Math.floor((vrCanvas.clientHeight || 240) * dpr));
   if (vrCanvas.width !== width) vrCanvas.width = width;
   if (vrCanvas.height !== height) vrCanvas.height = height;
 
+  gl.setTransform(1, 0, 0, 1, 0, 0);
+  gl.scale(dpr, dpr);
+  const vw = width / dpr;
+  const vh = height / dpr;
+
   inlineFallbackYaw += 0.008;
   const t = inlineFallbackYaw;
-  const cx = width * (0.5 + Math.cos(t) * 0.18);
-  const cy = height * (0.5 + Math.sin(t * 0.8) * 0.12);
+  const cx = vw * (0.5 + Math.cos(t + inlineFallbackPitch * 0.35) * 0.18);
+  const cy = vh * (0.5 + Math.sin(t * 0.8 + inlineFallbackPitch * 0.5) * 0.12);
 
-  const bg = gl.createLinearGradient(0, 0, width, height);
+  const bg = gl.createLinearGradient(0, 0, vw, vh);
   bg.addColorStop(0, "#061327");
   bg.addColorStop(1, "#10294f");
   gl.fillStyle = bg;
-  gl.fillRect(0, 0, width, height);
+  gl.fillRect(0, 0, vw, vh);
+
+  gl.save();
+  gl.globalCompositeOperation = "lighter";
+  eliteStars.forEach((star) => {
+    star.x += star.drift * (1 + inlineFallbackPitch * 0.15);
+    if (star.x < 0) star.x = 1;
+    const sx = star.x * vw;
+    const sy = (star.y + Math.sin(t + star.x * 6) * 0.003) * vh;
+    const r = 0.5 + star.z * 1.8;
+    gl.fillStyle = `rgba(190,220,255,${0.25 + star.z * 0.65})`;
+    gl.beginPath();
+    gl.arc(sx, sy, r, 0, Math.PI * 2);
+    gl.fill();
+  });
+  gl.restore();
 
   for (let i = 0; i < 14; i += 1) {
     const depth = (i + 1) / 14;
-    const w = width * (0.1 + depth * 0.8);
-    const h = height * (0.06 + depth * 0.52);
-    const x = cx - w / 2 + Math.sin(t + i) * 10;
-    const y = cy - h / 2 + Math.cos(t * 0.7 + i) * 7;
+    const w = vw * (0.1 + depth * 0.8);
+    const h = vh * (0.06 + depth * 0.52);
+    const x = cx - w / 2 + Math.sin(t + i + inlineFallbackPitch) * 10;
+    const y = cy - h / 2 + Math.cos(t * 0.7 + i + inlineFallbackPitch * 0.8) * 7;
     gl.strokeStyle = `rgba(111,176,255,${0.1 + depth * 0.28})`;
     gl.lineWidth = 1.5;
     gl.strokeRect(x, y, w, h);
@@ -580,9 +630,9 @@ function drawInlineFallbackFrame() {
 
   gl.fillStyle = "rgba(230,243,255,0.92)";
   gl.font = "600 13px Manrope, sans-serif";
-  gl.fillText("Inline immersive mode active", 14, 22);
+  gl.fillText("Elite inline immersive mode active", 14, 22);
   gl.fillStyle = "rgba(191,208,232,0.92)";
-  gl.fillText("WebXR headset mode unavailable on this device/browser.", 14, 42);
+  gl.fillText("Headset XR unavailable: running high-fidelity simulation.", 14, 42);
 
   inlineFallbackRaf = requestAnimationFrame(drawInlineFallbackFrame);
 }
@@ -590,9 +640,14 @@ function drawInlineFallbackFrame() {
 function startInlineFallback() {
   if (inlineFallbackActive) return;
   inlineFallbackActive = true;
+  if (!eliteStars.length) initEliteStars();
   toggleVRButtons(true);
-  setVRStatus("Inline immersive mode active.");
-  toast("Entered inline immersive mode");
+  setVRStatus("Inline immersive mode active (elite profile).");
+  toast("Entered elite inline immersive mode");
+  if (vrCanvas && !pointerLockNoticeShown) {
+    pointerLockNoticeShown = true;
+    toast("Click canvas for mouse-look");
+  }
   drawInlineFallbackFrame();
 }
 
@@ -606,6 +661,27 @@ function stopInlineFallback() {
   toggleVRButtons(false);
   setVRStatus("Inline immersive mode ended.");
   toast("Exited inline immersive mode");
+}
+
+function installElitePointerTracking() {
+  if (!vrCanvas) return;
+  vrCanvas.addEventListener("click", () => {
+    if (!inlineFallbackActive || !vrCanvas.requestPointerLock || pointerLockActive) return;
+    vrCanvas.requestPointerLock();
+  });
+  document.addEventListener("pointerlockchange", () => {
+    pointerLockActive = document.pointerLockElement === vrCanvas;
+  });
+  document.addEventListener("mousemove", (event) => {
+    if (!inlineFallbackActive) return;
+    if (pointerLockActive) {
+      inlineFallbackPitch += event.movementY * 0.0012;
+      inlineFallbackYaw += event.movementX * 0.0015;
+    } else {
+      inlineFallbackPitch += ((event.clientY / window.innerHeight) - 0.5 - inlineFallbackPitch) * ELITE_VR.cameraSmoothing;
+    }
+    inlineFallbackPitch = Math.max(-0.8, Math.min(0.8, inlineFallbackPitch));
+  }, { passive: true });
 }
 
 function installRealVR() {
@@ -630,3 +706,4 @@ installImmersiveControls();
 installImmersiveModal();
 installShortcuts();
 installRealVR();
+installElitePointerTracking();
