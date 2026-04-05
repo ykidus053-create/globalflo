@@ -50,6 +50,7 @@
         <a href="#signals">Signals</a>
         <a href="#operators">Operators</a>
         <a href="#board">Board</a>
+        <a href="#ai-integration">AI Methods</a>
         <a href="#immersive">Immersive</a>
       </nav>
     </header>
@@ -133,6 +134,63 @@
             <button type="button" class="ghost small" id="exit-vr" disabled>Exit VR</button>
           </div>
           <canvas id="vr-canvas" class="wf-vr-canvas" aria-hidden="true"></canvas>
+        </div>
+      </section>
+
+      <section id="ai-integration" class="wf-section">
+        <div class="section-heading">
+          <h2>AI Integration Methods</h2>
+          <p>Generative prototyping, predictive flow modeling, automated accessibility checks, and AI collaboration handoff.</p>
+        </div>
+        <div class="wf-ai-grid" id="ai-method-grid">
+          <article class="wf-ai-card">
+            <header>
+              <h3>1. Generative Prototyping</h3>
+              <span class="wf-badge" data-state="online">Active</span>
+            </header>
+            <p>Generate rapid layout/content variants from a prompt to speed ideation and A/B testing.</p>
+            <div class="wf-ai-actions">
+              <input id="ai-prompt" type="text" placeholder="Prompt: minimalist billing recovery dashboard" />
+              <button class="primary small" type="button" data-ai-method="generate">Generate variants</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-generate-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="wf-ai-card">
+            <header>
+              <h3>2. Predictive Flow Modeling</h3>
+              <span class="wf-badge" data-state="ready">Ready</span>
+            </header>
+            <p>Analyze lane pressure and event cadence to suggest next best workflow routing actions.</p>
+            <div class="wf-ai-actions">
+              <button class="ghost small" type="button" data-ai-method="predict">Run prediction</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-predict-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="wf-ai-card">
+            <header>
+              <h3>3. Automated UX + Accessibility Audit</h3>
+              <span class="wf-badge" data-state="review">Audit</span>
+            </header>
+            <p>Scan the current interface for readability, contrast, and usability risk signals.</p>
+            <div class="wf-ai-actions">
+              <button class="ghost small" type="button" data-ai-method="audit">Run accessibility check</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-audit-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="wf-ai-card">
+            <header>
+              <h3>4. AI Collaboration Handoff</h3>
+              <span class="wf-badge" data-state="online">Live</span>
+            </header>
+            <p>Generate a developer-ready handoff spec from current board/operator/signal state.</p>
+            <div class="wf-ai-actions">
+              <button class="primary small" type="button" data-ai-method="handoff">Generate handoff</button>
+            </div>
+            <pre class="wf-ai-output" id="ai-handoff-output" aria-live="polite"></pre>
+          </article>
         </div>
       </section>
 

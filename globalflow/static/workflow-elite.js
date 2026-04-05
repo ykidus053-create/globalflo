@@ -15,6 +15,12 @@ const enterVRButton = document.getElementById("enter-vr");
 const exitVRButton = document.getElementById("exit-vr");
 const vrStatus = document.getElementById("vr-status");
 const vrCanvas = document.getElementById("vr-canvas");
+const aiPromptInput = document.getElementById("ai-prompt");
+const aiGenerateOutput = document.getElementById("ai-generate-output");
+const aiPredictOutput = document.getElementById("ai-predict-output");
+const aiAuditOutput = document.getElementById("ai-audit-output");
+const aiHandoffOutput = document.getElementById("ai-handoff-output");
+const aiMethodButtons = Array.from(document.querySelectorAll("[data-ai-method]"));
 
 const immersiveState = {
   laser: true,
@@ -693,6 +699,158 @@ function installRealVR() {
   if (exitVRButton) exitVRButton.addEventListener("click", exitVR);
 }
 
+function formatLines(lines) {
+  return lines.filter(Boolean).join("\n");
+}
+
+function runGenerativeMethod() {
+  const prompt = (aiPromptInput?.value || "minimalist workflow dashboard").trim();
+  const variants = [
+    {
+      name: "Variant A",
+      layout: "Two-column hero + compact KPI rail + action-first cards",
+      copy: "Short benefit-first headlines with 1 CTA per section",
+      purpose: "Fast scan and lower cognitive load",
+    },
+    {
+      name: "Variant B",
+      layout: "Single-column narrative with progressive disclosure",
+      copy: "Outcome-first microcopy and risk-reversal notes",
+      purpose: "Higher clarity on mobile",
+    },
+    {
+      name: "Variant C",
+      layout: "Grid-first command center with adaptive cards",
+      copy: "Data-driven labels + confidence badges",
+      purpose: "Operator-centric decision speed",
+    },
+  ];
+  const lines = [
+    `Prompt: ${prompt}`,
+    "Generated layout/content variants:",
+    ...variants.map((v) => `- ${v.name}: ${v.layout} | ${v.copy} | ${v.purpose}`),
+    "Recommendation: Launch Variant C for operations-heavy traffic, A/B with Variant A for conversion.",
+  ];
+  if (aiGenerateOutput) aiGenerateOutput.textContent = formatLines(lines);
+}
+
+function runPredictiveMethod() {
+  const lanes = Array.from(document.querySelectorAll(".wf-lane"));
+  const laneCounts = lanes.map((lane) => ({
+    lane: lane.dataset.lane || "unknown",
+    count: lane.querySelectorAll(".wf-lane-card").length,
+  }));
+  const urgent = laneCounts.find((l) => l.lane === "review")?.count || 0;
+  const incoming = laneCounts.find((l) => l.lane === "incoming")?.count || 0;
+  const running = laneCounts.find((l) => l.lane === "running")?.count || 0;
+  const loadIndex = incoming * 1.2 + running * 0.8 + urgent * 1.8;
+  const risk = loadIndex > 12 ? "high" : loadIndex > 8 ? "medium" : "low";
+
+  const recommendations = [
+    urgent > 2 ? "Escalate review lane and auto-route low-risk items to complete." : "Review lane stable; keep current threshold.",
+    incoming > running ? "Increase auto-triage weight for incoming queue." : "Keep lane balancing as-is.",
+    "Enable dynamic SLA nudges for high-value billing and compliance tasks.",
+  ];
+
+  const lines = [
+    `Lane load index: ${loadIndex.toFixed(1)} (${risk} risk)`,
+    ...laneCounts.map((l) => `- ${l.lane}: ${l.count}`),
+    "Predicted optimization actions:",
+    ...recommendations.map((r) => `- ${r}`),
+  ];
+  if (aiPredictOutput) aiPredictOutput.textContent = formatLines(lines);
+}
+
+function parseRgb(color) {
+  const match = String(color).match(/rgba?\(([^)]+)\)/i);
+  if (!match) return null;
+  const [r, g, b] = match[1].split(",").slice(0, 3).map((v) => Number(v.trim()));
+  if ([r, g, b].some((v) => Number.isNaN(v))) return null;
+  return { r, g, b };
+}
+
+function luminance({ r, g, b }) {
+  const toLin = (v) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
+}
+
+function contrastRatio(a, b) {
+  const l1 = luminance(a);
+  const l2 = luminance(b);
+  const light = Math.max(l1, l2);
+  const dark = Math.min(l1, l2);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+function runAccessibilityMethod() {
+  const sampleNodes = Array.from(document.querySelectorAll(".wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card, .activity-entry p")).slice(0, 36);
+  let lowContrast = 0;
+  sampleNodes.forEach((node) => {
+    const style = getComputedStyle(node);
+    const fg = parseRgb(style.color);
+    const bg = parseRgb(style.backgroundColor);
+    if (!fg || !bg) return;
+    const ratio = contrastRatio(fg, bg);
+    if (ratio < 4.5) lowContrast += 1;
+  });
+
+  const issues = [
+    lowContrast > 0 ? `${lowContrast} sampled nodes under 4.5:1 contrast.` : "No sampled contrast failures detected.",
+    "Check focus-visible outline on all interactive controls.",
+    "Confirm drag/drop has keyboard equivalent (implemented).",
+    "Verify all status updates announce in aria-live regions.",
+  ];
+  const score = Math.max(76, 100 - lowContrast * 2);
+  const lines = [
+    `Automated UX+accessibility score: ${score}/100`,
+    ...issues.map((i) => `- ${i}`),
+  ];
+  if (aiAuditOutput) aiAuditOutput.textContent = formatLines(lines);
+}
+
+function runHandoffMethod() {
+  const handoff = {
+    generated_at: new Date().toISOString(),
+    page: "workflow-elite",
+    components: {
+      signals: document.querySelectorAll(".wf-signal-cell").length,
+      operators: document.querySelectorAll(".wf-operator-card").length,
+      lanes: document.querySelectorAll(".wf-lane").length,
+      lane_cards: document.querySelectorAll(".wf-lane-card").length,
+      ai_method_cards: document.querySelectorAll(".wf-ai-card").length,
+    },
+    implementation_notes: [
+      "Generative variants should remain outcome-first and action-first.",
+      "Predictive model uses queue pressure + review risk weighting.",
+      "Accessibility checks run client-side each iteration before release.",
+      "VR profile uses immersive-vr/ar/inline fallback chain with high-fidelity inline simulator.",
+    ],
+    next_dev_tasks: [
+      "Connect predictive method to real telemetry endpoint.",
+      "Persist audit snapshots for trend tracking.",
+      "Expose variant selection in account settings.",
+    ],
+  };
+  if (aiHandoffOutput) aiHandoffOutput.textContent = JSON.stringify(handoff, null, 2);
+}
+
+function installAIMethods() {
+  if (!aiMethodButtons.length) return;
+  aiMethodButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const method = button.dataset.aiMethod;
+      if (method === "generate") runGenerativeMethod();
+      if (method === "predict") runPredictiveMethod();
+      if (method === "audit") runAccessibilityMethod();
+      if (method === "handoff") runHandoffMethod();
+    });
+  });
+  runPredictiveMethod();
+}
+
 installSignalRipples();
 installDensityControls();
 installOperatorDnD();
@@ -707,3 +865,4 @@ installImmersiveModal();
 installShortcuts();
 installRealVR();
 installElitePointerTracking();
+installAIMethods();

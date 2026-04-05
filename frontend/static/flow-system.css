@@ -379,6 +379,61 @@ body.workflow-elite-page .wf-vr-panel {
   gap: 10px;
 }
 
+body.workflow-elite-page .wf-ai-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+body.workflow-elite-page .wf-ai-card {
+  border: 1px solid rgba(156, 184, 230, 0.32);
+  border-radius: 14px;
+  background: rgba(10, 18, 34, 0.8);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-ai-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+body.workflow-elite-page .wf-ai-card h3 {
+  margin: 0;
+}
+
+body.workflow-elite-page .wf-ai-actions {
+  display: grid;
+  gap: 8px;
+}
+
+body.workflow-elite-page .wf-ai-actions input {
+  width: 100%;
+  min-width: 0;
+  background: rgba(10, 18, 34, 0.7);
+  border: 1px solid rgba(156, 184, 230, 0.3);
+  border-radius: 10px;
+  color: #f3f8ff;
+  padding: 10px 12px;
+}
+
+body.workflow-elite-page .wf-ai-output {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  border: 1px solid rgba(156, 184, 230, 0.22);
+  border-radius: 10px;
+  background: rgba(6, 12, 24, 0.72);
+  color: #d9e7ff;
+  padding: 10px 12px;
+  min-height: 84px;
+  font: 500 12px/1.45 "Manrope", sans-serif;
+}
+
 body.workflow-elite-page .wf-vr-panel h3 {
   margin: 0;
   letter-spacing: -0.01em;
