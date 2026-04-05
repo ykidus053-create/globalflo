@@ -64,6 +64,8 @@ const workflowBoard = document.getElementById("wf-board");
 
 const SESSION_KEY = "globalflow_session";
 const NEXT_STEPS_ORDER_KEY = "globalflow_next_steps_order";
+const PERSONALIZATION_CONSENT_KEY = "globalflow_personalization_consent";
+const HAPTICS_ENABLED_KEY = "globalflow_haptics_enabled";
 const numberFormatter = new Intl.NumberFormat("en-US");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hiddenPollMultiplier = 4;
@@ -743,6 +745,9 @@ function applyDeviceClass() {
 }
 
 function triggerHaptic(pattern = 12) {
+  try {
+    if (window.localStorage.getItem(HAPTICS_ENABLED_KEY) === "false") return;
+  } catch (_) {}
   if (!("vibrate" in navigator)) return;
   try {
     navigator.vibrate(pattern);
@@ -918,10 +923,40 @@ function initFeedback() {
     openFeedbackButton.addEventListener("click", () => openModal(feedbackModal));
   }
   if (!feedbackForm) return;
+  const personalizationConsentInput = feedbackForm.querySelector("#personalization-consent");
+  const hapticsEnabledInput = feedbackForm.querySelector("#haptics-enabled");
+  if (personalizationConsentInput) {
+    try {
+      const savedConsent = window.localStorage.getItem(PERSONALIZATION_CONSENT_KEY);
+      if (savedConsent !== null) personalizationConsentInput.checked = savedConsent !== "false";
+    } catch (_) {}
+    personalizationConsentInput.addEventListener("change", () => {
+      try {
+        window.localStorage.setItem(PERSONALIZATION_CONSENT_KEY, personalizationConsentInput.checked ? "true" : "false");
+      } catch (_) {}
+    });
+  }
+  if (hapticsEnabledInput) {
+    try {
+      const savedHaptics = window.localStorage.getItem(HAPTICS_ENABLED_KEY);
+      if (savedHaptics !== null) hapticsEnabledInput.checked = savedHaptics !== "false";
+    } catch (_) {}
+    hapticsEnabledInput.addEventListener("change", () => {
+      try {
+        window.localStorage.setItem(HAPTICS_ENABLED_KEY, hapticsEnabledInput.checked ? "true" : "false");
+      } catch (_) {}
+    });
+  }
   feedbackForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const payload = Object.fromEntries(new FormData(feedbackForm));
+    const formData = new FormData(feedbackForm);
+    const payload = Object.fromEntries(formData);
+    payload.personalization_consent = Boolean(personalizationConsentInput?.checked);
+    payload.haptics_enabled = Boolean(hapticsEnabledInput?.checked);
     payload.rating = Number(payload.rating || 0);
+    payload.nps = payload.nps === "" || payload.nps == null ? null : Number(payload.nps);
+    payload.ces = payload.ces === "" || payload.ces == null ? null : Number(payload.ces);
+    payload.sus = payload.sus === "" || payload.sus == null ? null : Number(payload.sus);
     payload.ua = navigator.userAgent;
     payload.path = `${window.location.pathname}${window.location.hash}`;
     if (!payload.comment || payload.rating < 1 || payload.rating > 5) {
@@ -929,6 +964,25 @@ function initFeedback() {
       showToast("Feedback incomplete");
       return;
     }
+    if (payload.nps !== null && (payload.nps < 0 || payload.nps > 10)) {
+      if (feedbackStatus) feedbackStatus.textContent = "NPS must be between 0 and 10.";
+      showToast("Feedback incomplete");
+      return;
+    }
+    if (payload.ces !== null && (payload.ces < 1 || payload.ces > 7)) {
+      if (feedbackStatus) feedbackStatus.textContent = "CES must be between 1 and 7.";
+      showToast("Feedback incomplete");
+      return;
+    }
+    if (payload.sus !== null && (payload.sus < 0 || payload.sus > 100)) {
+      if (feedbackStatus) feedbackStatus.textContent = "SUS must be between 0 and 100.";
+      showToast("Feedback incomplete");
+      return;
+    }
+    try {
+      window.localStorage.setItem(PERSONALIZATION_CONSENT_KEY, payload.personalization_consent ? "true" : "false");
+      window.localStorage.setItem(HAPTICS_ENABLED_KEY, payload.haptics_enabled ? "true" : "false");
+    } catch (_) {}
     if (feedbackStatus) feedbackStatus.textContent = "Sending...";
     const result = await submitFeedback(payload);
     if (feedbackStatus) feedbackStatus.textContent = result.message || "Thanks. Feedback received.";

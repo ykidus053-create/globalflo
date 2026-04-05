@@ -718,6 +718,26 @@
             <textarea name="comment" rows="4" maxlength="2000" placeholder="Tell us what blocked you or what felt unclear." required></textarea>
           </label>
           <label>
+            NPS likelihood (0-10)
+            <input name="nps" type="number" min="0" max="10" step="1" placeholder="e.g. 8" />
+          </label>
+          <label>
+            Task effort (CES, 1-7)
+            <input name="ces" type="number" min="1" max="7" step="1" placeholder="e.g. 2" />
+          </label>
+          <label>
+            Usability (SUS, 0-100)
+            <input name="sus" type="number" min="0" max="100" step="1" placeholder="e.g. 85" />
+          </label>
+          <label class="feedback-toggle">
+            <input id="personalization-consent" name="personalization_consent" type="checkbox" checked />
+            Allow behavior-based personalization and analytics
+          </label>
+          <label class="feedback-toggle">
+            <input id="haptics-enabled" name="haptics_enabled" type="checkbox" checked />
+            Enable haptic microfeedback (supported devices only)
+          </label>
+          <label>
             Email (optional)
             <input name="email" type="email" placeholder="ops@company.com" />
           </label>

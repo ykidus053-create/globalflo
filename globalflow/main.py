@@ -1026,6 +1026,8 @@ async def ux_report():
     route_counts: Dict[str, int] = {}
     action_counts: Dict[str, int] = {}
     contrast_warnings = 0
+    consented_sessions = 0
+    non_consented_sessions = 0
     for item in telemetry:
         route = str(item.get("route", "") or "/")
         route_counts[route] = route_counts.get(route, 0) + 1
@@ -1037,6 +1039,10 @@ async def ux_report():
                 action_counts[action] = action_counts.get(action, 0) + 1
             warning_value = int(payload.get("contrast_warnings", 0) or 0)
             contrast_warnings += max(0, warning_value)
+            if payload.get("consent") is True:
+                consented_sessions += 1
+            elif payload.get("consent") is False:
+                non_consented_sessions += 1
 
     top_routes = sorted(route_counts.items(), key=lambda kv: kv[1], reverse=True)[:8]
     top_actions = sorted(action_counts.items(), key=lambda kv: kv[1], reverse=True)[:12]
@@ -1054,6 +1060,8 @@ async def ux_report():
         "top_routes": [{"route": route, "count": count} for route, count in top_routes],
         "top_actions": [{"action": action, "count": count} for action, count in top_actions],
         "contrast_warnings": contrast_warnings,
+        "consented_sessions": consented_sessions,
+        "non_consented_sessions": non_consented_sessions,
         "recommendations": recommendations,
     }
 
@@ -1595,6 +1603,38 @@ async def capture_feedback(payload: Dict[str, Any]):
     rating = int(payload.get("rating") or 0)
     comment = str(payload.get("comment") or "").strip()
     email = str(payload.get("email") or "").strip()
+    nps_raw = payload.get("nps")
+    ces_raw = payload.get("ces")
+    sus_raw = payload.get("sus")
+    personalization_consent = payload.get("personalization_consent")
+    haptics_enabled = payload.get("haptics_enabled")
+
+    def _optional_int(value: Any) -> Optional[int]:
+        if value is None:
+            return None
+        text = str(value).strip()
+        if not text:
+            return None
+        try:
+            return int(float(text))
+        except (TypeError, ValueError):
+            raise HTTPException(status_code=400, detail="numeric metric fields must be valid numbers")
+
+    def _to_bool(value: Any, default: bool = True) -> bool:
+        if value is None:
+            return default
+        if isinstance(value, bool):
+            return value
+        text = str(value).strip().lower()
+        if text in {"true", "1", "yes", "on"}:
+            return True
+        if text in {"false", "0", "no", "off"}:
+            return False
+        return default
+
+    nps = _optional_int(nps_raw)
+    ces = _optional_int(ces_raw)
+    sus = _optional_int(sus_raw)
 
     if rating < 1 or rating > 5:
         raise HTTPException(status_code=400, detail="rating must be between 1 and 5")
@@ -1602,11 +1642,22 @@ async def capture_feedback(payload: Dict[str, Any]):
         raise HTTPException(status_code=400, detail="comment is required")
     if len(comment) > 2000:
         raise HTTPException(status_code=400, detail="comment is too long")
+    if nps is not None and (nps < 0 or nps > 10):
+        raise HTTPException(status_code=400, detail="nps must be between 0 and 10")
+    if ces is not None and (ces < 1 or ces > 7):
+        raise HTTPException(status_code=400, detail="ces must be between 1 and 7")
+    if sus is not None and (sus < 0 or sus > 100):
+        raise HTTPException(status_code=400, detail="sus must be between 0 and 100")
 
     entry = {
         "rating": rating,
         "comment": comment,
         "email": email[:200],
+        "nps": nps,
+        "ces": ces,
+        "sus": sus,
+        "personalization_consent": _to_bool(personalization_consent, default=True),
+        "haptics_enabled": _to_bool(haptics_enabled, default=True),
         "timestamp": datetime.utcnow().isoformat(),
         "ua": str(payload.get("ua") or "")[:200],
         "path": str(payload.get("path") or "")[:200],

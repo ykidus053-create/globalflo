@@ -4,6 +4,17 @@ const loaderStart = performance.now();
 const UX_STORE_KEY = "globalflow_ux_state_v2";
 const UX_SESSION_KEY = "globalflow_ux_session_id";
 const UX_VARIANT_KEY = "globalflow_ux_variant";
+const UX_CONSENT_KEY = "globalflow_personalization_consent";
+
+function personalizationConsentEnabled() {
+  try {
+    const raw = localStorage.getItem(UX_CONSENT_KEY);
+    if (raw === null) return true;
+    return raw !== "false";
+  } catch (_) {
+    return true;
+  }
+}
 
 function safeParse(value, fallback) {
   try {
@@ -67,6 +78,7 @@ function getSessionId() {
 }
 
 function postTelemetry(eventType, payload = {}) {
+  if (!personalizationConsentEnabled()) return;
   const body = {
     event_type: eventType,
     session_id: getSessionId(),
@@ -82,6 +94,10 @@ function postTelemetry(eventType, payload = {}) {
 }
 
 function installVariantSystem() {
+  if (!personalizationConsentEnabled()) {
+    document.body.dataset.uxVariant = "A";
+    return;
+  }
   const body = document.body;
   if (!body) return;
   const allowed = ["A", "B", "C"];
@@ -121,6 +137,12 @@ function deriveUserSegment(state) {
 function applyPersonalization(state) {
   const body = document.body;
   if (!body) return;
+  if (!personalizationConsentEnabled()) {
+    state.userSegment = "general";
+    body.dataset.userSegment = "general";
+    body.classList.remove("ux-segment-finance", "ux-segment-workflow", "ux-segment-compliance", "ux-segment-documents");
+    return;
+  }
   const segment = deriveUserSegment(state);
   state.userSegment = segment;
   body.dataset.userSegment = segment;
@@ -136,6 +158,7 @@ function applyAdaptiveDensity(state) {
 }
 
 function installInteractionTelemetry(state) {
+  if (!personalizationConsentEnabled()) return;
   const clickable = Array.from(document.querySelectorAll("a, button, [role='button'], summary"));
   clickable.forEach((node) => {
     node.addEventListener(
@@ -237,9 +260,9 @@ function installUxEngine() {
   installVariantSystem();
   applyResponsiveUxState(state);
   applyPersonalization(state);
-  installInteractionTelemetry(state);
+  if (personalizationConsentEnabled()) installInteractionTelemetry(state);
   runAccessibilityPass(state);
-  postTelemetry("page_view", { density: state.preferredDensity, user_segment: state.userSegment });
+  postTelemetry("page_view", { density: state.preferredDensity, user_segment: state.userSegment, consent: personalizationConsentEnabled() });
   window.addEventListener(
     "resize",
     () => {
