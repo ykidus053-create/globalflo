@@ -1055,6 +1055,20 @@ async def ux_report():
     if not recommendations:
         recommendations.append("Continue iterative testing and collect broader user segments.")
 
+    feedback_count = len(FEEDBACK)
+    ratings = [int(item.get("rating") or 0) for item in FEEDBACK if int(item.get("rating") or 0) > 0]
+    nps_values = [int(item.get("nps")) for item in FEEDBACK if isinstance(item.get("nps"), int)]
+    ces_values = [int(item.get("ces")) for item in FEEDBACK if isinstance(item.get("ces"), int)]
+    sus_values = [int(item.get("sus")) for item in FEEDBACK if isinstance(item.get("sus"), int)]
+
+    feedback_summary = {
+        "count": feedback_count,
+        "avg_rating": round(sum(ratings) / len(ratings), 2) if ratings else None,
+        "avg_nps": round(sum(nps_values) / len(nps_values), 2) if nps_values else None,
+        "avg_ces": round(sum(ces_values) / len(ces_values), 2) if ces_values else None,
+        "avg_sus": round(sum(sus_values) / len(sus_values), 2) if sus_values else None,
+    }
+
     return {
         "events": len(telemetry),
         "top_routes": [{"route": route, "count": count} for route, count in top_routes],
@@ -1062,6 +1076,7 @@ async def ux_report():
         "contrast_warnings": contrast_warnings,
         "consented_sessions": consented_sessions,
         "non_consented_sessions": non_consented_sessions,
+        "feedback": feedback_summary,
         "recommendations": recommendations,
     }
 
@@ -1165,6 +1180,15 @@ async def ai_audit_ui(payload: Dict[str, Any]):
             "Prioritize unresolved contrast failures in high-traffic views.",
             "Validate focus order on navigation and workflow controls.",
             "Run a manual screen-reader pass for critical funnels.",
+            "Run UCD cycle: empathize users, define friction, ideate variants, prototype, then test.",
+            "Track SUS/NPS/CES each sprint and ship only when thresholds improve.",
+        ],
+        "implementation_loop": [
+            "Step 1 (Empathize): collect pain points from behavior + session evidence.",
+            "Step 2 (Define): convert evidence into exact problem statements.",
+            "Step 3 (Prototype): ship responsive variants with reusable components.",
+            "Step 4 (Test): run heuristic review + SUS/NPS/CES checks.",
+            "Step 5 (Polish): fix WCAG and handoff updated design tokens.",
         ],
     }
 

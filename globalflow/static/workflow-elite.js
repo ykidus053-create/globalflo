@@ -102,6 +102,15 @@ async function postJson(path, payload) {
   return data;
 }
 
+async function getJson(path) {
+  const response = await fetch(apiUrl(path), { method: "GET" });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.detail || data.message || "Request failed");
+  }
+  return data;
+}
+
 function initEliteStars() {
   eliteStars = Array.from({ length: ELITE_VR.starCount }).map(() => ({
     x: Math.random(),
@@ -846,11 +855,36 @@ async function runAccessibilityMethod() {
       keyboard_support: true,
       reduced_motion: true,
     });
+    let uxReport = null;
+    try {
+      uxReport = await getJson("/api/ux/report");
+    } catch (_) {}
+
+    const feedback = uxReport?.feedback || {};
+    const feedbackLines = [];
+    if (typeof feedback.count === "number" && feedback.count > 0) {
+      feedbackLines.push(`Feedback samples: ${feedback.count}`);
+      if (typeof feedback.avg_sus === "number") feedbackLines.push(`Avg SUS: ${feedback.avg_sus}/100`);
+      if (typeof feedback.avg_nps === "number") feedbackLines.push(`Avg NPS: ${feedback.avg_nps}/10`);
+      if (typeof feedback.avg_ces === "number") feedbackLines.push(`Avg CES: ${feedback.avg_ces}/7`);
+      if (typeof feedback.avg_rating === "number") feedbackLines.push(`Avg Rating: ${feedback.avg_rating}/5`);
+    }
+
     const lines = [
       `Automated UX+accessibility score: ${data.score}/100`,
       ...((data.findings || []).map((f) => `- ${f}`)),
+      ...(uxReport
+        ? [
+            `Telemetry events: ${uxReport.events || 0}`,
+            `Consented sessions: ${uxReport.consented_sessions || 0}`,
+            `Non-consented sessions: ${uxReport.non_consented_sessions || 0}`,
+          ]
+        : []),
+      ...(feedbackLines.length ? ["Feedback KPI snapshot:", ...feedbackLines.map((line) => `- ${line}`)] : []),
       "Next steps:",
       ...((data.next_steps || []).map((s) => `- ${s}`)),
+      "Implementation loop:",
+      ...((data.implementation_loop || []).map((s) => `- ${s}`)),
     ];
     if (aiAuditOutput) aiAuditOutput.textContent = formatLines(lines);
   } catch (error) {
