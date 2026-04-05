@@ -403,6 +403,32 @@
     background: var(--gf-card-bg-a) !important;
   }
 
+  /* Workflow Elite explicit de-navy overrides (legacy selectors use !important) */
+  body.gf-polish.workflow-elite-page {
+    --rd-zone-hero: #28282b;
+    --rd-zone-primary: #0f0b0a;
+    --rd-zone-secondary: #28282b;
+    --card-surface: #28282b;
+    --card-surface-soft: #0f0b0a;
+    --ui-surface: #28282b;
+    --ui-surface-soft: #0f0b0a;
+    --wf-surface-soft: #0f0b0a;
+    --audit-surface: #28282b;
+    --audit-surface-alt: #0f0b0a;
+  }
+
+  body.gf-polish.workflow-elite-page :is(.wf-hero, .wf-section, .wf-governance, .wf-hero-copy, .wf-hero-side, .wf-board, .wf-lane, .wf-ai-card, .wf-operator-card, .wf-signal-cell, .wf-vr-panel, .wf-immersive-controls, .wf-ai-output) {
+    background: #28282b !important;
+  }
+
+  body.gf-polish.workflow-elite-page :is(.wf-lane-card, .wf-signal-cell:nth-child(even), .wf-operator-card:nth-child(even), .wf-ai-card:nth-child(even), .wf-toggle, .wf-density, .wf-ai-actions input, .wf-ai-actions button, .wf-vr-actions button) {
+    background: #0f0b0a !important;
+  }
+
+  body.gf-polish.workflow-elite-page :is(.wf-hero-copy, .wf-hero-side, .wf-governance, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .wf-vr-panel, .wf-ai-output) {
+    border-color: rgba(243, 243, 244, 0.2) !important;
+  }
+
   @media (min-width: 1024px) and (max-width: 1599px) {
     .gf-polish main > :is(section, .wf-section, .workflow, .integrations, .hero, .capabilities, .proof, .pricing, .demo) {
       margin-block: var(--gf-space-section-laptop);
