@@ -1,0 +1,232 @@
+:root {
+  --gf-space-compact: 16px;
+  --gf-space-base: 24px;
+  --gf-space-roomy: 32px;
+  --gf-space-section-mobile: 48px;
+  --gf-space-section-laptop: 64px;
+  --gf-space-section-desktop: 80px;
+  --gf-card-padding-mobile: 16px;
+  --gf-card-padding-laptop: 20px;
+  --gf-card-padding-desktop: 24px;
+  --gf-body-max-read: 72ch;
+  --gf-title-tight: 1.14;
+  --gf-body-tight: 1.55;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+main {
+  padding-inline: clamp(16px, 2.6vw, 28px);
+}
+
+main > section,
+main > .wf-section,
+main > .workflow,
+main > .integrations,
+main > .hero,
+main > .capabilities,
+main > .proof,
+main > .pricing,
+main > .demo {
+  margin-block: var(--gf-space-section-mobile);
+}
+
+.section-heading,
+.wf-heading-inline {
+  margin-bottom: var(--gf-space-roomy);
+}
+
+:is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .hero-status-card,
+    .wf-ai-card,
+    .wf-operator-card,
+    .wf-lane-card,
+    .wf-signal-cell,
+    .connector-card,
+    .pricing-card,
+    .gf-card
+  ) {
+  min-width: 0;
+  padding: var(--gf-card-padding-mobile);
+  overflow-wrap: anywhere;
+}
+
+:is(.feature-card, .explore-card, .workflow-card, .connector-card, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .pricing-card, .hero-status-card) p,
+:is(.feature-card, .explore-card, .workflow-card, .connector-card, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .pricing-card, .hero-status-card) li,
+:is(.feature-card, .explore-card, .workflow-card, .connector-card, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .pricing-card, .hero-status-card) span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: var(--gf-body-tight);
+}
+
+.hero h1,
+.wf-hero h1,
+.section-heading h2,
+.wf-section h2,
+.pricing h2,
+.capabilities h2 {
+  line-height: var(--gf-title-tight);
+  letter-spacing: -0.01em;
+}
+
+.hero p,
+.lead,
+.section-heading p,
+.wf-hero-copy p,
+.wf-section p,
+.workflow-main p,
+.workflow-side p,
+.modal-note {
+  max-width: var(--gf-body-max-read);
+  line-height: var(--gf-body-tight);
+}
+
+:is(
+    .workflow-grid,
+    .connectors-grid,
+    .pricing-grid,
+    .explore-grid,
+    .wf-signal-grid,
+    .wf-operator-grid,
+    .wf-board
+  ) {
+  min-width: 0;
+  gap: var(--gf-space-base);
+}
+
+.wf-board,
+.workflow-grid,
+.connectors-grid,
+.pricing-grid,
+.explore-grid,
+.wf-signal-grid,
+.wf-operator-grid {
+  align-items: stretch;
+}
+
+@media (min-width: 1024px) and (max-width: 1599px) {
+  main > section,
+  main > .wf-section,
+  main > .workflow,
+  main > .integrations,
+  main > .hero,
+  main > .capabilities,
+  main > .proof,
+  main > .pricing,
+  main > .demo {
+    margin-block: var(--gf-space-section-laptop);
+  }
+
+  :is(
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .gf-card
+    ) {
+    padding: var(--gf-card-padding-laptop);
+  }
+}
+
+@media (min-width: 1600px) {
+  main > section,
+  main > .wf-section,
+  main > .workflow,
+  main > .integrations,
+  main > .hero,
+  main > .capabilities,
+  main > .proof,
+  main > .pricing,
+  main > .demo {
+    margin-block: var(--gf-space-section-desktop);
+  }
+
+  :is(
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-lane-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .gf-card
+    ) {
+    padding: var(--gf-card-padding-desktop);
+  }
+}
+
+@media (max-width: 1023px) {
+  .top,
+  .top--airbnb {
+    padding-block: var(--gf-space-compact);
+  }
+
+  .nav {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .hero h1,
+  .wf-hero h1 {
+    font-size: clamp(30px, 8.4vw, 44px);
+    line-height: 1.12;
+  }
+
+  .section-heading h2,
+  .wf-section h2 {
+    font-size: clamp(24px, 6.6vw, 34px);
+  }
+
+  :is(.hero p, .lead, .section-heading p, .wf-hero-copy p, .wf-section p, .workflow-main p, .workflow-side p, .modal-note) {
+    font-size: clamp(15px, 3.8vw, 18px);
+    max-width: 100%;
+  }
+
+  :is(
+      .workflow-grid,
+      .connectors-grid,
+      .pricing-grid,
+      .explore-grid,
+      .wf-signal-grid,
+      .wf-operator-grid
+    ) {
+    grid-template-columns: 1fr;
+  }
+
+  .wf-board {
+    grid-template-columns: 1fr;
+  }
+
+  .wf-lane {
+    min-width: 0;
+  }
+
+  .wf-lane-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .workflow-main,
+  .workflow-side,
+  .wf-hero,
+  .wf-hero-copy,
+  .wf-hero-side {
+    min-width: 0;
+  }
+}
