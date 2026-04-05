@@ -25,6 +25,7 @@
       </div>
     </div>
     <div class="backdrop"></div>
+    <a class="skip-link" href="#main-content">Skip to account content</a>
     <header class="top">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
@@ -38,10 +39,10 @@
       <nav class="nav" aria-label="Account navigation">
         <a href="/">Dashboard</a>
         <a href="/workflow-elite">Workflow</a>
-        <a href="/account">Account</a>
+        <a href="/account" aria-current="page">Account</a>
       </nav>
     </header>
-    <main class="account-page account-layout">
+    <main id="main-content" class="account-page account-layout" tabindex="-1">
       <aside class="user-card gf-card gf-fade" aria-label="Account summary">
         <header class="user-card__header">
           <img class="user-card__avatar" src="/static/globalflow-logo.svg" alt="" />

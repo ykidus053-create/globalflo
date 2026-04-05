@@ -336,6 +336,28 @@ body.paper-site :where(
   color: rgba(206, 221, 246, 0.86) !important;
 }
 
+/* High-traffic view contrast priority: nav, status rails, workflow controls */
+body.paper-site :where(header.top, .operator-rail, .signal-bar, .wf-density-controls, .wf-immersive-controls, .wf-ai-actions) {
+  color: var(--card-fg-strong) !important;
+}
+
+body.paper-site :where(header.top .nav a, .operator-rail a, .workflow-actions .ghost, .wf-toggle, .wf-density) {
+  color: #e9f2ff !important;
+  border-color: rgba(165, 194, 236, 0.42) !important;
+  background: rgba(11, 23, 43, 0.7) !important;
+}
+
+body.paper-site :where(header.top .nav a:hover, header.top .nav a:focus-visible, .operator-rail a:hover, .operator-rail a:focus-visible) {
+  color: #ffffff !important;
+  background: rgba(24, 43, 74, 0.82) !important;
+}
+
+body.paper-site :where(.signal-pill, .operator-rail__status, .hero-status-card, .wf-hero-side .hero-status-card) {
+  background: rgba(13, 26, 48, 0.82) !important;
+  color: #f5f9ff !important;
+  border-color: rgba(163, 193, 235, 0.4) !important;
+}
+
 /* UX runtime states (from site-boot) */
 body.paper-site.ux-density-compact :where(
   .gf-card-grid,

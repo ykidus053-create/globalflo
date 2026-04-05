@@ -33,6 +33,7 @@
     <div class="grid-overlay"></div>
     <div class="laser-cursor" id="laser-cursor" aria-hidden="true"></div>
     <div class="laser-trail" id="laser-trail" aria-hidden="true"></div>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
 
     <header class="top top--airbnb">
       <div class="brand">
@@ -46,7 +47,7 @@
       </div>
       <nav class="nav" aria-label="Workflow navigation">
         <a href="/">Home</a>
-        <a href="/workflow-elite">Workflow</a>
+        <a href="/workflow-elite" aria-current="page">Workflow</a>
         <a href="/account">Account</a>
         <a href="#signals">Signals</a>
         <a href="#operators">Operators</a>
@@ -55,7 +56,7 @@
       </nav>
     </header>
 
-    <main id="workspace" class="wf-shell">
+    <main id="workspace" class="wf-shell" tabindex="-1">
       <section class="wf-hero">
         <div class="wf-hero-copy gf-card">
           <p class="eyebrow">Workflow command center</p>
@@ -69,7 +70,7 @@
           </div>
         </div>
 
-        <aside class="wf-hero-side gf-card">
+        <aside class="wf-hero-side gf-card" role="status" aria-live="polite">
           <article class="hero-status-card">
             <div>
               <span>Operator confidence</span>

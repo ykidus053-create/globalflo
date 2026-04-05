@@ -32,6 +32,7 @@
       </div>
     </div>
     <div class="aurora"></div>
+    <a class="skip-link" href="#main-content">Skip to payment content</a>
     <header class="top">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
@@ -50,7 +51,7 @@
       </nav>
     </header>
 
-    <main class="payment-page">
+    <main id="main-content" class="payment-page" tabindex="-1">
       <section class="payment-hero">
         <div class="payment-header">
           <p class="eyebrow">PayPal billing</p>
@@ -106,7 +107,7 @@
             <textarea name="notes" rows="3" placeholder="PO number, billing schedule, or payment details"></textarea>
           </label>
           <button class="primary" type="submit" disabled>Send payment request</button>
-          <p class="payment-status" id="payment-status"></p>
+          <p class="payment-status" id="payment-status" role="status" aria-live="polite"></p>
         </form>
       </section>
     </main>

@@ -31,6 +31,7 @@
     </div>
     <div class="aurora"></div>
     <div class="grid-overlay"></div>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
 
     <header class="top">
       <div class="brand">
@@ -44,7 +45,7 @@
       </div>
       <nav class="nav" aria-label="Workflow navigation">
         <a href="/">Home</a>
-        <a href="/workflow-elite">Workflow</a>
+        <a href="/workflow-elite" aria-current="page">Workflow</a>
         <a href="#signals">Signals</a>
         <a href="#engine">Engine</a>
         <a href="#connectors">Connectors</a>
@@ -52,7 +53,7 @@
       </nav>
     </header>
 
-    <main id="workspace" class="wf-shell">
+    <main id="workspace" class="wf-shell" tabindex="-1">
       <section class="wf-hero">
         <div class="wf-hero-copy">
           <p class="eyebrow">Workflow command center</p>
@@ -65,7 +66,7 @@
             <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
           </div>
         </div>
-        <div class="wf-hero-side">
+        <div class="wf-hero-side" role="status" aria-live="polite">
           <article class="hero-status-card">
             <div>
               <span>Operator confidence</span>
