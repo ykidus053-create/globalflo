@@ -1092,3 +1092,94 @@ body.paper-site .wf-operator-card.is-dragging {
     padding-inline: 12px !important;
   }
 }
+
+/* Global readability lock (desktop + mobile) */
+body.paper-site {
+  --read-fg: #f4f8ff;
+  --read-muted: #d3deef;
+  --read-link: #e8f1ff;
+  --read-link-hover: #ffffff;
+}
+
+body.paper-site :where(
+  h1, h2, h3, h4, h5, h6,
+  .brand-copy span,
+  .hero-copy .lead,
+  .content-body h3,
+  .content-body h4,
+  .workflow-card h3,
+  .workflow-card h4,
+  .activity-entry .title,
+  .activity-entry h4,
+  .use-case-preview h3,
+  .feature-card h3,
+  .connector-card summary,
+  .pricing-card h3,
+  .operator-rail__label,
+  .operator-rail__status strong
+) {
+  color: var(--read-fg) !important;
+}
+
+body.paper-site :where(
+  p,
+  li,
+  small,
+  .brand-copy p,
+  .note,
+  .label,
+  .modal-note,
+  .activity-detail,
+  .activity-entry time,
+  .use-case-preview-domain,
+  .use-case-preview-copy,
+  .feature-card p,
+  .connector-card p,
+  .pricing-card p,
+  .workflow-card p,
+  .wf-operator-note,
+  .operator-rail__hint,
+  .operator-rail__links a
+) {
+  color: var(--read-muted) !important;
+}
+
+body.paper-site :where(
+  a,
+  .nav a,
+  .footer-links a,
+  .feature-link,
+  .text-link,
+  .mobile-dock a
+) {
+  color: var(--read-link) !important;
+}
+
+body.paper-site :where(
+  a:hover,
+  .nav a:hover,
+  .nav a.is-active,
+  .footer-links a:hover,
+  .feature-link:hover,
+  .text-link:hover,
+  .mobile-dock a:hover
+) {
+  color: var(--read-link-hover) !important;
+}
+
+body.paper-site :where(
+  .top,
+  .operator-rail,
+  .workflow-card,
+  .feature-card,
+  .explore-card,
+  .connector-card,
+  .pricing-card,
+  .activity-entry,
+  .use-case-preview,
+  .flow-modal__content,
+  .mobile-dock
+) {
+  background-color: color-mix(in srgb, rgba(8, 16, 30, 0.82) 88%, transparent) !important;
+  border-color: rgba(173, 195, 230, 0.3) !important;
+}
