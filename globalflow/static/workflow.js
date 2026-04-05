@@ -13,6 +13,13 @@ const moreSignals = [
 ];
 let signalCursor = 0;
 
+const toneRules = [
+  { tone: "urgency", badge: "Urgent", pattern: /deadline|escal|risk|blocked|retry|alert/i },
+  { tone: "trust", badge: "Trusted", pattern: /billing|invoice|payment|compliance|audit/i },
+  { tone: "success", badge: "Stable", pattern: /complete|ready|healthy|resolved|live/i },
+  { tone: "insight", badge: "Insight", pattern: /coverage|telemetry|analysis|signal|ops/i },
+];
+
 function createRipple(host, x, y) {
   const rect = host.getBoundingClientRect();
   const size = Math.max(rect.width, rect.height);
@@ -110,6 +117,8 @@ function installOperatorCards() {
   let dragSource = null;
 
   cards().forEach((card) => {
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-grabbed", "false");
     card.addEventListener("click", () => {
       card.classList.toggle("is-expanded");
     });
@@ -145,6 +154,22 @@ function installOperatorCards() {
       const isAfter = event.clientY > cardRect.top + cardRect.height / 2;
       operatorGrid.insertBefore(dragSource, isAfter ? card.nextSibling : card);
     });
+
+    card.addEventListener("keydown", (event) => {
+      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      event.preventDefault();
+      const nodes = cards();
+      const idx = nodes.indexOf(card);
+      const next = event.key === "ArrowUp" ? idx - 1 : idx + 1;
+      if (next < 0 || next >= nodes.length) return;
+      const target = nodes[next];
+      if (event.key === "ArrowUp") {
+        operatorGrid.insertBefore(card, target);
+      } else {
+        operatorGrid.insertBefore(card, target.nextSibling);
+      }
+      card.focus();
+    });
   });
 }
 
@@ -155,6 +180,8 @@ function installBoardDragDrop() {
   const lanes = workflowBoard.querySelectorAll(".wf-lane");
 
   cards.forEach((card) => {
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-grabbed", "false");
     card.addEventListener("dragstart", () => {
       source = card;
       card.classList.add("is-dragging");
@@ -164,6 +191,24 @@ function installBoardDragDrop() {
       card.classList.remove("is-dragging");
       lanes.forEach((lane) => lane.classList.remove("is-drop-target"));
       source = null;
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      event.preventDefault();
+      const lane = card.closest(".wf-lane");
+      if (!lane) return;
+      const laneCards = Array.from(lane.querySelectorAll(".wf-lane-card"));
+      const current = laneCards.indexOf(card);
+      const nextIndex = event.key === "ArrowUp" ? current - 1 : current + 1;
+      if (nextIndex < 0 || nextIndex >= laneCards.length) return;
+      const target = laneCards[nextIndex];
+      if (event.key === "ArrowUp") {
+        lane.insertBefore(card, target);
+      } else {
+        lane.insertBefore(card, target.nextSibling);
+      }
+      card.focus();
     });
   });
 
@@ -187,6 +232,31 @@ function installBoardDragDrop() {
       if (chip) chip.textContent = String(count);
     });
   });
+}
+
+function detectTone(text) {
+  const match = toneRules.find((rule) => rule.pattern.test(String(text || "")));
+  return match || { tone: "trust", badge: "Trusted" };
+}
+
+function installAdaptiveStates() {
+  if (signalGrid) {
+    signalGrid.querySelectorAll(".wf-signal-cell").forEach((cell) => {
+      if (cell.dataset.tone) return;
+      const content = cell.textContent || "";
+      cell.dataset.tone = detectTone(content).tone;
+    });
+  }
+  if (operatorGrid) {
+    operatorGrid.querySelectorAll(".wf-operator-card").forEach((card) => {
+      const badge = card.querySelector(".wf-badge");
+      if (!badge) return;
+      const rule = detectTone(card.textContent || "");
+      if (!badge.dataset.state || badge.dataset.state === "ready") {
+        badge.dataset.state = rule.tone === "urgency" ? "review" : rule.tone === "success" ? "online" : "ready";
+      }
+    });
+  }
 }
 
 function syncOperatorBadgesFromActivity() {
@@ -223,4 +293,5 @@ installDensityControls();
 installInfiniteSignalScroll();
 installOperatorCards();
 installBoardDragDrop();
+installAdaptiveStates();
 window.setInterval(syncOperatorBadgesFromActivity, 6000);

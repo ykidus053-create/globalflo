@@ -58,6 +58,9 @@ const openFeedbackButton = document.getElementById("open-feedback");
 const feedbackModal = document.getElementById("feedback-modal");
 const feedbackForm = document.getElementById("feedback-form");
 const feedbackStatus = document.getElementById("feedback-status");
+const exploreGrid = document.querySelector(".explore-grid");
+const workflowCards = document.querySelectorAll(".workflow-card");
+const workflowBoard = document.getElementById("wf-board");
 
 const SESSION_KEY = "globalflow_session";
 const NEXT_STEPS_ORDER_KEY = "globalflow_next_steps_order";
@@ -84,6 +87,13 @@ let autopilotState = {
 };
 const inFlightTasks = new Map();
 const pollers = [];
+
+const toneRules = [
+  { tone: "urgency", badge: "Urgent", pattern: /deadline|overdue|escalat|risk|urgent|tax/i },
+  { tone: "trust", badge: "Trusted", pattern: /billing|invoice|payment|compliance|audit/i },
+  { tone: "success", badge: "Stable", pattern: /follow|complete|ready|owner|dispatch/i },
+  { tone: "insight", badge: "Insight", pattern: /document|file|classif|analy|report|ops/i },
+];
 
 function apiUrl(path) {
   if (!path) return API_BASE || "";
@@ -1187,6 +1197,81 @@ function scheduleSafe(task, interval) {
   return controller;
 }
 
+function detectTone(text) {
+  const source = String(text || "");
+  const match = toneRules.find((rule) => rule.pattern.test(source));
+  return match || { tone: "trust", badge: "Trusted" };
+}
+
+function installAdaptiveUseCaseStates() {
+  if (!useCaseCards?.length) return;
+  useCaseCards.forEach((card) => {
+    const title = card.dataset.previewHeadline || "";
+    const description = card.dataset.previewDescription || "";
+    const merged = `${title} ${description}`;
+    const rule = detectTone(merged);
+    card.dataset.tone = rule.tone;
+    let badge = card.querySelector(".ux-badge");
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "ux-badge";
+      const anchor = card.querySelector(".explore-card__body h3") || card.querySelector(".explore-card__body");
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(badge, anchor.nextSibling);
+      }
+    }
+    badge.dataset.state = rule.tone;
+    badge.textContent = rule.badge;
+  });
+}
+
+function installAdaptiveGridEngine() {
+  if (!exploreGrid || !("ResizeObserver" in window)) return;
+  const ro = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const width = entry.contentRect.width;
+      if (width < 640) {
+        document.documentElement.dataset.gridDensity = "mobile";
+      } else if (width < 980) {
+        document.documentElement.dataset.gridDensity = "compact";
+      } else {
+        document.documentElement.dataset.gridDensity = "cozy";
+      }
+    }
+  });
+  ro.observe(exploreGrid);
+}
+
+function installWorkflowKeyboardControls() {
+  if (!workflowBoard) return;
+  const cards = Array.from(workflowBoard.querySelectorAll(".wf-lane-card"));
+  cards.forEach((card, index) => {
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-grabbed", "false");
+    card.addEventListener("keydown", (event) => {
+      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      event.preventDefault();
+      const lane = card.closest(".wf-lane");
+      if (!lane) return;
+      const laneCards = Array.from(lane.querySelectorAll(".wf-lane-card"));
+      const current = laneCards.indexOf(card);
+      const nextIndex = event.key === "ArrowUp" ? current - 1 : current + 1;
+      if (nextIndex < 0 || nextIndex >= laneCards.length) return;
+      const target = laneCards[nextIndex];
+      if (event.key === "ArrowUp") {
+        lane.insertBefore(card, target);
+      } else {
+        lane.insertBefore(card, target.nextSibling);
+      }
+      card.focus();
+      showToast("Workflow order updated");
+    });
+    if (index === 0) {
+      card.setAttribute("aria-grabbed", "false");
+    }
+  });
+}
+
 async function bootstrap() {
   handleAuthReturn();
   applyDeviceClass();
@@ -1201,6 +1286,9 @@ async function bootstrap() {
   initFeatureDetailButtons();
   initSearchFilters();
   initFeedback();
+  installAdaptiveUseCaseStates();
+  installAdaptiveGridEngine();
+  installWorkflowKeyboardControls();
   setBillingMode(billingMode);
   await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
 }

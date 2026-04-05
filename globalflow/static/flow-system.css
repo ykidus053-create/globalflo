@@ -583,3 +583,209 @@ body.workflow-elite-page #immersive-modal .flow-modal__content {
     min-width: 0 !important;
   }
 }
+
+/* ==========================================================================
+   Elite UX system layer: adaptive grids, semantic states, consistency, a11y
+   ========================================================================== */
+body.paper-site {
+  --ux-trust: #4ea8ff;
+  --ux-urgency: #ff6b6b;
+  --ux-success: #32d296;
+  --ux-warning: #ffb54d;
+  --ux-insight: #7a87ff;
+  --ux-surface: rgba(10, 20, 38, 0.84);
+  --ux-surface-soft: rgba(12, 24, 46, 0.72);
+  --ux-border: rgba(163, 190, 236, 0.34);
+  --ux-fg: #f3f8ff;
+  --ux-muted: #bfd0e8;
+  --ux-focus: #8dc4ff;
+  --ux-motion-fast: 220ms;
+  --ux-motion-base: 320ms;
+  --ux-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Consistent interaction motion */
+body.paper-site .gf-card,
+body.paper-site .explore-card,
+body.paper-site .wf-signal-cell,
+body.paper-site .wf-operator-card,
+body.paper-site .wf-lane-card,
+body.paper-site .connector-card,
+body.paper-site .pricing-card {
+  transition:
+    transform var(--ux-motion-base) var(--ux-ease),
+    box-shadow var(--ux-motion-base) var(--ux-ease),
+    border-color var(--ux-motion-fast) ease,
+    background-color var(--ux-motion-fast) ease;
+}
+
+body.paper-site .gf-card:hover,
+body.paper-site .explore-card:hover,
+body.paper-site .wf-operator-card:hover,
+body.paper-site .wf-lane-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Adaptive grid algorithms (dense packing + responsive fitting) */
+body.paper-site .explore-grid,
+body.paper-site .feature-grid,
+body.paper-site .connectors-grid,
+body.paper-site .subscription-grid,
+body.paper-site .testimonial-grid,
+body.paper-site .trust-signal-grid,
+body.paper-site .wf-signal-grid,
+body.paper-site .wf-operator-grid,
+body.paper-site .wf-board,
+body.paper-site .wf-lanes {
+  display: grid;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+html[data-grid-density="compact"] body.paper-site .explore-grid,
+html[data-grid-density="compact"] body.paper-site .feature-grid,
+html[data-grid-density="compact"] body.paper-site .wf-signal-grid,
+html[data-grid-density="compact"] body.paper-site .wf-operator-grid {
+  gap: 14px;
+}
+
+html[data-grid-density="mobile"] body.paper-site .explore-grid,
+html[data-grid-density="mobile"] body.paper-site .feature-grid,
+html[data-grid-density="mobile"] body.paper-site .wf-signal-grid,
+html[data-grid-density="mobile"] body.paper-site .wf-operator-grid {
+  gap: 10px;
+}
+
+/* Performance: render only visible card content where supported */
+body.paper-site .gf-card,
+body.paper-site .explore-card,
+body.paper-site .wf-operator-card,
+body.paper-site .wf-lane-card,
+body.paper-site .connector-card,
+body.paper-site .pricing-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 260px;
+}
+
+/* Semantic state surfaces */
+body.paper-site .explore-card[data-tone="trust"],
+body.paper-site .wf-signal-cell[data-tone="trust"] {
+  border-color: color-mix(in srgb, var(--ux-trust) 45%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(78, 168, 255, 0.22);
+}
+
+body.paper-site .explore-card[data-tone="urgency"],
+body.paper-site .wf-signal-cell[data-tone="urgency"] {
+  border-color: color-mix(in srgb, var(--ux-urgency) 48%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(255, 107, 107, 0.2);
+}
+
+body.paper-site .explore-card[data-tone="success"],
+body.paper-site .wf-signal-cell[data-tone="success"] {
+  border-color: color-mix(in srgb, var(--ux-success) 44%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(50, 210, 150, 0.2);
+}
+
+body.paper-site .explore-card[data-tone="insight"],
+body.paper-site .wf-signal-cell[data-tone="insight"] {
+  border-color: color-mix(in srgb, var(--ux-insight) 48%, var(--ux-border));
+  box-shadow: 0 8px 26px rgba(122, 135, 255, 0.22);
+}
+
+/* Intelligent user card badges */
+body.paper-site .ux-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--ux-border);
+  background: var(--ux-surface-soft);
+  color: var(--ux-fg);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+body.paper-site .ux-badge[data-state="trust"] {
+  border-color: rgba(78, 168, 255, 0.6);
+  color: #e9f4ff;
+}
+
+body.paper-site .ux-badge[data-state="urgency"] {
+  border-color: rgba(255, 107, 107, 0.66);
+  color: #ffe8e8;
+}
+
+body.paper-site .ux-badge[data-state="success"] {
+  border-color: rgba(50, 210, 150, 0.62);
+  color: #e7fff5;
+}
+
+body.paper-site .ux-badge[data-state="insight"] {
+  border-color: rgba(122, 135, 255, 0.62);
+  color: #eff1ff;
+}
+
+/* Readability controls */
+body.paper-site .explore-card__body h3,
+body.paper-site .feature-card h3,
+body.paper-site .wf-operator-copy h3,
+body.paper-site .wf-lane-card {
+  color: var(--ux-fg) !important;
+}
+
+body.paper-site .explore-card__body p,
+body.paper-site .feature-card p,
+body.paper-site .wf-operator-note,
+body.paper-site .connector-card p {
+  color: var(--ux-muted) !important;
+}
+
+body.paper-site .explore-card__body p,
+body.paper-site .feature-card p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Keyboard + focus a11y */
+body.paper-site :where(a, button, input, summary, [draggable="true"]):focus-visible {
+  outline: 3px solid var(--ux-focus);
+  outline-offset: 2px;
+}
+
+body.paper-site [aria-live="polite"] {
+  min-height: 1em;
+}
+
+/* Workflow drag/drop active states */
+body.paper-site .wf-lane.is-drop-target,
+body.paper-site .wf-operator-card.is-drop-target {
+  border-color: rgba(141, 196, 255, 0.76) !important;
+  box-shadow: 0 0 0 2px rgba(141, 196, 255, 0.24);
+}
+
+body.paper-site .wf-lane-card.is-dragging,
+body.paper-site .wf-operator-card.is-dragging {
+  opacity: 0.76;
+  transform: scale(0.98);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  body.paper-site .gf-card,
+  body.paper-site .explore-card,
+  body.paper-site .wf-signal-cell,
+  body.paper-site .wf-operator-card,
+  body.paper-site .wf-lane-card,
+  body.paper-site .connector-card,
+  body.paper-site .pricing-card {
+    transition: none !important;
+    animation: none !important;
+  }
+}

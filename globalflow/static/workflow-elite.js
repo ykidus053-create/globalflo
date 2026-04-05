@@ -33,6 +33,12 @@ let queuedIndex = 0;
 let xrSession = null;
 let xrRefSpace = null;
 let xrGl = null;
+const toneRules = [
+  { tone: "urgency", pattern: /deadline|risk|blocked|escal|retry|alert/i },
+  { tone: "trust", pattern: /billing|invoice|payment|audit|compliance/i },
+  { tone: "success", pattern: /complete|ready|stable|live|healthy/i },
+  { tone: "insight", pattern: /analysis|signal|coverage|telemetry|ops/i },
+];
 
 function toast(message) {
   const el = document.getElementById("toast");
@@ -102,6 +108,7 @@ function installOperatorDnD() {
   let source = null;
 
   cards().forEach((card) => {
+    card.setAttribute("tabindex", "0");
     card.addEventListener("dragstart", () => {
       source = card;
       card.classList.add("is-dragging");
@@ -125,6 +132,23 @@ function installOperatorDnD() {
       operatorGrid.insertBefore(source, placeAfter ? card.nextSibling : card);
       toast("Operator priority updated");
     });
+
+    card.addEventListener("keydown", (event) => {
+      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      event.preventDefault();
+      const nodes = cards();
+      const idx = nodes.indexOf(card);
+      const next = event.key === "ArrowUp" ? idx - 1 : idx + 1;
+      if (next < 0 || next >= nodes.length) return;
+      const target = nodes[next];
+      if (event.key === "ArrowUp") {
+        operatorGrid.insertBefore(card, target);
+      } else {
+        operatorGrid.insertBefore(card, target.nextSibling);
+      }
+      card.focus();
+      toast("Operator priority updated");
+    });
   });
 }
 
@@ -135,6 +159,7 @@ function installBoardDnD() {
   const cards = Array.from(workflowBoard.querySelectorAll(".wf-lane-card"));
 
   cards.forEach((card) => {
+    card.setAttribute("tabindex", "0");
     card.addEventListener("dragstart", () => {
       source = card;
       card.classList.add("is-dragging");
@@ -143,6 +168,25 @@ function installBoardDnD() {
       card.classList.remove("is-dragging");
       lanes.forEach((lane) => lane.classList.remove("is-drop-target"));
       source = null;
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      event.preventDefault();
+      const lane = card.closest(".wf-lane");
+      if (!lane) return;
+      const laneCards = Array.from(lane.querySelectorAll(".wf-lane-card"));
+      const current = laneCards.indexOf(card);
+      const nextIndex = event.key === "ArrowUp" ? current - 1 : current + 1;
+      if (nextIndex < 0 || nextIndex >= laneCards.length) return;
+      const target = laneCards[nextIndex];
+      if (event.key === "ArrowUp") {
+        lane.insertBefore(card, target);
+      } else {
+        lane.insertBefore(card, target.nextSibling);
+      }
+      card.focus();
+      toast("Workflow lane updated");
     });
   });
 
@@ -162,6 +206,26 @@ function installBoardDnD() {
       if (badge) badge.textContent = String(count);
       toast("Workflow lane updated");
     });
+  });
+}
+
+function detectTone(text) {
+  const source = String(text || "");
+  const match = toneRules.find((rule) => rule.pattern.test(source));
+  return match ? match.tone : "trust";
+}
+
+function installAdaptiveStates() {
+  document.querySelectorAll(".wf-signal-cell").forEach((cell) => {
+    if (!cell.dataset.tone) {
+      cell.dataset.tone = detectTone(cell.textContent || "");
+    }
+  });
+  document.querySelectorAll(".wf-operator-card .wf-badge").forEach((badge) => {
+    if (!badge.dataset.state || badge.dataset.state === "ready") {
+      const tone = detectTone(badge.closest(".wf-operator-card")?.textContent || "");
+      badge.dataset.state = tone === "urgency" ? "review" : tone === "success" ? "online" : "ready";
+    }
   });
 }
 
@@ -462,6 +526,7 @@ installOperatorDnD();
 installBoardDnD();
 installEventFeedLoader();
 installHeroActions();
+installAdaptiveStates();
 installDepthParallax();
 installLaserPointer();
 installImmersiveControls();
