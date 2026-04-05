@@ -1176,20 +1176,6 @@ async def ai_audit_ui(payload: Dict[str, Any]):
     return {
         "score": score,
         "findings": findings,
-        "next_steps": [
-            "Prioritize unresolved contrast failures in high-traffic views.",
-            "Validate focus order on navigation and workflow controls.",
-            "Run a manual screen-reader pass for critical funnels.",
-            "Run UCD cycle: empathize users, define friction, ideate variants, prototype, then test.",
-            "Track SUS/NPS/CES each sprint and ship only when thresholds improve.",
-        ],
-        "implementation_loop": [
-            "Step 1 (Empathize): collect pain points from behavior + session evidence.",
-            "Step 2 (Define): convert evidence into exact problem statements.",
-            "Step 3 (Prototype): ship responsive variants with reusable components.",
-            "Step 4 (Test): run heuristic review + SUS/NPS/CES checks.",
-            "Step 5 (Polish): fix WCAG and handoff updated design tokens.",
-        ],
     }
 
 

@@ -881,10 +881,6 @@ async function runAccessibilityMethod() {
           ]
         : []),
       ...(feedbackLines.length ? ["Feedback KPI snapshot:", ...feedbackLines.map((line) => `- ${line}`)] : []),
-      "Next steps:",
-      ...((data.next_steps || []).map((s) => `- ${s}`)),
-      "Implementation loop:",
-      ...((data.implementation_loop || []).map((s) => `- ${s}`)),
     ];
     if (aiAuditOutput) aiAuditOutput.textContent = formatLines(lines);
   } catch (error) {
