@@ -33,6 +33,10 @@ let queuedIndex = 0;
 let xrSession = null;
 let xrRefSpace = null;
 let xrGl = null;
+let xrMode = "none";
+let inlineFallbackRaf = null;
+let inlineFallbackActive = false;
+let inlineFallbackYaw = 0;
 const toneRules = [
   { tone: "urgency", pattern: /deadline|risk|blocked|escal|retry|alert/i },
   { tone: "trust", pattern: /billing|invoice|payment|audit|compliance/i },
@@ -417,19 +421,38 @@ function toggleVRButtons(inSession) {
 
 async function ensureXRSupport() {
   if (!("xr" in navigator) || !navigator.xr) {
-    setVRStatus("WebXR not available on this device/browser.");
-    if (enterVRButton) enterVRButton.disabled = true;
-    if (exitVRButton) exitVRButton.disabled = true;
-    return false;
+    xrMode = "inline-fallback";
+    setVRStatus("WebXR unavailable. Inline immersive mode is ready.");
+    toggleVRButtons(false);
+    return true;
   }
-  const supported = await navigator.xr.isSessionSupported("immersive-vr");
-  if (!supported) {
-    setVRStatus("Immersive VR session is not supported here.");
-    if (enterVRButton) enterVRButton.disabled = true;
-    if (exitVRButton) exitVRButton.disabled = true;
-    return false;
+
+  const supportsImmersiveVR = await navigator.xr.isSessionSupported("immersive-vr").catch(() => false);
+  if (supportsImmersiveVR) {
+    xrMode = "immersive-vr";
+    setVRStatus("Immersive VR ready. Connect headset and click Enter VR.");
+    toggleVRButtons(false);
+    return true;
   }
-  setVRStatus("VR ready. Connect headset and click Enter VR.");
+
+  const supportsImmersiveAR = await navigator.xr.isSessionSupported("immersive-ar").catch(() => false);
+  if (supportsImmersiveAR) {
+    xrMode = "immersive-ar";
+    setVRStatus("Immersive AR available on this device. Click Enter VR to start.");
+    toggleVRButtons(false);
+    return true;
+  }
+
+  const supportsInline = await navigator.xr.isSessionSupported("inline").catch(() => false);
+  if (supportsInline) {
+    xrMode = "inline";
+    setVRStatus("Inline XR mode ready.");
+    toggleVRButtons(false);
+    return true;
+  }
+
+  xrMode = "inline-fallback";
+  setVRStatus("Native XR sessions not available. Inline immersive mode is ready.");
   toggleVRButtons(false);
   return true;
 }
@@ -467,10 +490,18 @@ function renderXRFrame(time, frame) {
 }
 
 async function enterVR() {
-  if (!("xr" in navigator) || !navigator.xr || xrSession) return;
+  if (xrSession || inlineFallbackActive) return;
+
+  if (xrMode === "inline-fallback" || !("xr" in navigator) || !navigator.xr) {
+    startInlineFallback();
+    return;
+  }
+
   try {
-    xrSession = await navigator.xr.requestSession("immersive-vr", {
-      requiredFeatures: ["local-floor"],
+    const requestedMode = xrMode === "immersive-ar" ? "immersive-ar" : xrMode === "inline" ? "inline" : "immersive-vr";
+    const requiredFeatures = requestedMode === "inline" ? [] : ["local-floor"];
+    xrSession = await navigator.xr.requestSession(requestedMode, {
+      requiredFeatures,
       optionalFeatures: ["bounded-floor", "hand-tracking", "layers"],
     });
     xrSession.addEventListener("end", () => {
@@ -478,8 +509,8 @@ async function enterVR() {
       xrRefSpace = null;
       xrGl = null;
       toggleVRButtons(false);
-      setVRStatus("VR session ended.");
-      toast("VR session ended");
+      setVRStatus("XR session ended.");
+      toast("XR session ended");
     });
     xrSession.addEventListener("selectstart", () => toast("VR select start"));
     xrSession.addEventListener("selectend", () => toast("VR select end"));
@@ -490,25 +521,91 @@ async function enterVR() {
 
     await xrGl.makeXRCompatible();
     await xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, xrGl) });
-    xrRefSpace = await xrSession.requestReferenceSpace("local-floor");
+    xrRefSpace = await xrSession.requestReferenceSpace(requestedMode === "inline" ? "viewer" : "local-floor");
     toggleVRButtons(true);
-    setVRStatus("VR session active.");
-    toast("Entered VR");
+    setVRStatus(`XR session active (${requestedMode}).`);
+    toast(`Entered ${requestedMode}`);
     xrSession.requestAnimationFrame(renderXRFrame);
   } catch (error) {
-    setVRStatus(`VR start failed: ${error?.message || "unknown error"}`);
+    setVRStatus(`XR start failed: ${error?.message || "unknown error"}. Launching inline immersive mode.`);
     xrSession = null;
     xrRefSpace = null;
     xrGl = null;
     toggleVRButtons(false);
+    startInlineFallback();
   }
 }
 
 async function exitVR() {
-  if (!xrSession) return;
-  try {
-    await xrSession.end();
-  } catch (_) {}
+  if (xrSession) {
+    try {
+      await xrSession.end();
+    } catch (_) {}
+    return;
+  }
+  stopInlineFallback();
+}
+
+function drawInlineFallbackFrame() {
+  if (!inlineFallbackActive || !vrCanvas) return;
+  const gl = vrCanvas.getContext("2d");
+  if (!gl) return;
+
+  const width = vrCanvas.clientWidth || 640;
+  const height = vrCanvas.clientHeight || 240;
+  if (vrCanvas.width !== width) vrCanvas.width = width;
+  if (vrCanvas.height !== height) vrCanvas.height = height;
+
+  inlineFallbackYaw += 0.008;
+  const t = inlineFallbackYaw;
+  const cx = width * (0.5 + Math.cos(t) * 0.18);
+  const cy = height * (0.5 + Math.sin(t * 0.8) * 0.12);
+
+  const bg = gl.createLinearGradient(0, 0, width, height);
+  bg.addColorStop(0, "#061327");
+  bg.addColorStop(1, "#10294f");
+  gl.fillStyle = bg;
+  gl.fillRect(0, 0, width, height);
+
+  for (let i = 0; i < 14; i += 1) {
+    const depth = (i + 1) / 14;
+    const w = width * (0.1 + depth * 0.8);
+    const h = height * (0.06 + depth * 0.52);
+    const x = cx - w / 2 + Math.sin(t + i) * 10;
+    const y = cy - h / 2 + Math.cos(t * 0.7 + i) * 7;
+    gl.strokeStyle = `rgba(111,176,255,${0.1 + depth * 0.28})`;
+    gl.lineWidth = 1.5;
+    gl.strokeRect(x, y, w, h);
+  }
+
+  gl.fillStyle = "rgba(230,243,255,0.92)";
+  gl.font = "600 13px Manrope, sans-serif";
+  gl.fillText("Inline immersive mode active", 14, 22);
+  gl.fillStyle = "rgba(191,208,232,0.92)";
+  gl.fillText("WebXR headset mode unavailable on this device/browser.", 14, 42);
+
+  inlineFallbackRaf = requestAnimationFrame(drawInlineFallbackFrame);
+}
+
+function startInlineFallback() {
+  if (inlineFallbackActive) return;
+  inlineFallbackActive = true;
+  toggleVRButtons(true);
+  setVRStatus("Inline immersive mode active.");
+  toast("Entered inline immersive mode");
+  drawInlineFallbackFrame();
+}
+
+function stopInlineFallback() {
+  if (!inlineFallbackActive) return;
+  inlineFallbackActive = false;
+  if (inlineFallbackRaf) {
+    cancelAnimationFrame(inlineFallbackRaf);
+    inlineFallbackRaf = null;
+  }
+  toggleVRButtons(false);
+  setVRStatus("Inline immersive mode ended.");
+  toast("Exited inline immersive mode");
 }
 
 function installRealVR() {
