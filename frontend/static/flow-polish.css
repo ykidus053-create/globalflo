@@ -11,6 +11,12 @@
   --gf-body-max-read: 72ch;
   --gf-title-tight: 1.14;
   --gf-body-tight: 1.55;
+  --gf-card-radius: 18px;
+  --gf-card-border: 1px solid rgba(255, 255, 255, 0.12);
+  --gf-card-shadow: 0 12px 34px rgba(0, 0, 0, 0.24);
+  --gf-card-shadow-hover: 0 18px 46px rgba(0, 0, 0, 0.32);
+  --gf-card-heading-size: clamp(20px, 2.1vw, 28px);
+  --gf-card-body-size: clamp(15px, 1.2vw, 18px);
   overflow-x: clip;
 }
 
@@ -44,11 +50,174 @@
   overflow-wrap: anywhere;
 }
 
+.gf-polish :is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .hero-status-card,
+    .wf-ai-card,
+    .wf-operator-card,
+    .wf-lane-card,
+    .wf-signal-cell,
+    .connector-card,
+    .pricing-card,
+    .checkout-card,
+    .video-card-top,
+    .trust-card,
+    .stat-card,
+    .logo-pill,
+    .testimonial-card,
+    .endtoend-intro,
+    .endtoend-step,
+    .use-case-preview,
+    .user-card,
+    .founder-card,
+    .hero-proof-card,
+    .hero-trust-card,
+    .hero-media-card,
+    .wf-hero-copy,
+    .wf-hero-side,
+    .wf-governance,
+    .gf-card
+  ) {
+  border-radius: var(--gf-card-radius);
+  border: var(--gf-card-border);
+  box-shadow: var(--gf-card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: box-shadow 280ms ease, transform 280ms ease, border-color 280ms ease;
+}
+
+.gf-polish :is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .connector-card,
+    .pricing-card,
+    .checkout-card,
+    .trust-card,
+    .stat-card,
+    .testimonial-card,
+    .endtoend-step,
+    .use-case-preview,
+    .user-card,
+    .founder-card,
+    .gf-card
+  ):hover {
+  box-shadow: var(--gf-card-shadow-hover);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
 .gf-polish :is(.feature-card, .explore-card, .workflow-card, .connector-card, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .pricing-card, .hero-status-card) :is(p, li, span) {
   max-width: 100%;
   overflow-wrap: anywhere;
   word-break: break-word;
   line-height: var(--gf-body-tight);
+}
+
+.gf-polish :is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .connector-card,
+    .wf-ai-card,
+    .wf-operator-card,
+    .wf-lane-card,
+    .wf-signal-cell,
+    .pricing-card,
+    .hero-status-card,
+    .checkout-card,
+    .video-card-top,
+    .stat-card,
+    .trust-card,
+    .logo-pill,
+    .testimonial-card,
+    .endtoend-intro,
+    .endtoend-step,
+    .use-case-preview,
+    .user-card,
+    .founder-card,
+    .hero-proof-card,
+    .hero-trust-card,
+    .hero-media-card,
+    .wf-hero-copy,
+    .wf-hero-side,
+    .wf-governance,
+    .gf-card
+  ) :is(h2, h3, h4) {
+  font-size: var(--gf-card-heading-size);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  margin: 0 0 12px;
+  text-wrap: balance;
+}
+
+.gf-polish :is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .connector-card,
+    .wf-ai-card,
+    .wf-operator-card,
+    .wf-lane-card,
+    .wf-signal-cell,
+    .pricing-card,
+    .hero-status-card,
+    .checkout-card,
+    .video-card-top,
+    .stat-card,
+    .trust-card,
+    .logo-pill,
+    .testimonial-card,
+    .endtoend-intro,
+    .endtoend-step,
+    .use-case-preview,
+    .user-card,
+    .founder-card,
+    .hero-proof-card,
+    .hero-trust-card,
+    .hero-media-card,
+    .wf-hero-copy,
+    .wf-hero-side,
+    .wf-governance,
+    .gf-card
+  ) :is(p, li, small, .detail, .modal-note, .activity-detail, .user-card__meta, .user-card__hint) {
+  font-size: var(--gf-card-body-size);
+  line-height: 1.62;
+}
+
+.gf-polish :is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .connector-card,
+    .wf-ai-card,
+    .wf-operator-card,
+    .wf-lane-card,
+    .wf-signal-cell,
+    .pricing-card,
+    .hero-status-card,
+    .checkout-card,
+    .video-card-top,
+    .stat-card,
+    .trust-card,
+    .logo-pill,
+    .testimonial-card,
+    .endtoend-intro,
+    .endtoend-step,
+    .use-case-preview,
+    .user-card,
+    .founder-card,
+    .hero-proof-card,
+    .hero-trust-card,
+    .hero-media-card,
+    .wf-hero-copy,
+    .wf-hero-side,
+    .wf-governance,
+    .gf-card
+  ) > * + * {
+  margin-top: 12px;
 }
 
 .gf-polish :is(.hero h1, .wf-hero h1, .section-heading h2, .wf-section h2, .pricing h2, .capabilities h2) {
@@ -131,7 +300,7 @@
   }
 
   .gf-polish :is(.hero p, .lead, .section-heading p, .wf-hero-copy p, .wf-section p, .workflow-main p, .workflow-side p, .modal-note) {
-    font-size: clamp(15px, 3.8vw, 18px);
+    font-size: clamp(14px, 3.6vw, 17px);
     max-width: 100%;
   }
 
