@@ -95,6 +95,247 @@
   }
 }
 
+/* Final card readability lock: card text must never camouflage with card background */
+body.paper-site {
+  --card-surface: rgba(12, 24, 46, 0.9);
+  --card-surface-soft: rgba(16, 31, 58, 0.86);
+  --card-border: rgba(167, 196, 236, 0.32);
+  --card-fg-strong: #f6f9ff;
+  --card-fg-muted: #cfdef4;
+  --card-link: #b6d4ff;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) {
+  background: var(--card-surface) !important;
+  border-color: var(--card-border) !important;
+}
+
+body.paper-site :where(
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card
+):hover {
+  background: var(--card-surface-soft) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(h1, h2, h3, h4, h5, h6, strong, b, dt) {
+  color: var(--card-fg-strong) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(p, li, small, span, em, dd, label, pre) {
+  color: var(--card-fg-muted) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(a) {
+  color: var(--card-link) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(input, textarea, select) {
+  color: var(--card-fg-strong) !important;
+  background: rgba(8, 18, 35, 0.9) !important;
+  border-color: rgba(161, 193, 238, 0.38) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .connector-card,
+  .pricing-card,
+  .testimonial-card,
+  .trust-card,
+  .stat-card,
+  .use-case-preview,
+  .hero-proof-card,
+  .hero-status-card,
+  .hero-trust-card,
+  .hero-media-card,
+  .endtoend-intro,
+  .endtoend-step,
+  .founder-card,
+  .founder-proof,
+  .logo-pill,
+  .checkout-card,
+  .checkout-panel,
+  .checkout-hero-panel,
+  .payment-panel,
+  .account-panel,
+  .user-card,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .wf-vr-panel
+) :where(input, textarea, select)::placeholder {
+  color: rgba(206, 221, 246, 0.86) !important;
+}
+
 /* UX runtime states (from site-boot) */
 body.paper-site.ux-density-compact :where(
   .gf-card-grid,
