@@ -12,9 +12,14 @@
   --gf-title-tight: 1.14;
   --gf-body-tight: 1.55;
   --gf-card-radius: 18px;
-  --gf-card-border: 1px solid rgba(255, 255, 255, 0.12);
-  --gf-card-shadow: 0 12px 34px rgba(0, 0, 0, 0.24);
-  --gf-card-shadow-hover: 0 18px 46px rgba(0, 0, 0, 0.32);
+  --gf-video-navy: #081a3a;
+  --gf-video-cyan: #5fe7ff;
+  --gf-video-gold: #d9ba73;
+  --gf-video-ink: #ebf3ff;
+  --gf-video-magenta: #ff4f8b;
+  --gf-card-border: 1px solid rgba(95, 231, 255, 0.24);
+  --gf-card-shadow: 0 12px 34px rgba(8, 26, 58, 0.32);
+  --gf-card-shadow-hover: 0 20px 54px rgba(8, 26, 58, 0.46);
   --gf-card-heading-size: clamp(20px, 2.1vw, 28px);
   --gf-card-body-size: clamp(15px, 1.2vw, 18px);
   overflow-x: clip;
@@ -106,7 +111,7 @@
   ):hover {
   box-shadow: var(--gf-card-shadow-hover);
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(95, 231, 255, 0.44);
 }
 
 .gf-polish :is(.feature-card, .explore-card, .workflow-card, .connector-card, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .pricing-card, .hero-status-card) :is(p, li, span) {
@@ -223,11 +228,58 @@
 .gf-polish :is(.hero h1, .wf-hero h1, .section-heading h2, .wf-section h2, .pricing h2, .capabilities h2) {
   line-height: var(--gf-title-tight);
   letter-spacing: -0.01em;
+  background: linear-gradient(180deg, var(--gf-video-ink) 0%, #d8e7ff 62%, #9fd4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .gf-polish :is(.hero p, .lead, .section-heading p, .wf-hero-copy p, .wf-section p, .workflow-main p, .workflow-side p, .modal-note) {
   max-width: var(--gf-body-max-read);
   line-height: var(--gf-body-tight);
+  color: rgba(235, 243, 255, 0.9);
+}
+
+.gf-polish :is(
+    .feature-card,
+    .explore-card,
+    .workflow-card,
+    .connector-card,
+    .wf-ai-card,
+    .wf-operator-card,
+    .wf-lane-card,
+    .wf-signal-cell,
+    .pricing-card,
+    .hero-status-card,
+    .checkout-card,
+    .video-card-top,
+    .stat-card,
+    .trust-card,
+    .logo-pill,
+    .testimonial-card,
+    .endtoend-intro,
+    .endtoend-step,
+    .use-case-preview,
+    .user-card,
+    .founder-card,
+    .hero-proof-card,
+    .hero-trust-card,
+    .hero-media-card,
+    .wf-hero-copy,
+    .wf-hero-side,
+    .wf-governance,
+    .gf-card
+  )::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(95, 231, 255, 0.18) 0%, rgba(95, 231, 255, 0) 56%),
+    radial-gradient(120% 90% at 0% 100%, rgba(217, 186, 115, 0.15) 0%, rgba(217, 186, 115, 0) 58%),
+    linear-gradient(180deg, rgba(8, 26, 58, 0.38), rgba(8, 26, 58, 0.08));
+  opacity: 0.85;
 }
 
 .gf-polish :is(.workflow-grid, .connectors-grid, .pricing-grid, .explore-grid, .wf-signal-grid, .wf-operator-grid, .wf-board) {

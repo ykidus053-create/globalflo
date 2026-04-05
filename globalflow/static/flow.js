@@ -522,6 +522,63 @@ function initAmbientVfx() {
   });
 }
 
+function installStorytellingImmersion() {
+  const storySections = Array.from(document.querySelectorAll("main > section, main > .wf-section, main > .workflow"));
+  if (!storySections.length) return;
+
+  storySections.forEach((section, index) => {
+    section.classList.add("story-stage");
+    section.style.setProperty("--story-index", String(index));
+  });
+
+  if (prefersReducedMotion) {
+    storySections.forEach((section) => section.classList.add("is-story-focus"));
+    return;
+  }
+
+  const root = document.documentElement;
+  let rafId = 0;
+
+  const updateStoryState = () => {
+    rafId = 0;
+    const vh = window.innerHeight || 1;
+    let maxProgress = 0;
+    let bestScore = -1;
+    let focusIndex = 0;
+
+    storySections.forEach((section, index) => {
+      const rect = section.getBoundingClientRect();
+      const centerDistance = Math.abs(rect.top + rect.height * 0.5 - vh * 0.5);
+      const focusScore = Math.max(0, 1 - centerDistance / vh);
+      if (focusScore > bestScore) {
+        bestScore = focusScore;
+        focusIndex = index;
+      }
+
+      const enters = vh - rect.top;
+      const progress = Math.max(0, Math.min(1, enters / (vh + rect.height)));
+      section.style.setProperty("--story-progress", progress.toFixed(4));
+      maxProgress = Math.max(maxProgress, progress);
+    });
+
+    storySections.forEach((section, index) => {
+      section.classList.toggle("is-story-focus", index === focusIndex);
+    });
+
+    root.style.setProperty("--story-depth", maxProgress.toFixed(4));
+    root.style.setProperty("--story-focus", String(focusIndex));
+  };
+
+  const requestUpdate = () => {
+    if (rafId) return;
+    rafId = window.requestAnimationFrame(updateStoryState);
+  };
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate, { passive: true });
+  requestUpdate();
+}
+
 function initMagneticButtons() {
   return;
 }
@@ -1403,6 +1460,7 @@ async function bootstrap() {
   installAdaptiveUseCaseStates();
   installPersonalizedLayout();
   installAdaptiveGridEngine();
+  installStorytellingImmersion();
   installWorkflowKeyboardControls();
   setBillingMode(billingMode);
   await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
