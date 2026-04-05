@@ -742,6 +742,29 @@ function applyDeviceClass() {
   document.documentElement.dataset.device = device;
 }
 
+function triggerHaptic(pattern = 12) {
+  if (!("vibrate" in navigator)) return;
+  try {
+    navigator.vibrate(pattern);
+  } catch (_) {}
+}
+
+function installMicrointeractionHaptics() {
+  const hapticTargets = document.querySelectorAll(
+    ".primary, .ghost, .wf-toggle, .wf-density, .connector-card summary, .pricing-card button, .workflow-card button"
+  );
+  hapticTargets.forEach((target) => {
+    target.addEventListener(
+      "pointerdown",
+      () => {
+        if (prefersReducedMotion) return;
+        triggerHaptic(10);
+      },
+      { passive: true }
+    );
+  });
+}
+
 function loadNextStepsOrder() {
   try {
     const raw = window.localStorage.getItem(NEXT_STEPS_ORDER_KEY);
@@ -1225,6 +1248,31 @@ function installAdaptiveUseCaseStates() {
   });
 }
 
+function installPersonalizedLayout() {
+  const segment = document.body?.dataset?.userSegment || "general";
+  if (!segment || segment === "general" || !exploreGrid) return;
+  const cards = Array.from(exploreGrid.querySelectorAll("[data-preview-domain]"));
+  if (!cards.length) return;
+
+  const scored = cards
+    .map((card) => {
+      const domain = normalizeText(card.dataset.previewDomain || "");
+      let score = 0;
+      if (segment === "finance" && /bill|invoice|payment|recovery/.test(domain)) score = 3;
+      if (segment === "workflow" && /ops|orchestration|workflow|call/.test(domain)) score = 3;
+      if (segment === "compliance" && /tax|compliance|readiness|audit/.test(domain)) score = 3;
+      if (segment === "documents" && /document|file|control|uploads/.test(domain)) score = 3;
+      return { card, score };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  scored.forEach(({ card }) => exploreGrid.appendChild(card));
+  const leader = scored[0];
+  if (leader && leader.score > 0) {
+    leader.card.classList.add("is-personalized-focus");
+  }
+}
+
 function installAdaptiveGridEngine() {
   if (!exploreGrid || !("ResizeObserver" in window)) return;
   const ro = new ResizeObserver((entries) => {
@@ -1249,10 +1297,21 @@ function installWorkflowKeyboardControls() {
     card.setAttribute("tabindex", "0");
     card.setAttribute("aria-grabbed", "false");
     card.addEventListener("keydown", (event) => {
-      if (!["ArrowUp", "ArrowDown"].includes(event.key)) return;
+      if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
       event.preventDefault();
       const lane = card.closest(".wf-lane");
       if (!lane) return;
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        const lanes = Array.from(workflowBoard.querySelectorAll(".wf-lane"));
+        const laneIndex = lanes.indexOf(lane);
+        const targetIndex = event.key === "ArrowLeft" ? laneIndex - 1 : laneIndex + 1;
+        if (targetIndex < 0 || targetIndex >= lanes.length) return;
+        const targetLane = lanes[targetIndex];
+        targetLane.appendChild(card);
+        card.focus();
+        showToast("Workflow lane updated");
+        return;
+      }
       const laneCards = Array.from(lane.querySelectorAll(".wf-lane-card"));
       const current = laneCards.indexOf(card);
       const nextIndex = event.key === "ArrowUp" ? current - 1 : current + 1;
@@ -1286,7 +1345,9 @@ async function bootstrap() {
   initFeatureDetailButtons();
   initSearchFilters();
   initFeedback();
+  installMicrointeractionHaptics();
   installAdaptiveUseCaseStates();
+  installPersonalizedLayout();
   installAdaptiveGridEngine();
   installWorkflowKeyboardControls();
   setBillingMode(billingMode);

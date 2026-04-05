@@ -251,6 +251,47 @@ body.paper-site :where(.aurora, .grid-overlay, .vfx-cursor) {
   }
 }
 
+/* 2025 visual system additions: glass layer + personalization emphasis */
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card
+) {
+  backdrop-filter: blur(10px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
+}
+
+body.paper-site .is-personalized-focus {
+  border-color: rgba(138, 188, 255, 0.62) !important;
+  box-shadow: 0 0 0 1px rgba(138, 188, 255, 0.42), 0 14px 32px rgba(8, 19, 38, 0.52) !important;
+}
+
+body.paper-site.ux-segment-finance .is-personalized-focus::after,
+body.paper-site.ux-segment-workflow .is-personalized-focus::after,
+body.paper-site.ux-segment-compliance .is-personalized-focus::after,
+body.paper-site.ux-segment-documents .is-personalized-focus::after {
+  content: "Recommended";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #e9f3ff;
+  background: rgba(51, 113, 201, 0.42);
+  border: 1px solid rgba(164, 200, 246, 0.5);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
 /* Final card readability lock: card text must never camouflage with card background */
 body.paper-site {
   --card-surface: rgba(12, 24, 46, 0.9);

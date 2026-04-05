@@ -16,6 +16,13 @@ function safeParse(value, fallback) {
 function loadUxState() {
   const base = {
     interactions: {},
+    intents: {
+      finance: 0,
+      workflow: 0,
+      compliance: 0,
+      documents: 0,
+    },
+    userSegment: "general",
     scans: 0,
     contrastWarnings: 0,
     preferredDensity: "comfortable",
@@ -93,6 +100,34 @@ function installVariantSystem() {
   postTelemetry("variant_assigned", { variant: chosen });
 }
 
+function inferIntentFromAction(actionId) {
+  const id = String(actionId || "").toLowerCase();
+  if (/bill|invoice|payment|checkout|price/.test(id)) return "finance";
+  if (/workflow|board|operator|launch|autopilot|route|task/.test(id)) return "workflow";
+  if (/tax|compliance|audit|risk/.test(id)) return "compliance";
+  if (/file|doc|upload|folder|classif/.test(id)) return "documents";
+  return "general";
+}
+
+function deriveUserSegment(state) {
+  const intents = state.intents || {};
+  const ranked = Object.entries(intents)
+    .filter(([key]) => key !== "general")
+    .sort((a, b) => Number(b[1]) - Number(a[1]));
+  if (!ranked.length || ranked[0][1] <= 0) return "general";
+  return ranked[0][0];
+}
+
+function applyPersonalization(state) {
+  const body = document.body;
+  if (!body) return;
+  const segment = deriveUserSegment(state);
+  state.userSegment = segment;
+  body.dataset.userSegment = segment;
+  body.classList.remove("ux-segment-finance", "ux-segment-workflow", "ux-segment-compliance", "ux-segment-documents");
+  if (segment !== "general") body.classList.add(`ux-segment-${segment}`);
+}
+
 function applyAdaptiveDensity(state) {
   const body = document.body;
   if (!body) return;
@@ -113,8 +148,18 @@ function installInteractionTelemetry(state) {
           node.textContent?.trim()?.slice(0, 40) ||
           "unknown";
         state.interactions[id] = (state.interactions[id] || 0) + 1;
+        const intent = inferIntentFromAction(id);
+        if (intent !== "general") {
+          state.intents[intent] = (state.intents[intent] || 0) + 1;
+        }
+        applyPersonalization(state);
         saveUxState(state);
-        postTelemetry("interaction", { action: id, count: state.interactions[id] });
+        postTelemetry("interaction", {
+          action: id,
+          count: state.interactions[id],
+          intent,
+          user_segment: state.userSegment,
+        });
       },
       { passive: true }
     );
@@ -191,9 +236,10 @@ function installUxEngine() {
   const state = loadUxState();
   installVariantSystem();
   applyResponsiveUxState(state);
+  applyPersonalization(state);
   installInteractionTelemetry(state);
   runAccessibilityPass(state);
-  postTelemetry("page_view", { density: state.preferredDensity });
+  postTelemetry("page_view", { density: state.preferredDensity, user_segment: state.userSegment });
   window.addEventListener(
     "resize",
     () => {
