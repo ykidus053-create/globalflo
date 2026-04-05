@@ -789,3 +789,69 @@ body.paper-site .wf-operator-card.is-dragging {
     animation: none !important;
   }
 }
+
+/* Final phone-only text-fit lock (no laptop/tablet changes) */
+@media (max-width: 767px) {
+  body.paper-site .explore-grid,
+  body.paper-site .feature-grid,
+  body.paper-site .connectors-grid,
+  body.paper-site .subscription-grid,
+  body.paper-site .testimonial-grid,
+  body.paper-site .trust-signal-grid,
+  body.paper-site .wf-signal-grid,
+  body.paper-site .wf-operator-grid,
+  body.paper-site .wf-board,
+  body.paper-site .wf-lanes,
+  body.paper-site .workflow-grid,
+  body.paper-site .proof-grid,
+  body.paper-site .use-case-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  body.paper-site .gf-card,
+  body.paper-site .explore-card,
+  body.paper-site .feature-card,
+  body.paper-site .connector-card,
+  body.paper-site .pricing-card,
+  body.paper-site .testimonial-card,
+  body.paper-site .trust-card,
+  body.paper-site .workflow-card,
+  body.paper-site .wf-signal-cell,
+  body.paper-site .wf-operator-card,
+  body.paper-site .wf-lane-card,
+  body.paper-site .use-case-preview {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.paper-site .gf-card *,
+  body.paper-site .explore-card *,
+  body.paper-site .feature-card *,
+  body.paper-site .connector-card *,
+  body.paper-site .pricing-card *,
+  body.paper-site .workflow-card *,
+  body.paper-site .wf-signal-cell *,
+  body.paper-site .wf-operator-card *,
+  body.paper-site .wf-lane-card *,
+  body.paper-site .use-case-preview * {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    hyphens: auto;
+  }
+
+  body.paper-site .explore-card__body p,
+  body.paper-site .feature-card p,
+  body.paper-site .connector-card p,
+  body.paper-site .workflow-card p,
+  body.paper-site .use-case-preview p {
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+}
