@@ -18,11 +18,17 @@
     --gf-card-heading-size: clamp(20px, 2.1vw, 28px);
     --gf-card-body-size: clamp(15px, 1.2vw, 18px);
 
-    --gf-video-navy: #28282b;
-    --gf-video-cyan: #232323;
-    --gf-video-gold: #1b1813;
     --gf-video-ink: #f3f3f4;
-    --gf-video-magenta: #121213;
+    --gf-card-bg-a: #28282b;
+    --gf-card-bg-b: #0f0b0a;
+    --gf-card-text: #f3f3f4;
+    --gf-card-muted: #d3d3d6;
+    --bg: #0f0b0a;
+    --bg-soft: #28282b;
+    --panel: #28282b;
+    --panel-strong: #0f0b0a;
+    --text: #f3f3f4;
+    --muted: #d3d3d6;
     --gf-page-bg: #0f0b0a;
     --gf-page-bg-alt: #121213;
     --gf-overlay-dot: rgba(243, 243, 244, 0.08);
@@ -36,10 +42,7 @@
   .gf-polish,
   .gf-polish.payment-body,
   .gf-polish.checkout-body {
-    background:
-      radial-gradient(circle at 18% 10%, rgba(40, 40, 43, 0.56), transparent 42%),
-      radial-gradient(circle at 82% 14%, rgba(27, 24, 19, 0.52), transparent 44%),
-      linear-gradient(180deg, var(--gf-page-bg-alt) 0%, var(--gf-page-bg) 100%);
+    background: linear-gradient(180deg, var(--gf-page-bg-alt) 0%, var(--gf-page-bg) 100%);
   }
 
   .gf-polish :is(.aurora, .grid-overlay, .backdrop) {
@@ -120,6 +123,7 @@
     position: relative;
     overflow: hidden;
     padding: var(--gf-card-padding-mobile);
+    background: var(--gf-card-bg-a);
     border-radius: var(--gf-card-radius);
     border: var(--gf-card-border);
     box-shadow: var(--gf-card-shadow);
@@ -163,11 +167,8 @@
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    background:
-      radial-gradient(120% 90% at 100% 0%, rgba(40, 40, 43, 0.32) 0%, rgba(40, 40, 43, 0) 56%),
-      radial-gradient(120% 90% at 0% 100%, rgba(27, 24, 19, 0.35) 0%, rgba(27, 24, 19, 0) 58%),
-      linear-gradient(180deg, rgba(18, 18, 19, 0.48), rgba(18, 18, 19, 0.14));
-    opacity: 0.85;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+    opacity: 0.5;
   }
 
   .gf-polish :is(
@@ -226,6 +227,7 @@
     letter-spacing: -0.015em;
     margin: 0 0 12px;
     text-wrap: balance;
+    color: var(--gf-card-text);
   }
 
   .gf-polish :is(
@@ -258,6 +260,7 @@
       .wf-hero-side,
       .wf-governance
     ) :is(p, li, span, small, .detail, .modal-note, .activity-detail, .user-card__meta, .user-card__hint) {
+    color: var(--gf-card-muted);
     max-width: 100%;
     overflow-wrap: anywhere;
     word-break: break-word;
@@ -296,6 +299,53 @@
       .wf-governance
     ) > * + * {
     margin-top: 12px;
+  }
+
+  .gf-polish :is(
+      .feature-grid,
+      .explore-grid,
+      .workflow-grid,
+      .connectors-grid,
+      .pricing-grid,
+      .trust-signal-grid,
+      .testimonial-grid,
+      .logo-bar,
+      .subscription-grid,
+      .wf-signal-grid,
+      .wf-operator-grid,
+      .activity-feed
+    ) > :is(
+      .gf-card,
+      .feature-card,
+      .explore-card,
+      .workflow-card,
+      .hero-status-card,
+      .wf-ai-card,
+      .wf-operator-card,
+      .wf-signal-cell,
+      .connector-card,
+      .pricing-card,
+      .trust-card,
+      .stat-card,
+      .logo-pill,
+      .testimonial-card,
+      .endtoend-intro,
+      .endtoend-step,
+      .use-case-preview,
+      .user-card,
+      .founder-card,
+      .hero-proof-card,
+      .hero-trust-card,
+      .hero-media-card,
+      .wf-hero-copy,
+      .wf-hero-side,
+      .wf-governance
+    ):nth-child(even) {
+    background: var(--gf-card-bg-b);
+  }
+
+  .gf-polish .wf-lane-card:nth-child(even) {
+    background: var(--gf-card-bg-b);
   }
 
   @media (min-width: 1024px) and (max-width: 1599px) {
