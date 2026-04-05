@@ -95,6 +95,162 @@
   }
 }
 
+/* ==========================================================================
+   Research-driven UX layer:
+   Art direction + motion pacing + first-glance hierarchy
+   ========================================================================== */
+body.paper-site {
+  --rd-accent-a: #7cb4ff;
+  --rd-accent-b: #6ee7c8;
+  --rd-accent-c: #a5b4fc;
+  --rd-zone-hero: rgba(7, 17, 34, 0.9);
+  --rd-zone-primary: rgba(10, 22, 43, 0.84);
+  --rd-zone-secondary: rgba(13, 27, 51, 0.72);
+  --rd-text-strong: #f7fbff;
+  --rd-text-soft: #d7e6fd;
+  --rd-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rd-t-fast: 200ms;
+  --rd-t-base: 300ms;
+  --rd-t-slow: 400ms;
+}
+
+/* Art direction: abstract non-literal atmosphere */
+body.paper-site #hero,
+body.paper-site .wf-hero {
+  position: relative;
+  isolation: isolate;
+}
+
+body.paper-site #hero::before,
+body.paper-site .wf-hero::before {
+  content: "";
+  position: absolute;
+  inset: -6% -2% auto -2%;
+  height: 72%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(34rem 20rem at 12% 18%, color-mix(in srgb, var(--rd-accent-a) 36%, transparent), transparent 68%),
+    radial-gradient(28rem 18rem at 86% 22%, color-mix(in srgb, var(--rd-accent-c) 32%, transparent), transparent 70%),
+    radial-gradient(26rem 16rem at 56% 5%, color-mix(in srgb, var(--rd-accent-b) 24%, transparent), transparent 72%);
+  filter: saturate(110%);
+}
+
+/* Hierarchy zones: first-glance comprehension */
+body.paper-site :where(.hero-copy--unified, .wf-hero-copy, .hero-status-card, .wf-hero-side, .operator-rail) {
+  background: var(--rd-zone-hero) !important;
+  border-color: rgba(170, 197, 236, 0.38) !important;
+}
+
+body.paper-site :where(
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card
+) {
+  background: var(--rd-zone-primary) !important;
+  border-color: rgba(164, 196, 238, 0.34) !important;
+}
+
+body.paper-site :where(.trust-card, .testimonial-card, .use-case-preview, .logo-pill, .endtoend-step) {
+  background: var(--rd-zone-secondary) !important;
+}
+
+body.paper-site :where(
+  .hero-copy--unified h1,
+  .wf-hero-copy h1,
+  .hero-proof-card h2,
+  .section-heading h2,
+  .wf-section h2
+) {
+  color: var(--rd-text-strong) !important;
+}
+
+body.paper-site :where(
+  .lead,
+  .hero-copy--unified p,
+  .wf-hero-copy p,
+  .section-heading p,
+  .hero-trust-list p,
+  .activity-detail
+) {
+  color: var(--rd-text-soft) !important;
+}
+
+/* Motion polish: single pacing system across components */
+body.paper-site :where(
+  .primary,
+  .ghost,
+  .wf-toggle,
+  .wf-density,
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .motion-track,
+  .reveal-ready,
+  .gf-fade
+) {
+  transition-timing-function: var(--rd-ease) !important;
+}
+
+body.paper-site :where(
+  .primary,
+  .ghost,
+  .wf-toggle,
+  .wf-density,
+  .feature-link,
+  .text-link,
+  .footer-link-button
+) {
+  transition-duration: var(--rd-t-fast) !important;
+}
+
+body.paper-site :where(
+  .gf-card,
+  .explore-card,
+  .feature-card,
+  .workflow-card,
+  .pricing-card,
+  .connector-card,
+  .activity-entry,
+  .wf-signal-cell,
+  .wf-operator-card,
+  .wf-lane-card,
+  .wf-ai-card,
+  .motion-track,
+  .reveal-ready,
+  .gf-fade
+) {
+  transition-duration: var(--rd-t-base) !important;
+}
+
+/* Fatigue control: slow decorative loops, keep functional motion responsive */
+body.paper-site :where(.aurora, .grid-overlay, .vfx-cursor) {
+  animation-duration: 30s !important;
+  animation-timing-function: linear !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.paper-site :where(.aurora, .grid-overlay, .vfx-cursor, .motion-track, .gf-fade, .reveal-ready) {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* Final card readability lock: card text must never camouflage with card background */
 body.paper-site {
   --card-surface: rgba(12, 24, 46, 0.9);
