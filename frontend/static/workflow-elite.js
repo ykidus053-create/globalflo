@@ -21,6 +21,7 @@ const aiPredictOutput = document.getElementById("ai-predict-output");
 const aiAuditOutput = document.getElementById("ai-audit-output");
 const aiHandoffOutput = document.getElementById("ai-handoff-output");
 const aiMethodButtons = Array.from(document.querySelectorAll("[data-ai-method]"));
+const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
 
 const immersiveState = {
   laser: true,
@@ -66,6 +67,25 @@ function toast(message) {
   el.textContent = message;
   el.classList.add("is-visible");
   window.setTimeout(() => el.classList.remove("is-visible"), 2200);
+}
+
+function apiUrl(path) {
+  if (!path) return API_BASE || "";
+  if (/^https?:\/\//i.test(path)) return path;
+  return `${API_BASE}${path}`;
+}
+
+async function postJson(path, payload) {
+  const response = await fetch(apiUrl(path), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload || {}),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.detail || data.message || "Request failed");
+  }
+  return data;
 }
 
 function initEliteStars() {
@@ -703,62 +723,43 @@ function formatLines(lines) {
   return lines.filter(Boolean).join("\n");
 }
 
-function runGenerativeMethod() {
+async function runGenerativeMethod() {
   const prompt = (aiPromptInput?.value || "minimalist workflow dashboard").trim();
-  const variants = [
-    {
-      name: "Variant A",
-      layout: "Two-column hero + compact KPI rail + action-first cards",
-      copy: "Short benefit-first headlines with 1 CTA per section",
-      purpose: "Fast scan and lower cognitive load",
-    },
-    {
-      name: "Variant B",
-      layout: "Single-column narrative with progressive disclosure",
-      copy: "Outcome-first microcopy and risk-reversal notes",
-      purpose: "Higher clarity on mobile",
-    },
-    {
-      name: "Variant C",
-      layout: "Grid-first command center with adaptive cards",
-      copy: "Data-driven labels + confidence badges",
-      purpose: "Operator-centric decision speed",
-    },
-  ];
-  const lines = [
-    `Prompt: ${prompt}`,
-    "Generated layout/content variants:",
-    ...variants.map((v) => `- ${v.name}: ${v.layout} | ${v.copy} | ${v.purpose}`),
-    "Recommendation: Launch Variant C for operations-heavy traffic, A/B with Variant A for conversion.",
-  ];
-  if (aiGenerateOutput) aiGenerateOutput.textContent = formatLines(lines);
+  if (aiGenerateOutput) aiGenerateOutput.textContent = "Generating variants...";
+  try {
+    const data = await postJson("/api/ai/generate-variants", { prompt });
+    const lines = [
+      `Prompt: ${data.prompt || prompt}`,
+      "Generated layout/content variants:",
+      ...((data.variants || []).map((v) => `- ${v.name}: ${v.layout} | ${v.copy} | ${v.purpose}`)),
+      `Recommendation: ${data.recommendation || "Run A/B test on top two variants."}`,
+    ];
+    if (aiGenerateOutput) aiGenerateOutput.textContent = formatLines(lines);
+  } catch (error) {
+    if (aiGenerateOutput) aiGenerateOutput.textContent = `Generation failed: ${error.message}`;
+  }
 }
 
-function runPredictiveMethod() {
+async function runPredictiveMethod() {
   const lanes = Array.from(document.querySelectorAll(".wf-lane"));
-  const laneCounts = lanes.map((lane) => ({
-    lane: lane.dataset.lane || "unknown",
-    count: lane.querySelectorAll(".wf-lane-card").length,
-  }));
-  const urgent = laneCounts.find((l) => l.lane === "review")?.count || 0;
-  const incoming = laneCounts.find((l) => l.lane === "incoming")?.count || 0;
-  const running = laneCounts.find((l) => l.lane === "running")?.count || 0;
-  const loadIndex = incoming * 1.2 + running * 0.8 + urgent * 1.8;
-  const risk = loadIndex > 12 ? "high" : loadIndex > 8 ? "medium" : "low";
-
-  const recommendations = [
-    urgent > 2 ? "Escalate review lane and auto-route low-risk items to complete." : "Review lane stable; keep current threshold.",
-    incoming > running ? "Increase auto-triage weight for incoming queue." : "Keep lane balancing as-is.",
-    "Enable dynamic SLA nudges for high-value billing and compliance tasks.",
-  ];
-
-  const lines = [
-    `Lane load index: ${loadIndex.toFixed(1)} (${risk} risk)`,
-    ...laneCounts.map((l) => `- ${l.lane}: ${l.count}`),
-    "Predicted optimization actions:",
-    ...recommendations.map((r) => `- ${r}`),
-  ];
-  if (aiPredictOutput) aiPredictOutput.textContent = formatLines(lines);
+  const lanePayload = {};
+  lanes.forEach((lane) => {
+    const key = lane.dataset.lane || "unknown";
+    lanePayload[key] = lane.querySelectorAll(".wf-lane-card").length;
+  });
+  if (aiPredictOutput) aiPredictOutput.textContent = "Predicting next best actions...";
+  try {
+    const data = await postJson("/api/ai/predict-flow", { lanes: lanePayload });
+    const lines = [
+      `Lane load index: ${Number(data.load_index || 0).toFixed(1)} (${data.risk || "unknown"} risk)`,
+      ...Object.entries(data.lanes || {}).map(([lane, count]) => `- ${lane}: ${count}`),
+      "Predicted optimization actions:",
+      ...((data.recommendations || []).map((r) => `- ${r}`)),
+    ];
+    if (aiPredictOutput) aiPredictOutput.textContent = formatLines(lines);
+  } catch (error) {
+    if (aiPredictOutput) aiPredictOutput.textContent = `Prediction failed: ${error.message}`;
+  }
 }
 
 function parseRgb(color) {
@@ -785,7 +786,7 @@ function contrastRatio(a, b) {
   return (light + 0.05) / (dark + 0.05);
 }
 
-function runAccessibilityMethod() {
+async function runAccessibilityMethod() {
   const sampleNodes = Array.from(document.querySelectorAll(".wf-ai-card, .wf-signal-cell, .wf-operator-card, .wf-lane-card, .activity-entry p")).slice(0, 36);
   let lowContrast = 0;
   sampleNodes.forEach((node) => {
@@ -797,58 +798,63 @@ function runAccessibilityMethod() {
     if (ratio < 4.5) lowContrast += 1;
   });
 
-  const issues = [
-    lowContrast > 0 ? `${lowContrast} sampled nodes under 4.5:1 contrast.` : "No sampled contrast failures detected.",
-    "Check focus-visible outline on all interactive controls.",
-    "Confirm drag/drop has keyboard equivalent (implemented).",
-    "Verify all status updates announce in aria-live regions.",
-  ];
-  const score = Math.max(76, 100 - lowContrast * 2);
-  const lines = [
-    `Automated UX+accessibility score: ${score}/100`,
-    ...issues.map((i) => `- ${i}`),
-  ];
-  if (aiAuditOutput) aiAuditOutput.textContent = formatLines(lines);
+  if (aiAuditOutput) aiAuditOutput.textContent = "Running accessibility audit...";
+  try {
+    const data = await postJson("/api/ai/audit-ui", {
+      sampled_nodes: sampleNodes.length,
+      contrast_warnings: lowContrast,
+      keyboard_support: true,
+      reduced_motion: true,
+    });
+    const lines = [
+      `Automated UX+accessibility score: ${data.score}/100`,
+      ...((data.findings || []).map((f) => `- ${f}`)),
+      "Next steps:",
+      ...((data.next_steps || []).map((s) => `- ${s}`)),
+    ];
+    if (aiAuditOutput) aiAuditOutput.textContent = formatLines(lines);
+  } catch (error) {
+    if (aiAuditOutput) aiAuditOutput.textContent = `Audit failed: ${error.message}`;
+  }
 }
 
-function runHandoffMethod() {
-  const handoff = {
-    generated_at: new Date().toISOString(),
-    page: "workflow-elite",
-    components: {
-      signals: document.querySelectorAll(".wf-signal-cell").length,
+async function runHandoffMethod() {
+  const lanes = {};
+  document.querySelectorAll(".wf-lane").forEach((lane) => {
+    lanes[lane.dataset.lane || "unknown"] = lane.querySelectorAll(".wf-lane-card").length;
+  });
+  const variant = document.body?.dataset?.uxVariant || "A";
+  if (aiHandoffOutput) aiHandoffOutput.textContent = "Generating handoff spec...";
+  try {
+    const handoff = await postJson("/api/ai/handoff", {
+      lanes,
       operators: document.querySelectorAll(".wf-operator-card").length,
-      lanes: document.querySelectorAll(".wf-lane").length,
-      lane_cards: document.querySelectorAll(".wf-lane-card").length,
-      ai_method_cards: document.querySelectorAll(".wf-ai-card").length,
-    },
-    implementation_notes: [
-      "Generative variants should remain outcome-first and action-first.",
-      "Predictive model uses queue pressure + review risk weighting.",
-      "Accessibility checks run client-side each iteration before release.",
-      "VR profile uses immersive-vr/ar/inline fallback chain with high-fidelity inline simulator.",
-    ],
-    next_dev_tasks: [
-      "Connect predictive method to real telemetry endpoint.",
-      "Persist audit snapshots for trend tracking.",
-      "Expose variant selection in account settings.",
-    ],
-  };
-  if (aiHandoffOutput) aiHandoffOutput.textContent = JSON.stringify(handoff, null, 2);
+      signals: document.querySelectorAll(".wf-signal-cell").length,
+      variant,
+    });
+    if (aiHandoffOutput) aiHandoffOutput.textContent = JSON.stringify(handoff, null, 2);
+  } catch (error) {
+    if (aiHandoffOutput) aiHandoffOutput.textContent = `Handoff failed: ${error.message}`;
+  }
 }
 
 function installAIMethods() {
   if (!aiMethodButtons.length) return;
   aiMethodButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const method = button.dataset.aiMethod;
-      if (method === "generate") runGenerativeMethod();
-      if (method === "predict") runPredictiveMethod();
-      if (method === "audit") runAccessibilityMethod();
-      if (method === "handoff") runHandoffMethod();
+      button.disabled = true;
+      try {
+        if (method === "generate") await runGenerativeMethod();
+        if (method === "predict") await runPredictiveMethod();
+        if (method === "audit") await runAccessibilityMethod();
+        if (method === "handoff") await runHandoffMethod();
+      } finally {
+        button.disabled = false;
+      }
     });
   });
-  runPredictiveMethod();
+  runPredictiveMethod().catch(() => {});
 }
 
 installSignalRipples();

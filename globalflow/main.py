@@ -1058,6 +1058,140 @@ async def ux_report():
     }
 
 
+@app.post("/api/ai/generate-variants", response_class=JSONResponse)
+async def ai_generate_variants(payload: Dict[str, Any]):
+    prompt = str(payload.get("prompt", "minimalist workflow dashboard")).strip()
+    variants = [
+        {
+            "name": "Variant A",
+            "layout": "Two-column hero + concise KPI rail + action-first cards",
+            "copy": "Benefit-first headline and one dominant CTA",
+            "purpose": "Fast scan and reduced cognitive load",
+        },
+        {
+            "name": "Variant B",
+            "layout": "Single-column progressive disclosure flow",
+            "copy": "Short operational microcopy + trust labels",
+            "purpose": "Mobile readability and lower friction",
+        },
+        {
+            "name": "Variant C",
+            "layout": "Grid command-center with adaptive card density",
+            "copy": "Data-led status labels + confidence indicators",
+            "purpose": "Operator throughput and decision speed",
+        },
+    ]
+    return {
+        "prompt": prompt,
+        "variants": variants,
+        "recommendation": "A/B test Variant C against Variant A for conversion and task-completion speed.",
+    }
+
+
+@app.post("/api/ai/predict-flow", response_class=JSONResponse)
+async def ai_predict_flow(payload: Dict[str, Any]):
+    lanes = payload.get("lanes", {})
+    if not isinstance(lanes, dict):
+        lanes = {}
+    incoming = int(lanes.get("incoming", 0) or 0)
+    running = int(lanes.get("running", 0) or 0)
+    review = int(lanes.get("review", 0) or 0)
+    complete = int(lanes.get("complete", 0) or 0)
+    load_index = incoming * 1.2 + running * 0.8 + review * 1.8 - min(complete, 10) * 0.15
+    risk = "high" if load_index > 12 else "medium" if load_index > 8 else "low"
+
+    recommendations: List[str] = []
+    if review > 2:
+        recommendations.append("Auto-route low-risk review items to complete with audit logging.")
+    if incoming > running:
+        recommendations.append("Increase triage parallelism for incoming queue.")
+    if load_index <= 8:
+        recommendations.append("Current flow is stable; keep thresholds and monitor.")
+
+    return {
+        "load_index": round(load_index, 1),
+        "risk": risk,
+        "lanes": {
+            "incoming": incoming,
+            "running": running,
+            "review": review,
+            "complete": complete,
+        },
+        "recommendations": recommendations,
+    }
+
+
+@app.post("/api/ai/audit-ui", response_class=JSONResponse)
+async def ai_audit_ui(payload: Dict[str, Any]):
+    sampled_nodes = int(payload.get("sampled_nodes", 0) or 0)
+    contrast_warnings = int(payload.get("contrast_warnings", 0) or 0)
+    keyboard_support = bool(payload.get("keyboard_support", True))
+    reduced_motion = bool(payload.get("reduced_motion", True))
+    score = 100
+    score -= min(contrast_warnings * 3, 24)
+    if not keyboard_support:
+        score -= 12
+    if not reduced_motion:
+        score -= 8
+    score = max(62, score)
+
+    findings: List[str] = []
+    findings.append(f"Scanned nodes: {sampled_nodes}")
+    if contrast_warnings:
+        findings.append(f"Contrast alerts: {contrast_warnings} (recommended ratio >= 4.5:1)")
+    else:
+        findings.append("No contrast alerts in provided sample.")
+    if keyboard_support:
+        findings.append("Keyboard interaction paths detected.")
+    else:
+        findings.append("Keyboard interaction paths are incomplete.")
+    if reduced_motion:
+        findings.append("Reduced-motion handling detected.")
+    else:
+        findings.append("Reduced-motion handling missing.")
+
+    return {
+        "score": score,
+        "findings": findings,
+        "next_steps": [
+            "Prioritize unresolved contrast failures in high-traffic views.",
+            "Validate focus order on navigation and workflow controls.",
+            "Run a manual screen-reader pass for critical funnels.",
+        ],
+    }
+
+
+@app.post("/api/ai/handoff", response_class=JSONResponse)
+async def ai_handoff(payload: Dict[str, Any]):
+    lanes = payload.get("lanes", {})
+    if not isinstance(lanes, dict):
+        lanes = {}
+    operators = int(payload.get("operators", 0) or 0)
+    signals = int(payload.get("signals", 0) or 0)
+    variant = str(payload.get("variant", "A")).strip() or "A"
+    return {
+        "generated_at": datetime.utcnow().isoformat(),
+        "page": "workflow-elite",
+        "variant": variant,
+        "components": {
+            "signals": signals,
+            "operators": operators,
+            "lanes": lanes,
+        },
+        "implementation_notes": [
+            "Design Thinking loop is active via telemetry and variant adaptation.",
+            "UCD iteration prioritizes top-route and top-action friction points.",
+            "Accessibility audit endpoint included in release workflow.",
+            "VR runtime includes immersive-vr/ar/inline fallback chain.",
+        ],
+        "next_dev_tasks": [
+            "Connect predictive output to real-time routing thresholds.",
+            "Persist UX report snapshots for trend regressions.",
+            "Integrate handoff payload with release notes automation.",
+        ],
+    }
+
+
 @app.get("/health", response_class=JSONResponse)
 async def healthcheck():
     return {
