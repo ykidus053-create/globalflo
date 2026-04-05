@@ -12,14 +12,14 @@
   --gf-title-tight: 1.14;
   --gf-body-tight: 1.55;
   --gf-card-radius: 18px;
-  --gf-video-navy: #081a3a;
-  --gf-video-cyan: #5fe7ff;
-  --gf-video-gold: #d9ba73;
-  --gf-video-ink: #ebf3ff;
-  --gf-video-magenta: #ff4f8b;
-  --gf-card-border: 1px solid rgba(95, 231, 255, 0.24);
-  --gf-card-shadow: 0 12px 34px rgba(8, 26, 58, 0.32);
-  --gf-card-shadow-hover: 0 20px 54px rgba(8, 26, 58, 0.46);
+  --gf-video-navy: #28282b;
+  --gf-video-cyan: #232323;
+  --gf-video-gold: #1b1813;
+  --gf-video-ink: #f3f3f4;
+  --gf-video-magenta: #121213;
+  --gf-card-border: 1px solid rgba(243, 243, 244, 0.16);
+  --gf-card-shadow: 0 12px 34px rgba(15, 11, 10, 0.42);
+  --gf-card-shadow-hover: 0 20px 54px rgba(15, 11, 10, 0.56);
   --gf-card-heading-size: clamp(20px, 2.1vw, 28px);
   --gf-card-body-size: clamp(15px, 1.2vw, 18px);
   overflow-x: clip;
@@ -111,7 +111,7 @@
   ):hover {
   box-shadow: var(--gf-card-shadow-hover);
   transform: translateY(-2px);
-  border-color: rgba(95, 231, 255, 0.44);
+  border-color: rgba(243, 243, 244, 0.28);
 }
 
 .gf-polish :is(.feature-card, .explore-card, .workflow-card, .connector-card, .wf-ai-card, .wf-operator-card, .wf-lane-card, .wf-signal-cell, .pricing-card, .hero-status-card) :is(p, li, span) {
@@ -228,7 +228,7 @@
 .gf-polish :is(.hero h1, .wf-hero h1, .section-heading h2, .wf-section h2, .pricing h2, .capabilities h2) {
   line-height: var(--gf-title-tight);
   letter-spacing: -0.01em;
-  background: linear-gradient(180deg, var(--gf-video-ink) 0%, #d8e7ff 62%, #9fd4ff 100%);
+  background: linear-gradient(180deg, var(--gf-video-ink) 0%, #d8d8da 62%, #bdbdc3 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -237,7 +237,7 @@
 .gf-polish :is(.hero p, .lead, .section-heading p, .wf-hero-copy p, .wf-section p, .workflow-main p, .workflow-side p, .modal-note) {
   max-width: var(--gf-body-max-read);
   line-height: var(--gf-body-tight);
-  color: rgba(235, 243, 255, 0.9);
+  color: rgba(243, 243, 244, 0.86);
 }
 
 .gf-polish :is(
@@ -276,9 +276,9 @@
   border-radius: inherit;
   pointer-events: none;
   background:
-    radial-gradient(120% 90% at 100% 0%, rgba(95, 231, 255, 0.18) 0%, rgba(95, 231, 255, 0) 56%),
-    radial-gradient(120% 90% at 0% 100%, rgba(217, 186, 115, 0.15) 0%, rgba(217, 186, 115, 0) 58%),
-    linear-gradient(180deg, rgba(8, 26, 58, 0.38), rgba(8, 26, 58, 0.08));
+    radial-gradient(120% 90% at 100% 0%, rgba(40, 40, 43, 0.32) 0%, rgba(40, 40, 43, 0) 56%),
+    radial-gradient(120% 90% at 0% 100%, rgba(27, 24, 19, 0.35) 0%, rgba(27, 24, 19, 0) 58%),
+    linear-gradient(180deg, rgba(18, 18, 19, 0.48), rgba(18, 18, 19, 0.14));
   opacity: 0.85;
 }
 
