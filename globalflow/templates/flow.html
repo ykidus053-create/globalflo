@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="{{ url_for('static', filename='flow.css') }}">
+  <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}">
 </head>
 <body>
 
@@ -60,9 +60,9 @@
         <p>Telemetry feeds orchestration, retries, and intelligent alerts.</p>
       </div>
 
-      <div class="grid-auto">
+      <div class="grid-auto gf-card-grid">
         {% for stat in stats %}
-        <article class="card">
+        <article class="card gf-card">
           <header class="card-title">
             {{ stat.label }}
             <span class="status-pill">{{ stat.key }}</span>
@@ -82,9 +82,9 @@
         <p>Critical workflows, continuously monitored. Each agent manages a lane and escalates when needed.</p>
       </div>
 
-      <div class="grid-auto">
+      <div class="grid-auto gf-card-grid">
         {% for agent in agents %}
-        <article class="card">
+        <article class="card gf-card {% if loop.first %}is-personalized-focus{% endif %}">
           <header class="card-title">
             {{ agent.name }}
           </header>

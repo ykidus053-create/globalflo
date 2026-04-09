@@ -3,13 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< HEAD
-    <meta name="theme-color" content="#161b18" />
-    <title>Checkout | GlobalFlow</title>
-=======
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#000000" />
 <title>Checkout | GlobalFlow</title>
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,18 +12,6 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-<<<<<<< HEAD
-    <link rel="stylesheet" href="/static/flow.css" />
-  </head>
-  <body class="checkout-body">
-    <div class="aurora"></div>
-    <header class="top">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-=======
     <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
     <link rel="stylesheet" href="/static/flow-system.css?v={{ asset_version }}" />
     <link rel="stylesheet" href="/static/flow-polish.css?v={{ asset_version }}" />
@@ -46,7 +29,6 @@
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
         </div>
         <div class="brand-copy">
           <span>GlobalFlow Checkout</span>
@@ -55,20 +37,13 @@
       </div>
       <nav class="nav" aria-label="Checkout navigation">
         <a href="/">Home</a>
-<<<<<<< HEAD
-=======
         <a href="/workflow-elite">Workflow</a>
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
         <a href="/account">Account</a>
         <a href="#invoice-form">Invoice</a>
       </nav>
     </header>
 
-<<<<<<< HEAD
-    <main class="checkout-page">
-=======
     <main id="main-content" class="checkout-page" tabindex="-1">
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
       <section class="checkout-hero">
         <div class="checkout-hero-copy">
           {% if tier.badge %}
@@ -79,11 +54,7 @@
           <p class="lead">{{ tier.description }}</p>
           <p class="price">{{ tier.monthly_price }}</p>
           <div class="checkout-links">
-<<<<<<< HEAD
-            {% for method, url in tier.payment_links.items() %}
-=======
             {% for method, url in tier_payment_links.items() %}
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
             <a class="primary small" href="{{ url }}" rel="noreferrer">Pay with {{ method.capitalize() }}</a>
             {% endfor %}
           </div>
@@ -101,10 +72,7 @@
           <h2>Request an invoice</h2>
           <p>Use this flow when procurement or finance needs a manual ticket.</p>
           <form id="invoice-form" data-method="{{ tier.preferred_method }}" data-tier-id="{{ tier.id }}">
-<<<<<<< HEAD
-=======
             <input type="hidden" name="payment_ticket" value="{{ preferred_payment_ticket }}" />
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
             <label>
               Business email
               <input name="email" type="email" placeholder="ops@company.com" required />
@@ -155,11 +123,7 @@
       <p>Your workspace unlocks after billing confirmation and connector validation.</p>
     </footer>
 
-<<<<<<< HEAD
-    <script type="module" src="/static/checkout.js"></script>
-=======
     <script src="/static/site-boot.js?v={{ asset_version }}" defer></script>
     <script type="module" src="/static/checkout.js?v={{ asset_version }}"></script>
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
   </body>
 </html>

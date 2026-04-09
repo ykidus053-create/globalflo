@@ -127,13 +127,7 @@ if (form) {
         if (response.ok) {
           status.textContent = "Profile updated.";
           const theme = body?.settings?.theme;
-<<<<<<< HEAD
-          if (theme === "light" || theme === "dark") {
-            document.documentElement.setAttribute("data-theme", theme);
-          }
-=======
           applyTheme(theme);
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
         } else {
           status.textContent = body.detail || "Could not update yet.";
         }

@@ -1,5 +1,5 @@
 /* GlobalFlow design system layer: tokens + motion + rhythm + contrast */
-
+@import url("glass-ai.css");
 :root {
   --ds-bg: #080808;
   --ds-surface: rgba(255, 255, 255, 0.03);

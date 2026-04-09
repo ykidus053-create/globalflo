@@ -684,11 +684,9 @@ USER_SETTINGS: Dict[str, str] = {
     "daily_digest": "enabled",
     "alert_channel": "Slack",
     "automation_tier": "High trust",
-<<<<<<< HEAD
-    "theme": "light",
-=======
+
     "theme": "dark",
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
 }
 
 SUBSCRIPTIONS: List[Dict[str, str]] = []
@@ -913,17 +911,12 @@ def _tasks_list() -> List[Dict[str, str]]:
 
 
 def _active_theme() -> str:
-<<<<<<< HEAD
-    theme = USER_SETTINGS.get("theme", "light")
-    return theme if theme in {"light", "dark"} else "light"
 
-@app.get("/", response_class=HTMLResponse)
-=======
     theme = USER_SETTINGS.get("theme", "dark")
     return theme if theme in {"light", "dark"} else "dark"
 
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
 async def homepage(request: Request):
     if request.method == "HEAD":
         return Response(status_code=200)
@@ -947,9 +940,7 @@ async def homepage(request: Request):
             "payment_methods": PAYMENT_METHODS,
             "toolkit": AUTOMATION_TOOLS,
             "autopilot": autopilot_status,
-<<<<<<< HEAD
-            "theme": _active_theme(),
-=======
+
             "connectors": CONNECTORS,
             "subscription_tiers": [
                 {**tier, "payment_links": _secure_tier_payment_links(request, tier)}
@@ -968,7 +959,7 @@ async def homepage(request: Request):
                 "google": bool(_provider_credentials("google")["client_id"] and _provider_credentials("google")["client_secret"]),
                 "apple": bool(_provider_credentials("apple")["client_id"] and _provider_credentials("apple")["client_secret"]),
             },
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
         },
     )
 
@@ -1489,14 +1480,13 @@ async def payment_portal(request: Request, method: str):
         {
             "request": request,
             "portal": portal,
-<<<<<<< HEAD
-=======
+
             "payment_ticket": payment_ticket,
             "payment_verified": payment_verified,
             "payment_auth_error": payment_auth_error,
             "preset_tier": preset_tier,
             "preset_amount": preset_amount,
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
             "theme": _active_theme(),
         },
     )
@@ -1504,12 +1494,7 @@ async def payment_portal(request: Request, method: str):
 
 @app.get("/checkout/{tier_id}", response_class=HTMLResponse)
 async def checkout_page(request: Request, tier_id: str):
-<<<<<<< HEAD
-    tier = SUBSCRIPTION_LOOKUP.get(tier_id)
-    if not tier:
-        raise HTTPException(status_code=404, detail="Subscription tier unavailable")
-    return templates.TemplateResponse(
-=======
+
     tier = SUBSCRIPTION_LOOKUP.get(tier_id.lower())
     if not tier:
         raise HTTPException(status_code=404, detail="Subscription tier unavailable")
@@ -1528,18 +1513,16 @@ async def checkout_page(request: Request, tier_id: str):
             }
         )
     return _render_html(
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
         "checkout.html",
         {
             "request": request,
             "tier": tier,
-<<<<<<< HEAD
-            "payment_methods": PAYMENT_METHODS,
-=======
+
             "tier_payment_links": secure_links,
             "preferred_payment_ticket": preferred_ticket,
             "payment_methods": payment_methods_secure,
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
             "theme": _active_theme(),
         },
     )
@@ -1749,11 +1732,9 @@ async def toolkit_action(tool_id: str):
 
 @app.get("/privacy", response_class=HTMLResponse)
 async def privacy_policy(request: Request):
-<<<<<<< HEAD
-    return templates.TemplateResponse(
-=======
+
     return _render_html(
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
         "privacy.html",
         {
             "request": request,
@@ -1765,11 +1746,9 @@ async def privacy_policy(request: Request):
 
 @app.get("/terms", response_class=HTMLResponse)
 async def terms_of_service(request: Request):
-<<<<<<< HEAD
-    return templates.TemplateResponse(
-=======
+
     return _render_html(
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
         "terms.html",
         {
             "request": request,
@@ -1891,13 +1870,10 @@ async def update_account(payload: Dict[str, str]):
     USER_SETTINGS["daily_digest"] = payload.get("daily_digest", USER_SETTINGS["daily_digest"])
     USER_SETTINGS["alert_channel"] = payload.get("alert_channel", USER_SETTINGS["alert_channel"])
     USER_SETTINGS["automation_tier"] = payload.get("automation_tier", USER_SETTINGS["automation_tier"])
-<<<<<<< HEAD
-    theme = payload.get("theme", USER_SETTINGS.get("theme", "light"))
-    USER_SETTINGS["theme"] = theme if theme in {"light", "dark"} else "light"
-=======
+
     theme = payload.get("theme", USER_SETTINGS.get("theme", "dark"))
     USER_SETTINGS["theme"] = theme if theme in {"light", "dark"} else "dark"
->>>>>>> 459184d7c4294adab122c10d6b8a726200a957cc
+
     return {"status": "updated", "profile": USER_PROFILE, "settings": USER_SETTINGS}
 
 
