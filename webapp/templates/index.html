@@ -1,23 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Elite Coding Console</title>
-    <link rel="stylesheet" href="/static/style.css" />
-  </head>
-  <body>
-    <div class="hero">
-      <p class="eyebrow">Coding++ Philosophy</p>
-      <h1>Launch a production-ready control room</h1>
-      <p class="lead">
-        FastAPI + modern tooling deliver the fastest feedback loop—automation,
-        insight, and deployment in a single page.
-      </p>
-      <a class="primary" href="/docs">Explore the FastAPI docs</a>
-    </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Launch a production-ready control room. Fast feedback loop, automation, and deployment.">
+  <title>GlobalFlo | Elite Coding Console</title>
 
-    <section class="metrics">
+  <!-- Google Fonts for Typography Scalability (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- Semantic Main Wrapper -->
+  <main>
+    <!-- Hero Section -->
+    <header class="hero" aria-labelledby="hero-title">
+      <span class="eyebrow" aria-label="Philosophy highlight">Coding++ Philosophy</span>
+      <h1 id="hero-title">Launch a production-ready control room</h1>
+      <p class="lead">
+        FastAPI + modern tooling deliver the fastest feedback loop—automation, insight, and deployment in a single page. Built for scale, optimized for zero latency.
+      </p>
+      
+      <!-- Micro-interaction / Haptic Trigger Focus -->
+      <a href="https://raw.githubusercontent.com/docs" class="primary-btn" aria-label="Explore the FastAPI documentation">
+        Explore the Docs
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </header>
+
+    <!-- Metrics Section (Variables handled via jinja if applicable) -->
+    <section class="metrics" aria-label="System Metrics Overview">
       {% for metric in metrics %}
       <article class="metric-card">
         <p class="metric-value">{{ metric.value }}</p>
@@ -27,17 +45,26 @@
       {% endfor %}
     </section>
 
-    <section class="highlights">
-      <h2>Architectural highlights</h2>
+    <!-- Architecture Highlights -->
+    <section class="highlights" aria-labelledby="highlights-title">
+      <h2 id="highlights-title">Architectural highlights</h2>
       <ul>
         {% for item in highlights %}
         <li>{{ item }}</li>
         {% endfor %}
       </ul>
+      
+      <p class="lead" style="margin-top: var(--spacing-4); font-size: var(--text-sm);">
+        Powered by FastAPI, Prefect/Temporal, Transformers, LangChain, and Polars.
+      </p>
     </section>
 
-    <footer>
-      <p>Powered by FastAPI, Prefect/Temporal, Transformers, LangChain, and Polars.</p>
-    </footer>
-  </body>
+  </main>
+
+  <!-- Semantic Footer -->
+  <footer>
+    <p>&copy; 2026 GlobalFlo. UCD Mobile-First AI Personalized Console.</p>
+  </footer>
+
+</body>
 </html>
