@@ -5496,3 +5496,120 @@ body.paper-site .hero-media-points span {
 .connector-card[data-health="bad"].connector-card--airbnb {
   border-color: #874242 !important;
 }
+
+/* 2026 UX uplift: anticipatory + bento + kinetic + accessibility */
+body.paper-site {
+  font-family: "Inter", "Manrope", system-ui, sans-serif;
+  font-variation-settings: "opsz" 32;
+}
+
+/* Golden-ratio hero split (primary:secondary = 1:1.618) */
+.hero.hero--airbnb {
+  grid-template-columns: minmax(0, 742px) minmax(0, 458px);
+}
+
+/* Bento tile hierarchy */
+.gf-card,
+.explore-card,
+.pricing-card,
+.trust-card,
+.connector-card,
+.workflow-card,
+.activity-entry,
+.overview-panel,
+.hero-proof-card,
+.hero-status-card,
+.hero-trust-card {
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+
+/* One-action rule: keep one clear primary, soften siblings */
+.hero-actions .primary {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 12px 34px rgba(0,0,0,0.34);
+}
+
+.hero-actions .ghost {
+  opacity: 0.86;
+}
+
+.hero-actions .ghost:hover,
+.hero-actions .ghost:focus-visible {
+  opacity: 1;
+}
+
+/* Integration search + status */
+.integration-search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.integration-search-row input {
+  width: min(420px, 100%);
+}
+
+/* Skeleton loading for perceived performance */
+.skeleton-card {
+  position: relative;
+  min-height: 120px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+  overflow: hidden;
+}
+
+.skeleton-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.14) 45%, transparent 70%);
+  transform: translateX(-100%);
+  animation: skeleton-sheen 1.2s linear infinite;
+}
+
+@keyframes skeleton-sheen {
+  to { transform: translateX(140%); }
+}
+
+/* Accessibility-first focus and contrast reinforcement */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #9ec5ff;
+  outline-offset: 3px;
+}
+
+/* Z-pattern support on landing hero */
+.hero-copy,
+.hero-stage {
+  align-content: start;
+}
+
+/* Mobile anti-clipping */
+@media (max-width: 900px) {
+  .hero.hero--airbnb {
+    grid-template-columns: 1fr;
+  }
+
+  .integration-search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .integration-search-row input {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-card::before {
+    animation: none;
+  }
+}

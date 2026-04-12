@@ -36,6 +36,9 @@ const vfxCursor = document.getElementById("vfx-cursor");
 
 const connectorForms = document.querySelectorAll(".connector-form");
 const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
+const integrationSearch = document.getElementById("integration-search");
+const integrationSearchMeta = document.getElementById("integration-search-meta");
+const connectorCards = document.querySelectorAll(".connector-card");
 const paymentButtons = document.querySelectorAll("[data-payment-method]");
 const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
 const subscribeOpenButtons = document.querySelectorAll("[data-subscribe-open='true']");
@@ -67,6 +70,69 @@ let autopilotState = {
 };
 const inFlightTasks = new Map();
 const pollers = [];
+
+function normalizeText(value) {
+  return String(value || "").toLowerCase().trim();
+}
+
+function renderSkeleton(target, count = 3) {
+  if (!target) return;
+  target.innerHTML = "";
+  for (let i = 0; i < count; i += 1) {
+    const skeleton = document.createElement("div");
+    skeleton.className = "skeleton-card";
+    target.appendChild(skeleton);
+  }
+}
+
+function updateSearchMeta(el, visible, total) {
+  if (!el) return;
+  el.textContent = `${visible}/${total}`;
+}
+
+function filterIntegrations() {
+  if (!integrationSearch || !connectorCards.length) return;
+  const query = normalizeText(integrationSearch.value);
+  let visible = 0;
+  connectorCards.forEach((card) => {
+    const text = normalizeText(card.textContent);
+    const match = !query || text.includes(query);
+    card.hidden = !match;
+    card.setAttribute("aria-hidden", match ? "false" : "true");
+    if (match) visible += 1;
+  });
+  updateSearchMeta(integrationSearchMeta, visible, connectorCards.length);
+}
+
+function applyAnticipatoryDesign() {
+  const params = new URLSearchParams(window.location.search);
+  const referral = normalizeText(document.referrer);
+  const utmSource = normalizeText(params.get("utm_source"));
+  const body = document.body;
+  let segment = "general";
+  if (utmSource.includes("ads") || referral.includes("facebook") || referral.includes("google")) {
+    segment = "marketing";
+  } else if (utmSource.includes("finance") || referral.includes("quickbooks")) {
+    segment = "finance";
+  } else if (utmSource.includes("ops") || referral.includes("zapier") || referral.includes("make")) {
+    segment = "automation";
+  }
+  if (body) body.dataset.userSegment = segment;
+
+  const prioritize = {
+    marketing: ["meta-ads", "google-ads"],
+    finance: ["snowflake", "bigquery"],
+    automation: ["zapier", "make"],
+  };
+  const picks = prioritize[segment] || [];
+  if (picks.length && connectorCards.length) {
+    const grid = connectorCards[0].parentElement;
+    picks.forEach((id) => {
+      const card = document.querySelector(`.connector-card[data-connector-id="${id}"]`);
+      if (card && grid) grid.prepend(card);
+    });
+  }
+}
 
 function apiUrl(path) {
   if (!path) return API_BASE || "";
@@ -255,6 +321,7 @@ function renderActivity(events) {
 
 async function fetchTasks() {
   if (!workflowGrid) return;
+  renderSkeleton(workflowGrid, 4);
   const data = await runExclusive("tasks", () => fetchJson("/api/tasks"));
   renderTasks(data.tasks);
   return data;
@@ -294,6 +361,7 @@ async function refreshAutopilotStatus() {
 
 async function fetchActivity() {
   if (!activityFeed) return;
+  renderSkeleton(activityFeed, 3);
   try {
     const body = await runExclusive("activity", () => fetchJson("/api/activity"));
     renderActivity(body.events);
@@ -899,12 +967,15 @@ function scheduleSafe(task, interval) {
 }
 
 async function bootstrap() {
+  applyAnticipatoryDesign();
   handleAuthReturn();
 initRevealObserver();
 initActiveNav();
 initAmbientVfx();
 initMagneticButtons();
 initKineticType();
+  if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
+  filterIntegrations();
   setBillingMode(billingMode);
   await Promise.allSettled([
     fetchTasks(),

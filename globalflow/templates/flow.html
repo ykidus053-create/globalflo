@@ -34,12 +34,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@100..900&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
   </head>
-  <body class="paper-site">
+  <body class="paper-site" data-user-segment="general">
     <a class="skip-link" href="#main-content">Skip to content</a>
     <canvas class="render-layer" id="render-layer" aria-hidden="true"></canvas>
     <div class="vfx-progress" id="scroll-progress" aria-hidden="true"></div>
@@ -68,7 +68,7 @@
         <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <button class="ghost small" id="open-login" type="button">Login</button>
-        <button class="primary small" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
+        <button class="primary small" data-subscribe-open="true" data-tier="starter" type="button">Start My Trial</button>
       </nav>
     </header>
 
@@ -88,8 +88,8 @@
           <p class="lead">Automate billing, follow-up, files, and compliance. Most pilot teams recover 20+ hours each week.</p>
 
           <div class="hero-actions">
-            <button class="primary primary--hero" data-subscribe-open="true" data-tier="starter" type="button">Start free</button>
-            <button class="ghost primary--hero" id="watch-demo" type="button">Watch the demo</button>
+            <button class="primary primary--hero" data-subscribe-open="true" data-tier="starter" type="button">Get Access</button>
+            <button class="ghost primary--hero" id="watch-demo" type="button">Preview Demo</button>
           </div>
 
           <div class="hero-quickfacts">
@@ -382,6 +382,10 @@
             <h2>Connect your stack.</h2>
           </div>
         </div>
+        <div class="integration-search-row">
+          <input id="integration-search" type="search" placeholder="Search integrations..." aria-label="Search integrations" />
+          <span id="integration-search-meta" class="connector-toggle">0/0</span>
+        </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for connector in connectors %}
           <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="{{ connector.id }}" {% if loop.first %}open{% endif %}>
@@ -409,7 +413,7 @@
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
               <div class="connector-actions">
-                <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
+              <button type="submit" class="primary small">Run {{ connector.name }}</button>
                 <button type="button" class="ghost small" data-integration-check="{{ connector.id }}">Check status</button>
               </div>
               <p class="modal-note connector-status" data-integration-health="{{ connector.id }}">
@@ -505,7 +509,7 @@
                 {% endfor %}
               </select>
             </label>
-            <button type="submit" class="primary small">Continue</button>
+            <button type="submit" class="primary small">Get Access</button>
             <p class="modal-note" id="subscribe-status"></p>
           </form>
         </div>
