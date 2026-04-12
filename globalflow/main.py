@@ -1582,7 +1582,15 @@ async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
     connector_name = str(connector.get("name", connector_id)).strip()
     endpoint = str(connector.get("resolved_url") or connector.get("default_url") or "").strip()
     env_key = str(connector.get("env_key") or "").strip()
-    configured = bool(env_key and os.environ.get(env_key, "").strip())
+    alias_keys = [str(k).strip() for k in connector.get("env_aliases", []) if str(k).strip()]
+    candidate_keys = [k for k in [env_key, *alias_keys] if k]
+    configured_value = ""
+    for key in candidate_keys:
+        value = os.environ.get(key, "").strip()
+        if value:
+            configured_value = value
+            break
+    configured = bool(configured_value)
     method = str(connector.get("health_method", "GET")).upper()
 
     if not endpoint:
@@ -1699,7 +1707,15 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     if not connector:
         raise HTTPException(status_code=404, detail="Connector not available")
     env_key = str(connector.get("env_key", "")).strip()
-    if not env_key or not os.environ.get(env_key, "").strip():
+    alias_keys = [str(k).strip() for k in connector.get("env_aliases", []) if str(k).strip()]
+    candidate_keys = [k for k in [env_key, *alias_keys] if k]
+    configured_value = ""
+    for key in candidate_keys:
+        value = os.environ.get(key, "").strip()
+        if value:
+            configured_value = value
+            break
+    if not env_key or not configured_value:
         raise HTTPException(
             status_code=412,
             detail=f"Connector not configured. Set {env_key} to enable live execution.",
