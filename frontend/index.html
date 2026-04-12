@@ -37,7 +37,7 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=22ad953" />
+    <link rel="stylesheet" href="/static/flow.css?v=8439964" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="paper-site">
@@ -460,7 +460,7 @@
         </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" open>
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="zapier" open>
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -484,12 +484,19 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger Zapier</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger Zapier</button>
+                <button type="button" class="ghost small" data-integration-check="zapier">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="zapier">
+                
+                Not configured - set GLOBALFLOW_ZAPIER_WEBHOOK
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="make" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -513,12 +520,19 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger Make (Integromat)</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger Make (Integromat)</button>
+                <button type="button" class="ghost small" data-integration-check="make">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="make">
+                
+                Not configured - set GLOBALFLOW_MAKE_WEBHOOK
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="snowflake" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -542,12 +556,19 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger Snowflake</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger Snowflake</button>
+                <button type="button" class="ghost small" data-integration-check="snowflake">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="snowflake">
+                
+                Not configured - set GLOBALFLOW_SNOWFLAKE_ENDPOINT
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="bigquery" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -565,18 +586,25 @@
               </label>
               <label>
                 Jobreference
-                <input name="jobReference" placeholder="{&#39;projectId&#39;: &#39;project-id&#39;}" />
+                <input name="jobReference" placeholder="{&#34;projectId&#34;:&#34;project-id&#34;}" />
               </label>
               <label>
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger BigQuery</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger BigQuery</button>
+                <button type="button" class="ghost small" data-integration-check="bigquery">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="bigquery">
+                
+                Not configured - set GLOBALFLOW_BIGQUERY_ENDPOINT
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="cloudwatch" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -600,12 +628,19 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger AWS CloudWatch</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger AWS CloudWatch</button>
+                <button type="button" class="ghost small" data-integration-check="cloudwatch">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="cloudwatch">
+                
+                Not configured - set GLOBALFLOW_CLOUDWATCH_ENDPOINT
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="datadog" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -629,12 +664,19 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger Datadog</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger Datadog</button>
+                <button type="button" class="ghost small" data-integration-check="datadog">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="datadog">
+                
+                Not configured - set GLOBALFLOW_DATADOG_ENDPOINT
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="meta-ads" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -658,12 +700,19 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger Meta Ads</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger Meta Ads</button>
+                <button type="button" class="ghost small" data-integration-check="meta-ads">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="meta-ads">
+                
+                Not configured - set GLOBALFLOW_META_ADS_ENDPOINT
+                
+              </p>
             </form>
           </details>
           
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="google-ads" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
@@ -687,8 +736,15 @@
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger Google Ads</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger Google Ads</button>
+                <button type="button" class="ghost small" data-integration-check="google-ads">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="google-ads">
+                
+                Not configured - set GLOBALFLOW_GOOGLE_ADS_ENDPOINT
+                
+              </p>
             </form>
           </details>
           
@@ -950,7 +1006,7 @@
     </footer>
 
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
-    <script type="module" src="/static/render-layer.js?v=22ad953"></script>
-    <script type="module" src="/static/flow.js?v=22ad953"></script>
+    <script type="module" src="/static/render-layer.js?v=8439964"></script>
+    <script type="module" src="/static/flow.js?v=8439964"></script>
   </body>
 </html>

@@ -35,6 +35,7 @@ const scrollProgress = document.getElementById("scroll-progress");
 const vfxCursor = document.getElementById("vfx-cursor");
 
 const connectorForms = document.querySelectorAll(".connector-form");
+const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
 const paymentButtons = document.querySelectorAll("[data-payment-method]");
 const subscriptionButtons = document.querySelectorAll("[data-checkout-tier]");
 const subscribeOpenButtons = document.querySelectorAll("[data-subscribe-open='true']");
@@ -659,6 +660,49 @@ function showToast(text) {
   }, 2200);
 }
 
+function integrationTone(status) {
+  if (["connected", "reachable", "auth_required"].includes(status)) return "ok";
+  if (["not_configured", "degraded"].includes(status)) return "warn";
+  return "bad";
+}
+
+function renderIntegrationHealth(item) {
+  const connectorId = item?.id;
+  if (!connectorId) return;
+  const statusEl = document.querySelector(`[data-integration-health="${connectorId}"]`);
+  const card = document.querySelector(`.connector-card[data-connector-id="${connectorId}"]`);
+  if (!statusEl || !card) return;
+  const status = String(item.status || "unknown");
+  const code = item.status_code ? ` (${item.status_code})` : "";
+  const latency = item.latency_ms == null ? "" : ` - ${item.latency_ms}ms`;
+  statusEl.textContent = `${status}${code}${latency} - ${item.message || ""}`;
+  card.dataset.health = integrationTone(status);
+}
+
+async function refreshIntegrationHealth() {
+  try {
+    const data = await fetchJson("/api/integrations/status");
+    const items = Array.isArray(data.items) ? data.items : [];
+    items.forEach((item) => renderIntegrationHealth(item));
+  } catch (error) {
+    console.warn("Integration health refresh failed", error);
+  }
+}
+
+async function refreshSingleIntegration(connectorId) {
+  if (!connectorId) return;
+  const statusEl = document.querySelector(`[data-integration-health="${connectorId}"]`);
+  if (statusEl) statusEl.textContent = "Checking live status...";
+  try {
+    const data = await fetchJson(`/api/integrations/${connectorId}/status`);
+    if (data && data.item) renderIntegrationHealth(data.item);
+    showToast(`${connectorId} status refreshed`);
+  } catch (error) {
+    if (statusEl) statusEl.textContent = error.message || "Status check failed.";
+    showToast(error.message || "Status check failed");
+  }
+}
+
 if (inspectButton) inspectButton.addEventListener("click", inspectFlow);
 if (flowModalClose) flowModalClose.addEventListener("click", () => closeModal(flowModal));
 
@@ -811,6 +855,13 @@ connectorForms.forEach((form) => {
   });
 });
 
+integrationCheckButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const connectorId = button.dataset.integrationCheck;
+    refreshSingleIntegration(connectorId);
+  });
+});
+
 if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode("monthly"));
 if (annualToggle) annualToggle.addEventListener("click", () => setBillingMode("annual"));
 
@@ -855,7 +906,14 @@ initAmbientVfx();
 initMagneticButtons();
 initKineticType();
   setBillingMode(billingMode);
-  await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
+  await Promise.allSettled([
+    fetchTasks(),
+    fetchSummary(),
+    refreshMetrics(),
+    refreshAutopilotStatus(),
+    fetchActivity(),
+    refreshIntegrationHealth(),
+  ]);
 }
 
 bootstrap().catch((error) => {
@@ -879,3 +937,4 @@ scheduleSafe(fetchTasks, 15000);
 scheduleSafe(refreshMetrics, 45000);
 scheduleSafe(refreshAutopilotStatus, 30000);
 scheduleSafe(fetchActivity, 30000);
+scheduleSafe(refreshIntegrationHealth, 60000);

@@ -384,7 +384,7 @@
         </div>
         <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for connector in connectors %}
-          <details class="connector-card connector-card--airbnb gf-card gf-fade" {% if loop.first %}open{% endif %}>
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="{{ connector.id }}" {% if loop.first %}open{% endif %}>
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--{{ connector.icon }}" aria-hidden="true"></div>
@@ -398,18 +398,27 @@
             <form class="connector-form" data-connector-id="{{ connector.id }}">
               <label>
                 Endpoint
-                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="{{ connector.default_url }}" />
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="{{ connector.resolved_url }}" />
               </label>
               <label>
                 {{ connector.sample_field | capitalize }}
-                <input name="{{ connector.sample_field }}" placeholder="{{ connector.sample_message }}" />
+                <input name="{{ connector.sample_field }}" placeholder="{{ connector.sample_message_text }}" />
               </label>
               <label>
                 Context
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
-              <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
-              <p class="modal-note connector-status"></p>
+              <div class="connector-actions">
+                <button type="submit" class="primary small">Trigger {{ connector.name }}</button>
+                <button type="button" class="ghost small" data-integration-check="{{ connector.id }}">Check status</button>
+              </div>
+              <p class="modal-note connector-status" data-integration-health="{{ connector.id }}">
+                {% if connector.configured %}
+                Configured - pending live check
+                {% else %}
+                Not configured - set {{ connector.env_key }}
+                {% endif %}
+              </p>
             </form>
           </details>
           {% endfor %}

@@ -5469,3 +5469,30 @@ body.paper-site .hero-media-points span {
   background: rgba(255, 255, 255, 0.02) !important;
   color: #cfd9e0 !important;
 }
+
+/* Live integrations binding (ICOMAT-style compatible) */
+.connector-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.connector-card .connector-status {
+  margin-top: 8px;
+}
+
+.connector-card[data-health="ok"],
+.connector-card[data-health="ok"].connector-card--airbnb {
+  border-color: #3f7f56 !important;
+}
+
+.connector-card[data-health="warn"],
+.connector-card[data-health="warn"].connector-card--airbnb {
+  border-color: #8b7b40 !important;
+}
+
+.connector-card[data-health="bad"],
+.connector-card[data-health="bad"].connector-card--airbnb {
+  border-color: #874242 !important;
+}
