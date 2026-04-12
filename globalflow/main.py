@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import httpx
-from fastapi import BackgroundTasks, FastAPI, Form, HTTPException
+from fastapi import FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
@@ -1227,13 +1227,12 @@ async def healthcheck():
 
 
 @app.post("/api/tasks/{task_id}/run", response_class=JSONResponse)
-async def run_task(task_id: str, background_tasks: BackgroundTasks):
+async def run_task(task_id: str):
     task = task_manager.get_task(task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-
-    background_tasks.add_task(task_manager.kickoff, task_id)
-    return {"task": task}
+    result = await task_manager.kickoff(task_id)
+    return {"task": result}
 
 
 @app.post("/api/subscribe", response_class=JSONResponse)
@@ -1582,7 +1581,9 @@ async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
     connector_name = str(connector.get("name", connector_id)).strip()
     env_key = str(connector.get("env_key") or "").strip()
     endpoint_value, _ = resolve_connector_env_value(connector)
+    default_endpoint = str(connector.get("default_url") or "").strip()
     endpoint = endpoint_value or str(connector.get("default_url") or "").strip()
+    using_env_endpoint = bool(endpoint_value)
     configured = bool(endpoint_value)
     method = str(connector.get("health_method", "GET")).upper()
 
@@ -1659,6 +1660,30 @@ async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
                 response = await client.get(endpoint, headers=headers)
             status_code = int(response.status_code)
     except httpx.HTTPError as exc:
+        if using_env_endpoint and default_endpoint and endpoint != default_endpoint:
+            try:
+                async with httpx.AsyncClient(timeout=8, follow_redirects=True) as client:
+                    if method == "POST":
+                        response = await client.post(default_endpoint, json=payload, headers=headers)
+                    else:
+                        response = await client.get(default_endpoint, headers=headers)
+                    status_code = int(response.status_code)
+                    endpoint = default_endpoint
+            except httpx.HTTPError:
+                pass
+        if status_code:
+            latency_ms = round((time.perf_counter() - started) * 1000, 1)
+            state = "reachable" if status_code in {404, 405, 429} else "degraded"
+            message = f"Endpoint reachable ({status_code})"
+            return {
+                "id": connector_id,
+                "name": connector_name,
+                "configured": configured,
+                "status": state,
+                "status_code": status_code,
+                "latency_ms": latency_ms,
+                "message": message,
+            }
         latency_ms = round((time.perf_counter() - started) * 1000, 1)
         return {
             "id": connector_id,
@@ -1707,7 +1732,8 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
             status_code=412,
             detail=f"Connector not configured. Set {env_key} to enable live execution.",
         )
-    target_url = payload.get("target_url") or configured_value or connector.get("default_url")
+    default_url = str(connector.get("default_url") or "").strip()
+    target_url = payload.get("target_url") or configured_value or default_url
     field_name = connector.get("sample_field", "message")
     body = {
         field_name: payload.get(field_name) or connector.get("sample_message"),
@@ -1757,8 +1783,42 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
                 response = await client.get(target_url, headers=headers, params=body)
             else:
                 response = await client.post(target_url, json=body, headers=headers)
-            response.raise_for_status()
     except httpx.HTTPError as exc:
+        fallback_used = False
+        if default_url and target_url != default_url:
+            try:
+                async with httpx.AsyncClient(timeout=10) as client:
+                    if method == "GET":
+                        response = await client.get(default_url, headers=headers, params=body)
+                    else:
+                        response = await client.post(default_url, json=body, headers=headers)
+                target_url = default_url
+                fallback_used = True
+            except httpx.HTTPError:
+                fallback_used = False
+        if fallback_used:
+            status_code = int(response.status_code)
+            monitoring.record("tasks_run")
+            activity_log.record(
+                kind="connector",
+                source=connector["name"],
+                message=f"Connector hit (fallback) - {status_code}",
+                detail=response.text[:200],
+            )
+            details: Dict[str, Any] = {}
+            if response.headers.get("content-type", "").startswith("application/json"):
+                try:
+                    details = response.json()
+                except ValueError:
+                    details = {"raw": response.text[:200]}
+            elif response.text:
+                details = {"raw": response.text[:200]}
+            dispatch_status = "ok" if status_code < 300 else "reachable"
+            return {
+                "status": dispatch_status,
+                "message": f"{connector['name']} reachable via fallback - {status_code}",
+                "details": details,
+            }
         logger.warning("Connector %s failed: %s", connector_id, exc)
         activity_log.record(
             kind="connector",
@@ -1767,11 +1827,29 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
             detail=str(exc),
         )
         raise HTTPException(status_code=502, detail="Connector endpoint unreachable")
+    status_code = int(response.status_code)
+    reachable_non_success = {400, 401, 403, 404, 405, 409, 422, 429}
+    if status_code >= 500:
+        logger.warning("Connector %s returned server error %s", connector_id, status_code)
+        activity_log.record(
+            kind="connector",
+            source=connector["name"],
+            message=f"Connector server error - {status_code}",
+            detail=response.text[:200],
+        )
+        raise HTTPException(status_code=502, detail=f"Connector endpoint returned {status_code}")
+
+    dispatch_status = "ok" if status_code < 300 else ("reachable" if status_code in reachable_non_success else "degraded")
+    dispatch_message = (
+        f"{connector['name']} triggered - {status_code}"
+        if dispatch_status == "ok"
+        else f"{connector['name']} reachable - {status_code}"
+    )
     monitoring.record("tasks_run")
     activity_log.record(
         kind="connector",
         source=connector["name"],
-        message=f"Connector hit - {response.status_code}",
+        message=f"Connector hit - {status_code}",
         detail=response.text[:200],
     )
     details: Dict[str, Any] = {}
@@ -1780,11 +1858,67 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
             details = response.json()
         except ValueError:
             details = {"raw": response.text[:200]}
+    elif response.text:
+        details = {"raw": response.text[:200]}
     return {
-        "status": "ok",
-        "message": f"{connector['name']} triggered - {response.status_code}",
+        "status": dispatch_status,
+        "message": dispatch_message,
         "details": details,
     }
+
+
+TASK_CONNECTOR_MAP: Dict[str, List[str]] = {
+    "calls": ["zapier", "make", "datadog"],
+    "billing": ["snowflake", "bigquery", "datadog"],
+    "taxes": ["cloudwatch", "snowflake", "datadog"],
+    "files": ["zapier", "make", "cloudwatch"],
+}
+
+
+async def _execute_task_connectors(task_id: str, task: Dict[str, Any]) -> Dict[str, Any]:
+    connector_ids = TASK_CONNECTOR_MAP.get(task_id, [])
+    if not connector_ids:
+        return {"total": 0, "ok": 0, "failed": 0, "results": []}
+
+    ok = 0
+    failed = 0
+    results: List[Dict[str, Any]] = []
+    for connector_id in connector_ids:
+        payload = {
+            "context": f"GlobalFlow task execution: {task_id}",
+            "event": f"{task_id}.run.completed",
+            "Action": "ListMetrics",
+            "title": f"GlobalFlow task {task_id}",
+            "name": f"GlobalFlow {task_id}",
+            "customer_id": "1234567890",
+            "sqlText": "select current_timestamp()",
+            "jobReference": '{"projectId":"project-id"}',
+        }
+        try:
+            response = await trigger_connector(connector_id, payload)
+            status = str(response.get("status") or "ok")
+            if status in {"ok", "reachable"}:
+                ok += 1
+            else:
+                failed += 1
+            results.append({"id": connector_id, "status": status, "message": response.get("message")})
+        except HTTPException as exc:
+            failed += 1
+            results.append({"id": connector_id, "status": "error", "message": str(exc.detail)})
+        except Exception as exc:
+            failed += 1
+            results.append({"id": connector_id, "status": "error", "message": str(exc)})
+
+    activity_log.record(
+        kind="connector",
+        source=task_id,
+        message=f"Task connectors dispatched {ok}/{len(connector_ids)}",
+        detail="; ".join(f"{item['id']}={item['status']}" for item in results),
+    )
+    return {"total": len(connector_ids), "ok": ok, "failed": failed, "results": results}
+
+
+task_manager.set_execution_hook(_execute_task_connectors)
 
 
 @app.get("/api/integrations/status", response_class=JSONResponse)

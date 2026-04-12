@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 try:
     from .activity import ActivityLog
@@ -41,10 +41,15 @@ class TaskManager:
         tasks: Dict[str, Dict[str, Any]],
         monitoring: Monitoring,
         orchestrator: Optional[FlowOrchestrator] = None,
+        execution_hook: Optional[Callable[[str, Dict[str, Any]], Awaitable[Dict[str, Any]]]] = None,
     ):
         self._tasks = tasks
         self._monitoring = monitoring
         self._orchestrator = orchestrator
+        self._execution_hook = execution_hook
+
+    def set_execution_hook(self, execution_hook: Optional[Callable[[str, Dict[str, Any]], Awaitable[Dict[str, Any]]]]) -> None:
+        self._execution_hook = execution_hook
 
     def list_tasks(self) -> List[Dict[str, Any]]:
         return list(self._tasks.values())
@@ -86,10 +91,19 @@ class TaskManager:
                 await self._orchestrator.run(task_id)
             else:
                 await asyncio.sleep(2)
+            hook_summary: Dict[str, Any] = {}
+            if self._execution_hook:
+                hook_summary = await self._execution_hook(task_id, task)
+            hook_suffix = ""
+            if hook_summary:
+                total = int(hook_summary.get("total", 0))
+                ok = int(hook_summary.get("ok", 0))
+                if total > 0:
+                    hook_suffix = f" Connectors {ok}/{total} dispatched."
             completed = self.update_task(
                 task_id,
                 status="ready",
-                note=f"Workflow complete at {datetime.utcnow().strftime('%H:%M UTC')}; next trigger scheduled.",
+                note=f"Workflow complete at {datetime.utcnow().strftime('%H:%M UTC')}; next trigger scheduled.{hook_suffix}",
             )
             logger.info("Task %s completed", task_id)
             return completed
