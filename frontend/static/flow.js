@@ -33,6 +33,9 @@ const panelHealth = document.getElementById("panel-health");
 const lastSync = document.getElementById("last-sync");
 const scrollProgress = document.getElementById("scroll-progress");
 const vfxCursor = document.getElementById("vfx-cursor");
+const journeyShortcut = document.getElementById("journey-shortcut");
+const journeyShortcutCopy = document.getElementById("journey-shortcut-copy");
+const journeyShortcutAction = document.getElementById("journey-shortcut-action");
 
 const connectorForms = document.querySelectorAll(".connector-form");
 const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
@@ -54,6 +57,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const hiddenPollMultiplier = 4;
 const minimumHiddenInterval = 60000;
 const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
+const VISIT_PROFILE_KEY = "globalflow_visit_profile";
 
 let metricsCache = {};
 let activityCount = 0;
@@ -70,6 +74,7 @@ let autopilotState = {
 };
 const inFlightTasks = new Map();
 const pollers = [];
+let shortcutShown = false;
 
 function normalizeText(value) {
   return String(value || "").toLowerCase().trim();
@@ -109,6 +114,9 @@ function applyAnticipatoryDesign() {
   const referral = normalizeText(document.referrer);
   const utmSource = normalizeText(params.get("utm_source"));
   const body = document.body;
+  const timezone = normalizeText(Intl.DateTimeFormat().resolvedOptions().timeZone || "");
+  const profile = readVisitProfile();
+  const isReturning = Number(profile.visits || 0) > 1;
   let segment = "general";
   if (utmSource.includes("ads") || referral.includes("facebook") || referral.includes("google")) {
     segment = "marketing";
@@ -117,7 +125,17 @@ function applyAnticipatoryDesign() {
   } else if (utmSource.includes("ops") || referral.includes("zapier") || referral.includes("make")) {
     segment = "automation";
   }
-  if (body) body.dataset.userSegment = segment;
+  if (body) {
+    body.dataset.userSegment = segment;
+    body.dataset.userReturning = isReturning ? "yes" : "no";
+    body.dataset.userRegion = timezone.includes("america")
+      ? "americas"
+      : timezone.includes("europe")
+      ? "europe"
+      : timezone.includes("asia") || timezone.includes("africa")
+      ? "emea-apac"
+      : "global";
+  }
 
   const prioritize = {
     marketing: ["meta-ads", "google-ads"],
@@ -138,6 +156,8 @@ function applyAnticipatoryDesign() {
 function applySegmentCopy(segment) {
   const lead = document.querySelector(".hero-copy .lead");
   const h1 = document.querySelector(".hero-copy h1");
+  const profile = readVisitProfile();
+  const isReturning = Number(profile.visits || 0) > 1;
   if (!lead || !h1) return;
 
   const copy = {
@@ -160,8 +180,10 @@ function applySegmentCopy(segment) {
   };
 
   const selected = copy[segment] || copy.general;
-  h1.textContent = selected.h1;
-  lead.textContent = selected.lead;
+  h1.textContent = isReturning ? selected.h1.replace("One control room", "Your control room") : selected.h1;
+  lead.textContent = isReturning
+    ? `${selected.lead} Continue from where you left off in one click.`
+    : selected.lead;
 }
 
 function applyPrimaryActionFocus() {
@@ -207,6 +229,94 @@ function hydrateConversionForms() {
   if (!email) return;
   const subscribeEmail = subscribeForm?.querySelector('input[name="email"]');
   if (subscribeEmail && !subscribeEmail.value) subscribeEmail.value = email;
+}
+
+function readVisitProfile() {
+  try {
+    const raw = window.localStorage.getItem(VISIT_PROFILE_KEY);
+    if (!raw) return { visits: 0, lastSection: "", interactions: 0 };
+    return JSON.parse(raw);
+  } catch {
+    return { visits: 0, lastSection: "", interactions: 0 };
+  }
+}
+
+function writeVisitProfile(profile) {
+  try {
+    window.localStorage.setItem(VISIT_PROFILE_KEY, JSON.stringify(profile));
+  } catch {
+    // No-op when storage is unavailable.
+  }
+}
+
+function trackVisitProfile() {
+  const profile = readVisitProfile();
+  profile.visits = Number(profile.visits || 0) + 1;
+  profile.lastSeenAt = new Date().toISOString();
+  writeVisitProfile(profile);
+}
+
+function readSession() {
+  return loadSession();
+}
+
+function showJourneyShortcut(action) {
+  if (!journeyShortcut || shortcutShown) return;
+  const actionMap = {
+    trial: {
+      label: "Start My Trial",
+      copy: "Need the fastest path? Start your trial now.",
+      handler: () => openModal(subscribeModal),
+    },
+    workflow: {
+      label: "Open Workflow",
+      copy: "Jump directly to your live workflow command center.",
+      handler: () => scrollToSelector("#flowboard"),
+    },
+    integrations: {
+      label: "Open Integrations",
+      copy: "Go straight to integration setup.",
+      handler: () => scrollToSelector("#integrations"),
+    },
+  };
+  const chosen = actionMap[action] || actionMap.trial;
+  if (journeyShortcutCopy) journeyShortcutCopy.textContent = chosen.copy;
+  if (journeyShortcutAction) {
+    journeyShortcutAction.textContent = chosen.label;
+    journeyShortcutAction.onclick = chosen.handler;
+  }
+  journeyShortcut.hidden = false;
+  shortcutShown = true;
+}
+
+function initFrictionShortcuts() {
+  const profile = readVisitProfile();
+  let interactions = 0;
+  document.addEventListener(
+    "click",
+    (event) => {
+      const trigger = event.target instanceof Element ? event.target.closest("button, a, summary") : null;
+      if (!trigger) return;
+      interactions += 1;
+      const nextProfile = readVisitProfile();
+      nextProfile.interactions = Number(nextProfile.interactions || 0) + 1;
+      writeVisitProfile(nextProfile);
+
+      if (interactions < 3 || shortcutShown) return;
+      const segment = document.body?.dataset?.userSegment || "general";
+      if (segment === "automation") showJourneyShortcut("workflow");
+      else if (segment === "marketing") showJourneyShortcut("integrations");
+      else showJourneyShortcut("trial");
+    },
+    { passive: true }
+  );
+
+  if (Number(profile.visits || 0) >= 2) {
+    const preferred = String(profile.lastSection || "").toLowerCase();
+    if (preferred.includes("flow")) showJourneyShortcut("workflow");
+    else if (preferred.includes("integration")) showJourneyShortcut("integrations");
+    else showJourneyShortcut("trial");
+  }
 }
 
 function apiUrl(path) {
@@ -599,6 +709,9 @@ function initActiveNav() {
         navLinks.forEach((link) => {
           link.classList.toggle("is-active", link.getAttribute("href") === `#${entry.target.id}`);
         });
+        const profile = readVisitProfile();
+        profile.lastSection = entry.target.id;
+        writeVisitProfile(profile);
       });
     },
     { threshold: 0.45 }
@@ -1042,9 +1155,11 @@ function scheduleSafe(task, interval) {
 }
 
 async function bootstrap() {
+  trackVisitProfile();
   const segment = applyAnticipatoryDesign();
   applySegmentCopy(segment);
   applyPrimaryActionFocus();
+  initFrictionShortcuts();
   hydrateConversionForms();
   handleAuthReturn();
 initRevealObserver();

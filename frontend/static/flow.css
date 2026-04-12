@@ -5837,3 +5837,123 @@ body.paper-site .content-body {
     animation: none !important;
   }
 }
+
+/* Final contrast hardening: prevent camouflaged text on all surfaces */
+body.paper-site {
+  --text-strong: #fcfdff !important;
+  --text-body: #eef2f8 !important;
+  --text-muted: #d7deea !important;
+}
+
+body.paper-site .top,
+body.paper-site .nav,
+body.paper-site .mobile-dock,
+body.paper-site .site-footer,
+body.paper-site .flow-modal__content,
+body.paper-site .journey-shortcut,
+body.paper-site .connector-card,
+body.paper-site .workflow-card,
+body.paper-site .explore-card,
+body.paper-site .stat-card,
+body.paper-site .pricing-card,
+body.paper-site .trust-card,
+body.paper-site .overview-panel,
+body.paper-site .hero-media-card,
+body.paper-site .summary,
+body.paper-site .activity-entry,
+body.paper-site .checkout-card {
+  color: var(--text-body) !important;
+}
+
+body.paper-site .nav a,
+body.paper-site .mobile-dock a,
+body.paper-site .footer-links a,
+body.paper-site .brand-copy p,
+body.paper-site .eyebrow,
+body.paper-site .connector-toggle,
+body.paper-site .label,
+body.paper-site .note,
+body.paper-site .modal-note,
+body.paper-site .feature-link,
+body.paper-site .signal-meta,
+body.paper-site .workflow-status {
+  color: var(--text-muted) !important;
+}
+
+body.paper-site .nav a:hover,
+body.paper-site .nav a.is-active,
+body.paper-site .mobile-dock a:hover,
+body.paper-site .footer-links a:hover,
+body.paper-site .feature-link:hover {
+  color: var(--text-strong) !important;
+}
+
+body.paper-site h1,
+body.paper-site h2,
+body.paper-site h3,
+body.paper-site h4,
+body.paper-site strong,
+body.paper-site .price,
+body.paper-site .value,
+body.paper-site .brand-copy span,
+body.paper-site .hero-benefit-list li,
+body.paper-site .hero-chip-row span,
+body.paper-site .hero-media-points span,
+body.paper-site .explore-description,
+body.paper-site .connector-status {
+  color: var(--text-strong) !important;
+}
+
+body.paper-site input,
+body.paper-site select,
+body.paper-site textarea {
+  color: var(--text-strong) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+body.paper-site input::placeholder,
+body.paper-site textarea::placeholder {
+  color: #cfd7e5 !important;
+}
+
+/* Progressive disclosure on use-case cards without hiding content completely */
+body.paper-site .explore-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.paper-site .explore-card:hover .explore-description,
+body.paper-site .explore-card:focus-within .explore-description {
+  -webkit-line-clamp: 8;
+}
+
+body.paper-site .journey-shortcut {
+  position: sticky;
+  top: 84px;
+  z-index: 30;
+  margin: 0 auto 16px;
+  width: min(1200px, calc(100% - 32px));
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+body.paper-site .journey-shortcut p {
+  margin: 0;
+  color: var(--text-strong) !important;
+}
+
+@media (max-width: 640px) {
+  body.paper-site .journey-shortcut {
+    width: calc(100% - 24px);
+    top: 74px;
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
