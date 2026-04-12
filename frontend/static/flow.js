@@ -13,7 +13,6 @@ const loginForm = document.getElementById("login-form");
 const loginStatus = document.getElementById("login-status");
 const googleLoginButton = document.getElementById("login-with-google");
 const appleLoginButton = document.getElementById("login-with-apple");
-const oauthStatus = document.getElementById("oauth-status");
 const launchOrchestrationBtn = document.getElementById("launch-orchestration");
 const watchDemoBtn = document.getElementById("watch-demo");
 const demoVideo = document.getElementById("demo-video");
@@ -44,29 +43,8 @@ const navLinks = document.querySelectorAll(".nav a[href^='#']");
 const priceCells = document.querySelectorAll(".price[data-monthly][data-annual]");
 const monthlyToggle = document.getElementById("billing-monthly");
 const annualToggle = document.getElementById("billing-annual");
-const featureDetailButtons = document.querySelectorAll("[data-feature-title]");
-const useCaseCards = document.querySelectorAll("[data-preview-headline]");
-const useCasePreviewTitle = document.getElementById("use-case-preview-title");
-const useCasePreviewDomain = document.getElementById("use-case-preview-domain");
-const useCasePreviewCopy = document.getElementById("use-case-preview-copy");
-const useCaseSearch = document.getElementById("use-case-search");
-const useCaseSearchMeta = document.getElementById("use-case-search-meta");
-const integrationSearch = document.getElementById("integration-search");
-const integrationSearchMeta = document.getElementById("integration-search-meta");
-const connectorCards = document.querySelectorAll(".connector-card");
-const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
-const openFeedbackButton = document.getElementById("open-feedback");
-const feedbackModal = document.getElementById("feedback-modal");
-const feedbackForm = document.getElementById("feedback-form");
-const feedbackStatus = document.getElementById("feedback-status");
-const exploreGrid = document.querySelector(".explore-grid");
-const workflowCards = document.querySelectorAll(".workflow-card");
-const workflowBoard = document.getElementById("wf-board");
 
 const SESSION_KEY = "globalflow_session";
-const NEXT_STEPS_ORDER_KEY = "globalflow_next_steps_order";
-const PERSONALIZATION_CONSENT_KEY = "globalflow_personalization_consent";
-const HAPTICS_ENABLED_KEY = "globalflow_haptics_enabled";
 const numberFormatter = new Intl.NumberFormat("en-US");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const hiddenPollMultiplier = 4;
@@ -76,8 +54,6 @@ const API_BASE = String(window.GLOBALFLOW_API_BASE || "").replace(/\/$/, "");
 let metricsCache = {};
 let activityCount = 0;
 let revealObserver = null;
-let sectionObserver = null;
-let motionObserver = null;
 let billingMode = "monthly";
 let activeModalId = null;
 let summaryCache = null;
@@ -90,13 +66,6 @@ let autopilotState = {
 };
 const inFlightTasks = new Map();
 const pollers = [];
-
-const toneRules = [
-  { tone: "urgency", badge: "Urgent", pattern: /deadline|overdue|escalat|risk|urgent|tax/i },
-  { tone: "trust", badge: "Trusted", pattern: /billing|invoice|payment|compliance|audit/i },
-  { tone: "success", badge: "Stable", pattern: /follow|complete|ready|owner|dispatch/i },
-  { tone: "insight", badge: "Insight", pattern: /document|file|classif|analy|report|ops/i },
-];
 
 function apiUrl(path) {
   if (!path) return API_BASE || "";
@@ -246,15 +215,12 @@ function renderTasks(tasks) {
 
 function renderSummary(steps) {
   if (!nextSteps) return;
-  const savedOrder = loadNextStepsOrder();
-  const orderedSteps = applyNextStepsOrder(steps, savedOrder);
   nextSteps.innerHTML = "";
-  orderedSteps.forEach((step) => {
+  steps.forEach((step) => {
     const li = document.createElement("li");
     li.textContent = step;
     nextSteps.appendChild(li);
   });
-  initNextStepsDragDrop();
 }
 
 function renderActivity(events) {
@@ -351,7 +317,7 @@ function triggerFlow() {
 
 function initRevealObserver() {
   const targets = document.querySelectorAll(
-    "main > section, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card, .endtoend-step, .overview-panel, .hero-proof-card, .hero-trust-card"
+    "main > section, .hero-video-card, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card"
   );
   targets.forEach((target) => registerRevealTargets(target));
 
@@ -377,7 +343,7 @@ function initRevealObserver() {
 
 function registerRevealTargets(target) {
   if (!target || target.classList.contains("reveal-ready")) return;
-  target.style.transitionDelay = `${Math.min(revealIndex * 55, 360)}ms`;
+  target.style.transitionDelay = `${Math.min(revealIndex * 40, 320)}ms`;
   target.classList.add("reveal-ready");
   revealIndex += 1;
   if (prefersReducedMotion) {
@@ -385,81 +351,6 @@ function registerRevealTargets(target) {
     return;
   }
   if (revealObserver) revealObserver.observe(target);
-}
-
-function initSectionStateObserver() {
-  const sections = document.querySelectorAll("main > section");
-  if (!sections.length) return;
-
-  if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
-    sections.forEach((section) => section.classList.add("is-section-active"));
-    return;
-  }
-
-  sectionObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        entry.target.classList.toggle("is-section-active", entry.isIntersecting);
-      });
-    },
-    { threshold: 0.28, rootMargin: "-8% 0px -18% 0px" }
-  );
-
-  sections.forEach((section) => sectionObserver.observe(section));
-}
-
-function initAdvancedMotion() {
-  const trackedSelectors = [
-    ".hero-visual",
-    ".overview-statement",
-    ".endtoend-step",
-    ".explore-card",
-    ".stat-card--airbnb",
-    ".pricing-card",
-    ".trust-card",
-    ".workflow-card",
-    ".activity-entry",
-    ".connector-card",
-    ".hero-quickfacts article",
-  ];
-
-  const trackedNodes = document.querySelectorAll(trackedSelectors.join(", "));
-  trackedNodes.forEach((node, index) => {
-    node.classList.add("motion-track");
-    node.style.setProperty("--motion-delay", `${Math.min(index * 40, 320)}ms`);
-  });
-
-  const pointerTargets = document.querySelectorAll(
-    ".gf-card, .workflow-card, .activity-entry, .explore-card, .endtoend-step, .hero-visual, .connector-card"
-  );
-
-  pointerTargets.forEach((target) => {
-    target.addEventListener("pointermove", (event) => {
-      const rect = target.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      target.style.setProperty("--pointer-x", `${x.toFixed(2)}%`);
-      target.style.setProperty("--pointer-y", `${y.toFixed(2)}%`);
-    });
-    target.addEventListener("pointerenter", () => target.classList.add("is-hovered"));
-    target.addEventListener("pointerleave", () => target.classList.remove("is-hovered"));
-  });
-
-  if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
-    trackedNodes.forEach((node) => node.classList.add("is-entered"));
-    return;
-  }
-
-  motionObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        entry.target.classList.toggle("is-entered", entry.isIntersecting);
-      });
-    },
-    { threshold: 0.22, rootMargin: "-6% 0px -12% 0px" }
-  );
-
-  trackedNodes.forEach((node) => motionObserver.observe(node));
 }
 
 function initAmbientVfx() {
@@ -477,7 +368,10 @@ function initAmbientVfx() {
       root.style.setProperty("--mx", x.toFixed(4));
       root.style.setProperty("--my", y.toFixed(4));
       if (aurora) {
-        aurora.style.transform = `translate3d(${(x - 0.5) * 12}px, ${(y - 0.5) * 8}px, 0)`;
+        aurora.style.transform = `translate3d(${(x - 0.5) * 28}px, ${(y - 0.5) * 20}px, 0)`;
+      }
+      if (vfxCursor) {
+        vfxCursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
       }
     },
     { passive: true }
@@ -494,8 +388,8 @@ function initAmbientVfx() {
         scrollProgress.style.transform = `scaleX(${Math.max(progress, 0.02)})`;
       }
       parallaxSections.forEach((section, index) => {
-        const rate = ((index % 2) + 1) * 0.004;
-        const offset = Math.min(window.scrollY * rate, 8);
+        const rate = ((index % 3) + 1) * 0.012;
+        const offset = Math.min(window.scrollY * rate, 18);
         section.style.setProperty("--section-shift", `${offset.toFixed(2)}px`);
       });
     },
@@ -507,8 +401,8 @@ function initAmbientVfx() {
       const rect = card.getBoundingClientRect();
       const px = ((event.clientX - rect.left) / rect.width) * 100;
       const py = ((event.clientY - rect.top) / rect.height) * 100;
-      const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -3;
-      const ry = ((event.clientX - rect.left) / rect.width - 0.5) * 4;
+      const rx = ((event.clientY - rect.top) / rect.height - 0.5) * -10;
+      const ry = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
       card.style.setProperty("--gx", `${px.toFixed(2)}%`);
       card.style.setProperty("--gy", `${py.toFixed(2)}%`);
       card.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
@@ -523,69 +417,28 @@ function initAmbientVfx() {
   });
 }
 
-function installStorytellingImmersion() {
-  const storySections = Array.from(document.querySelectorAll("main > section, main > .wf-section, main > .workflow"));
-  if (!storySections.length) return;
-
-  storySections.forEach((section, index) => {
-    section.classList.add("story-stage");
-    section.style.setProperty("--story-index", String(index));
-  });
-
-  if (prefersReducedMotion) {
-    storySections.forEach((section) => section.classList.add("is-story-focus"));
-    return;
-  }
-
-  const root = document.documentElement;
-  let rafId = 0;
-
-  const updateStoryState = () => {
-    rafId = 0;
-    const vh = window.innerHeight || 1;
-    let maxProgress = 0;
-    let bestScore = -1;
-    let focusIndex = 0;
-
-    storySections.forEach((section, index) => {
-      const rect = section.getBoundingClientRect();
-      const centerDistance = Math.abs(rect.top + rect.height * 0.5 - vh * 0.5);
-      const focusScore = Math.max(0, 1 - centerDistance / vh);
-      if (focusScore > bestScore) {
-        bestScore = focusScore;
-        focusIndex = index;
-      }
-
-      const enters = vh - rect.top;
-      const progress = Math.max(0, Math.min(1, enters / (vh + rect.height)));
-      section.style.setProperty("--story-progress", progress.toFixed(4));
-      maxProgress = Math.max(maxProgress, progress);
-    });
-
-    storySections.forEach((section, index) => {
-      section.classList.toggle("is-story-focus", index === focusIndex);
-    });
-
-    root.style.setProperty("--story-depth", maxProgress.toFixed(4));
-    root.style.setProperty("--story-focus", String(focusIndex));
-  };
-
-  const requestUpdate = () => {
-    if (rafId) return;
-    rafId = window.requestAnimationFrame(updateStoryState);
-  };
-
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate, { passive: true });
-  requestUpdate();
-}
-
 function initMagneticButtons() {
-  return;
+  if (prefersReducedMotion) return;
+  const buttons = document.querySelectorAll("button.primary, button.ghost, .nav a, .feature-link");
+  buttons.forEach((button) => {
+    button.addEventListener("pointermove", (event) => {
+      const rect = button.getBoundingClientRect();
+      const dx = ((event.clientX - rect.left) / rect.width - 0.5) * 14;
+      const dy = ((event.clientY - rect.top) / rect.height - 0.5) * 10;
+      button.style.setProperty("--bx", `${dx.toFixed(2)}px`);
+      button.style.setProperty("--by", `${dy.toFixed(2)}px`);
+      button.classList.add("is-magnetic");
+    });
+    button.addEventListener("pointerleave", () => {
+      button.style.removeProperty("--bx");
+      button.style.removeProperty("--by");
+      button.classList.remove("is-magnetic");
+    });
+  });
 }
 
 function initKineticType() {
-  const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3, .overview-statement, .endtoend-body h3");
+  const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3");
   headings.forEach((heading) => heading.classList.add("kinetic-heading"));
 }
 
@@ -604,7 +457,7 @@ function initActiveNav() {
         });
       });
     },
-    { threshold: 0.45, rootMargin: "-12% 0px -30% 0px" }
+    { threshold: 0.45 }
   );
 
   sections.forEach((section) => observer.observe(section));
@@ -777,369 +630,7 @@ function openCheckoutForTier(tierId) {
   window.location.assign(`/checkout/${String(tierId).toLowerCase()}`);
 }
 
-function normalizeText(value) {
-  return String(value || "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function updateSearchMeta(metaEl, visible, total) {
-  if (!metaEl) return;
-  if (!total) {
-    metaEl.textContent = "";
-    return;
-  }
-  metaEl.textContent = `${visible}/${total}`;
-}
-
-function applyDeviceClass() {
-  const width = window.innerWidth;
-  let device = "desktop";
-  if (width < 640) device = "mobile";
-  else if (width < 1024) device = "tablet";
-  else if (width < 1440) device = "laptop";
-  document.documentElement.dataset.device = device;
-}
-
-function triggerHaptic(pattern = 12) {
-  try {
-    if (window.localStorage.getItem(HAPTICS_ENABLED_KEY) === "false") return;
-  } catch (_) {}
-  if (!("vibrate" in navigator)) return;
-  try {
-    navigator.vibrate(pattern);
-  } catch (_) {}
-}
-
-function installMicrointeractionHaptics() {
-  const hapticTargets = document.querySelectorAll(
-    ".primary, .ghost, .wf-toggle, .wf-density, .connector-card summary, .pricing-card button, .workflow-card button"
-  );
-  hapticTargets.forEach((target) => {
-    target.addEventListener(
-      "pointerdown",
-      () => {
-        if (prefersReducedMotion) return;
-        triggerHaptic(10);
-      },
-      { passive: true }
-    );
-  });
-}
-
-function loadNextStepsOrder() {
-  try {
-    const raw = window.localStorage.getItem(NEXT_STEPS_ORDER_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveNextStepsOrder(order) {
-  try {
-    window.localStorage.setItem(NEXT_STEPS_ORDER_KEY, JSON.stringify(order));
-  } catch {}
-}
-
-function applyNextStepsOrder(steps, order) {
-  if (!Array.isArray(steps) || !steps.length) return [];
-  if (!Array.isArray(order) || !order.length) return steps;
-  const index = new Map(order.map((value, idx) => [value, idx]));
-  return [...steps].sort((a, b) => {
-    const ia = index.has(a) ? index.get(a) : Number.MAX_SAFE_INTEGER;
-    const ib = index.has(b) ? index.get(b) : Number.MAX_SAFE_INTEGER;
-    return ia - ib;
-  });
-}
-
-function initNextStepsDragDrop() {
-  if (!nextSteps) return;
-  const items = [...nextSteps.querySelectorAll("li")];
-  if (!items.length) return;
-
-  items.forEach((li) => {
-    li.draggable = true;
-    li.classList.add("is-draggable");
-  });
-
-  let dragSource = null;
-
-  const onDragStart = (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    dragSource = target;
-    target.classList.add("is-dragging");
-    event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", target.textContent || "");
-  };
-
-  const onDragEnd = () => {
-    nextSteps.querySelectorAll(".is-dragging, .is-drop-target").forEach((el) => el.classList.remove("is-dragging", "is-drop-target"));
-    dragSource = null;
-    const order = [...nextSteps.querySelectorAll("li")].map((li) => li.textContent || "");
-    saveNextStepsOrder(order);
-    showToast("Saved next-step order");
-  };
-
-  const onDragOver = (event) => {
-    event.preventDefault();
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    const li = target.closest("li");
-    if (!li || li === dragSource) return;
-    li.classList.add("is-drop-target");
-    event.dataTransfer.dropEffect = "move";
-  };
-
-  const onDrop = (event) => {
-    event.preventDefault();
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    const li = target.closest("li");
-    if (!li || !dragSource || li === dragSource) return;
-    const rect = li.getBoundingClientRect();
-    const before = event.clientY < rect.top + rect.height / 2;
-    if (before) nextSteps.insertBefore(dragSource, li);
-    else nextSteps.insertBefore(dragSource, li.nextSibling);
-    nextSteps.querySelectorAll(".is-drop-target").forEach((el) => el.classList.remove("is-drop-target"));
-  };
-
-  nextSteps.addEventListener("dragstart", onDragStart);
-  nextSteps.addEventListener("dragend", onDragEnd);
-  nextSteps.addEventListener("dragover", onDragOver);
-  nextSteps.addEventListener("drop", onDrop);
-}
-
-function initSearchFilters() {
-  const filterUseCases = () => {
-    if (!useCaseSearch || !useCaseCards.length) return;
-    const query = normalizeText(useCaseSearch.value);
-    let visible = 0;
-    useCaseCards.forEach((card) => {
-      const haystack = normalizeText(
-        `${card.dataset.previewDomain || ""} ${card.dataset.previewHeadline || ""} ${card.dataset.previewDescription || ""}`
-      );
-      const match = !query || haystack.includes(query);
-      card.hidden = !match;
-      card.setAttribute("aria-hidden", match ? "false" : "true");
-      if (match) visible += 1;
-    });
-
-    updateSearchMeta(useCaseSearchMeta, visible, useCaseCards.length);
-
-    // Keep preview panel in sync with the first visible card.
-    if (visible > 0) {
-      const first = [...useCaseCards].find((card) => !card.hidden);
-      if (first && useCasePreviewTitle && useCasePreviewDomain && useCasePreviewCopy) {
-        useCasePreviewTitle.textContent = first.dataset.previewHeadline || "";
-        useCasePreviewDomain.textContent = first.dataset.previewDomain || "";
-        useCasePreviewCopy.textContent = first.dataset.previewDescription || "";
-      }
-    }
-  };
-
-  const filterIntegrations = () => {
-    if (!integrationSearch || !connectorCards.length) return;
-    const query = normalizeText(integrationSearch.value);
-    let visible = 0;
-    connectorCards.forEach((card) => {
-      const text = normalizeText(card.textContent);
-      const match = !query || text.includes(query);
-      card.hidden = !match;
-      card.setAttribute("aria-hidden", match ? "false" : "true");
-      if (match) visible += 1;
-    });
-    updateSearchMeta(integrationSearchMeta, visible, connectorCards.length);
-  };
-
-  if (useCaseSearch) useCaseSearch.addEventListener("input", filterUseCases);
-  if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
-
-  filterUseCases();
-  filterIntegrations();
-}
-
-function setIntegrationHealthUi(connectorId, payload) {
-  if (!connectorId) return;
-  const statusEl = document.querySelector(`[data-integration-health="${connectorId}"]`);
-  const cardEl = document.querySelector(`.connector-card[data-connector-id="${connectorId}"]`);
-  if (!statusEl || !payload) return;
-
-  const status = String(payload.status || "unknown");
-  const latency = payload.latency_ms == null ? "" : ` - ${payload.latency_ms}ms`;
-  const statusCode = payload.status_code ? ` (${payload.status_code})` : "";
-  statusEl.textContent = `${status}${statusCode}${latency} - ${payload.message || "No details"}`;
-
-  if (cardEl) {
-    cardEl.dataset.health = status;
-    cardEl.classList.remove("is-health-ok", "is-health-warn", "is-health-bad");
-    if (["connected", "reachable", "auth_required"].includes(status)) {
-      cardEl.classList.add("is-health-ok");
-    } else if (["degraded", "not_configured"].includes(status)) {
-      cardEl.classList.add("is-health-warn");
-    } else {
-      cardEl.classList.add("is-health-bad");
-    }
-  }
-}
-
-async function refreshAllIntegrationHealth() {
-  if (!connectorCards.length) return;
-  try {
-    const data = await fetchJson("/api/integrations/status");
-    const items = Array.isArray(data.items) ? data.items : [];
-    items.forEach((item) => setIntegrationHealthUi(item.id, item));
-  } catch (error) {
-    console.warn("Integration health refresh failed", error);
-  }
-}
-
-async function checkSingleIntegration(connectorId, statusEl) {
-  if (!connectorId) return;
-  if (statusEl) statusEl.textContent = "checking live status...";
-  try {
-    const data = await fetchJson(`/api/integrations/${connectorId}/status`);
-    setIntegrationHealthUi(connectorId, data.item || {});
-    showToast(`${connectorId} status updated`);
-  } catch (error) {
-    if (statusEl) statusEl.textContent = error.message || "status check failed";
-    showToast(error.message || "status check failed");
-  }
-}
-
-async function submitFeedback(payload) {
-  try {
-    const data = await fetchJson("/api/feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    return data;
-  } catch (error) {
-    return { status: "queued", message: error.message || "Feedback queued locally." };
-  }
-}
-
-function initFeedback() {
-  if (openFeedbackButton) {
-    openFeedbackButton.addEventListener("click", () => openModal(feedbackModal));
-  }
-  if (!feedbackForm) return;
-  const personalizationConsentInput = feedbackForm.querySelector("#personalization-consent");
-  const hapticsEnabledInput = feedbackForm.querySelector("#haptics-enabled");
-  if (personalizationConsentInput) {
-    try {
-      const savedConsent = window.localStorage.getItem(PERSONALIZATION_CONSENT_KEY);
-      if (savedConsent !== null) personalizationConsentInput.checked = savedConsent !== "false";
-    } catch (_) {}
-    personalizationConsentInput.addEventListener("change", () => {
-      try {
-        window.localStorage.setItem(PERSONALIZATION_CONSENT_KEY, personalizationConsentInput.checked ? "true" : "false");
-      } catch (_) {}
-    });
-  }
-  if (hapticsEnabledInput) {
-    try {
-      const savedHaptics = window.localStorage.getItem(HAPTICS_ENABLED_KEY);
-      if (savedHaptics !== null) hapticsEnabledInput.checked = savedHaptics !== "false";
-    } catch (_) {}
-    hapticsEnabledInput.addEventListener("change", () => {
-      try {
-        window.localStorage.setItem(HAPTICS_ENABLED_KEY, hapticsEnabledInput.checked ? "true" : "false");
-      } catch (_) {}
-    });
-  }
-  feedbackForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(feedbackForm);
-    const payload = Object.fromEntries(formData);
-    payload.personalization_consent = Boolean(personalizationConsentInput?.checked);
-    payload.haptics_enabled = Boolean(hapticsEnabledInput?.checked);
-    payload.rating = Number(payload.rating || 0);
-    payload.nps = payload.nps === "" || payload.nps == null ? null : Number(payload.nps);
-    payload.ces = payload.ces === "" || payload.ces == null ? null : Number(payload.ces);
-    payload.sus = payload.sus === "" || payload.sus == null ? null : Number(payload.sus);
-    payload.ua = navigator.userAgent;
-    payload.path = `${window.location.pathname}${window.location.hash}`;
-    if (!payload.comment || payload.rating < 1 || payload.rating > 5) {
-      if (feedbackStatus) feedbackStatus.textContent = "Rating and comment are required.";
-      showToast("Feedback incomplete");
-      return;
-    }
-    if (payload.nps !== null && (payload.nps < 0 || payload.nps > 10)) {
-      if (feedbackStatus) feedbackStatus.textContent = "NPS must be between 0 and 10.";
-      showToast("Feedback incomplete");
-      return;
-    }
-    if (payload.ces !== null && (payload.ces < 1 || payload.ces > 7)) {
-      if (feedbackStatus) feedbackStatus.textContent = "CES must be between 1 and 7.";
-      showToast("Feedback incomplete");
-      return;
-    }
-    if (payload.sus !== null && (payload.sus < 0 || payload.sus > 100)) {
-      if (feedbackStatus) feedbackStatus.textContent = "SUS must be between 0 and 100.";
-      showToast("Feedback incomplete");
-      return;
-    }
-    try {
-      window.localStorage.setItem(PERSONALIZATION_CONSENT_KEY, payload.personalization_consent ? "true" : "false");
-      window.localStorage.setItem(HAPTICS_ENABLED_KEY, payload.haptics_enabled ? "true" : "false");
-    } catch (_) {}
-    if (feedbackStatus) feedbackStatus.textContent = "Sending...";
-    const result = await submitFeedback(payload);
-    if (feedbackStatus) feedbackStatus.textContent = result.message || "Thanks. Feedback received.";
-    showToast(result.message || "Feedback received");
-    await fetchActivity().catch(() => {});
-    window.setTimeout(() => closeModal(feedbackModal), 700);
-  });
-}
-
-function initUseCasePreview() {
-  if (!useCaseCards.length || !useCasePreviewTitle || !useCasePreviewDomain || !useCasePreviewCopy) return;
-
-  const updatePreview = (card) => {
-    useCasePreviewTitle.textContent = card.dataset.previewHeadline || "";
-    useCasePreviewDomain.textContent = card.dataset.previewDomain || "";
-    useCasePreviewCopy.textContent = card.dataset.previewDescription || "";
-  };
-
-  useCaseCards.forEach((card, index) => {
-    if (index === 0) updatePreview(card);
-    ["mouseenter", "focusin"].forEach((eventName) => {
-      card.addEventListener(eventName, () => updatePreview(card));
-    });
-  });
-}
-
-function initFeatureDetailButtons() {
-  if (!featureDetailButtons.length || !flowModal || !flowModalBody) return;
-  featureDetailButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const payload = {
-        capability: button.dataset.featureTitle,
-        headline: button.dataset.featureHeadline,
-        detail: button.dataset.featureDetail,
-        next_step: button.dataset.featureTarget,
-      };
-      flowModalBody.textContent = JSON.stringify(payload, null, 2);
-      openModal(flowModal);
-    });
-  });
-}
-
 function startSocialLogin(provider) {
-  const providerButton =
-    provider === "google" ? googleLoginButton : provider === "apple" ? appleLoginButton : null;
-  if (providerButton && providerButton.dataset.providerReady !== "true") {
-    const message = `${provider[0].toUpperCase()}${provider.slice(1)} sign-in is not configured on the server yet.`;
-    if (oauthStatus) oauthStatus.textContent = message;
-    showToast(message);
-    return;
-  }
   const returnTo = `${window.location.origin}${window.location.pathname}${window.location.search}`;
   window.location.assign(apiUrl(`/auth/${provider}/start?return_to=${encodeURIComponent(returnTo)}`));
 }
@@ -1149,14 +640,8 @@ function setBillingMode(mode) {
   priceCells.forEach((cell) => {
     cell.textContent = cell.dataset[mode] || cell.textContent;
   });
-  if (monthlyToggle) {
-    monthlyToggle.classList.toggle("is-active", mode === "monthly");
-    monthlyToggle.setAttribute("aria-selected", mode === "monthly" ? "true" : "false");
-  }
-  if (annualToggle) {
-    annualToggle.classList.toggle("is-active", mode === "annual");
-    annualToggle.setAttribute("aria-selected", mode === "annual" ? "true" : "false");
-  }
+  if (monthlyToggle) monthlyToggle.classList.toggle("is-active", mode === "monthly");
+  if (annualToggle) annualToggle.classList.toggle("is-active", mode === "annual");
 }
 
 function showToast(text) {
@@ -1205,6 +690,7 @@ if (launchOrchestrationBtn) {
     try {
       showToast("Launching automation flow...");
       await fetchTasks();
+      scrollToSelector("#flowboard");
       triggerFlow();
     } catch (error) {
       setReliabilityState("warning", "Launch delayed");
@@ -1296,9 +782,6 @@ subscriptionButtons.forEach((button) => {
 });
 
 connectorForms.forEach((form) => {
-  const endpointInput = form.querySelector("input[name='target_url']");
-  const sampleInput = form.querySelector("input:not([name='target_url']):not([name='context'])");
-  const submitButton = form.querySelector("button[type='submit']");
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const connectorId = form.dataset.connectorId;
@@ -1325,30 +808,6 @@ connectorForms.forEach((form) => {
       setReliabilityState("warning", "Connector retry needed");
       showToast(error.message || "Connector offline");
     }
-  });
-
-  const refreshConnectorState = () => {
-    if (!submitButton) return;
-    const hasEndpoint = endpointInput && endpointInput.value.trim().startsWith("http");
-    const hasSample = sampleInput && sampleInput.value.trim().length > 0;
-    submitButton.disabled = !(hasEndpoint && hasSample);
-    const statusEl = form.querySelector(".connector-status");
-    if (statusEl && !submitButton.disabled) {
-      statusEl.textContent = "Ready to validate connector";
-    }
-  };
-
-  [endpointInput, sampleInput].forEach((input) => {
-    if (input) input.addEventListener("input", refreshConnectorState);
-  });
-  refreshConnectorState();
-});
-
-integrationCheckButtons.forEach((button) => {
-  button.addEventListener("click", async () => {
-    const connectorId = button.dataset.integrationCheck;
-    const statusEl = document.querySelector(`[data-integration-health="${connectorId}"]`);
-    await checkSingleIntegration(connectorId, statusEl);
   });
 });
 
@@ -1388,146 +847,15 @@ function scheduleSafe(task, interval) {
   return controller;
 }
 
-function detectTone(text) {
-  const source = String(text || "");
-  const match = toneRules.find((rule) => rule.pattern.test(source));
-  return match || { tone: "trust", badge: "Trusted" };
-}
-
-function installAdaptiveUseCaseStates() {
-  if (!useCaseCards?.length) return;
-  useCaseCards.forEach((card) => {
-    const title = card.dataset.previewHeadline || "";
-    const description = card.dataset.previewDescription || "";
-    const merged = `${title} ${description}`;
-    const rule = detectTone(merged);
-    card.dataset.tone = rule.tone;
-    let badge = card.querySelector(".ux-badge");
-    if (!badge) {
-      badge = document.createElement("span");
-      badge.className = "ux-badge";
-      const anchor = card.querySelector(".explore-card__body h3") || card.querySelector(".explore-card__body");
-      if (anchor && anchor.parentNode) {
-        anchor.parentNode.insertBefore(badge, anchor.nextSibling);
-      }
-    }
-    badge.dataset.state = rule.tone;
-    badge.textContent = rule.badge;
-  });
-}
-
-function installPersonalizedLayout() {
-  const segment = document.body?.dataset?.userSegment || "general";
-  if (!segment || segment === "general" || !exploreGrid) return;
-  const cards = Array.from(exploreGrid.querySelectorAll("[data-preview-domain]"));
-  if (!cards.length) return;
-
-  const scored = cards
-    .map((card) => {
-      const domain = normalizeText(card.dataset.previewDomain || "");
-      let score = 0;
-      if (segment === "finance" && /bill|invoice|payment|recovery/.test(domain)) score = 3;
-      if (segment === "workflow" && /ops|orchestration|workflow|call/.test(domain)) score = 3;
-      if (segment === "compliance" && /tax|compliance|readiness|audit/.test(domain)) score = 3;
-      if (segment === "documents" && /document|file|control|uploads/.test(domain)) score = 3;
-      return { card, score };
-    })
-    .sort((a, b) => b.score - a.score);
-
-  scored.forEach(({ card }) => exploreGrid.appendChild(card));
-  const leader = scored[0];
-  if (leader && leader.score > 0) {
-    leader.card.classList.add("is-personalized-focus");
-  }
-}
-
-function installAdaptiveGridEngine() {
-  if (!exploreGrid || !("ResizeObserver" in window)) return;
-  const ro = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      const width = entry.contentRect.width;
-      if (width < 640) {
-        document.documentElement.dataset.gridDensity = "mobile";
-      } else if (width < 980) {
-        document.documentElement.dataset.gridDensity = "compact";
-      } else {
-        document.documentElement.dataset.gridDensity = "cozy";
-      }
-    }
-  });
-  ro.observe(exploreGrid);
-}
-
-function installWorkflowKeyboardControls() {
-  if (!workflowBoard) return;
-  const cards = Array.from(workflowBoard.querySelectorAll(".wf-lane-card"));
-  cards.forEach((card, index) => {
-    card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-grabbed", "false");
-    card.addEventListener("keydown", (event) => {
-      if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) return;
-      event.preventDefault();
-      const lane = card.closest(".wf-lane");
-      if (!lane) return;
-      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-        const lanes = Array.from(workflowBoard.querySelectorAll(".wf-lane"));
-        const laneIndex = lanes.indexOf(lane);
-        const targetIndex = event.key === "ArrowLeft" ? laneIndex - 1 : laneIndex + 1;
-        if (targetIndex < 0 || targetIndex >= lanes.length) return;
-        const targetLane = lanes[targetIndex];
-        targetLane.appendChild(card);
-        card.focus();
-        showToast("Workflow lane updated");
-        return;
-      }
-      const laneCards = Array.from(lane.querySelectorAll(".wf-lane-card"));
-      const current = laneCards.indexOf(card);
-      const nextIndex = event.key === "ArrowUp" ? current - 1 : current + 1;
-      if (nextIndex < 0 || nextIndex >= laneCards.length) return;
-      const target = laneCards[nextIndex];
-      if (event.key === "ArrowUp") {
-        lane.insertBefore(card, target);
-      } else {
-        lane.insertBefore(card, target.nextSibling);
-      }
-      card.focus();
-      showToast("Workflow order updated");
-    });
-    if (index === 0) {
-      card.setAttribute("aria-grabbed", "false");
-    }
-  });
-}
-
 async function bootstrap() {
   handleAuthReturn();
-  applyDeviceClass();
-  initRevealObserver();
-  initSectionStateObserver();
-  initAdvancedMotion();
-  initActiveNav();
-  initAmbientVfx();
-  initMagneticButtons();
-  initKineticType();
-  initUseCasePreview();
-  initFeatureDetailButtons();
-  initSearchFilters();
-  initFeedback();
-  installMicrointeractionHaptics();
-  installAdaptiveUseCaseStates();
-  installPersonalizedLayout();
-  installAdaptiveGridEngine();
-  installStorytellingImmersion();
-  installWorkflowKeyboardControls();
+initRevealObserver();
+initActiveNav();
+initAmbientVfx();
+initMagneticButtons();
+initKineticType();
   setBillingMode(billingMode);
-  await Promise.allSettled([
-    fetchTasks(),
-    fetchSummary(),
-    refreshMetrics(),
-    refreshAutopilotStatus(),
-    fetchActivity(),
-    refreshAllIntegrationHealth(),
-  ]);
+  await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
 }
 
 bootstrap().catch((error) => {
@@ -1538,8 +866,6 @@ bootstrap().catch((error) => {
 document.addEventListener("visibilitychange", () => {
   pollers.forEach((poller) => poller.restart());
 });
-
-window.addEventListener("resize", applyDeviceClass, { passive: true });
 
 window.addEventListener(
   "pagehide",
@@ -1553,4 +879,3 @@ scheduleSafe(fetchTasks, 15000);
 scheduleSafe(refreshMetrics, 45000);
 scheduleSafe(refreshAutopilotStatus, 30000);
 scheduleSafe(fetchActivity, 30000);
-scheduleSafe(refreshAllIntegrationHealth, 60000);

@@ -4,7 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" />
-<title>PayPal | GlobalFlow</title>
+        <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>PayPal | GlobalFlow</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,24 +20,17 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=2e52e88" />
-    <link rel="stylesheet" href="/static/flow-system.css?v=2e52e88" />
-    <link rel="stylesheet" href="/static/flow-polish.css?v=2e52e88" />
+    <link rel="stylesheet" href="/static/flow.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="gf-polish payment-body paper-site top-tier-site is-loading">
-    <div class="site-loader" id="site-loader" aria-hidden="true">
-      <div class="site-loader__inner">
-        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
-        <p class="site-loader__word">GlobalFlow</p>
-      </div>
-    </div>
+  <body class="payment-body paper-site">
     <div class="aurora"></div>
-    <a class="skip-link" href="#main-content">Skip to payment content</a>
     <header class="top">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
-          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
         <div class="brand-copy">
           <span>PayPal</span>
@@ -38,13 +39,13 @@
       </div>
       <nav class="nav" aria-label="Payment navigation">
         <a href="/">Home</a>
-        <a href="/workflow-elite">Workflow</a>
+        <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <a href="#payment-form">Invoice request</a>
       </nav>
     </header>
 
-    <main id="main-content" class="payment-page" tabindex="-1">
+    <main class="payment-page">
       <section class="payment-hero">
         <div class="payment-header">
           <p class="eyebrow">PayPal billing</p>
@@ -78,14 +79,10 @@
       <section class="payment-form-section">
         <h2>Send a payment request</h2>
         <p>Enter the tier, business email, amount, and finance notes.</p>
-        
-        <p class="payment-status" role="alert">Open payment from a valid checkout session to enable verified billing.</p>
-        
         <form id="payment-form" class="payment-form">
-          <input type="hidden" name="payment_ticket" value="" />
           <label>
             Selected tier
-            <input name="tier" value="" placeholder="starter / pilot / launch / captain" />
+            <input name="tier" placeholder="starter / pilot / launch / captain" />
           </label>
           <label>
             Business email
@@ -93,19 +90,18 @@
           </label>
           <label>
             Amount
-            <input name="amount" value="" placeholder="$549" />
+            <input name="amount" placeholder="$549" />
           </label>
           <label>
             Notes for finance
             <textarea name="notes" rows="3" placeholder="PO number, billing schedule, or payment details"></textarea>
           </label>
-          <button class="primary" type="submit" disabled>Send payment request</button>
-          <p class="payment-status" id="payment-status" role="status" aria-live="polite"></p>
+          <button class="primary" type="submit">Send payment request</button>
+          <p class="payment-status" id="payment-status"></p>
         </form>
       </section>
     </main>
 
-    <script src="/static/site-boot.js?v=2e52e88" defer></script>
-    <script type="module" src="/static/payment.js?v=2e52e88"></script>
+    <script type="module" src="/static/payment.js"></script>
   </body>
 </html>

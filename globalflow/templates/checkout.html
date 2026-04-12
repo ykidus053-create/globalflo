@@ -3,8 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
-<title>Checkout | GlobalFlow</title>
+    <meta name="theme-color" content="#ffffff" />
+        <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>Checkout | GlobalFlow</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,23 +20,16 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v={{ asset_version }}" />
-    <link rel="stylesheet" href="/static/flow-system.css?v={{ asset_version }}" />
-    <link rel="stylesheet" href="/static/flow-polish.css?v={{ asset_version }}" />
+    <link rel="stylesheet" href="/static/flow.css" />
   </head>
-  <body class="gf-polish checkout-body paper-site top-tier-site is-loading">
-    <div class="site-loader" id="site-loader" aria-hidden="true">
-      <div class="site-loader__inner">
-        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
-        <p class="site-loader__word">GlobalFlow</p>
-      </div>
-    </div>
+  <body class="checkout-body paper-site">
     <div class="aurora"></div>
-    <a class="skip-link" href="#main-content">Skip to checkout content</a>
     <header class="top">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
-          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
         <div class="brand-copy">
           <span>GlobalFlow Checkout</span>
@@ -37,13 +38,13 @@
       </div>
       <nav class="nav" aria-label="Checkout navigation">
         <a href="/">Home</a>
-        <a href="/workflow-elite">Workflow</a>
+        <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <a href="#invoice-form">Invoice</a>
       </nav>
     </header>
 
-    <main id="main-content" class="checkout-page" tabindex="-1">
+    <main class="checkout-page">
       <section class="checkout-hero">
         <div class="checkout-hero-copy">
           {% if tier.badge %}
@@ -54,7 +55,7 @@
           <p class="lead">{{ tier.description }}</p>
           <p class="price">{{ tier.monthly_price }}</p>
           <div class="checkout-links">
-            {% for method, url in tier_payment_links.items() %}
+            {% for method, url in tier.payment_links.items() %}
             <a class="primary small" href="{{ url }}" rel="noreferrer">Pay with {{ method.capitalize() }}</a>
             {% endfor %}
           </div>
@@ -72,7 +73,6 @@
           <h2>Request an invoice</h2>
           <p>Use this flow when procurement or finance needs a manual ticket.</p>
           <form id="invoice-form" data-method="{{ tier.preferred_method }}" data-tier-id="{{ tier.id }}">
-            <input type="hidden" name="payment_ticket" value="{{ preferred_payment_ticket }}" />
             <label>
               Business email
               <input name="email" type="email" placeholder="ops@company.com" required />
@@ -123,7 +123,6 @@
       <p>Your workspace unlocks after billing confirmation and connector validation.</p>
     </footer>
 
-    <script src="/static/site-boot.js?v={{ asset_version }}" defer></script>
-    <script type="module" src="/static/checkout.js?v={{ asset_version }}"></script>
+    <script type="module" src="/static/checkout.js"></script>
   </body>
 </html>

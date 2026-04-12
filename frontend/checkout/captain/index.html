@@ -3,8 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
-<title>Checkout | GlobalFlow</title>
+    <meta name="theme-color" content="#ffffff" />
+        <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>Checkout | GlobalFlow</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,24 +20,17 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=2e52e88" />
-    <link rel="stylesheet" href="/static/flow-system.css?v=2e52e88" />
-    <link rel="stylesheet" href="/static/flow-polish.css?v=2e52e88" />
+    <link rel="stylesheet" href="/static/flow.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="gf-polish checkout-body paper-site top-tier-site is-loading">
-    <div class="site-loader" id="site-loader" aria-hidden="true">
-      <div class="site-loader__inner">
-        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
-        <p class="site-loader__word">GlobalFlow</p>
-      </div>
-    </div>
+  <body class="checkout-body paper-site">
     <div class="aurora"></div>
-    <a class="skip-link" href="#main-content">Skip to checkout content</a>
     <header class="top">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
-          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
         <div class="brand-copy">
           <span>GlobalFlow Checkout</span>
@@ -38,13 +39,13 @@
       </div>
       <nav class="nav" aria-label="Checkout navigation">
         <a href="/">Home</a>
-        <a href="/workflow-elite">Workflow</a>
+        <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <a href="#invoice-form">Invoice</a>
       </nav>
     </header>
 
-    <main id="main-content" class="checkout-page" tabindex="-1">
+    <main class="checkout-page">
       <section class="checkout-hero">
         <div class="checkout-hero-copy">
           
@@ -56,11 +57,11 @@
           <p class="price">$899 / month</p>
           <div class="checkout-links">
             
-            <a class="primary small" href="/payment/paypal?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6IjNXMkdGd3RQbmRYT1Zzd1dFa3VnTVUtRyIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6ImNhcHRhaW4iLCJ0cyI6MTc3NjAxNTMzMH0.hbjMQYSmevYerQ4I2YiITE1RSCqT-c2senwKI5dj7Ac" rel="noreferrer">Pay with Paypal</a>
+            <a class="primary small" href="/payment/paypal?tier=captain&amp;amount=899" rel="noreferrer">Pay with Paypal</a>
             
-            <a class="primary small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiItZG9IV1BKbWhzX2ZwUDI5T1Q4dTRMaGIiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTUzMzB9.mncu6f6tEwIhD5RHhCrFBR2VzYXMlUeMG698s7vrm44" rel="noreferrer">Pay with Mastercard</a>
+            <a class="primary small" href="/payment/mastercard?tier=captain&amp;amount=899" rel="noreferrer">Pay with Mastercard</a>
             
-            <a class="primary small" href="/payment/amex?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiIyTnkyYkZob2czZkJTcUxtVE03cnpGUkMiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTUzMzB9.ZO60miZW6HxiLeYpQPU2OEvBwbY8e9b4dR4kGAXK-TA" rel="noreferrer">Pay with Amex</a>
+            <a class="primary small" href="/payment/amex?tier=captain&amp;amount=899" rel="noreferrer">Pay with Amex</a>
             
           </div>
         </div>
@@ -77,7 +78,6 @@
           <h2>Request an invoice</h2>
           <p>Use this flow when procurement or finance needs a manual ticket.</p>
           <form id="invoice-form" data-method="amex" data-tier-id="captain">
-            <input type="hidden" name="payment_ticket" value="eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiIyTnkyYkZob2czZkJTcUxtVE03cnpGUkMiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTUzMzB9.ZO60miZW6HxiLeYpQPU2OEvBwbY8e9b4dR4kGAXK-TA" />
             <label>
               Business email
               <input name="email" type="email" placeholder="ops@company.com" required />
@@ -132,7 +132,7 @@
             <p>Digital invoices</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/paypal?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6IjNXMkdGd3RQbmRYT1Zzd1dFa3VnTVUtRyIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6ImNhcHRhaW4iLCJ0cyI6MTc3NjAxNTMzMH0.hbjMQYSmevYerQ4I2YiITE1RSCqT-c2senwKI5dj7Ac" rel="noreferrer">Open PayPal</a>
+            <a class="ghost small" href="/payment/paypal?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJwYXlwYWwiLCJub25jZSI6IkZkLWdtd1U5OEkwWWloT1FqYUJadGVzYiIsInJldHVybl90byI6Imh0dHBzOi8vZ2xvYmFsZmxvdy1zdGF0aWMub25yZW5kZXIuY29tIiwidGllciI6ImNhcHRhaW4iLCJ0cyI6MTc3NjAxNjQ2Nn0.QBzzaUexjoG1-TZqqfSNLzEjzDqHJA-_0ef0AnsbseY" rel="noreferrer">Open PayPal</a>
           </div>
         </article>
         
@@ -143,7 +143,7 @@
             <p>Recurring billing</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiItZG9IV1BKbWhzX2ZwUDI5T1Q4dTRMaGIiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTUzMzB9.mncu6f6tEwIhD5RHhCrFBR2VzYXMlUeMG698s7vrm44" rel="noreferrer">Open Mastercard</a>
+            <a class="ghost small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJtYXN0ZXJjYXJkIiwibm9uY2UiOiJBRnBiQmZLcEZWYXg5TmNNQWNUQ01YRWwiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTY0NjZ9.svWA_PvADZ5WRXyLE-17g83M5HAkOhzG3cMDoOzEZb8" rel="noreferrer">Open Mastercard</a>
           </div>
         </article>
         
@@ -154,7 +154,7 @@
             <p>Card billing</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/amex?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiIyTnkyYkZob2czZkJTcUxtVE03cnpGUkMiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTUzMzB9.ZO60miZW6HxiLeYpQPU2OEvBwbY8e9b4dR4kGAXK-TA" rel="noreferrer">Open American Express</a>
+            <a class="ghost small" href="/payment/amex?ticket=eyJhbW91bnQiOiI4OTkiLCJraW5kIjoicGF5bWVudF90aWNrZXQiLCJtZXRob2QiOiJhbWV4Iiwibm9uY2UiOiJEbXZrdmV0NzFOUTVUZDVua0t0NzY4Q2UiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJjYXB0YWluIiwidHMiOjE3NzYwMTY0NjZ9.r5zZXxxIUNDvHp38ypArFWdL8b-r2NTFPTkEcnUGUG0" rel="noreferrer">Open American Express</a>
           </div>
         </article>
         
@@ -165,7 +165,6 @@
       <p>Your workspace unlocks after billing confirmation and connector validation.</p>
     </footer>
 
-    <script src="/static/site-boot.js?v=2e52e88" defer></script>
-    <script type="module" src="/static/checkout.js?v=2e52e88"></script>
+    <script type="module" src="/static/checkout.js"></script>
   </body>
 </html>

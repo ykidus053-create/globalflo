@@ -3,132 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#080808" />
-<title>GlobalFlow | Account</title>
-    <link rel="stylesheet" href="/static/flow.css?v=2e52e88" />
-    <link rel="stylesheet" href="/static/flow-system.css?v=2e52e88" />
-    <link rel="stylesheet" href="/static/flow-polish.css?v=2e52e88" />
+    <meta name="theme-color" content="#ffffff" />
+        <script>
+      (function () {
+        try {
+          document.documentElement.setAttribute("data-theme", "light");
+          localStorage.setItem("globalflow_theme", "light");
+        } catch (error) {}
+      })();
+    </script>
+    <title>GlobalFlow | Account</title>
+    <link rel="stylesheet" href="/static/flow.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="gf-polish paper-site top-tier-site is-loading">
-    <div class="site-loader" id="site-loader" aria-hidden="true">
-      <div class="site-loader__inner">
-        <img class="site-loader__logo" src="/static/globalflow-logo.svg" alt="" />
-        <p class="site-loader__word">GlobalFlow</p>
-      </div>
-    </div>
+  <body class="paper-site">
     <div class="backdrop"></div>
-    <a class="skip-link" href="#main-content">Skip to account content</a>
     <header class="top">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <img class="brand-mark__image" src="/static/globalflow-logo.svg" alt="" />
-        </div>
-        <div class="brand-copy">
-          <span>GlobalFlow</span>
-          <p>Account</p>
-        </div>
+        <span>GlobalFlow</span>
+        <p>Account</p>
       </div>
       <nav class="nav" aria-label="Account navigation">
         <a href="/">Dashboard</a>
-        <a href="/workflow-elite">Workflow</a>
-        <a href="/account" aria-current="page">Account</a>
+        <a href="/automation">Automation</a>
+        <a href="/account">Account</a>
       </nav>
     </header>
-    <main id="main-content" class="account-page account-layout" tabindex="-1">
-      <aside class="user-card gf-card gf-fade" aria-label="Account summary">
-        <header class="user-card__header">
-          <img class="user-card__avatar" src="/static/globalflow-logo.svg" alt="" />
-          <div class="user-card__title">
-            <h2 class="user-card__name">Nova Ops</h2>
-            <p class="user-card__meta">Automation Architect - ops@globalflow.ai</p>
-          </div>
-        </header>
-
-        <div class="user-card__body">
-          <ul class="user-card__stats" aria-label="Account signals">
-            <li><span>Timezone</span><strong>UTC</strong></li>
-            <li><span>Digest</span><strong>enabled</strong></li>
-            <li><span>Alerts</span><strong>Slack</strong></li>
-            <li><span>Tier</span><strong>High trust</strong></li>
-          </ul>
-
-          <div class="color-grid" role="list" aria-label="Semantic color grid">
-            <button
-              class="color-cell"
-              type="button"
-              role="listitem"
-              data-tone="ok"
-              data-ripple="true"
-              data-tooltip="Healthy automation. Runs are completing inside expected time and confidence bounds."
-              aria-label="Operational status: ok"
-            >
-              <span>Operational</span><strong>Ok</strong>
-            </button>
-            <button
-              class="color-cell"
-              type="button"
-              role="listitem"
-              data-tone="info"
-              data-ripple="true"
-              data-tooltip="Informational state. Work is queued or in progress and waiting on the next trigger."
-              aria-label="Queued status: info"
-            >
-              <span>Queued</span><strong>Info</strong>
-            </button>
-            <button
-              class="color-cell"
-              type="button"
-              role="listitem"
-              data-tone="warn"
-              data-ripple="true"
-              data-tooltip="Needs review. A run completed but is waiting for operator verification or approval."
-              aria-label="Needs review status: warn"
-            >
-              <span>Needs review</span><strong>Warn</strong>
-            </button>
-            <button
-              class="color-cell"
-              type="button"
-              role="listitem"
-              data-tone="err"
-              data-ripple="true"
-              data-tooltip="Blocked. A run failed validation or a dependency is missing, and requires intervention."
-              aria-label="Blocked status: error"
-            >
-              <span>Blocked</span><strong>Error</strong>
-            </button>
-            <button
-              class="color-cell"
-              type="button"
-              role="listitem"
-              data-tone="accent"
-              data-ripple="true"
-              data-tooltip="Verified. Outcome was checked and logged, ready to sync downstream."
-              aria-label="Verified status: accent"
-            >
-              <span>Verified</span><strong>Accent</strong>
-            </button>
-            <button
-              class="color-cell"
-              type="button"
-              role="listitem"
-              data-tone="neutral"
-              data-ripple="true"
-              data-tooltip="Draft state. Prepared but not yet launched into the workflow."
-              aria-label="Draft status: neutral"
-            >
-              <span>Draft</span><strong>Neutral</strong>
-            </button>
-          </div>
-        </div>
-
-        <footer class="user-card__footer">
-          <button class="primary" form="account-form" type="submit">Save changes</button>
-          <p class="user-card__hint">Changes apply immediately and sync to live workflows.</p>
-        </footer>
-      </aside>
-
+    <main class="account-page">
       <section class="account-panel">
         <div class="panel-heading">
           <h2>Profile settings</h2>
@@ -183,13 +84,6 @@
                 </option>
               </select>
             </label>
-            <label>
-              Theme
-              <select name="theme">
-                <option value="light" >Light</option>
-                <option value="dark" selected>Dark</option>
-              </select>
-            </label>
           </div>
           <div class="form-actions">
             <button type="submit" class="primary">Save changes</button>
@@ -198,7 +92,6 @@
         </form>
       </section>
     </main>
-    <script src="/static/site-boot.js?v=2e52e88" defer></script>
-    <script type="module" src="/static/account.js?v=2e52e88"></script>
+    <script type="module" src="/static/account.js"></script>
   </body>
 </html>
