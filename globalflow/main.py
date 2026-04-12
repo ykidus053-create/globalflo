@@ -25,12 +25,12 @@ from starlette.requests import Request
 try:
     from .activity import ActivityLog
     from .automations import FlowOrchestrator
-    from .connectors import CONNECTOR_LOOKUP, CONNECTORS
+    from .connectors import CONNECTOR_LOOKUP, CONNECTORS, resolve_connector_env_value, resolve_env_value
     from .services import AutoPilot, Monitoring, TaskManager
 except ImportError:  # pragma: no cover - fallback when running as a top-level module
     from activity import ActivityLog
     from automations import FlowOrchestrator
-    from connectors import CONNECTOR_LOOKUP, CONNECTORS
+    from connectors import CONNECTOR_LOOKUP, CONNECTORS, resolve_connector_env_value, resolve_env_value
     from services import AutoPilot, Monitoring, TaskManager
 
 root = Path(__file__).resolve().parent
@@ -1580,17 +1580,10 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
 async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
     connector_id = str(connector.get("id", "")).strip()
     connector_name = str(connector.get("name", connector_id)).strip()
-    endpoint = str(connector.get("resolved_url") or connector.get("default_url") or "").strip()
     env_key = str(connector.get("env_key") or "").strip()
-    alias_keys = [str(k).strip() for k in connector.get("env_aliases", []) if str(k).strip()]
-    candidate_keys = [k for k in [env_key, *alias_keys] if k]
-    configured_value = ""
-    for key in candidate_keys:
-        value = os.environ.get(key, "").strip()
-        if value:
-            configured_value = value
-            break
-    configured = bool(configured_value)
+    endpoint_value, _ = resolve_connector_env_value(connector)
+    endpoint = endpoint_value or str(connector.get("default_url") or "").strip()
+    configured = bool(endpoint_value)
     method = str(connector.get("health_method", "GET")).upper()
 
     if not endpoint:
@@ -1622,32 +1615,33 @@ async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
     }
     headers = {"User-Agent": "GlobalFlow-Integration-Check/1.0", "Accept": "application/json"}
 
-    def _read_env(name: str) -> str:
-        return os.environ.get(name, "").strip()
+    def _read_env(name: str, aliases: Optional[List[str]] = None) -> str:
+        value, _ = resolve_env_value(name, aliases or [])
+        return value
 
     if connector_id == "snowflake":
-        token = _read_env("GLOBALFLOW_SNOWFLAKE_TOKEN")
+        token = _read_env("GLOBALFLOW_SNOWFLAKE_TOKEN", ["SNOWFLAKE_TOKEN"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
     elif connector_id == "bigquery":
-        token = _read_env("GLOBALFLOW_BIGQUERY_TOKEN")
+        token = _read_env("GLOBALFLOW_BIGQUERY_TOKEN", ["BIGQUERY_TOKEN", "GOOGLE_BIGQUERY_TOKEN"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
     elif connector_id == "datadog":
-        api_key = _read_env("GLOBALFLOW_DATADOG_API_KEY")
-        app_key = _read_env("GLOBALFLOW_DATADOG_APP_KEY")
+        api_key = _read_env("GLOBALFLOW_DATADOG_API_KEY", ["DATADOG_API_KEY"])
+        app_key = _read_env("GLOBALFLOW_DATADOG_APP_KEY", ["DATADOG_APP_KEY", "DATADOG_APPLICATION_KEY"])
         if api_key:
             headers["DD-API-KEY"] = api_key
         if app_key:
             headers["DD-APPLICATION-KEY"] = app_key
     elif connector_id == "meta-ads":
-        token = _read_env("GLOBALFLOW_META_ADS_ACCESS_TOKEN")
+        token = _read_env("GLOBALFLOW_META_ADS_ACCESS_TOKEN", ["META_ADS_ACCESS_TOKEN", "FACEBOOK_ACCESS_TOKEN"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
     elif connector_id == "google-ads":
-        token = _read_env("GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN")
-        developer_token = _read_env("GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN")
-        login_customer_id = _read_env("GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID")
+        token = _read_env("GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN", ["GOOGLE_ADS_ACCESS_TOKEN"])
+        developer_token = _read_env("GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN", ["GOOGLE_ADS_DEVELOPER_TOKEN"])
+        login_customer_id = _read_env("GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID", ["GOOGLE_ADS_LOGIN_CUSTOMER_ID"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
         if developer_token:
@@ -1707,20 +1701,13 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     if not connector:
         raise HTTPException(status_code=404, detail="Connector not available")
     env_key = str(connector.get("env_key", "")).strip()
-    alias_keys = [str(k).strip() for k in connector.get("env_aliases", []) if str(k).strip()]
-    candidate_keys = [k for k in [env_key, *alias_keys] if k]
-    configured_value = ""
-    for key in candidate_keys:
-        value = os.environ.get(key, "").strip()
-        if value:
-            configured_value = value
-            break
+    configured_value, _ = resolve_connector_env_value(connector)
     if not env_key or not configured_value:
         raise HTTPException(
             status_code=412,
             detail=f"Connector not configured. Set {env_key} to enable live execution.",
         )
-    target_url = payload.get("target_url") or connector.get("resolved_url") or connector["default_url"]
+    target_url = payload.get("target_url") or configured_value or connector.get("default_url")
     field_name = connector.get("sample_field", "message")
     body = {
         field_name: payload.get(field_name) or connector.get("sample_message"),
@@ -1730,32 +1717,33 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     method = str(connector.get("dispatch_method") or connector.get("health_method") or "POST").upper()
     headers = {"User-Agent": "GlobalFlow-Connector-Dispatch/1.0", "Accept": "application/json"}
 
-    def _read_env(name: str) -> str:
-        return os.environ.get(name, "").strip()
+    def _read_env(name: str, aliases: Optional[List[str]] = None) -> str:
+        value, _ = resolve_env_value(name, aliases or [])
+        return value
 
     if connector_id == "snowflake":
-        token = _read_env("GLOBALFLOW_SNOWFLAKE_TOKEN")
+        token = _read_env("GLOBALFLOW_SNOWFLAKE_TOKEN", ["SNOWFLAKE_TOKEN"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
     elif connector_id == "bigquery":
-        token = _read_env("GLOBALFLOW_BIGQUERY_TOKEN")
+        token = _read_env("GLOBALFLOW_BIGQUERY_TOKEN", ["BIGQUERY_TOKEN", "GOOGLE_BIGQUERY_TOKEN"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
     elif connector_id == "datadog":
-        api_key = _read_env("GLOBALFLOW_DATADOG_API_KEY")
-        app_key = _read_env("GLOBALFLOW_DATADOG_APP_KEY")
+        api_key = _read_env("GLOBALFLOW_DATADOG_API_KEY", ["DATADOG_API_KEY"])
+        app_key = _read_env("GLOBALFLOW_DATADOG_APP_KEY", ["DATADOG_APP_KEY", "DATADOG_APPLICATION_KEY"])
         if api_key:
             headers["DD-API-KEY"] = api_key
         if app_key:
             headers["DD-APPLICATION-KEY"] = app_key
     elif connector_id == "meta-ads":
-        token = _read_env("GLOBALFLOW_META_ADS_ACCESS_TOKEN")
+        token = _read_env("GLOBALFLOW_META_ADS_ACCESS_TOKEN", ["META_ADS_ACCESS_TOKEN", "FACEBOOK_ACCESS_TOKEN"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
     elif connector_id == "google-ads":
-        token = _read_env("GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN")
-        developer_token = _read_env("GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN")
-        login_customer_id = _read_env("GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID")
+        token = _read_env("GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN", ["GOOGLE_ADS_ACCESS_TOKEN"])
+        developer_token = _read_env("GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN", ["GOOGLE_ADS_DEVELOPER_TOKEN"])
+        login_customer_id = _read_env("GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID", ["GOOGLE_ADS_LOGIN_CUSTOMER_ID"])
         if token:
             headers["Authorization"] = f"Bearer {token}"
         if developer_token:

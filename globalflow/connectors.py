@@ -1,22 +1,76 @@
 import json
 import os
-from typing import Any, Dict, List
+import re
+from typing import Any, Dict, Iterable, List, Sequence, Tuple
 
 
-def _env_value(connector: Dict[str, Any]) -> str:
-    keys = [str(connector.get("env_key") or "").strip()]
-    keys.extend([str(k).strip() for k in connector.get("env_aliases", []) if str(k).strip()])
-    for key in keys:
-        if not key:
-            continue
+def _normalize_env_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", str(value or "").strip().lower())
+
+
+def _prefix_variants(base_key: str) -> List[str]:
+    key = str(base_key or "").strip().replace("-", "_").replace(".", "_")
+    if not key:
+        return []
+    upper = key.upper()
+    variants = {upper}
+    stripped = upper
+    for prefix in ("GLOBALFLOW_", "GLOBAL_FLOW_", "GF_", "APP_"):
+        if stripped.startswith(prefix):
+            stripped = stripped[len(prefix) :]
+    if stripped:
+        variants.update(
+            {
+                stripped,
+                f"GLOBALFLOW_{stripped}",
+                f"GLOBAL_FLOW_{stripped}",
+                f"GF_{stripped}",
+                f"APP_{stripped}",
+            }
+        )
+        if stripped.endswith("_ENDPOINT"):
+            stem = stripped[: -len("_ENDPOINT")]
+            variants.update({f"{stem}_URL", f"{stem}_URI", f"{stem}_WEBHOOK"})
+        if stripped.endswith("_WEBHOOK"):
+            stem = stripped[: -len("_WEBHOOK")]
+            variants.update({f"{stem}_ENDPOINT", f"{stem}_URL"})
+    return [candidate for candidate in variants if candidate]
+
+
+def _candidate_env_keys(primary: str, aliases: Sequence[str] = ()) -> List[str]:
+    candidates: List[str] = []
+    seen = set()
+    for raw in [primary, *aliases]:
+        for candidate in _prefix_variants(raw):
+            if candidate not in seen:
+                candidates.append(candidate)
+                seen.add(candidate)
+    return candidates
+
+
+def resolve_env_value(primary: str, aliases: Sequence[str] = ()) -> Tuple[str, str]:
+    candidates = _candidate_env_keys(primary, aliases)
+    for key in candidates:
         value = os.environ.get(key, "")
         if value and value.strip():
-            return value.strip()
-    return ""
+            return value.strip(), key
+
+    normalized_candidates = {_normalize_env_key(key) for key in candidates if key}
+    if normalized_candidates:
+        for env_key, env_value in os.environ.items():
+            if _normalize_env_key(env_key) in normalized_candidates and str(env_value or "").strip():
+                return str(env_value).strip(), env_key
+    return "", ""
+
+
+def resolve_connector_env_value(connector: Dict[str, Any]) -> Tuple[str, str]:
+    primary = str(connector.get("env_key") or "").strip()
+    aliases = [str(k).strip() for k in connector.get("env_aliases", []) if str(k).strip()]
+    return resolve_env_value(primary, aliases)
 
 
 def _resolve_url(connector: Dict[str, Any]) -> str:
-    env_value = _env_value(connector)
+    env_value, _ = resolve_connector_env_value(connector)
     if env_value:
         return env_value
     return connector["default_url"]
@@ -32,7 +86,8 @@ def _build_connector(definition: Dict[str, Any]) -> Dict[str, Any]:
     connector = dict(definition)
     connector["resolved_url"] = _resolve_url(connector)
     connector["sample_message_text"] = _sample_message_text(connector.get("sample_message", ""))
-    connector["configured"] = bool(_env_value(connector))
+    env_value, _ = resolve_connector_env_value(connector)
+    connector["configured"] = bool(env_value)
     return connector
 
 
