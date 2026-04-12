@@ -1329,11 +1329,17 @@ connectorForms.forEach((form) => {
 
   const refreshConnectorState = () => {
     if (!submitButton) return;
+    const connectorConfigured = form.dataset.configured === "true";
     const hasEndpoint = endpointInput && endpointInput.value.trim().startsWith("http");
     const hasSample = sampleInput && sampleInput.value.trim().length > 0;
-    submitButton.disabled = !(hasEndpoint && hasSample);
+    submitButton.disabled = !(connectorConfigured && hasEndpoint && hasSample);
     const statusEl = form.querySelector(".connector-status");
-    if (statusEl && !submitButton.disabled) {
+    if (!statusEl) return;
+    if (!connectorConfigured) {
+      statusEl.textContent = "Not configured in environment yet";
+      return;
+    }
+    if (!submitButton.disabled) {
       statusEl.textContent = "Ready to validate connector";
     }
   };

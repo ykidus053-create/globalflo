@@ -131,7 +131,7 @@
             <p class="integration-health connector-status" data-integration-health="{{ connector.id }}">
               {% if connector.configured %}Configured - run live check{% else %}Not configured - set {{ connector.env_key }}{% endif %}
             </p>
-            <form class="connector-form" data-connector-id="{{ connector.id }}">
+            <form class="connector-form" data-connector-id="{{ connector.id }}" data-configured="{% if connector.configured %}true{% else %}false{% endif %}">
               <input name="target_url" type="url" value="{{ connector.resolved_url }}" required />
               <input
                 name="{{ connector.sample_field }}"
@@ -142,7 +142,7 @@
               />
               <input name="context" type="text" value="GlobalFlow live integration run" />
               <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
-                <button class="btn-primary" type="submit">Run live action</button>
+                <button class="btn-primary" type="submit" {% if not connector.configured %}disabled{% endif %}>Run live action</button>
                 <button
                   class="btn-primary"
                   style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"

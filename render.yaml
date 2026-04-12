@@ -18,6 +18,22 @@ services:
         sync: false
       - key: GLOBALFLOW_APPLE_CLIENT_SECRET
         sync: false
+      - key: GLOBALFLOW_ZAPIER_WEBHOOK
+        sync: false
+      - key: GLOBALFLOW_MAKE_WEBHOOK
+        sync: false
+      - key: GLOBALFLOW_SNOWFLAKE_ENDPOINT
+        sync: false
+      - key: GLOBALFLOW_BIGQUERY_ENDPOINT
+        sync: false
+      - key: GLOBALFLOW_CLOUDWATCH_ENDPOINT
+        sync: false
+      - key: GLOBALFLOW_DATADOG_ENDPOINT
+        sync: false
+      - key: GLOBALFLOW_META_ADS_ENDPOINT
+        sync: false
+      - key: GLOBALFLOW_GOOGLE_ADS_ENDPOINT
+        sync: false
     buildCommand: pip install -r requirements.txt
     startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health

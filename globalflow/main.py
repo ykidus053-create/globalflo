@@ -1665,6 +1665,12 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     connector = CONNECTOR_LOOKUP.get(connector_id.lower())
     if not connector:
         raise HTTPException(status_code=404, detail="Connector not available")
+    env_key = str(connector.get("env_key", "")).strip()
+    if not env_key or not os.environ.get(env_key, "").strip():
+        raise HTTPException(
+            status_code=412,
+            detail=f"Connector not configured. Set {env_key} to enable live execution.",
+        )
     target_url = payload.get("target_url") or connector.get("resolved_url") or connector["default_url"]
     field_name = connector.get("sample_field", "message")
     body = {
