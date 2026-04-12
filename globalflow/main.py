@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import hashlib
 import hmac
@@ -1576,6 +1577,89 @@ async def submit_payment_request(method: str, payload: Dict[str, str]):
     }
 
 
+async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
+    connector_id = str(connector.get("id", "")).strip()
+    connector_name = str(connector.get("name", connector_id)).strip()
+    endpoint = str(connector.get("resolved_url") or connector.get("default_url") or "").strip()
+    env_key = str(connector.get("env_key") or "").strip()
+    configured = bool(env_key and os.environ.get(env_key, "").strip())
+    method = str(connector.get("health_method", "GET")).upper()
+
+    if not endpoint:
+        return {
+            "id": connector_id,
+            "name": connector_name,
+            "configured": configured,
+            "status": "unavailable",
+            "status_code": 0,
+            "latency_ms": None,
+            "message": "No endpoint configured",
+        }
+
+    if not configured:
+        return {
+            "id": connector_id,
+            "name": connector_name,
+            "configured": False,
+            "status": "not_configured",
+            "status_code": 0,
+            "latency_ms": None,
+            "message": f"Set {env_key} to enable live integration",
+        }
+
+    payload = {
+        str(connector.get("sample_field", "event")): connector.get("sample_message"),
+        "source": "globalflow-health-check",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+    headers = {"User-Agent": "GlobalFlow-Integration-Check/1.0", "Accept": "application/json"}
+
+    started = time.perf_counter()
+    status_code = 0
+    try:
+        async with httpx.AsyncClient(timeout=8, follow_redirects=True) as client:
+            if method == "POST":
+                response = await client.post(endpoint, json=payload, headers=headers)
+            else:
+                response = await client.get(endpoint, headers=headers)
+            status_code = int(response.status_code)
+    except httpx.HTTPError as exc:
+        latency_ms = round((time.perf_counter() - started) * 1000, 1)
+        return {
+            "id": connector_id,
+            "name": connector_name,
+            "configured": configured,
+            "status": "unreachable",
+            "status_code": 0,
+            "latency_ms": latency_ms,
+            "message": str(exc),
+        }
+
+    latency_ms = round((time.perf_counter() - started) * 1000, 1)
+    if status_code < 400:
+        state = "connected"
+        message = "Live endpoint reachable"
+    elif status_code in {401, 403}:
+        state = "auth_required"
+        message = "Endpoint reachable (auth required)"
+    elif status_code in {404, 405, 429}:
+        state = "reachable"
+        message = f"Endpoint reachable ({status_code})"
+    else:
+        state = "degraded"
+        message = f"Endpoint returned {status_code}"
+
+    return {
+        "id": connector_id,
+        "name": connector_name,
+        "configured": configured,
+        "status": state,
+        "status_code": status_code,
+        "latency_ms": latency_ms,
+        "message": message,
+    }
+
+
 @app.post("/api/connectors/{connector_id}", response_class=JSONResponse)
 async def trigger_connector(connector_id: str, payload: Dict[str, str]):
     connector = CONNECTOR_LOOKUP.get(connector_id.lower())
@@ -1619,6 +1703,21 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
         "message": f"{connector['name']} triggered - {response.status_code}",
         "details": details,
     }
+
+
+@app.get("/api/integrations/status", response_class=JSONResponse)
+async def list_integration_status():
+    checks = await asyncio.gather(*[_probe_connector_health(connector) for connector in CONNECTORS])
+    return {"items": checks, "updated_at": datetime.utcnow().isoformat()}
+
+
+@app.get("/api/integrations/{connector_id}/status", response_class=JSONResponse)
+async def integration_status(connector_id: str):
+    connector = CONNECTOR_LOOKUP.get(connector_id.lower())
+    if not connector:
+        raise HTTPException(status_code=404, detail="Integration not available")
+    check = await _probe_connector_health(connector)
+    return {"item": check, "updated_at": datetime.utcnow().isoformat()}
 
 @app.post("/api/feedback", response_class=JSONResponse)
 async def capture_feedback(payload: Dict[str, Any]):

@@ -54,6 +54,7 @@ const useCaseSearchMeta = document.getElementById("use-case-search-meta");
 const integrationSearch = document.getElementById("integration-search");
 const integrationSearchMeta = document.getElementById("integration-search-meta");
 const connectorCards = document.querySelectorAll(".connector-card");
+const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
 const openFeedbackButton = document.getElementById("open-feedback");
 const feedbackModal = document.getElementById("feedback-modal");
 const feedbackForm = document.getElementById("feedback-form");
@@ -962,6 +963,54 @@ function initSearchFilters() {
   filterIntegrations();
 }
 
+function setIntegrationHealthUi(connectorId, payload) {
+  if (!connectorId) return;
+  const statusEl = document.querySelector(`[data-integration-health="${connectorId}"]`);
+  const cardEl = document.querySelector(`.connector-card[data-connector-id="${connectorId}"]`);
+  if (!statusEl || !payload) return;
+
+  const status = String(payload.status || "unknown");
+  const latency = payload.latency_ms == null ? "" : ` - ${payload.latency_ms}ms`;
+  const statusCode = payload.status_code ? ` (${payload.status_code})` : "";
+  statusEl.textContent = `${status}${statusCode}${latency} - ${payload.message || "No details"}`;
+
+  if (cardEl) {
+    cardEl.dataset.health = status;
+    cardEl.classList.remove("is-health-ok", "is-health-warn", "is-health-bad");
+    if (["connected", "reachable", "auth_required"].includes(status)) {
+      cardEl.classList.add("is-health-ok");
+    } else if (["degraded", "not_configured"].includes(status)) {
+      cardEl.classList.add("is-health-warn");
+    } else {
+      cardEl.classList.add("is-health-bad");
+    }
+  }
+}
+
+async function refreshAllIntegrationHealth() {
+  if (!connectorCards.length) return;
+  try {
+    const data = await fetchJson("/api/integrations/status");
+    const items = Array.isArray(data.items) ? data.items : [];
+    items.forEach((item) => setIntegrationHealthUi(item.id, item));
+  } catch (error) {
+    console.warn("Integration health refresh failed", error);
+  }
+}
+
+async function checkSingleIntegration(connectorId, statusEl) {
+  if (!connectorId) return;
+  if (statusEl) statusEl.textContent = "checking live status...";
+  try {
+    const data = await fetchJson(`/api/integrations/${connectorId}/status`);
+    setIntegrationHealthUi(connectorId, data.item || {});
+    showToast(`${connectorId} status updated`);
+  } catch (error) {
+    if (statusEl) statusEl.textContent = error.message || "status check failed";
+    showToast(error.message || "status check failed");
+  }
+}
+
 async function submitFeedback(payload) {
   try {
     const data = await fetchJson("/api/feedback", {
@@ -1295,6 +1344,14 @@ connectorForms.forEach((form) => {
   refreshConnectorState();
 });
 
+integrationCheckButtons.forEach((button) => {
+  button.addEventListener("click", async () => {
+    const connectorId = button.dataset.integrationCheck;
+    const statusEl = document.querySelector(`[data-integration-health="${connectorId}"]`);
+    await checkSingleIntegration(connectorId, statusEl);
+  });
+});
+
 if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode("monthly"));
 if (annualToggle) annualToggle.addEventListener("click", () => setBillingMode("annual"));
 
@@ -1463,7 +1520,14 @@ async function bootstrap() {
   installStorytellingImmersion();
   installWorkflowKeyboardControls();
   setBillingMode(billingMode);
-  await Promise.allSettled([fetchTasks(), fetchSummary(), refreshMetrics(), refreshAutopilotStatus(), fetchActivity()]);
+  await Promise.allSettled([
+    fetchTasks(),
+    fetchSummary(),
+    refreshMetrics(),
+    refreshAutopilotStatus(),
+    fetchActivity(),
+    refreshAllIntegrationHealth(),
+  ]);
 }
 
 bootstrap().catch((error) => {
@@ -1489,3 +1553,4 @@ scheduleSafe(fetchTasks, 15000);
 scheduleSafe(refreshMetrics, 45000);
 scheduleSafe(refreshAutopilotStatus, 30000);
 scheduleSafe(fetchActivity, 30000);
+scheduleSafe(refreshAllIntegrationHealth, 60000);

@@ -10,9 +10,9 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/flow.css?v=92b99db" />
-    <link rel="stylesheet" href="/static/flow-system.css?v=92b99db" />
-    <link rel="stylesheet" href="/static/flow-polish.css?v=92b99db" />
+    <link rel="stylesheet" href="/static/flow.css?v=2e52e88" />
+    <link rel="stylesheet" href="/static/flow-system.css?v=2e52e88" />
+    <link rel="stylesheet" href="/static/flow-polish.css?v=2e52e88" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
   <body class="gf-polish paper-site top-tier-site workflow-lab-page is-loading">
@@ -335,28 +335,28 @@
           <details class="connector-card" open>
             <summary>
               <div class="connector-heading">
-                <div class="feature-icon feature-icon--slack" aria-hidden="true"></div>
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
                 <div>
-                  <h3>Slack Alert</h3>
-                  <p>Post automation summaries, anomalies, and approvals straight into a Slack channel.</p>
+                  <h3>Zapier</h3>
+                  <p>Plug GlobalFlow into 1,000+ apps instantly with trigger/action automation.</p>
                 </div>
               </div>
               <span class="connector-toggle">Trigger</span>
             </summary>
-            <form class="connector-form" data-connector-id="slack">
+            <form class="connector-form" data-connector-id="zapier">
               <label>
                 Endpoint
-                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://hooks.example.com/slack/globalflow" />
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://hooks.zapier.com/hooks/catch/123456/abcde" />
               </label>
               <label>
-                Text
-                <input name="text" placeholder="GlobalFlow finished a billing automation - review the results in Prefect." />
+                Event
+                <input name="event" placeholder="billing.run.completed" />
               </label>
               <label>
                 Context
                 <input name="context" placeholder="Workflow workspace trigger" />
               </label>
-              <button type="submit" class="primary small">Trigger Slack Alert</button>
+              <button type="submit" class="primary small">Trigger Zapier</button>
               <p class="modal-note connector-status"></p>
             </form>
           </details>
@@ -364,28 +364,28 @@
           <details class="connector-card" >
             <summary>
               <div class="connector-heading">
-                <div class="feature-icon feature-icon--hubspot" aria-hidden="true"></div>
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
                 <div>
-                  <h3>HubSpot CRM</h3>
-                  <p>Create or update deals and contacts with the automation outcome metadata.</p>
+                  <h3>Make (Integromat)</h3>
+                  <p>Run multi-step low-code scenarios with branching and retries.</p>
                 </div>
               </div>
               <span class="connector-toggle">Trigger</span>
             </summary>
-            <form class="connector-form" data-connector-id="hubspot">
+            <form class="connector-form" data-connector-id="make">
               <label>
                 Endpoint
-                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.hubapi.com/crm/v3/objects/deals" />
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxx" />
               </label>
               <label>
-                Properties
-                <input name="properties" placeholder="{&#39;stage&#39;: &#39;automation complete&#39;, &#39;amount&#39;: &#39;12500&#39;}" />
+                Event
+                <input name="event" placeholder="ops.orchestration.synced" />
               </label>
               <label>
                 Context
                 <input name="context" placeholder="Workflow workspace trigger" />
               </label>
-              <button type="submit" class="primary small">Trigger HubSpot CRM</button>
+              <button type="submit" class="primary small">Trigger Make (Integromat)</button>
               <p class="modal-note connector-status"></p>
             </form>
           </details>
@@ -393,28 +393,28 @@
           <details class="connector-card" >
             <summary>
               <div class="connector-heading">
-                <div class="feature-icon feature-icon--quickbooks" aria-hidden="true"></div>
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
                 <div>
-                  <h3>QuickBooks Sync</h3>
-                  <p>Send reconciliation and invoice metadata into QuickBooks Online for downstream finance teams.</p>
+                  <h3>Snowflake</h3>
+                  <p>Send structured automation telemetry to enterprise data warehousing.</p>
                 </div>
               </div>
               <span class="connector-toggle">Trigger</span>
             </summary>
-            <form class="connector-form" data-connector-id="quickbooks">
+            <form class="connector-form" data-connector-id="snowflake">
               <label>
                 Endpoint
-                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.intuit.com/v3/company/1234567890/payment" />
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://example-account.snowflakecomputing.com/api/v2/statements" />
               </label>
               <label>
-                Invoice_id
-                <input name="invoice_id" placeholder="GLFLOW-689 reconciliation processed" />
+                Sqltext
+                <input name="sqlText" placeholder="select current_timestamp()" />
               </label>
               <label>
                 Context
                 <input name="context" placeholder="Workflow workspace trigger" />
               </label>
-              <button type="submit" class="primary small">Trigger QuickBooks Sync</button>
+              <button type="submit" class="primary small">Trigger Snowflake</button>
               <p class="modal-note connector-status"></p>
             </form>
           </details>
@@ -422,28 +422,144 @@
           <details class="connector-card" >
             <summary>
               <div class="connector-heading">
-                <div class="feature-icon feature-icon--airtable" aria-hidden="true"></div>
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
                 <div>
-                  <h3>Airtable Sync</h3>
-                  <p>Stream updates into Airtable bases for ops teams that track statuses visually.</p>
+                  <h3>BigQuery</h3>
+                  <p>Export workflow outcomes for advanced analytics and ML pipelines.</p>
                 </div>
               </div>
               <span class="connector-toggle">Trigger</span>
             </summary>
-            <form class="connector-form" data-connector-id="airtable">
+            <form class="connector-form" data-connector-id="bigquery">
               <label>
                 Endpoint
-                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.airtable.com/v0/appXXXXXXXXX/GlobalFlow" />
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://bigquery.googleapis.com/bigquery/v2/projects/project-id/jobs" />
               </label>
               <label>
-                Fields
-                <input name="fields" placeholder="{&#39;Name&#39;: &#39;GlobalFlow billing automation&#39;, &#39;Status&#39;: &#39;Complete&#39;}" />
+                Jobreference
+                <input name="jobReference" placeholder="{&#39;projectId&#39;: &#39;project-id&#39;}" />
               </label>
               <label>
                 Context
                 <input name="context" placeholder="Workflow workspace trigger" />
               </label>
-              <button type="submit" class="primary small">Trigger Airtable Sync</button>
+              <button type="submit" class="primary small">Trigger BigQuery</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
+                <div>
+                  <h3>AWS CloudWatch</h3>
+                  <p>Publish logs and metrics for operational monitoring and alerting.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="cloudwatch">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://monitoring.amazonaws.com/" />
+              </label>
+              <label>
+                Action
+                <input name="Action" placeholder="ListMetrics" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="Workflow workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger AWS CloudWatch</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
+                <div>
+                  <h3>Datadog</h3>
+                  <p>Stream service checks and events into centralized observability dashboards.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="datadog">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://api.datadoghq.com/api/v1/validate" />
+              </label>
+              <label>
+                Title
+                <input name="title" placeholder="GlobalFlow connector validation" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="Workflow workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger Datadog</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
+                <div>
+                  <h3>Meta Ads</h3>
+                  <p>Send conversion signals to improve campaign optimization and attribution.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="meta-ads">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://graph.facebook.com/v20.0/act_123456789/campaigns" />
+              </label>
+              <label>
+                Name
+                <input name="name" placeholder="GlobalFlow conversion sync" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="Workflow workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger Meta Ads</button>
+              <p class="modal-note connector-status"></p>
+            </form>
+          </details>
+          
+          <details class="connector-card" >
+            <summary>
+              <div class="connector-heading">
+                <div class="feature-icon feature-icon--" aria-hidden="true"></div>
+                <div>
+                  <h3>Google Ads</h3>
+                  <p>Sync conversion and spend signals to improve ROI visibility.</p>
+                </div>
+              </div>
+              <span class="connector-toggle">Trigger</span>
+            </summary>
+            <form class="connector-form" data-connector-id="google-ads">
+              <label>
+                Endpoint
+                <input name="target_url" type="url" placeholder="https://hooks.example.com/..." value="https://googleads.googleapis.com/v17/customers:listAccessibleCustomers" />
+              </label>
+              <label>
+                Customer_id
+                <input name="customer_id" placeholder="1234567890" />
+              </label>
+              <label>
+                Context
+                <input name="context" placeholder="Workflow workspace trigger" />
+              </label>
+              <button type="submit" class="primary small">Trigger Google Ads</button>
               <p class="modal-note connector-status"></p>
             </form>
           </details>
@@ -461,8 +577,8 @@
     </main>
 
     <div class="toast" id="toast" aria-live="polite">Action running...</div>
-    <script src="/static/site-boot.js?v=92b99db" defer></script>
-    <script type="module" src="/static/flow.js?v=92b99db"></script>
-    <script type="module" src="/static/workflow.js?v=92b99db"></script>
+    <script src="/static/site-boot.js?v=2e52e88" defer></script>
+    <script type="module" src="/static/flow.js?v=2e52e88"></script>
+    <script type="module" src="/static/workflow.js?v=2e52e88"></script>
   </body>
 </html>

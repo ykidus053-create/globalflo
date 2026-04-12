@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="/static/flow.css?v=92b99db">
+  <link rel="stylesheet" href="/static/flow.css?v=2e52e88">
     <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
 <body>
@@ -25,6 +25,7 @@
       <a href="#overview">Overview</a>
       <a href="#tasks">Tasks</a>
       <a href="#agents">Agents</a>
+      <a href="#integrations">Integrations</a>
       <a href="/account">Account & Settings</a>
     </nav>
   </header>
@@ -148,7 +149,350 @@
       </div>
     </section>
 
+    <section class="panel" id="integrations" aria-labelledby="integrations-heading">
+      <div class="section-head">
+        <h2 id="integrations-heading">Real Integrations</h2>
+        <p>Live provider connections for automation, data warehousing, observability, and marketing performance.</p>
+      </div>
+
+      <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-3);">
+        <input
+          id="integration-search"
+          type="search"
+          placeholder="Search integrations..."
+          aria-label="Search integrations"
+          style="min-width:260px;max-width:520px;width:100%;"
+        />
+        <span id="integration-search-meta" class="status-pill">0/0</span>
+      </div>
+
+      <div class="grid-auto gf-card-grid">
+        
+        <article class="card gf-card connector-card" data-connector-id="zapier">
+          <header class="card-title">
+            Zapier
+            <span class="status-pill">automation</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Plug GlobalFlow into 1,000+ apps instantly with trigger/action automation.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> Lets GlobalFlow plug into 1000+ tools instantly</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://hooks.zapier.com/hooks/catch/123456/abcde</p>
+            <p class="integration-health connector-status" data-integration-health="zapier">
+              Not configured - set GLOBALFLOW_ZAPIER_WEBHOOK
+            </p>
+            <form class="connector-form" data-connector-id="zapier">
+              <input name="target_url" type="url" value="https://hooks.zapier.com/hooks/catch/123456/abcde" required />
+              <input
+                name="event"
+                type="text"
+                value="billing.run.completed"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="zapier"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://zapier.com/developer" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="make">
+          <header class="card-title">
+            Make (Integromat)
+            <span class="status-pill">automation</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Run multi-step low-code scenarios with branching and retries.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> Lets GlobalFlow plug into 1000+ tools instantly</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxx</p>
+            <p class="integration-health connector-status" data-integration-health="make">
+              Not configured - set GLOBALFLOW_MAKE_WEBHOOK
+            </p>
+            <form class="connector-form" data-connector-id="make">
+              <input name="target_url" type="url" value="https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxx" required />
+              <input
+                name="event"
+                type="text"
+                value="ops.orchestration.synced"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="make"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://www.make.com/en/help" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="snowflake">
+          <header class="card-title">
+            Snowflake
+            <span class="status-pill">data-warehouse</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Send structured automation telemetry to enterprise data warehousing.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> Deep analysis, predictive modeling, enterprise scalability</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://example-account.snowflakecomputing.com/api/v2/statements</p>
+            <p class="integration-health connector-status" data-integration-health="snowflake">
+              Not configured - set GLOBALFLOW_SNOWFLAKE_ENDPOINT
+            </p>
+            <form class="connector-form" data-connector-id="snowflake">
+              <input name="target_url" type="url" value="https://example-account.snowflakecomputing.com/api/v2/statements" required />
+              <input
+                name="sqlText"
+                type="text"
+                value="select current_timestamp()"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="snowflake"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://docs.snowflake.com/en/developer-guide/sql-api/intro" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="bigquery">
+          <header class="card-title">
+            BigQuery
+            <span class="status-pill">data-warehouse</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Export workflow outcomes for advanced analytics and ML pipelines.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> Deep analysis, predictive modeling, enterprise scalability</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://bigquery.googleapis.com/bigquery/v2/projects/project-id/jobs</p>
+            <p class="integration-health connector-status" data-integration-health="bigquery">
+              Not configured - set GLOBALFLOW_BIGQUERY_ENDPOINT
+            </p>
+            <form class="connector-form" data-connector-id="bigquery">
+              <input name="target_url" type="url" value="https://bigquery.googleapis.com/bigquery/v2/projects/project-id/jobs" required />
+              <input
+                name="jobReference"
+                type="text"
+                value="{&#34;projectId&#34;:&#34;project-id&#34;}"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="bigquery"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://cloud.google.com/bigquery/docs/reference/rest" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="cloudwatch">
+          <header class="card-title">
+            AWS CloudWatch
+            <span class="status-pill">security-logs</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Publish logs and metrics for operational monitoring and alerting.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> System monitoring and anomaly detection</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://monitoring.amazonaws.com/</p>
+            <p class="integration-health connector-status" data-integration-health="cloudwatch">
+              Not configured - set GLOBALFLOW_CLOUDWATCH_ENDPOINT
+            </p>
+            <form class="connector-form" data-connector-id="cloudwatch">
+              <input name="target_url" type="url" value="https://monitoring.amazonaws.com/" required />
+              <input
+                name="Action"
+                type="text"
+                value="ListMetrics"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="cloudwatch"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/Welcome.html" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="datadog">
+          <header class="card-title">
+            Datadog
+            <span class="status-pill">security-logs</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Stream service checks and events into centralized observability dashboards.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> System monitoring and anomaly detection</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://api.datadoghq.com/api/v1/validate</p>
+            <p class="integration-health connector-status" data-integration-health="datadog">
+              Not configured - set GLOBALFLOW_DATADOG_ENDPOINT
+            </p>
+            <form class="connector-form" data-connector-id="datadog">
+              <input name="target_url" type="url" value="https://api.datadoghq.com/api/v1/validate" required />
+              <input
+                name="title"
+                type="text"
+                value="GlobalFlow connector validation"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="datadog"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://docs.datadoghq.com/api/latest/" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="meta-ads">
+          <header class="card-title">
+            Meta Ads
+            <span class="status-pill">marketing</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Send conversion signals to improve campaign optimization and attribution.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> Campaign optimization and ROI analysis</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://graph.facebook.com/v20.0/act_123456789/campaigns</p>
+            <p class="integration-health connector-status" data-integration-health="meta-ads">
+              Not configured - set GLOBALFLOW_META_ADS_ENDPOINT
+            </p>
+            <form class="connector-form" data-connector-id="meta-ads">
+              <input name="target_url" type="url" value="https://graph.facebook.com/v20.0/act_123456789/campaigns" required />
+              <input
+                name="name"
+                type="text"
+                value="GlobalFlow conversion sync"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="meta-ads"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://developers.facebook.com/docs/marketing-apis" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+        <article class="card gf-card connector-card" data-connector-id="google-ads">
+          <header class="card-title">
+            Google Ads
+            <span class="status-pill">marketing</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">Sync conversion and spend signals to improve ROI visibility.</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> Campaign optimization and ROI analysis</p>
+            
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> https://googleads.googleapis.com/v17/customers:listAccessibleCustomers</p>
+            <p class="integration-health connector-status" data-integration-health="google-ads">
+              Not configured - set GLOBALFLOW_GOOGLE_ADS_ENDPOINT
+            </p>
+            <form class="connector-form" data-connector-id="google-ads">
+              <input name="target_url" type="url" value="https://googleads.googleapis.com/v17/customers:listAccessibleCustomers" required />
+              <input
+                name="customer_id"
+                type="text"
+                value="1234567890"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="google-ads"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="https://developers.google.com/google-ads/api/docs/start" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        
+      </div>
+    </section>
+
   </main>
 
+  <script src="/static/flow.js?v=2e52e88"></script>
 </body>
 </html>

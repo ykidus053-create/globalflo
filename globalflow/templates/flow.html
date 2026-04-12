@@ -24,6 +24,7 @@
       <a href="#overview">Overview</a>
       <a href="#tasks">Tasks</a>
       <a href="#agents">Agents</a>
+      <a href="#integrations">Integrations</a>
       <a href="/account">Account & Settings</a>
     </nav>
   </header>
@@ -97,7 +98,70 @@
       </div>
     </section>
 
+    <section class="panel" id="integrations" aria-labelledby="integrations-heading">
+      <div class="section-head">
+        <h2 id="integrations-heading">Real Integrations</h2>
+        <p>Live provider connections for automation, data warehousing, observability, and marketing performance.</p>
+      </div>
+
+      <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-3);">
+        <input
+          id="integration-search"
+          type="search"
+          placeholder="Search integrations..."
+          aria-label="Search integrations"
+          style="min-width:260px;max-width:520px;width:100%;"
+        />
+        <span id="integration-search-meta" class="status-pill">0/0</span>
+      </div>
+
+      <div class="grid-auto gf-card-grid">
+        {% for connector in connectors %}
+        <article class="card gf-card connector-card" data-connector-id="{{ connector.id }}">
+          <header class="card-title">
+            {{ connector.name }}
+            <span class="status-pill">{{ connector.category }}</span>
+          </header>
+          <div class="card-body">
+            <p style="margin-bottom: var(--space-2);">{{ connector.description }}</p>
+            {% if connector.capability %}
+            <p style="margin-bottom: var(--space-2);"><strong>Impact:</strong> {{ connector.capability }}</p>
+            {% endif %}
+            <p style="margin-bottom: var(--space-2);"><strong>Endpoint:</strong> {{ connector.resolved_url }}</p>
+            <p class="integration-health connector-status" data-integration-health="{{ connector.id }}">
+              {% if connector.configured %}Configured - run live check{% else %}Not configured - set {{ connector.env_key }}{% endif %}
+            </p>
+            <form class="connector-form" data-connector-id="{{ connector.id }}">
+              <input name="target_url" type="url" value="{{ connector.resolved_url }}" required />
+              <input
+                name="{{ connector.sample_field }}"
+                type="text"
+                value="{{ connector.sample_message_text }}"
+                placeholder="Sample payload"
+                required
+              />
+              <input name="context" type="text" value="GlobalFlow live integration run" />
+              <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;">
+                <button class="btn-primary" type="submit">Run live action</button>
+                <button
+                  class="btn-primary"
+                  style="background: transparent; border: 1px solid var(--color-border); color: var(--color-text);"
+                  type="button"
+                  data-integration-check="{{ connector.id }}"
+                >
+                  Check live status
+                </button>
+              </div>
+            </form>
+            <p style="margin-top:var(--space-2);"><a href="{{ connector.doc }}" target="_blank" rel="noreferrer">API docs</a></p>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
   </main>
 
+  <script src="/static/flow.js?v={{ asset_version }}"></script>
 </body>
 </html>

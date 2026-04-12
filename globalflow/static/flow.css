@@ -284,3 +284,22 @@ input:focus, select:focus, textarea:focus {
     transition: none !important;
   }
 }
+
+.connector-status {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.connector-card.is-health-ok {
+  border-color: #2e7d32;
+}
+
+.connector-card.is-health-warn {
+  border-color: #ad8b00;
+}
+
+.connector-card.is-health-bad {
+  border-color: #a83232;
+}
