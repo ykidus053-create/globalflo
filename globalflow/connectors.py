@@ -40,6 +40,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "automation",
             "capability": "Lets GlobalFlow plug into 1000+ tools instantly",
             "health_method": "POST",
+            "dispatch_method": "POST",
         }
     ),
     _build_connector(
@@ -55,6 +56,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "automation",
             "capability": "Lets GlobalFlow plug into 1000+ tools instantly",
             "health_method": "POST",
+            "dispatch_method": "POST",
         }
     ),
     _build_connector(
@@ -70,6 +72,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "data-warehouse",
             "capability": "Deep analysis, predictive modeling, enterprise scalability",
             "health_method": "POST",
+            "dispatch_method": "POST",
         }
     ),
     _build_connector(
@@ -85,6 +88,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "data-warehouse",
             "capability": "Deep analysis, predictive modeling, enterprise scalability",
             "health_method": "POST",
+            "dispatch_method": "POST",
         }
     ),
     _build_connector(
@@ -100,6 +104,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "security-logs",
             "capability": "System monitoring and anomaly detection",
             "health_method": "GET",
+            "dispatch_method": "GET",
         }
     ),
     _build_connector(
@@ -115,6 +120,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "security-logs",
             "capability": "System monitoring and anomaly detection",
             "health_method": "GET",
+            "dispatch_method": "GET",
         }
     ),
     _build_connector(
@@ -130,6 +136,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "marketing",
             "capability": "Campaign optimization and ROI analysis",
             "health_method": "GET",
+            "dispatch_method": "POST",
         }
     ),
     _build_connector(
@@ -145,6 +152,7 @@ CONNECTORS: List[Dict[str, Any]] = [
             "category": "marketing",
             "capability": "Campaign optimization and ROI analysis",
             "health_method": "GET",
+            "dispatch_method": "GET",
         }
     ),
 ]

@@ -1614,6 +1614,39 @@ async def _probe_connector_health(connector: Dict[str, Any]) -> Dict[str, Any]:
     }
     headers = {"User-Agent": "GlobalFlow-Integration-Check/1.0", "Accept": "application/json"}
 
+    def _read_env(name: str) -> str:
+        return os.environ.get(name, "").strip()
+
+    if connector_id == "snowflake":
+        token = _read_env("GLOBALFLOW_SNOWFLAKE_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif connector_id == "bigquery":
+        token = _read_env("GLOBALFLOW_BIGQUERY_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif connector_id == "datadog":
+        api_key = _read_env("GLOBALFLOW_DATADOG_API_KEY")
+        app_key = _read_env("GLOBALFLOW_DATADOG_APP_KEY")
+        if api_key:
+            headers["DD-API-KEY"] = api_key
+        if app_key:
+            headers["DD-APPLICATION-KEY"] = app_key
+    elif connector_id == "meta-ads":
+        token = _read_env("GLOBALFLOW_META_ADS_ACCESS_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif connector_id == "google-ads":
+        token = _read_env("GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN")
+        developer_token = _read_env("GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN")
+        login_customer_id = _read_env("GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        if developer_token:
+            headers["developer-token"] = developer_token
+        if login_customer_id:
+            headers["login-customer-id"] = login_customer_id
+
     started = time.perf_counter()
     status_code = 0
     try:
@@ -1678,9 +1711,48 @@ async def trigger_connector(connector_id: str, payload: Dict[str, str]):
         "timestamp": datetime.utcnow().isoformat(),
         "context": payload.get("context", "GlobalFlow automation"),
     }
+    method = str(connector.get("dispatch_method") or connector.get("health_method") or "POST").upper()
+    headers = {"User-Agent": "GlobalFlow-Connector-Dispatch/1.0", "Accept": "application/json"}
+
+    def _read_env(name: str) -> str:
+        return os.environ.get(name, "").strip()
+
+    if connector_id == "snowflake":
+        token = _read_env("GLOBALFLOW_SNOWFLAKE_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif connector_id == "bigquery":
+        token = _read_env("GLOBALFLOW_BIGQUERY_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif connector_id == "datadog":
+        api_key = _read_env("GLOBALFLOW_DATADOG_API_KEY")
+        app_key = _read_env("GLOBALFLOW_DATADOG_APP_KEY")
+        if api_key:
+            headers["DD-API-KEY"] = api_key
+        if app_key:
+            headers["DD-APPLICATION-KEY"] = app_key
+    elif connector_id == "meta-ads":
+        token = _read_env("GLOBALFLOW_META_ADS_ACCESS_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif connector_id == "google-ads":
+        token = _read_env("GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN")
+        developer_token = _read_env("GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN")
+        login_customer_id = _read_env("GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        if developer_token:
+            headers["developer-token"] = developer_token
+        if login_customer_id:
+            headers["login-customer-id"] = login_customer_id
+
     try:
         async with httpx.AsyncClient(timeout=10) as client:
-            response = await client.post(target_url, json=body)
+            if method == "GET":
+                response = await client.get(target_url, headers=headers, params=body)
+            else:
+                response = await client.post(target_url, json=body, headers=headers)
             response.raise_for_status()
     except httpx.HTTPError as exc:
         logger.warning("Connector %s failed: %s", connector_id, exc)

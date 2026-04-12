@@ -132,6 +132,81 @@ function applyAnticipatoryDesign() {
       if (card && grid) grid.prepend(card);
     });
   }
+  return segment;
+}
+
+function applySegmentCopy(segment) {
+  const lead = document.querySelector(".hero-copy .lead");
+  const h1 = document.querySelector(".hero-copy h1");
+  if (!lead || !h1) return;
+
+  const copy = {
+    marketing: {
+      h1: "One control room for campaigns, billing, files, and compliance.",
+      lead: "Automate campaign follow-up, invoicing, files, and compliance from one operating layer.",
+    },
+    finance: {
+      h1: "One control room for billing, tax readiness, files, and follow-up.",
+      lead: "Automate invoicing, reconciliation, compliance prep, and follow-up with live operator visibility.",
+    },
+    automation: {
+      h1: "One control room for routing, execution, verification, and handoff.",
+      lead: "Automate operations with clear execution states, ownership, and next actions in one place.",
+    },
+    general: {
+      h1: "One calm control room for calls, billing, taxes, files, and follow-up.",
+      lead: "Automate billing, follow-up, files, and compliance. Most pilot teams recover 20+ hours each week.",
+    },
+  };
+
+  const selected = copy[segment] || copy.general;
+  h1.textContent = selected.h1;
+  lead.textContent = selected.lead;
+}
+
+function applyPrimaryActionFocus() {
+  const actionTargets = Array.from(document.querySelectorAll(".primary, .ghost"));
+  const sectionMap = {
+    hero: ".hero-actions .primary",
+    demo: "#watch-demo",
+    flowboard: "#launch-orchestration",
+    integrations: ".connector-card:not([hidden]) .primary",
+    pricing: "[data-checkout-tier]",
+  };
+
+  const setPrimary = (sectionId) => {
+    actionTargets.forEach((el) => el.classList.remove("is-action-primary"));
+    const selector = sectionMap[sectionId];
+    if (!selector) return;
+    const primary = document.querySelector(selector);
+    if (primary) primary.classList.add("is-action-primary");
+    document.body.dataset.primarySection = sectionId || "hero";
+  };
+
+  const sections = ["hero", "demo", "flowboard", "integrations", "pricing"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  if (!sections.length) return;
+  setPrimary("hero");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target?.id) setPrimary(visible.target.id);
+    },
+    { threshold: [0.35, 0.6, 0.85] }
+  );
+  sections.forEach((section) => observer.observe(section));
+}
+
+function hydrateConversionForms() {
+  const session = readSession();
+  const email = session?.email ? String(session.email).trim() : "";
+  if (!email) return;
+  const subscribeEmail = subscribeForm?.querySelector('input[name="email"]');
+  if (subscribeEmail && !subscribeEmail.value) subscribeEmail.value = email;
 }
 
 function apiUrl(path) {
@@ -967,7 +1042,10 @@ function scheduleSafe(task, interval) {
 }
 
 async function bootstrap() {
-  applyAnticipatoryDesign();
+  const segment = applyAnticipatoryDesign();
+  applySegmentCopy(segment);
+  applyPrimaryActionFocus();
+  hydrateConversionForms();
   handleAuthReturn();
 initRevealObserver();
 initActiveNav();

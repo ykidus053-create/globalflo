@@ -34,6 +34,22 @@ services:
         sync: false
       - key: GLOBALFLOW_GOOGLE_ADS_ENDPOINT
         sync: false
+      - key: GLOBALFLOW_SNOWFLAKE_TOKEN
+        sync: false
+      - key: GLOBALFLOW_BIGQUERY_TOKEN
+        sync: false
+      - key: GLOBALFLOW_DATADOG_API_KEY
+        sync: false
+      - key: GLOBALFLOW_DATADOG_APP_KEY
+        sync: false
+      - key: GLOBALFLOW_META_ADS_ACCESS_TOKEN
+        sync: false
+      - key: GLOBALFLOW_GOOGLE_ADS_ACCESS_TOKEN
+        sync: false
+      - key: GLOBALFLOW_GOOGLE_ADS_DEVELOPER_TOKEN
+        sync: false
+      - key: GLOBALFLOW_GOOGLE_ADS_LOGIN_CUSTOMER_ID
+        sync: false
     buildCommand: pip install -r requirements.txt
     startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
