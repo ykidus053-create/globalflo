@@ -195,6 +195,48 @@
         </div>
       </section>
 
+      <section class="wf-section ops-blueprint" id="ops-intelligence">
+        <div class="section-heading">
+          <h2>{{ ai_ops_blueprint.headline }}</h2>
+          <p>{{ ai_ops_blueprint.overview }}</p>
+        </div>
+        <div class="ops-architecture">
+          {% for node in ai_ops_blueprint.architecture %}
+          <span>{{ loop.index }}. {{ node }}</span>
+          {% endfor %}
+        </div>
+        <div class="wf-ai-grid">
+          {% for step in ai_ops_blueprint.steps %}
+          <article class="wf-ai-card">
+            <header>
+              <h3>{{ loop.index }}. {{ step.title }}</h3>
+              <span class="wf-badge" data-state="ready">Live</span>
+            </header>
+            <p>{{ step.detail }}</p>
+            <p class="modal-note"><strong>Outcome:</strong> {{ step.outcome }}</p>
+          </article>
+          {% endfor %}
+        </div>
+        <div class="wf-immersive-controls">
+          <article class="summary">
+            <h3>Guardrails</h3>
+            <ul>
+              {% for rule in ai_ops_blueprint.guardrails %}
+              <li>{{ rule }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+          <article class="summary">
+            <h3>Phase 2+</h3>
+            <ul>
+              {% for item in ai_ops_blueprint.phase2 %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <section id="operators" class="wf-section">
         <div class="section-heading">
           <h2>AI operator cards</h2>

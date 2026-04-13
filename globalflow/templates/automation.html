@@ -172,6 +172,45 @@
         </div>
       </section>
 
+      <section class="integrations ops-blueprint" id="ops-intelligence">
+        <div class="section-heading">
+          <h2>{{ ai_ops_blueprint.headline }}</h2>
+          <p>{{ ai_ops_blueprint.overview }}</p>
+        </div>
+        <div class="ops-architecture">
+          {% for node in ai_ops_blueprint.architecture %}
+          <span>{{ loop.index }}. {{ node }}</span>
+          {% endfor %}
+        </div>
+        <div class="connectors-grid">
+          {% for step in ai_ops_blueprint.steps %}
+          <article class="connector-card">
+            <h3>{{ loop.index }}. {{ step.title }}</h3>
+            <p>{{ step.detail }}</p>
+            <p class="modal-note"><strong>Outcome:</strong> {{ step.outcome }}</p>
+          </article>
+          {% endfor %}
+        </div>
+        <div class="ops-safety">
+          <article class="summary">
+            <h3>Built-in guardrails</h3>
+            <ul>
+              {% for rule in ai_ops_blueprint.guardrails %}
+              <li>{{ rule }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+          <article class="summary">
+            <h3>Phase 2 roadmap</h3>
+            <ul>
+              {% for item in ai_ops_blueprint.phase2 %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </article>
+        </div>
+      </section>
+
       <div class="flow-modal" role="dialog" aria-modal="true" id="flow-modal">
         <div class="flow-modal__content">
           <button class="flow-modal__close" id="flow-modal-close" type="button">&times;</button>

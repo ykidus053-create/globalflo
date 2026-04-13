@@ -900,6 +900,51 @@ AUTOMATION_TOOLS = [
 
 AUTOMATION_TOOL_LOOKUP = {tool["id"]: tool for tool in AUTOMATION_TOOLS}
 
+AI_OPS_BLUEPRINT = {
+    "headline": "GlobalFlow — AI Ops Intelligence System",
+    "overview": "Data In -> Intelligence -> Risk Check -> Human Approval -> Controlled Action",
+    "steps": [
+        {"title": "Data Ingestion", "detail": "Collect Slack, Stripe, HubSpot, Analytics, and Support events via webhook/API.", "outcome": "Real-time + batch coverage"},
+        {"title": "Event Normalization", "detail": "Convert every event into one unified schema for scalable processing.", "outcome": "Consistent event object"},
+        {"title": "Routing Engine", "detail": "Route events by domain to finance, churn, support, and compliance analyzers.", "outcome": "Correct processor selection"},
+        {"title": "AI Analysis", "detail": "Run cross-system pattern analysis to detect risk and opportunity context.", "outcome": "Context-aware conclusions"},
+        {"title": "Context Enrichment", "detail": "Pull CLV, recent activity, and historical issues before recommendations.", "outcome": "Lower false positives"},
+        {"title": "Risk Scoring", "detail": "Score risk by impact, reversibility, confidence, and customer importance.", "outcome": "0-10 risk signal"},
+        {"title": "Recommendation Generation", "detail": "Produce issue, cause, recommended actions, and confidence output.", "outcome": "Actionable response package"},
+        {"title": "Policy Guardrails", "detail": "Apply hard rules before execution based on risk and action class.", "outcome": "Unsafe actions blocked"},
+        {"title": "Human Approval", "detail": "Deliver approve/reject/modify decision prompts in dashboard and Slack.", "outcome": "Operator-in-control workflow"},
+        {"title": "Decision Handling", "detail": "Branch approved, rejected, or modified flows into controlled next steps.", "outcome": "Deterministic control paths"},
+        {"title": "Execution Engine", "detail": "Execute only approved actions across connectors and internal systems.", "outcome": "Controlled external actions"},
+        {"title": "Audit Trail", "detail": "Log actor, reason, timestamp, and payload for every state transition.", "outcome": "Compliance-ready traceability"},
+        {"title": "Learning Loop", "detail": "Capture outcomes and feed recommendation tuning over time.", "outcome": "Continuous system improvement"},
+    ],
+    "guardrails": [
+        "Default mode is read-only.",
+        "Financial actions always require approval.",
+        "Risk score > 7 requires escalation.",
+        "Confidence thresholds gate auto-recommendations.",
+        "Execution paths include rollback hooks.",
+    ],
+    "architecture": [
+        "Connectors",
+        "Event Bus",
+        "Routing Engine",
+        "AI Analysis",
+        "Risk Engine",
+        "Policy Engine",
+        "Human Approval",
+        "Execution Engine",
+        "Audit + Feedback",
+    ],
+    "phase2": [
+        "Predictive analytics",
+        "Multi-agent validation",
+        "What-if simulation",
+        "Adaptive workflows",
+        "Cross-company benchmarking",
+    ],
+}
+
 monitoring = Monitoring()
 activity_log = ActivityLog()
 orchestrator = FlowOrchestrator(activity_log)
@@ -2149,6 +2194,7 @@ async def automation_workspace(request: Request):
             "request": request,
             "autopilot": autopilot.status(),
             "connectors": CONNECTORS,
+            "ai_ops_blueprint": AI_OPS_BLUEPRINT,
             "theme": _active_theme(),
         },
     )
@@ -2180,6 +2226,7 @@ async def workflow_workspace(request: Request):
             "connectors": CONNECTORS,
             "workflow_signals": workflow_signals,
             "workflow_operators": workflow_operators,
+            "ai_ops_blueprint": AI_OPS_BLUEPRINT,
             "theme": _active_theme(),
         },
     )
@@ -2220,6 +2267,7 @@ async def workflow_workspace_elite(request: Request):
             "workflow_signals": workflow_signals,
             "workflow_operators": workflow_operators,
             "workflow_events": workflow_events,
+            "ai_ops_blueprint": AI_OPS_BLUEPRINT,
             "theme": _active_theme(),
         },
     )

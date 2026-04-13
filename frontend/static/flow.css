@@ -6019,3 +6019,43 @@ body.paper-site .command-kbd {
   font-size: 0.75rem;
   color: var(--text-body) !important;
 }
+
+/* AI Ops blueprint module */
+body.paper-site .ops-blueprint {
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 24px;
+}
+
+body.paper-site .ops-architecture {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+body.paper-site .ops-architecture span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--surface-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-body) !important;
+  font-size: 0.84rem;
+}
+
+body.paper-site .ops-safety {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 860px) {
+  body.paper-site .ops-safety {
+    grid-template-columns: 1fr;
+  }
+}
