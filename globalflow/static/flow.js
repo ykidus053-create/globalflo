@@ -4,6 +4,9 @@ const inspectButton = document.getElementById("inspect-flow");
 const flowModal = document.getElementById("flow-modal");
 const flowModalClose = document.getElementById("flow-modal-close");
 const flowModalBody = document.getElementById("flow-modal-body");
+const commandModal = document.getElementById("command-modal");
+const commandSearch = document.getElementById("command-search");
+const commandList = document.getElementById("command-list");
 const subscribeModal = document.getElementById("subscribe-modal");
 const subscribeForm = document.getElementById("subscribe-form");
 const heroLeadForm = document.getElementById("hero-lead-form");
@@ -66,6 +69,7 @@ let billingMode = "monthly";
 let activeModalId = null;
 let summaryCache = null;
 let revealIndex = 0;
+let commandRegistry = [];
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
@@ -761,6 +765,70 @@ function closeModal(target, skipHistory = false) {
   if (!skipHistory) resetModalHistory();
 }
 
+function buildCommandPalette() {
+  commandRegistry = [
+    { id: "start-trial", title: "Start free trial", hint: "Open subscription modal", kbd: "T", run: () => openModal(subscribeModal) },
+    { id: "inspect-flow", title: "Inspect telemetry", hint: "Open workflow summary", kbd: "I", run: () => inspectFlow() },
+    { id: "run-orchestration", title: "Launch orchestration", hint: "Run full automation sequence", kbd: "R", run: () => launchOrchestrationBtn?.click() },
+    { id: "goto-workflow", title: "Go to workflow", hint: "Jump to workflow section", kbd: "W", run: () => scrollToSelector("#flowboard") },
+    { id: "goto-integrations", title: "Go to integrations", hint: "Jump to integrations section", kbd: "G", run: () => scrollToSelector("#integrations") },
+    { id: "toggle-autopilot", title: "Toggle autopilot", hint: "Pause or resume autonomous loops", kbd: "A", run: () => autopilotToggle?.click() },
+    { id: "open-login", title: "Open login", hint: "Authenticate account session", kbd: "L", run: () => openModal(loginModal) },
+  ].filter((cmd) => typeof cmd.run === "function");
+}
+
+function renderCommandList(query = "") {
+  if (!commandList) return;
+  const q = normalizeText(query);
+  const items = commandRegistry.filter((cmd) => !q || normalizeText(`${cmd.title} ${cmd.hint}`).includes(q));
+  commandList.innerHTML = "";
+  items.forEach((cmd, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `command-item${index === 0 ? " is-active" : ""}`;
+    button.innerHTML = `<span><strong>${cmd.title}</strong><br><small>${cmd.hint}</small></span><span class="command-kbd">${cmd.kbd}</span>`;
+    button.addEventListener("click", () => {
+      closeModal(commandModal);
+      cmd.run();
+    });
+    commandList.appendChild(button);
+  });
+}
+
+function openCommandPalette() {
+  if (!commandModal) return;
+  if (!commandRegistry.length) buildCommandPalette();
+  renderCommandList(commandSearch?.value || "");
+  openModal(commandModal);
+  if (commandSearch) {
+    commandSearch.value = "";
+    window.setTimeout(() => commandSearch.focus(), 10);
+  }
+}
+
+function initCommandPalette() {
+  if (!commandModal) return;
+  buildCommandPalette();
+  renderCommandList("");
+  commandSearch?.addEventListener("input", () => renderCommandList(commandSearch.value));
+  document.addEventListener("keydown", (event) => {
+    const key = String(event.key || "").toLowerCase();
+    if ((event.metaKey || event.ctrlKey) && key === "k") {
+      event.preventDefault();
+      openCommandPalette();
+      return;
+    }
+    const tag = event.target?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (key === "t") openModal(subscribeModal);
+    if (key === "r") launchOrchestrationBtn?.click();
+    if (key === "w") scrollToSelector("#flowboard");
+    if (key === "g") scrollToSelector("#integrations");
+    if (key === "a") autopilotToggle?.click();
+    if (key === "l") openModal(loginModal);
+  });
+}
+
 window.addEventListener("popstate", (event) => {
   const modalId = event.state?.modalId;
   const openModalEl = document.querySelector(".flow-modal--open");
@@ -1162,11 +1230,12 @@ async function bootstrap() {
   initFrictionShortcuts();
   hydrateConversionForms();
   handleAuthReturn();
-initRevealObserver();
-initActiveNav();
-initAmbientVfx();
-initMagneticButtons();
-initKineticType();
+  initRevealObserver();
+  initActiveNav();
+  initAmbientVfx();
+  initMagneticButtons();
+  initKineticType();
+  initCommandPalette();
   if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
   filterIntegrations();
   setBillingMode(billingMode);

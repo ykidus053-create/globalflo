@@ -5957,3 +5957,65 @@ body.paper-site .journey-shortcut p {
     align-items: stretch;
   }
 }
+
+/* Advanced UI: command palette */
+body.paper-site .command-modal__content {
+  max-width: 760px;
+}
+
+body.paper-site .command-search {
+  display: grid;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted) !important;
+}
+
+body.paper-site .command-search input {
+  width: 100%;
+  min-height: 46px;
+}
+
+body.paper-site .command-list {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+  max-height: min(52vh, 420px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+body.paper-site .command-item {
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: border-color var(--motion-fast), transform var(--motion-fast), background var(--motion-fast);
+}
+
+body.paper-site .command-item:hover,
+body.paper-site .command-item.is-active {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+body.paper-site .command-item strong {
+  color: var(--text-strong) !important;
+}
+
+body.paper-site .command-item small {
+  color: var(--text-muted) !important;
+}
+
+body.paper-site .command-kbd {
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-bottom-width: 2px;
+  border-radius: 8px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  color: var(--text-body) !important;
+}

@@ -383,6 +383,19 @@
           <pre id="flow-modal-body">Fetching...</pre>
         </div>
       </div>
+
+      <div class="flow-modal command-modal" role="dialog" aria-modal="true" id="command-modal" aria-labelledby="command-title">
+        <div class="flow-modal__content command-modal__content">
+          <button class="flow-modal__close" data-modal="command-modal" type="button">&times;</button>
+          <h3 id="command-title">Command Palette</h3>
+          <p class="modal-note">Use keyboard shortcuts for advanced control.</p>
+          <label class="command-search">
+            Search commands
+            <input id="command-search" type="search" placeholder="Type a command..." autocomplete="off" />
+          </label>
+          <div class="command-list" id="command-list" role="listbox" aria-label="Command list"></div>
+        </div>
+      </div>
     </main>
 
     <div class="toast" id="toast" aria-live="polite">Action running...</div>

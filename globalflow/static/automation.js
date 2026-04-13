@@ -18,6 +18,10 @@ const activityTotal = document.getElementById("activity-total");
 const flowModal = document.getElementById("flow-modal");
 const flowModalBody = document.getElementById("flow-modal-body");
 const flowModalClose = document.getElementById("flow-modal-close");
+const commandModal = document.getElementById("command-modal");
+const commandSearch = document.getElementById("command-search");
+const commandList = document.getElementById("command-list");
+let commandRegistry = [];
 
 function showToast(text) {
   const toast = document.getElementById("toast");
@@ -186,6 +190,49 @@ function closeFlowModal() {
   if (flowModal) flowModal.classList.remove("flow-modal--open");
 }
 
+function closeCommandModal() {
+  if (commandModal) commandModal.classList.remove("flow-modal--open");
+}
+
+function buildCommandPalette() {
+  commandRegistry = [
+    { title: "Run all flows", hint: "Execute every automation flow now", kbd: "R", run: runAllFlows },
+    { title: "Run one cycle", hint: "Execute one full autopilot cycle", kbd: "C", run: runManualCycle },
+    { title: "Toggle autopilot", hint: "Pause or resume autopilot", kbd: "A", run: toggleAutopilot },
+    { title: "Inspect telemetry", hint: "Open workflow summary JSON", kbd: "I", run: inspectFlow },
+    { title: "Go to connectors", hint: "Jump to connector controls", kbd: "G", run: () => document.getElementById("connectors")?.scrollIntoView({ behavior: "smooth" }) },
+  ];
+}
+
+function renderCommandList(query = "") {
+  if (!commandList) return;
+  const q = String(query || "").trim().toLowerCase();
+  const matches = commandRegistry.filter((item) => !q || `${item.title} ${item.hint}`.toLowerCase().includes(q));
+  commandList.innerHTML = "";
+  matches.forEach((item, idx) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `command-item${idx === 0 ? " is-active" : ""}`;
+    button.innerHTML = `<span><strong>${item.title}</strong><br><small>${item.hint}</small></span><span class="command-kbd">${item.kbd}</span>`;
+    button.addEventListener("click", async () => {
+      closeCommandModal();
+      await item.run();
+    });
+    commandList.appendChild(button);
+  });
+}
+
+function openCommandModal() {
+  if (!commandModal) return;
+  if (!commandRegistry.length) buildCommandPalette();
+  renderCommandList(commandSearch?.value || "");
+  commandModal.classList.add("flow-modal--open");
+  if (commandSearch) {
+    commandSearch.value = "";
+    window.setTimeout(() => commandSearch.focus(), 10);
+  }
+}
+
 if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", runAllFlows);
 }
@@ -209,8 +256,34 @@ if (flowModal) {
     if (event.target === flowModal) closeFlowModal();
   });
 }
+document.querySelectorAll("[data-modal='command-modal']").forEach((button) => {
+  button.addEventListener("click", closeCommandModal);
+});
+if (commandModal) {
+  commandModal.addEventListener("click", (event) => {
+    if (event.target === commandModal) closeCommandModal();
+  });
+}
 
 async function bootstrap() {
+  buildCommandPalette();
+  renderCommandList("");
+  commandSearch?.addEventListener("input", () => renderCommandList(commandSearch.value));
+  document.addEventListener("keydown", (event) => {
+    const key = String(event.key || "").toLowerCase();
+    if ((event.metaKey || event.ctrlKey) && key === "k") {
+      event.preventDefault();
+      openCommandModal();
+      return;
+    }
+    const tag = event.target?.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if (key === "r") runAllFlows();
+    if (key === "c") runManualCycle();
+    if (key === "a") toggleAutopilot();
+    if (key === "i") inspectFlow();
+    if (key === "g") document.getElementById("connectors")?.scrollIntoView({ behavior: "smooth" });
+  });
   if (reliabilityState) reliabilityState.textContent = "Workspace online";
   if (signalDot) signalDot.classList.remove("is-warning");
   await Promise.all([loadTasks(), loadActivity(), loadMetrics(), loadAutopilot()]);
