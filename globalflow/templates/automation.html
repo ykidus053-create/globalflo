@@ -65,6 +65,7 @@
           <div class="workflow-actions">
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
             <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
+            <button class="ghost small" id="run-all-flows" type="button">Run all flows</button>
           </div>
         </div>
         <div class="hero-stage">
@@ -82,6 +83,24 @@
               <strong id="activity-total">0 events</strong>
             </div>
           </article>
+          <article class="hero-status-card">
+            <div>
+              <span>Autopilot state</span>
+              <strong id="autopilot-status" aria-live="polite">Checking...</strong>
+            </div>
+            <div>
+              <span>Next run</span>
+              <strong id="autopilot-next-run">Pending</strong>
+            </div>
+            <div>
+              <span>Cycles completed</span>
+              <strong id="autopilot-cycle-count">{{ autopilot.cycles }}</strong>
+            </div>
+          </article>
+          <div class="workflow-actions">
+            <button class="primary small" id="autopilot-toggle" type="button">Toggle autopilot</button>
+            <button class="ghost small" id="run-manual-cycle" type="button">Run one cycle</button>
+          </div>
         </div>
       </section>
 
@@ -163,6 +182,6 @@
     </main>
 
     <div class="toast" id="toast" aria-live="polite">Action running...</div>
-    <script type="module" src="/static/flow.js"></script>
+    <script type="module" src="/static/automation.js"></script>
   </body>
 </html>

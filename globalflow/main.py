@@ -1235,6 +1235,36 @@ async def run_task(task_id: str):
     return {"task": result}
 
 
+@app.post("/api/tasks/run-all", response_class=JSONResponse)
+async def run_all_tasks():
+    tasks = task_manager.list_tasks()
+    results: List[Dict[str, Any]] = []
+    for task in tasks:
+        task_id = str(task.get("id") or "").strip()
+        if not task_id:
+            continue
+        try:
+            completed = await task_manager.kickoff(task_id)
+            results.append(
+                {
+                    "id": task_id,
+                    "status": str(completed.get("status") or "ready"),
+                    "note": str(completed.get("note") or ""),
+                }
+            )
+        except Exception as exc:
+            results.append({"id": task_id, "status": "error", "note": str(exc)})
+    ok = sum(1 for item in results if item["status"] == "ready")
+    failed = len(results) - ok
+    activity_log.record(
+        kind="automation",
+        source="workspace",
+        message=f"Manual run-all completed ({ok}/{len(results)})",
+        detail="; ".join(f"{item['id']}={item['status']}" for item in results),
+    )
+    return {"status": "ok" if failed == 0 else "partial", "ok": ok, "failed": failed, "items": results}
+
+
 @app.post("/api/subscribe", response_class=JSONResponse)
 async def subscribe(payload: Dict[str, str]):
     email = payload.get("email")
@@ -2030,6 +2060,31 @@ async def set_autopilot(payload: Dict[str, Any]):
     else:
         await autopilot.disable()
     return autopilot.status()
+
+
+@app.post("/api/autopilot/cycle", response_class=JSONResponse)
+async def run_autopilot_cycle():
+    tasks = task_manager.list_tasks()
+    results: List[Dict[str, Any]] = []
+    for task in tasks:
+        task_id = str(task.get("id") or "").strip()
+        if not task_id:
+            continue
+        try:
+            completed = await task_manager.kickoff(task_id)
+            results.append({"id": task_id, "status": completed.get("status", "ready"), "note": completed.get("note", "")})
+        except Exception as exc:
+            results.append({"id": task_id, "status": "error", "note": str(exc)})
+    autopilot.cycle_count += 1
+    autopilot.last_run = datetime.utcnow()
+    monitoring.record("autopilot_cycles")
+    activity_log.record(
+        kind="autopilot",
+        source="manual-cycle",
+        message=f"Manual cycle {autopilot.cycle_count} completed",
+        detail=f"{len(results)} automation(s) executed",
+    )
+    return {"status": "ok", "cycle": autopilot.cycle_count, "items": results, "autopilot": autopilot.status()}
 
 
 @app.get("/api/toolkit/{tool_id}", response_class=JSONResponse)
