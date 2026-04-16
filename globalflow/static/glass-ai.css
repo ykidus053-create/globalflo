@@ -4,91 +4,89 @@
    Ref: Sykes 2025, Santoso 2024, Dwiansyah & Voutama 2025
    ========================================================================== */
 
-/* ── Design Tokens ── */
+/* ── Deeply Implemented AI-First Design System ── */
 :root {
-  /* Palette: Deep space with electric highlights */
-  --gf-bg-deep: #050a18;
-  --gf-bg-base: #0a1628;
-  --gf-bg-elevated: #0f1d36;
-  --gf-bg-surface: rgba(15, 29, 54, 0.72);
-  --gf-bg-glass: rgba(15, 29, 54, 0.45);
-  --gf-bg-glass-hover: rgba(22, 40, 72, 0.6);
+  /* Extreme Dark Spatial Layout */
+  --gf-bg-deep: #030509;
+  --gf-bg-base: #060B14;
+  --gf-bg-elevated: #0B1220;
+  --gf-bg-surface: rgba(11, 18, 32, 0.4);
+  --gf-bg-glass: rgba(14, 21, 38, 0.35);
+  --gf-bg-glass-hover: rgba(26, 42, 68, 0.5);
 
-  /* Accent spectrum */
-  --gf-accent-blue: #3b82f6;
-  --gf-accent-violet: #8b5cf6;
-  --gf-accent-cyan: #06b6d4;
-  --gf-accent-emerald: #10b981;
-  --gf-accent-amber: #f59e0b;
-  --gf-accent-rose: #f43f5e;
+  /* Vivid Neons */
+  --gf-accent-blue: #2563EB;
+  --gf-accent-violet: #8B5CF6;
+  --gf-accent-cyan: #06B6D4;
+  --gf-accent-emerald: #10B981;
+  --gf-accent-amber: #F59E0B;
+  --gf-accent-rose: #E11D48;
 
-  /* Glow tokens */
-  --gf-glow-blue: rgba(59, 130, 246, 0.35);
-  --gf-glow-violet: rgba(139, 92, 246, 0.3);
-  --gf-glow-cyan: rgba(6, 182, 212, 0.25);
-  --gf-glow-emerald: rgba(16, 185, 129, 0.3);
+  /* Aggressive Glows */
+  --gf-glow-blue: rgba(37, 99, 235, 0.4);
+  --gf-glow-violet: rgba(139, 92, 246, 0.5);
+  --gf-glow-cyan: rgba(6, 182, 212, 0.4);
+  --gf-glow-emerald: rgba(16, 185, 129, 0.4);
 
-  /* Text – WCAG AAA on dark surfaces */
-  --gf-text-primary: #f1f5f9;    /* 15.4:1 on #0a1628 */
-  --gf-text-secondary: #cbd5e1;  /* 10.2:1 */
-  --gf-text-muted: #94a3b8;      /* 5.6:1  */
-  --gf-text-link: #93c5fd;       /* 7.8:1  */
+  /* Contrast First */
+  --gf-text-primary: #FFFFFF;
+  --gf-text-secondary: #CBD5E1;
+  --gf-text-muted: #64748B;
+  --gf-text-link: #38BDF8;
 
-  /* Borders */
-  --gf-border-subtle: rgba(148, 163, 184, 0.12);
-  --gf-border-default: rgba(148, 163, 184, 0.2);
-  --gf-border-strong: rgba(148, 163, 184, 0.35);
-  --gf-border-glow: rgba(59, 130, 246, 0.4);
+  /* Architectural Borders */
+  --gf-border-subtle: rgba(255, 255, 255, 0.04);
+  --gf-border-default: rgba(255, 255, 255, 0.1);
+  --gf-border-strong: rgba(255, 255, 255, 0.2);
+  --gf-border-glow: rgba(37, 99, 235, 0.5);
 
-  /* Radius – Figma-aligned */
-  --gf-radius-sm: 8px;
-  --gf-radius-md: 14px;
-  --gf-radius-lg: 20px;
-  --gf-radius-xl: 28px;
+  /* Aggressive Border Radii */
+  --gf-radius-sm: 10px;
+  --gf-radius-md: 18px;
+  --gf-radius-lg: 28px;
+  --gf-radius-xl: 40px;
   --gf-radius-pill: 999px;
 
-  /* Spacing – 4px grid (Figma auto-layout) */
-  --gf-space-1: 4px;
-  --gf-space-2: 8px;
-  --gf-space-3: 12px;
-  --gf-space-4: 16px;
-  --gf-space-5: 20px;
-  --gf-space-6: 24px;
-  --gf-space-8: 32px;
-  --gf-space-10: 40px;
-  --gf-space-12: 48px;
-  --gf-space-16: 64px;
-  --gf-space-20: 80px;
-  --gf-space-24: 96px;
+  /* Expansive Spacing */
+  --gf-space-1: 6px;
+  --gf-space-2: 12px;
+  --gf-space-3: 18px;
+  --gf-space-4: 24px;
+  --gf-space-5: 32px;
+  --gf-space-6: 48px;
+  --gf-space-8: 64px;
+  --gf-space-10: 96px;
+  --gf-space-12: 120px;
+  --gf-space-16: 160px;
 
-  /* Typography scale */
-  --gf-text-xs: 0.75rem;
-  --gf-text-sm: 0.875rem;
-  --gf-text-base: 1rem;
-  --gf-text-lg: 1.125rem;
-  --gf-text-xl: 1.25rem;
-  --gf-text-2xl: 1.5rem;
-  --gf-text-3xl: 1.875rem;
-  --gf-text-4xl: 2.25rem;
-  --gf-text-5xl: clamp(2.5rem, 5vw, 3.75rem);
+  /* Heroic Typography Settings */
+  --gf-text-xs: 0.85rem;
+  --gf-text-sm: 0.95rem;
+  --gf-text-base: 1.1rem;
+  --gf-text-lg: 1.3rem;
+  --gf-text-xl: 1.6rem;
+  --gf-text-2xl: 2rem;
+  --gf-text-3xl: 2.5rem;
+  --gf-text-4xl: 3.5rem;
+  --gf-text-5xl: clamp(3rem, 6.5vw, 5rem);
 
-  /* Motion – haptic-tuned (Kimseng et al. 2024) */
-  --gf-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --gf-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --gf-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --gf-duration-fast: 150ms;
-  --gf-duration-base: 250ms;
-  --gf-duration-slow: 400ms;
-  --gf-duration-reveal: 600ms;
+  /* Hyper-fluid Physics */
+  --gf-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --gf-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --gf-ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --gf-duration-fast: 200ms;
+  --gf-duration-base: 400ms;
+  --gf-duration-slow: 600ms;
+  --gf-duration-reveal: 800ms;
 
-  /* Glassmorphism */
-  --gf-blur-sm: blur(8px);
-  --gf-blur-md: blur(16px);
-  --gf-blur-lg: blur(24px);
+  /* Intense Spatial Blurs */
+  --gf-blur-sm: blur(12px);
+  --gf-blur-md: blur(28px);
+  --gf-blur-lg: blur(48px);
 
   /* Layout */
-  --gf-max-width: 1200px;
-  --gf-grid-gap: var(--gf-space-6);
+  --gf-max-width: 1440px;
+  --gf-grid-gap: var(--gf-space-5);
 }
 
 /* ── Reset & Base ── */
@@ -97,11 +95,11 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 100px;
 }
 
 body.paper-site {
-  font-family: 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
   font-size: var(--gf-text-base);
   line-height: 1.6;
   color: var(--gf-text-secondary);
