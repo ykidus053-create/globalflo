@@ -303,19 +303,22 @@ body.paper-site .primary {
     0 4px 20px rgba(37, 99, 235, 0.5),
     inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
   transition:
-    all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    all 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6) !important; /* Disney Anticipation Bounce */
+  will-change: transform, box-shadow;
 }
 
 body.paper-site .primary:hover {
-  transform: scale(1.05) translateY(-2px) !important;
+  transform: scale(1.08) translateY(-4px) !important;
   background-position: right center !important;
   box-shadow: 
-    0 8px 32px rgba(124, 58, 237, 0.6),
+    0 12px 36px rgba(124, 58, 237, 0.7),
+    0 0 0 2px rgba(255, 255, 255, 0.15),
     inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.paper-site .primary:active {
-  transform: scale(0.97) !important;
+  transform: scale(0.92) translateY(2px) !important; /* Follow-through squash */
+  transition: all 0.1s ease-out !important;
 }
 
 body.paper-site .ghost {
@@ -606,7 +609,7 @@ body.paper-site:not(.is-loading) .site-loader {
   pointer-events: none;
 }
 
-/* ── Aurora effect ── */
+/* ── Aurora & Surreal Fluid Art Direction ── */
 body.paper-site .aurora {
   position: fixed;
   inset: 0;
@@ -614,14 +617,21 @@ body.paper-site .aurora {
   background:
     radial-gradient(ellipse 120% 80% at 20% -10%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
     radial-gradient(ellipse 100% 60% at 80% -5%, rgba(139, 92, 246, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 50% at 50% 90%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 50% at 50% 90%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+    conic-gradient(from 180deg at 50% 50%, rgba(139, 92, 246, 0.15) 0deg, rgba(6, 182, 212, 0) 180deg, rgba(139, 92, 246, 0.15) 360deg);
   pointer-events: none;
-  animation: gf-aurora 20s ease-in-out infinite alternate;
+  animation: gf-aurora 20s ease-in-out infinite alternate, surreal-orb 30s linear infinite;
+}
+
+@keyframes surreal-orb {
+  0% { transform: scale(1) translateY(0) rotate(0deg); }
+  50% { transform: scale(1.1) translateY(-10%) rotate(180deg); }
+  100% { transform: scale(1) translateY(0) rotate(360deg); }
 }
 
 @keyframes gf-aurora {
-  0% { transform: scale(1) translateX(0) translateY(0); filter: hue-rotate(0deg); }
-  100% { transform: scale(1.05) translateX(-3%) translateY(2%); filter: hue-rotate(15deg); }
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(15deg); }
 }
 
 /* ── Scroll progress ── */

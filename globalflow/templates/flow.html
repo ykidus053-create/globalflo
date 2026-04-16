@@ -600,6 +600,46 @@
     </footer>
 
     <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
+    
+    <!-- ── Deep UI Execution Engine ── -->
+    <script id="deep-ui-engine">
+      document.addEventListener('DOMContentLoaded', () => {
+        // Accessibility Validation (ARIA Semantics)
+        document.querySelectorAll('.gf-card').forEach(el => {
+          if (!el.getAttribute('role')) el.setAttribute('role', 'region');
+        });
+        document.querySelectorAll('button').forEach(btn => {
+          if (!btn.getAttribute('aria-pressed')) btn.setAttribute('aria-pressed', 'false');
+        });
+
+        // Haptic Engine API (Wearable/Mobile Tactile UX)
+        document.querySelectorAll('.primary, .ghost').forEach(el => {
+          el.addEventListener('pointerdown', () => {
+            if (navigator.vibrate) navigator.vibrate([15, 30, 15]); // Sharp Disney haptic pulse
+          });
+        });
+
+        // AI Predictive Analytics Simulation (Session Tracking)
+        let dwellTime = 0;
+        setInterval(() => {
+          dwellTime++;
+          if (dwellTime > 12) { // Reveal AI suggestion after 12 seconds of dwell
+            const shortcut = document.getElementById('journey-shortcut');
+            if (shortcut && shortcut.hidden) {
+              shortcut.hidden = false;
+              shortcut.classList.add('gf-card', 'story-reveal', 'is-revealed', 'is-personalized-focus');
+              shortcut.style.margin = '2rem auto';
+              shortcut.innerHTML = '<p class="eyebrow" style="color:var(--gf-accent-blue)">AI Analytics</p><h3>Optimized Path Detected</h3><button class="primary" style="margin-top:1rem" onclick="this.parentElement.hidden=true">Engage Workflow Automation ✦</button>';
+            }
+          }
+        }, 1000);
+        
+        ['mousemove', 'scroll', 'keypress', 'touchstart'].forEach(evt => 
+          document.addEventListener(evt, () => dwellTime = 0, {passive: true})
+        );
+      });
+    </script>
+
     <script type="module" src="/static/render-layer.js?v={{ asset_version }}"></script>
     <script type="module" src="/static/flow.js?v={{ asset_version }}"></script>
   </body>
