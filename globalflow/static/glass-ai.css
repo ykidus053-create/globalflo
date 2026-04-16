@@ -187,14 +187,15 @@ body.paper-site :where(
   .wf-lane-card, .wf-ai-card, .wf-vr-panel, .activity-entry
 ) {
   background: var(--gf-bg-glass) !important;
-  backdrop-filter: blur(16px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   border: 1px solid var(--gf-border-default) !important;
   border-radius: var(--gf-radius-lg) !important;
   padding: var(--gf-space-6) !important;
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.02) !important;
   transition:
     transform var(--gf-duration-base) var(--gf-ease-spring),
     border-color var(--gf-duration-fast) var(--gf-ease-out),
@@ -207,13 +208,13 @@ body.paper-site :where(
   .pricing-card, .connector-card, .testimonial-card, .stat-card,
   .wf-signal-cell, .wf-operator-card, .wf-lane-card, .wf-ai-card
 ):hover {
-  transform: translateY(-4px) !important;
+  transform: translateY(-4px) scale(1.01) !important;
   border-color: var(--gf-border-glow) !important;
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 16px 48px rgba(0, 0, 0, 0.4),
     0 0 0 1px var(--gf-border-glow),
-    0 0 30px var(--gf-glow-blue),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+    0 0 40px var(--gf-glow-blue),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Card text readability lock */
@@ -273,23 +274,29 @@ body.paper-site .primary {
   gap: var(--gf-space-2);
   font-family: inherit;
   font-size: var(--gf-text-sm);
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.02em;
   color: #fff !important;
-  background: linear-gradient(135deg, var(--gf-accent-blue), var(--gf-accent-violet)) !important;
-  border: none !important;
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #06b6d4) !important;
+  background-size: 200% auto !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: var(--gf-radius-pill) !important;
-  padding: 12px 28px !important;
+  padding: 12px 32px !important;
   cursor: pointer;
-  min-height: 44px;
-  box-shadow: 0 4px 16px var(--gf-glow-blue) !important;
+  min-height: 48px;
+  box-shadow: 
+    0 4px 20px rgba(37, 99, 235, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
   transition:
-    transform var(--gf-duration-fast) var(--gf-ease-spring),
-    box-shadow var(--gf-duration-base) var(--gf-ease-out) !important;
+    all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 
 body.paper-site .primary:hover {
-  transform: scale(1.04) translateY(-1px) !important;
-  box-shadow: 0 8px 28px var(--gf-glow-violet) !important;
+  transform: scale(1.05) translateY(-2px) !important;
+  background-position: right center !important;
+  box-shadow: 
+    0 8px 32px rgba(124, 58, 237, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
 
 body.paper-site .primary:active {
@@ -590,15 +597,16 @@ body.paper-site .aurora {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 120% 80% at 20% -10%, rgba(59,130,246,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 60% at 80% -5%, rgba(139,92,246,0.06) 0%, transparent 55%);
+    radial-gradient(ellipse 120% 80% at 20% -10%, rgba(6, 182, 212, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 60% at 80% -5%, rgba(139, 92, 246, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% 90%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
   pointer-events: none;
-  animation: gf-aurora 25s linear infinite alternate;
+  animation: gf-aurora 20s ease-in-out infinite alternate;
 }
 
 @keyframes gf-aurora {
-  0% { transform: translateX(0) translateY(0); }
-  100% { transform: translateX(-3%) translateY(2%); }
+  0% { transform: scale(1) translateX(0) translateY(0); filter: hue-rotate(0deg); }
+  100% { transform: scale(1.05) translateX(-3%) translateY(2%); filter: hue-rotate(15deg); }
 }
 
 /* ── Scroll progress ── */
