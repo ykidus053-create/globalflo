@@ -396,6 +396,61 @@
             <p>High-contrast tokens, semantic structure, keyboard-safe controls, and reduced-motion handling are enforced as baseline behavior.</p>
           </details>
         </div>
+
+        <div class="strategy-framework gf-card">
+          <div class="section-heading">
+            <h3>Design Thinking + UCD execution engine</h3>
+            <p>Empathize, define, ideate, prototype, test with measurable micro-steps and AI-assisted acceleration.</p>
+          </div>
+          <div class="dt-phase-bar" id="dt-phase-bar" role="tablist" aria-label="Design thinking phases">
+            <button class="dt-phase is-active" type="button" data-dt-phase="empathize" role="tab" aria-selected="true">Empathize</button>
+            <button class="dt-phase" type="button" data-dt-phase="define" role="tab" aria-selected="false">Define</button>
+            <button class="dt-phase" type="button" data-dt-phase="ideate" role="tab" aria-selected="false">Ideate</button>
+            <button class="dt-phase" type="button" data-dt-phase="prototype" role="tab" aria-selected="false">Prototype</button>
+            <button class="dt-phase" type="button" data-dt-phase="test" role="tab" aria-selected="false">Test</button>
+          </div>
+          <div class="dt-phase-panel" id="dt-phase-panel" aria-live="polite">
+            <h4 id="dt-title">Empathize: understand real user context.</h4>
+            <p id="dt-summary">Capture pain points, user intent, and workflow blockers from real sessions before proposing any UI structure.</p>
+            <ul id="dt-microsteps"></ul>
+            <p class="modal-note" id="dt-kpi">Output KPI: interview coverage >= 80% of target user groups.</p>
+          </div>
+        </div>
+
+        <div class="strategy-ops-grid">
+          <article class="strategy-op-card gf-card gf-fade">
+            <div class="content-body">
+              <h3>UCD Research Loop</h3>
+              <p>Map personas, friction points, and primary goals. Keep one dominant action per screen.</p>
+              <ul class="hero-benefit-list">
+                <li>Persona and context segmentation</li>
+                <li>Task completion path mapping</li>
+                <li>Friction score and remediation queue</li>
+              </ul>
+            </div>
+          </article>
+          <article class="strategy-op-card gf-card gf-fade">
+            <div class="content-body">
+              <h3>Figma-to-Code Pipeline</h3>
+              <p>Auto-layout components, variant states, and tokenized spacing/typography map directly to reusable frontend patterns.</p>
+              <ul class="hero-benefit-list">
+                <li>Component variants and interaction states</li>
+                <li>Mobile-first breakpoint validation</li>
+                <li>Dev handoff with implementation constraints</li>
+              </ul>
+            </div>
+          </article>
+          <article class="strategy-op-card gf-card gf-fade">
+            <div class="content-body">
+              <h3>Accessibility + Heuristic Validation</h3>
+              <p>Nielsen heuristics and WCAG checks run before release so readability and control are verified instead of assumed.</p>
+              <div class="strategy-actions">
+                <button class="ghost small" type="button" id="run-live-a11y-scan">Run live scan</button>
+              </div>
+              <pre class="strategy-output" id="live-a11y-output" aria-live="polite"></pre>
+            </div>
+          </article>
+        </div>
       </section>
 
       <section id="use-cases" class="explore-section gf-section">

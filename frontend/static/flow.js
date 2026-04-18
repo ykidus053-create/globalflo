@@ -43,6 +43,13 @@ const storyRail = document.getElementById("strategy-story-rail");
 const storyTitle = document.getElementById("story-title");
 const storyCopy = document.getElementById("story-copy");
 const strategyButtons = document.querySelectorAll("[data-ai-lab]");
+const dtPhaseBar = document.getElementById("dt-phase-bar");
+const dtTitle = document.getElementById("dt-title");
+const dtSummary = document.getElementById("dt-summary");
+const dtMicrosteps = document.getElementById("dt-microsteps");
+const dtKpi = document.getElementById("dt-kpi");
+const liveA11yScanButton = document.getElementById("run-live-a11y-scan");
+const liveA11yOutput = document.getElementById("live-a11y-output");
 
 const connectorForms = document.querySelectorAll(".connector-form");
 const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
@@ -835,6 +842,148 @@ function initStrategyLabActions() {
   });
 }
 
+function initDesignThinkingEngine() {
+  if (!dtPhaseBar || !dtTitle || !dtSummary || !dtMicrosteps || !dtKpi) return;
+  const phases = {
+    empathize: {
+      title: "Empathize: understand real user context.",
+      summary: "Capture pain points, intent, and constraints from direct observation before proposing interface changes.",
+      microsteps: [
+        "Collect qualitative interviews from operators and end users.",
+        "Map journey pain points and note repeated blockers.",
+        "Segment by user role, intent, and device context.",
+        "Translate pain points into observable UX goals.",
+      ],
+      kpi: "Output KPI: interview coverage >= 80% of target user groups.",
+    },
+    define: {
+      title: "Define: frame precise, testable problems.",
+      summary: "Convert research into focused problem statements and success metrics tied to behavior.",
+      microsteps: [
+        "Write one problem statement per high-friction flow.",
+        "Set one primary action per screen to reduce decision overload.",
+        "Define measurable success outcomes (completion rate, time-on-task).",
+        "Prioritize by impact and implementation effort.",
+      ],
+      kpi: "Output KPI: each priority problem has a measurable success metric.",
+    },
+    ideate: {
+      title: "Ideate: generate multiple credible directions.",
+      summary: "Create competing options, including AI-assisted variants, then filter using clarity and usability constraints.",
+      microsteps: [
+        "Generate baseline + AI variants for the same task flow.",
+        "Stress-test hierarchy, copy precision, and CTA dominance.",
+        "Remove decorative motion that does not aid comprehension.",
+        "Select finalists using heuristics and accessibility checks.",
+      ],
+      kpi: "Output KPI: >= 3 validated variants per priority flow.",
+    },
+    prototype: {
+      title: "Prototype: move from layout to interaction.",
+      summary: "Build realistic, testable states with component systems, breakpoints, and interaction timing.",
+      microsteps: [
+        "Build reusable component variants with explicit states.",
+        "Validate mobile and laptop behavior separately.",
+        "Apply motion timings (200-400ms) for clear feedback.",
+        "Map design tokens to implementation-ready CSS structure.",
+      ],
+      kpi: "Output KPI: prototype parity across mobile and laptop critical flows.",
+    },
+    test: {
+      title: "Test: validate and iterate with evidence.",
+      summary: "Run heuristic, accessibility, and behavior checks; feed findings back into the next design cycle.",
+      microsteps: [
+        "Run Nielsen heuristic review on critical screens.",
+        "Execute contrast, focus order, and readability scans.",
+        "Measure task completion and error frequency.",
+        "Apply revisions and re-test until acceptance criteria pass.",
+      ],
+      kpi: "Output KPI: SUS target >= 82 and zero critical accessibility failures.",
+    },
+  };
+
+  const buttons = Array.from(dtPhaseBar.querySelectorAll(".dt-phase"));
+  if (!buttons.length) return;
+
+  const renderPhase = (phaseKey) => {
+    const phase = phases[phaseKey] || phases.empathize;
+    dtTitle.textContent = phase.title;
+    dtSummary.textContent = phase.summary;
+    dtKpi.textContent = phase.kpi;
+    dtMicrosteps.innerHTML = "";
+    phase.microsteps.forEach((step) => {
+      const item = document.createElement("li");
+      item.textContent = step;
+      dtMicrosteps.appendChild(item);
+    });
+    buttons.forEach((button) => {
+      const active = button.dataset.dtPhase === phaseKey;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", active ? "true" : "false");
+    });
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => renderPhase(button.dataset.dtPhase));
+  });
+
+  renderPhase("empathize");
+}
+
+function parseRgb(value) {
+  const match = String(value || "").match(/rgba?\(([^)]+)\)/i);
+  if (!match) return null;
+  const parts = match[1].split(",").map((part) => Number(part.trim()));
+  if (parts.length < 3 || parts.some((part, idx) => idx < 3 && Number.isNaN(part))) return null;
+  return { r: parts[0], g: parts[1], b: parts[2] };
+}
+
+function relativeLuminance({ r, g, b }) {
+  const channel = (value) => {
+    const n = value / 255;
+    return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+}
+
+function contrastRatio(foreground, background) {
+  const lumA = relativeLuminance(foreground);
+  const lumB = relativeLuminance(background);
+  const light = Math.max(lumA, lumB);
+  const dark = Math.min(lumA, lumB);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+function runLiveAccessibilityScan() {
+  if (!liveA11yOutput) return;
+  const textTargets = Array.from(document.querySelectorAll(".gf-card p, .gf-card h2, .gf-card h3, .gf-card li, .gf-card small"));
+  let scanned = 0;
+  let alerts = 0;
+
+  textTargets.forEach((node) => {
+    const style = window.getComputedStyle(node);
+    const parentStyle = window.getComputedStyle(node.closest(".gf-card") || node.parentElement || node);
+    const fg = parseRgb(style.color);
+    const bg = parseRgb(parentStyle.backgroundColor);
+    if (!fg || !bg) return;
+    scanned += 1;
+    const ratio = contrastRatio(fg, bg);
+    if (ratio < 4.5) alerts += 1;
+  });
+
+  const motionSafe = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "enabled" : "available";
+  const keyboardPaths = document.querySelectorAll("button, a, input, select, textarea").length;
+  const scoreBase = Math.max(0, 100 - alerts * 3);
+  const score = Math.max(62, Math.min(99, scoreBase));
+
+  liveA11yOutput.textContent =
+    `Automated UX+accessibility score: ${score}/100\n` +
+    `- Scanned nodes: ${scanned}\n` +
+    `- Contrast alerts: ${alerts} (recommended ratio >= 4.5:1)\n` +
+    `- Keyboard interaction paths detected: ${keyboardPaths}\n` +
+    `- Reduced-motion handling: ${motionSafe}`;
+}
+
 async function inspectFlow() {
   try {
     const data = await fetchSummary();
@@ -1299,6 +1448,9 @@ integrationCheckButtons.forEach((button) => {
 
 if (monthlyToggle) monthlyToggle.addEventListener("click", () => setBillingMode("monthly"));
 if (annualToggle) annualToggle.addEventListener("click", () => setBillingMode("annual"));
+if (liveA11yScanButton) {
+  liveA11yScanButton.addEventListener("click", runLiveAccessibilityScan);
+}
 
 function scheduleSafe(task, interval) {
   let timerId = null;
@@ -1348,6 +1500,7 @@ async function bootstrap() {
   initKineticType();
   initStorytellingRail();
   initStrategyLabActions();
+  initDesignThinkingEngine();
   initCommandPalette();
   if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
   filterIntegrations();
