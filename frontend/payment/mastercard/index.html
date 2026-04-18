@@ -3,29 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-        <script>
-      (function () {
-        try {
-          document.documentElement.setAttribute("data-theme", "light");
-          localStorage.setItem("globalflow_theme", "light");
-        } catch (error) {}
-      })();
-    </script>
+    <meta name="theme-color" content="#000000" />
     <title>Mastercard | GlobalFlow</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/glass-ai.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="payment-body paper-site">
+  <body class="payment-body paper-site" data-user-segment="payment" data-theme="dark">
     <div class="aurora"></div>
-    <header class="top">
+    <div class="grid-overlay"></div>
+    <header class="top top--airbnb">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span>
@@ -39,15 +33,16 @@
       </div>
       <nav class="nav" aria-label="Payment navigation">
         <a href="/">Home</a>
+        <a href="/workflow-elite">Workflow</a>
         <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <a href="#payment-form">Invoice request</a>
       </nav>
     </header>
 
-    <main class="payment-page">
-      <section class="payment-hero">
-        <div class="payment-header">
+    <main class="payment-page landing-main gf-container gf-dark">
+      <section class="payment-hero gf-section">
+        <div class="payment-header gf-card gf-fade">
           <p class="eyebrow">Mastercard billing</p>
           <h1>Secure Mastercard payment handoff</h1>
           <p>Recurring billing Use the in-app Mastercard desk to request a routed invoice instead of a broken external checkout.</p>
@@ -57,7 +52,7 @@
           </div>
         </div>
 
-        <section class="payment-panel">
+        <section class="payment-panel gf-card gf-fade">
           <div class="payment-icon mastercard"></div>
           <div class="payment-details">
             <p class="payment-note">Use the in-app Mastercard desk to request a routed invoice instead of a broken external checkout.</p>
@@ -76,7 +71,7 @@
         </section>
       </section>
 
-      <section class="payment-form-section">
+      <section class="payment-form-section gf-card gf-fade">
         <h2>Send a payment request</h2>
         <p>Enter the tier, business email, amount, and finance notes.</p>
         <form id="payment-form" class="payment-form">

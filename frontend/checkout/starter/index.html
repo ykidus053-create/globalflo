@@ -3,29 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-        <script>
-      (function () {
-        try {
-          document.documentElement.setAttribute("data-theme", "light");
-          localStorage.setItem("globalflow_theme", "light");
-        } catch (error) {}
-      })();
-    </script>
+    <meta name="theme-color" content="#000000" />
     <title>Checkout | GlobalFlow</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/glass-ai.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="checkout-body paper-site">
+  <body class="checkout-body paper-site" data-user-segment="checkout" data-theme="dark">
     <div class="aurora"></div>
-    <header class="top">
+    <div class="grid-overlay"></div>
+    <header class="top top--airbnb">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span>
@@ -39,15 +33,16 @@
       </div>
       <nav class="nav" aria-label="Checkout navigation">
         <a href="/">Home</a>
+        <a href="/workflow-elite">Workflow</a>
         <a href="/automation">Automation</a>
         <a href="/account">Account</a>
         <a href="#invoice-form">Invoice</a>
       </nav>
     </header>
 
-    <main class="checkout-page">
-      <section class="checkout-hero">
-        <div class="checkout-hero-copy">
+    <main class="checkout-page landing-main gf-container gf-dark">
+      <section class="checkout-hero gf-section">
+        <div class="checkout-hero-copy gf-card gf-fade">
           
           <span class="tier-badge">Free trial</span>
           
@@ -65,7 +60,7 @@
             
           </div>
         </div>
-        <div class="checkout-hero-panel">
+        <div class="checkout-hero-panel gf-card gf-fade">
           <p><strong>Best fit:</strong> Best for first pilots and evaluation teams.</p>
           <p><strong>Typical outcome:</strong> Most starter teams validate one automation path and remove 6 to 10 hours of admin work each week.</p>
           <p><strong>Low-risk rollout:</strong> No payment required. Start with 1 workflow and 100 runs each month.</p>
@@ -73,8 +68,8 @@
         </div>
       </section>
 
-      <section class="checkout-offset">
-        <div class="checkout-card">
+      <section class="checkout-offset gf-section">
+        <div class="checkout-card gf-card gf-fade">
           <h2>Request an invoice</h2>
           <p>Use this flow when procurement or finance needs a manual ticket.</p>
           <form id="invoice-form" data-method="paypal" data-tier-id="starter">
@@ -95,7 +90,7 @@
           </form>
         </div>
 
-        <div class="checkout-panel">
+        <div class="checkout-panel gf-card gf-fade">
           <h2>Included in Starter</h2>
           <ul class="method-grid">
             
@@ -123,38 +118,38 @@
         </div>
       </section>
 
-      <section class="payment-strip">
+      <section class="payment-strip gf-section">
         
-        <article class="payment-chip">
+        <article class="payment-chip gf-card gf-fade">
           <div class="payment-icon paypal"></div>
           <div>
             <h3>PayPal</h3>
             <p>Digital invoices</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/paypal?ticket=eyJhbW91bnQiOiIwIiwia2luZCI6InBheW1lbnRfdGlja2V0IiwibWV0aG9kIjoicGF5cGFsIiwibm9uY2UiOiJLR1pvbkRYSGhSeFdkWGJMSXhDcUFhbGUiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJzdGFydGVyIiwidHMiOjE3NzY0OTY3OTd9.BVUrC5XX-LpOuQ273TtzzIaigN3-SK3_RTP_M-BwnR8" rel="noreferrer">Open PayPal</a>
+            <a class="ghost small" href="/payment/paypal?ticket=eyJhbW91bnQiOiIwIiwia2luZCI6InBheW1lbnRfdGlja2V0IiwibWV0aG9kIjoicGF5cGFsIiwibm9uY2UiOiJaN3BBdndUTGtsMzNSQVQ5X1huZG5CdWIiLCJyZXR1cm5fdG8iOiJodHRwczovL2dsb2JhbGZsb3ctc3RhdGljLm9ucmVuZGVyLmNvbSIsInRpZXIiOiJzdGFydGVyIiwidHMiOjE3NzY0OTcyMzh9.X8eQ5hc7SgDRZAwSP2lTWK-gynbqS_hdkko_h7r7BXo" rel="noreferrer">Open PayPal</a>
           </div>
         </article>
         
-        <article class="payment-chip">
+        <article class="payment-chip gf-card gf-fade">
           <div class="payment-icon mastercard"></div>
           <div>
             <h3>Mastercard</h3>
             <p>Recurring billing</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiIwIiwia2luZCI6InBheW1lbnRfdGlja2V0IiwibWV0aG9kIjoibWFzdGVyY2FyZCIsIm5vbmNlIjoiS0dGRzJlVkUyS3gwTkVLbmY2cUZkMG14IiwicmV0dXJuX3RvIjoiaHR0cHM6Ly9nbG9iYWxmbG93LXN0YXRpYy5vbnJlbmRlci5jb20iLCJ0aWVyIjoic3RhcnRlciIsInRzIjoxNzc2NDk2Nzk3fQ.a2Q0Zn_Lgo2x1phRFwsZtR8KPU9ebwQwR7zFcUzufkI" rel="noreferrer">Open Mastercard</a>
+            <a class="ghost small" href="/payment/mastercard?ticket=eyJhbW91bnQiOiIwIiwia2luZCI6InBheW1lbnRfdGlja2V0IiwibWV0aG9kIjoibWFzdGVyY2FyZCIsIm5vbmNlIjoiWGVyNjFkazl2Y3FBRTloNlF4ZllXRklPIiwicmV0dXJuX3RvIjoiaHR0cHM6Ly9nbG9iYWxmbG93LXN0YXRpYy5vbnJlbmRlci5jb20iLCJ0aWVyIjoic3RhcnRlciIsInRzIjoxNzc2NDk3MjM4fQ.U6NHccpJAIkhow7MDs_RqAI0RiX9LB9mRP6MDkB639U" rel="noreferrer">Open Mastercard</a>
           </div>
         </article>
         
-        <article class="payment-chip">
+        <article class="payment-chip gf-card gf-fade">
           <div class="payment-icon amex"></div>
           <div>
             <h3>American Express</h3>
             <p>Card billing</p>
           </div>
           <div class="payment-actions-links">
-            <a class="ghost small" href="/payment/amex?ticket=eyJhbW91bnQiOiIwIiwia2luZCI6InBheW1lbnRfdGlja2V0IiwibWV0aG9kIjoiYW1leCIsIm5vbmNlIjoiZnVKN2NaUnp0S3hsZXlpbVRvUGx5Y3J2IiwicmV0dXJuX3RvIjoiaHR0cHM6Ly9nbG9iYWxmbG93LXN0YXRpYy5vbnJlbmRlci5jb20iLCJ0aWVyIjoic3RhcnRlciIsInRzIjoxNzc2NDk2Nzk3fQ.kATjApici6gDMOQxuFHLj_59_MvFtValEZT35zOXTiQ" rel="noreferrer">Open American Express</a>
+            <a class="ghost small" href="/payment/amex?ticket=eyJhbW91bnQiOiIwIiwia2luZCI6InBheW1lbnRfdGlja2V0IiwibWV0aG9kIjoiYW1leCIsIm5vbmNlIjoid0wyQ1pZOEd2MkRKNWNxaHd3eFBvTkcyIiwicmV0dXJuX3RvIjoiaHR0cHM6Ly9nbG9iYWxmbG93LXN0YXRpYy5vbnJlbmRlci5jb20iLCJ0aWVyIjoic3RhcnRlciIsInRzIjoxNzc2NDk3MjM4fQ.FmFdTO7j4dvSCXTt60GXva_ffuJt-qmRkjH9N-gXLww" rel="noreferrer">Open American Express</a>
           </div>
         </article>
         
