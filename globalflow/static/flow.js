@@ -820,13 +820,13 @@ function initStrategyLabActions() {
 
   const lines = {
     generate:
-      "Variant A: High-trust layout with one primary CTA.\nVariant B: Operations-first bento with denser telemetry.\nVariant C: Mobile-priority stacked flow with reduced cognitive load.",
+      "Option A: Fastest operator route.\nOption B: Highest-confidence route.\nOption C: Lowest-risk route with extra review.",
     predict:
       "Predicted next best action:\n1) Open workflow board\n2) Trigger billing recovery\n3) Escalate churn-risk account for manual review",
     audit:
-      "Automated UX+accessibility score: 91/100\n- Contrast alerts: 0 critical\n- Keyboard path coverage: complete\n- Motion safety: reduced-motion supported",
+      "Interface quality score: 91/100\n- Critical readability alerts: 0\n- Control path coverage: complete\n- Motion safety: reduced-motion supported",
     handoff:
-      "Handoff package generated:\n- Components: strategy-bento, story-rail, disclosure-cards\n- Tokens: spacing, contrast, motion timings\n- QA gates: WCAG checks + approval policy",
+      "Handoff package generated:\n- Action summary included\n- Ownership and approval gates attached\n- Verification checks ready before execution",
   };
 
   strategyButtons.forEach((button) => {
@@ -846,59 +846,59 @@ function initDesignThinkingEngine() {
   if (!dtPhaseBar || !dtTitle || !dtSummary || !dtMicrosteps || !dtKpi) return;
   const phases = {
     empathize: {
-      title: "Empathize: understand real user context.",
-      summary: "Capture pain points, intent, and constraints from direct observation before proposing interface changes.",
+      title: "Capture: understand the operating context.",
+      summary: "Collect the incoming signals, blockers, and constraints before deciding how work should move.",
       microsteps: [
-        "Collect qualitative interviews from operators and end users.",
-        "Map journey pain points and note repeated blockers.",
-        "Segment by user role, intent, and device context.",
-        "Translate pain points into observable UX goals.",
+        "Collect signals from operators, customers, and systems.",
+        "Map where work stalls or context gets lost.",
+        "Segment by role, urgency, and operating conditions.",
+        "Translate friction into observable action goals.",
       ],
-      kpi: "Output KPI: interview coverage >= 80% of target user groups.",
+      kpi: "Output KPI: signal coverage >= 80% of priority workflows.",
     },
     define: {
-      title: "Define: frame precise, testable problems.",
-      summary: "Convert research into focused problem statements and success metrics tied to behavior.",
+      title: "Frame: define the exact problem.",
+      summary: "Turn the observed friction into a precise decision problem with measurable success criteria.",
       microsteps: [
-        "Write one problem statement per high-friction flow.",
-        "Set one primary action per screen to reduce decision overload.",
-        "Define measurable success outcomes (completion rate, time-on-task).",
+        "Write one problem statement per high-friction workflow.",
+        "Set one primary next action for each critical state.",
+        "Define measurable success outcomes for execution speed and confidence.",
         "Prioritize by impact and implementation effort.",
       ],
-      kpi: "Output KPI: each priority problem has a measurable success metric.",
+      kpi: "Output KPI: each priority problem has a measurable outcome target.",
     },
     ideate: {
-      title: "Ideate: generate multiple credible directions.",
-      summary: "Create competing options, including AI-assisted variants, then filter using clarity and usability constraints.",
+      title: "Compare: generate credible options.",
+      summary: "Create competing action paths, then filter them by clarity, safety, and execution value.",
       microsteps: [
-        "Generate baseline + AI variants for the same task flow.",
-        "Stress-test hierarchy, copy precision, and CTA dominance.",
-        "Remove decorative motion that does not aid comprehension.",
-        "Select finalists using heuristics and accessibility checks.",
+        "Generate baseline and assisted options for the same workflow.",
+        "Stress-test the best path, safest path, and fastest path.",
+        "Remove visual noise that does not improve action clarity.",
+        "Select finalists using quality and reliability checks.",
       ],
-      kpi: "Output KPI: >= 3 validated variants per priority flow.",
+      kpi: "Output KPI: >= 3 validated options per priority workflow.",
     },
     prototype: {
-      title: "Prototype: move from layout to interaction.",
-      summary: "Build realistic, testable states with component systems, breakpoints, and interaction timing.",
+      title: "Prepare: build the execution-ready state.",
+      summary: "Turn the selected path into a realistic, testable operating surface with full state coverage.",
       microsteps: [
-        "Build reusable component variants with explicit states.",
+        "Build shared states with explicit action outcomes.",
         "Validate mobile and laptop behavior separately.",
-        "Apply motion timings (200-400ms) for clear feedback.",
-        "Map design tokens to implementation-ready CSS structure.",
+        "Apply clear feedback timing for interaction states.",
+        "Map the selected path to reusable implementation patterns.",
       ],
-      kpi: "Output KPI: prototype parity across mobile and laptop critical flows.",
+      kpi: "Output KPI: parity across mobile and laptop critical flows.",
     },
     test: {
-      title: "Test: validate and iterate with evidence.",
-      summary: "Run heuristic, accessibility, and behavior checks; feed findings back into the next design cycle.",
+      title: "Validate: verify before execution.",
+      summary: "Run quality, readability, and behavior checks, then feed the results back into the next operating cycle.",
       microsteps: [
-        "Run Nielsen heuristic review on critical screens.",
-        "Execute contrast, focus order, and readability scans.",
+        "Run quality review on critical surfaces.",
+        "Execute readability, focus order, and control scans.",
         "Measure task completion and error frequency.",
         "Apply revisions and re-test until acceptance criteria pass.",
       ],
-      kpi: "Output KPI: SUS target >= 82 and zero critical accessibility failures.",
+      kpi: "Output KPI: confidence target >= 82 and zero critical readability failures.",
     },
   };
 
@@ -977,9 +977,9 @@ function runLiveAccessibilityScan() {
   const score = Math.max(62, Math.min(99, scoreBase));
 
   liveA11yOutput.textContent =
-    `Automated UX+accessibility score: ${score}/100\n` +
+    `Interface quality score: ${score}/100\n` +
     `- Scanned nodes: ${scanned}\n` +
-    `- Contrast alerts: ${alerts} (recommended ratio >= 4.5:1)\n` +
+    `- Readability alerts: ${alerts} (recommended ratio >= 4.5:1)\n` +
     `- Keyboard interaction paths detected: ${keyboardPaths}\n` +
     `- Reduced-motion handling: ${motionSafe}`;
 }
