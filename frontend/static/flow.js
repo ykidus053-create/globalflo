@@ -81,6 +81,7 @@ let activeModalId = null;
 let summaryCache = null;
 let revealIndex = 0;
 let commandRegistry = [];
+let lastMotionTrigger = null;
 let autopilotState = {
   enabled: autopilotData?.dataset?.enabled === "true",
   next_run: autopilotData?.dataset?.nextRun || null,
@@ -97,6 +98,15 @@ const motionState = {
   story: "intake",
   velocity: 0,
 };
+
+function rememberMotionTrigger(element) {
+  if (!(element instanceof HTMLElement)) return;
+  const rect = element.getBoundingClientRect();
+  lastMotionTrigger = {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  };
+}
 
 function detectMotionPerformance() {
   const lowPower =
@@ -150,6 +160,29 @@ function registerMotionInteraction(weight = 1, intent = "guided") {
   if (nextProfile !== motionState.profile) {
     applyMotionProfile(nextProfile, detectMotionPerformance());
   }
+}
+
+function pulseElement(element, className = "is-feedback-pulse") {
+  if (!(element instanceof HTMLElement)) return;
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+  window.setTimeout(() => element.classList.remove(className), 900);
+}
+
+function createRipple(host, clientX, clientY) {
+  if (!(host instanceof HTMLElement)) return;
+  const rect = host.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 1.1;
+  const ripple = document.createElement("span");
+  ripple.className = "motion-ripple";
+  ripple.style.width = `${size}px`;
+  ripple.style.height = `${size}px`;
+  ripple.style.left = `${clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${clientY - rect.top - size / 2}px`;
+  host.querySelectorAll(".motion-ripple").forEach((node) => node.remove());
+  host.appendChild(ripple);
+  window.setTimeout(() => ripple.remove(), 760);
 }
 
 function markButtonBusy(button, busy, pendingLabel) {
@@ -658,7 +691,7 @@ function triggerFlow() {
 
 function initRevealObserver() {
   const targets = document.querySelectorAll(
-    "main > section, .hero-video-card, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card"
+    "main > section, .hero-video-card, .hero-status-card, .logo-pill, .testimonial-card, .feature-card, .pricing-card, .payment-chip, .trust-card, .founder-card, .connector-card, .hero-proof-card, .hero-trust-card, .hero-media-card, .overview-panel, .endtoend-step, .activity-entry, .wf-signal-cell, .wf-operator-card, .wf-lane-card"
   );
   targets.forEach((target) => registerRevealTargets(target));
 
@@ -685,7 +718,13 @@ function initRevealObserver() {
 function registerRevealTargets(target) {
   if (!target || target.classList.contains("reveal-ready")) return;
   target.style.transitionDelay = `${Math.min(revealIndex * 40, 320)}ms`;
+  target.style.setProperty("--reveal-order", String(revealIndex));
+  target.classList.add(["has-reveal-up", "has-reveal-left", "has-reveal-right"][revealIndex % 3]);
   target.classList.add("reveal-ready");
+  const staggerTargets = target.querySelectorAll(
+    ".content-body > *, .hero-quickfacts > *, .hero-benefit-list > *, .hero-chip-row > *, .hero-trust-list > *, .pricing-list > *, .workflow-grid > *, .command-item, .connector-form > *, .method-grid > *, .endtoend-body > *"
+  );
+  staggerTargets.forEach((item, index) => item.style.setProperty("--child-order", String(index)));
   revealIndex += 1;
   if (prefersReducedMotion) {
     target.classList.add("is-visible");
@@ -907,6 +946,78 @@ function initPredictiveMotionEngine() {
 
   window.addEventListener("scroll", settle, { passive: true });
   window.addEventListener("pointermove", settle, { passive: true });
+}
+
+function initActionRipples() {
+  const rippleTargets = document.querySelectorAll(".primary, .ghost, .wf-density, .wf-toggle, .feature-link, .connector-card summary, .command-item");
+  rippleTargets.forEach((target) => {
+    target.addEventListener(
+      "pointerdown",
+      (event) => {
+        rememberMotionTrigger(target);
+        const x = event.clientX || target.getBoundingClientRect().left + target.getBoundingClientRect().width / 2;
+        const y = event.clientY || target.getBoundingClientRect().top + target.getBoundingClientRect().height / 2;
+        createRipple(target, x, y);
+      },
+      { passive: true }
+    );
+  });
+}
+
+function initHoverDisclosure() {
+  const cards = document.querySelectorAll(".pricing-card, .connector-card, .explore-card, .hero-proof-card, .hero-status-card, .hero-trust-card, .wf-signal-cell, .wf-lane-card");
+  cards.forEach((card) => {
+    if (card.querySelector(".hover-disclosure")) return;
+    const heading =
+      card.querySelector("h3, h2, strong, .label, .connector-heading h3")?.textContent?.trim() ||
+      card.getAttribute("data-connector-id") ||
+      "Explore";
+    const label = document.createElement("span");
+    label.className = "hover-disclosure";
+    label.textContent = heading;
+    card.appendChild(label);
+  });
+}
+
+function initDirectionalMotion() {
+  document.querySelectorAll(".endtoend-step, .pricing-card, .explore-card, .connector-card").forEach((card, index) => {
+    card.classList.add(index % 2 === 0 ? "motion-flow-forward" : "motion-flow-backward");
+  });
+}
+
+function initDetailTransitions() {
+  document.querySelectorAll("details.connector-card").forEach((detail) => {
+    detail.addEventListener("toggle", () => {
+      pulseElement(detail);
+      detail.classList.toggle("is-detail-open", detail.open);
+    });
+  });
+}
+
+function initScrollCue() {
+  const hero = document.getElementById("hero");
+  if (!hero || hero.querySelector(".scroll-cue")) return;
+  const cue = document.createElement("button");
+  cue.type = "button";
+  cue.className = "scroll-cue";
+  cue.setAttribute("aria-label", "Scroll to next section");
+  cue.innerHTML = '<span class="scroll-cue__label">Scroll</span><span class="scroll-cue__arrow" aria-hidden="true"></span>';
+  cue.addEventListener("click", () => {
+    registerMotionInteraction(1, "guided");
+    scrollToSelector("#overview");
+  });
+  hero.appendChild(cue);
+}
+
+function initAutoScrollReveal() {
+  if (prefersReducedMotion) return;
+  if (window.location.hash || window.scrollY > 12) return;
+  if (window.sessionStorage.getItem("globalflow_auto_reveal_done") === "1") return;
+  window.sessionStorage.setItem("globalflow_auto_reveal_done", "1");
+  window.setTimeout(() => {
+    const targetY = Math.min(Math.round(window.innerHeight * 0.16), 120);
+    window.scrollTo({ top: targetY, behavior: "smooth" });
+  }, 900);
 }
 
 function initActiveNav() {
@@ -1211,15 +1322,25 @@ function resetModalHistory() {
 function openModal(target, pushHistory = true) {
   if (!target) return;
   document.querySelectorAll(".flow-modal--open").forEach((el) => el.classList.remove("flow-modal--open"));
+  if (lastMotionTrigger) {
+    target.style.setProperty("--modal-origin-x", `${lastMotionTrigger.x}px`);
+    target.style.setProperty("--modal-origin-y", `${lastMotionTrigger.y}px`);
+  }
+  target.classList.remove("is-closing");
+  target.classList.add("is-opening");
   target.classList.add("flow-modal--open");
   activeModalId = target.id;
+  pulseElement(target.querySelector(".flow-modal__content"));
+  window.setTimeout(() => target.classList.remove("is-opening"), 420);
   if (pushHistory) pushModalHistory(target.id);
 }
 
 function closeModal(target, skipHistory = false) {
   if (!target) return;
+  target.classList.add("is-closing");
   target.classList.remove("flow-modal--open");
   activeModalId = null;
+  window.setTimeout(() => target.classList.remove("is-closing"), 260);
   if (!skipHistory) resetModalHistory();
 }
 
@@ -1434,11 +1555,14 @@ function showToast(text) {
   toast.setAttribute("role", "status");
   toast.setAttribute("aria-live", "polite");
   toast.style.display = "block";
+  toast.classList.add("is-visible");
+  pulseElement(toast);
   if (!prefersReducedMotion) {
     toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
   }
   window.setTimeout(() => {
     toast.style.display = "none";
+    toast.classList.remove("is-visible");
   }, 2200);
 }
 
@@ -1459,6 +1583,8 @@ function renderIntegrationHealth(item) {
   const latency = item.latency_ms == null ? "" : ` - ${item.latency_ms}ms`;
   statusEl.textContent = `${status}${code}${latency} - ${item.message || ""}`;
   card.dataset.health = integrationTone(status);
+  pulseElement(statusEl);
+  pulseElement(card);
 }
 
 async function refreshIntegrationHealth() {
@@ -1715,6 +1841,11 @@ async function bootstrap() {
   initGuidedFocus();
   initCinematicSections();
   initPredictiveMotionEngine();
+  initActionRipples();
+  initHoverDisclosure();
+  initDirectionalMotion();
+  initDetailTransitions();
+  initScrollCue();
   initMagneticButtons();
   initKineticType();
   initStorytellingRail();
@@ -1732,6 +1863,7 @@ async function bootstrap() {
     fetchActivity(),
     refreshIntegrationHealth(),
   ]);
+  initAutoScrollReveal();
 }
 
 bootstrap().catch((error) => {
