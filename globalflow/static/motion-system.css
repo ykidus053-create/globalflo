@@ -1,0 +1,796 @@
+/* ==========================================================================
+   GlobalFlow 2026 Advanced Motion System
+   Official M3 Design System Implementation
+   Source: m3.material.io production CSS tokens
+   1. M3 Motion Easing & Duration
+   2. M3 Type Scale
+   3. M3 Elevation
+   4. M3 Shape
+   5. M3 Color Roles (Dark)
+   6. M3 State Layers
+   7. CRED & FinTech Custom Springs
+   8. Spatial Circular Menus & 3D UI (Oleg Frolov Style)
+   ========================================================================== */
+
+:root {
+  /* ────────────────────────────────────────────
+     1. M3 Motion — Easing & Duration
+     Official curves from Material Design 3
+     ──────────────────────────────────────────── */
+
+  /* Emphasized: for hero transitions, page changes, large transformations */
+  --m3-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --m3-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --m3-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* Standard: for smaller, utilitarian motions */
+  --m3-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --m3-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --m3-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+
+  /* Legacy: for compatibility */
+  --m3-easing-linear: cubic-bezier(0, 0, 1, 1);
+
+  /* Duration tokens (M3 spec) */
+  --m3-duration-short1: 50ms;
+  --m3-duration-short2: 100ms;
+  --m3-duration-short3: 150ms;
+  --m3-duration-short4: 200ms;
+  --m3-duration-medium1: 250ms;
+  --m3-duration-medium2: 300ms;
+  --m3-duration-medium3: 350ms;
+  --m3-duration-medium4: 400ms;
+  --m3-duration-long1: 450ms;
+  --m3-duration-long2: 500ms;
+  --m3-duration-long3: 550ms;
+  --m3-duration-long4: 600ms;
+  --m3-duration-extra-long1: 700ms;
+  --m3-duration-extra-long2: 800ms;
+  --m3-duration-extra-long3: 900ms;
+  --m3-duration-extra-long4: 1000ms;
+
+  /* Convenience aliases (backward compat) */
+  --m3-duration-short: var(--m3-duration-short3);
+  --m3-duration-medium: var(--m3-duration-medium2);
+  --m3-duration-long: var(--m3-duration-long2);
+  --m3-duration-extra-long: var(--m3-duration-extra-long2);
+
+
+  /* ────────────────────────────────────────────
+     2. M3 Type Scale Tokens
+     From m3.material.io (Google Sans / Google Sans Text)
+     Adapted: using Inter as display, system-ui as text
+     ──────────────────────────────────────────── */
+
+  --m3-typescale-display-large-size: 57px;
+  --m3-typescale-display-large-line-height: 64px;
+  --m3-typescale-display-large-weight: 400;
+  --m3-typescale-display-large-tracking: -0.25px;
+
+  --m3-typescale-display-medium-size: 45px;
+  --m3-typescale-display-medium-line-height: 52px;
+  --m3-typescale-display-medium-weight: 400;
+  --m3-typescale-display-medium-tracking: 0;
+
+  --m3-typescale-display-small-size: 36px;
+  --m3-typescale-display-small-line-height: 44px;
+  --m3-typescale-display-small-weight: 400;
+  --m3-typescale-display-small-tracking: 0;
+
+  --m3-typescale-headline-large-size: 32px;
+  --m3-typescale-headline-large-line-height: 40px;
+  --m3-typescale-headline-large-weight: 400;
+  --m3-typescale-headline-large-tracking: 0;
+
+  --m3-typescale-headline-medium-size: 28px;
+  --m3-typescale-headline-medium-line-height: 36px;
+  --m3-typescale-headline-medium-weight: 400;
+  --m3-typescale-headline-medium-tracking: 0;
+
+  --m3-typescale-headline-small-size: 24px;
+  --m3-typescale-headline-small-line-height: 32px;
+  --m3-typescale-headline-small-weight: 400;
+  --m3-typescale-headline-small-tracking: 0;
+
+  --m3-typescale-title-large-size: 22px;
+  --m3-typescale-title-large-line-height: 28px;
+  --m3-typescale-title-large-weight: 400;
+  --m3-typescale-title-large-tracking: 0;
+
+  --m3-typescale-title-medium-size: 16px;
+  --m3-typescale-title-medium-line-height: 24px;
+  --m3-typescale-title-medium-weight: 500;
+  --m3-typescale-title-medium-tracking: 0.15px;
+
+  --m3-typescale-title-small-size: 14px;
+  --m3-typescale-title-small-line-height: 20px;
+  --m3-typescale-title-small-weight: 500;
+  --m3-typescale-title-small-tracking: 0.1px;
+
+  --m3-typescale-body-large-size: 16px;
+  --m3-typescale-body-large-line-height: 24px;
+  --m3-typescale-body-large-weight: 400;
+  --m3-typescale-body-large-tracking: 0.5px;
+
+  --m3-typescale-body-medium-size: 14px;
+  --m3-typescale-body-medium-line-height: 20px;
+  --m3-typescale-body-medium-weight: 400;
+  --m3-typescale-body-medium-tracking: 0.25px;
+
+  --m3-typescale-body-small-size: 12px;
+  --m3-typescale-body-small-line-height: 16px;
+  --m3-typescale-body-small-weight: 400;
+  --m3-typescale-body-small-tracking: 0.4px;
+
+  --m3-typescale-label-large-size: 14px;
+  --m3-typescale-label-large-line-height: 20px;
+  --m3-typescale-label-large-weight: 500;
+  --m3-typescale-label-large-tracking: 0.1px;
+
+  --m3-typescale-label-medium-size: 12px;
+  --m3-typescale-label-medium-line-height: 16px;
+  --m3-typescale-label-medium-weight: 500;
+  --m3-typescale-label-medium-tracking: 0.5px;
+
+  --m3-typescale-label-small-size: 11px;
+  --m3-typescale-label-small-line-height: 16px;
+  --m3-typescale-label-small-weight: 500;
+  --m3-typescale-label-small-tracking: 0.5px;
+
+
+  /* ────────────────────────────────────────────
+     3. M3 Elevation Tokens
+     Official shadow values from mio-root CSS
+     ──────────────────────────────────────────── */
+
+  --m3-elevation-0: none;
+  --m3-elevation-1: 0px 1px 2px 0px rgba(0,0,0,0.30), 0px 1px 3px 1px rgba(0,0,0,0.15);
+  --m3-elevation-2: 0px 1px 2px 0px rgba(0,0,0,0.30), 0px 2px 6px 2px rgba(0,0,0,0.15);
+  --m3-elevation-3: 0px 1px 3px 0px rgba(0,0,0,0.30), 0px 4px 8px 3px rgba(0,0,0,0.15);
+  --m3-elevation-4: 0px 2px 3px 0px rgba(0,0,0,0.30), 0px 6px 10px 4px rgba(0,0,0,0.15);
+  --m3-elevation-5: 0px 4px 4px 0px rgba(0,0,0,0.30), 0px 8px 12px 6px rgba(0,0,0,0.15);
+
+
+  /* ────────────────────────────────────────────
+     4. M3 Shape Tokens
+     Corner radius scale
+     ──────────────────────────────────────────── */
+
+  --m3-shape-corner-none: 0px;
+  --m3-shape-corner-extra-small: 4px;
+  --m3-shape-corner-small: 8px;
+  --m3-shape-corner-medium: 12px;
+  --m3-shape-corner-large: 16px;
+  --m3-shape-corner-extra-large: 28px;
+  --m3-shape-corner-full: 999px;
+
+
+  /* ────────────────────────────────────────────
+     5. M3 Color Roles (Dark Theme)
+     Mapped to GlobalFlow's existing palette
+     ──────────────────────────────────────────── */
+
+  --m3-color-primary: var(--gf-accent-blue, #2563EB);
+  --m3-color-on-primary: #ffffff;
+  --m3-color-primary-container: rgba(37, 99, 235, 0.18);
+  --m3-color-on-primary-container: #c0d8ff;
+
+  --m3-color-secondary: var(--gf-accent-violet, #8B5CF6);
+  --m3-color-on-secondary: #ffffff;
+  --m3-color-secondary-container: rgba(139, 92, 246, 0.15);
+  --m3-color-on-secondary-container: #d4c4ff;
+
+  --m3-color-tertiary: var(--gf-accent-cyan, #06B6D4);
+  --m3-color-on-tertiary: #ffffff;
+  --m3-color-tertiary-container: rgba(6, 182, 212, 0.15);
+  --m3-color-on-tertiary-container: #a7ecf7;
+
+  --m3-color-error: #F2B8B5;
+  --m3-color-on-error: #601410;
+  --m3-color-error-container: #8C1D18;
+  --m3-color-on-error-container: #F9DEDC;
+
+  --m3-color-surface: var(--bg, #0a1731);
+  --m3-color-on-surface: var(--text, #e6ecf8);
+  --m3-color-surface-variant: rgba(255, 255, 255, 0.06);
+  --m3-color-on-surface-variant: var(--muted, #b6c3dd);
+  --m3-color-outline: var(--line, rgba(255, 255, 255, 0.12));
+  --m3-color-outline-variant: rgba(255, 255, 255, 0.08);
+
+  --m3-color-surface-container-lowest: rgba(0, 0, 0, 0.2);
+  --m3-color-surface-container-low: rgba(255, 255, 255, 0.04);
+  --m3-color-surface-container: rgba(255, 255, 255, 0.06);
+  --m3-color-surface-container-high: rgba(255, 255, 255, 0.08);
+  --m3-color-surface-container-highest: rgba(255, 255, 255, 0.12);
+
+  --m3-color-inverse-surface: #e6ecf8;
+  --m3-color-inverse-on-surface: #0a1731;
+  --m3-color-inverse-primary: #1d4ed8;
+
+  --m3-color-scrim: rgba(0, 0, 0, 0.32);
+
+
+  /* ────────────────────────────────────────────
+     6. M3 State Layer Opacities
+     ──────────────────────────────────────────── */
+
+  --m3-state-hover-opacity: 0.08;
+  --m3-state-focus-opacity: 0.12;
+  --m3-state-pressed-opacity: 0.12;
+  --m3-state-dragged-opacity: 0.16;
+
+
+  /* ────────────────────────────────────────────
+     7. FinTech & CRED Custom Springs
+     ──────────────────────────────────────────── */
+
+  --fintech-spring-soft: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --fintech-spring-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
+/* ==========================================================================
+   M3 Utility Classes — Type Scale
+   Apply official M3 typography to elements
+   ========================================================================== */
+
+.m3-display-large {
+  font-size: var(--m3-typescale-display-large-size);
+  line-height: var(--m3-typescale-display-large-line-height);
+  font-weight: var(--m3-typescale-display-large-weight);
+  letter-spacing: var(--m3-typescale-display-large-tracking);
+}
+.m3-display-medium {
+  font-size: var(--m3-typescale-display-medium-size);
+  line-height: var(--m3-typescale-display-medium-line-height);
+  font-weight: var(--m3-typescale-display-medium-weight);
+  letter-spacing: var(--m3-typescale-display-medium-tracking);
+}
+.m3-display-small {
+  font-size: var(--m3-typescale-display-small-size);
+  line-height: var(--m3-typescale-display-small-line-height);
+  font-weight: var(--m3-typescale-display-small-weight);
+  letter-spacing: var(--m3-typescale-display-small-tracking);
+}
+.m3-headline-large {
+  font-size: var(--m3-typescale-headline-large-size);
+  line-height: var(--m3-typescale-headline-large-line-height);
+  font-weight: var(--m3-typescale-headline-large-weight);
+  letter-spacing: var(--m3-typescale-headline-large-tracking);
+}
+.m3-headline-medium {
+  font-size: var(--m3-typescale-headline-medium-size);
+  line-height: var(--m3-typescale-headline-medium-line-height);
+  font-weight: var(--m3-typescale-headline-medium-weight);
+  letter-spacing: var(--m3-typescale-headline-medium-tracking);
+}
+.m3-headline-small {
+  font-size: var(--m3-typescale-headline-small-size);
+  line-height: var(--m3-typescale-headline-small-line-height);
+  font-weight: var(--m3-typescale-headline-small-weight);
+  letter-spacing: var(--m3-typescale-headline-small-tracking);
+}
+.m3-title-large {
+  font-size: var(--m3-typescale-title-large-size);
+  line-height: var(--m3-typescale-title-large-line-height);
+  font-weight: var(--m3-typescale-title-large-weight);
+  letter-spacing: var(--m3-typescale-title-large-tracking);
+}
+.m3-title-medium {
+  font-size: var(--m3-typescale-title-medium-size);
+  line-height: var(--m3-typescale-title-medium-line-height);
+  font-weight: var(--m3-typescale-title-medium-weight);
+  letter-spacing: var(--m3-typescale-title-medium-tracking);
+}
+.m3-body-large {
+  font-size: var(--m3-typescale-body-large-size);
+  line-height: var(--m3-typescale-body-large-line-height);
+  font-weight: var(--m3-typescale-body-large-weight);
+  letter-spacing: var(--m3-typescale-body-large-tracking);
+}
+.m3-body-medium {
+  font-size: var(--m3-typescale-body-medium-size);
+  line-height: var(--m3-typescale-body-medium-line-height);
+  font-weight: var(--m3-typescale-body-medium-weight);
+  letter-spacing: var(--m3-typescale-body-medium-tracking);
+}
+.m3-label-large {
+  font-size: var(--m3-typescale-label-large-size);
+  line-height: var(--m3-typescale-label-large-line-height);
+  font-weight: var(--m3-typescale-label-large-weight);
+  letter-spacing: var(--m3-typescale-label-large-tracking);
+}
+.m3-label-medium {
+  font-size: var(--m3-typescale-label-medium-size);
+  line-height: var(--m3-typescale-label-medium-line-height);
+  font-weight: var(--m3-typescale-label-medium-weight);
+  letter-spacing: var(--m3-typescale-label-medium-tracking);
+}
+
+
+/* ==========================================================================
+   M3 Utility Classes — Elevation
+   ========================================================================== */
+
+.m3-elevation-1 { box-shadow: var(--m3-elevation-1); }
+.m3-elevation-2 { box-shadow: var(--m3-elevation-2); }
+.m3-elevation-3 { box-shadow: var(--m3-elevation-3); }
+.m3-elevation-4 { box-shadow: var(--m3-elevation-4); }
+.m3-elevation-5 { box-shadow: var(--m3-elevation-5); }
+
+
+/* ==========================================================================
+   M3 Utility Classes — Shape
+   ========================================================================== */
+
+.m3-shape-extra-small { border-radius: var(--m3-shape-corner-extra-small); }
+.m3-shape-small { border-radius: var(--m3-shape-corner-small); }
+.m3-shape-medium { border-radius: var(--m3-shape-corner-medium); }
+.m3-shape-large { border-radius: var(--m3-shape-corner-large); }
+.m3-shape-extra-large { border-radius: var(--m3-shape-corner-extra-large); }
+.m3-shape-full { border-radius: var(--m3-shape-corner-full); }
+
+
+/* ==========================================================================
+   M3 State Layer — Interactive Surface Hover/Focus/Press
+   Adds a semi-transparent overlay that follows M3 state layer spec
+   ========================================================================== */
+
+.m3-interactive {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.m3-interactive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--m3-duration-short2) var(--m3-easing-standard);
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.m3-interactive:hover::after { opacity: var(--m3-state-hover-opacity); }
+.m3-interactive:focus-visible::after { opacity: var(--m3-state-focus-opacity); }
+.m3-interactive:active::after { opacity: var(--m3-state-pressed-opacity); }
+
+
+/* ==========================================================================
+   M3 Surface Containers
+   ========================================================================== */
+
+.m3-surface { background: var(--m3-color-surface); color: var(--m3-color-on-surface); }
+.m3-surface-container-low { background: var(--m3-color-surface-container-low); }
+.m3-surface-container { background: var(--m3-color-surface-container); }
+.m3-surface-container-high { background: var(--m3-color-surface-container-high); }
+.m3-surface-container-highest { background: var(--m3-color-surface-container-highest); }
+
+.m3-primary-container {
+  background: var(--m3-color-primary-container);
+  color: var(--m3-color-on-primary-container);
+}
+.m3-secondary-container {
+  background: var(--m3-color-secondary-container);
+  color: var(--m3-color-on-secondary-container);
+}
+.m3-tertiary-container {
+  background: var(--m3-color-tertiary-container);
+  color: var(--m3-color-on-tertiary-container);
+}
+
+
+/* ==========================================================================
+   M3 Filled Button
+   ========================================================================== */
+
+.m3-btn-filled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 24px;
+  border: none;
+  border-radius: var(--m3-shape-corner-full);
+  background: var(--m3-color-primary);
+  color: var(--m3-color-on-primary);
+  font-size: var(--m3-typescale-label-large-size);
+  font-weight: var(--m3-typescale-label-large-weight);
+  letter-spacing: var(--m3-typescale-label-large-tracking);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--m3-duration-short3) var(--m3-easing-standard),
+              transform var(--m3-duration-short3) var(--m3-easing-emphasized-decelerate);
+}
+
+.m3-btn-filled::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--m3-color-on-primary);
+  opacity: 0;
+  transition: opacity var(--m3-duration-short2) var(--m3-easing-standard);
+  pointer-events: none;
+}
+
+.m3-btn-filled:hover { box-shadow: var(--m3-elevation-1); }
+.m3-btn-filled:hover::after { opacity: var(--m3-state-hover-opacity); }
+.m3-btn-filled:focus-visible::after { opacity: var(--m3-state-focus-opacity); }
+.m3-btn-filled:active::after { opacity: var(--m3-state-pressed-opacity); }
+.m3-btn-filled:active { transform: scale(0.98); }
+
+
+/* ==========================================================================
+   M3 Card
+   ========================================================================== */
+
+.m3-card {
+  background: var(--m3-color-surface-container);
+  border: 1px solid var(--m3-color-outline-variant);
+  border-radius: var(--m3-shape-corner-large);
+  box-shadow: var(--m3-elevation-0);
+  transition: box-shadow var(--m3-duration-medium1) var(--m3-easing-standard),
+              transform var(--m3-duration-medium1) var(--m3-easing-emphasized-decelerate);
+}
+
+.m3-card:hover {
+  box-shadow: var(--m3-elevation-2);
+  transform: translateY(-2px);
+}
+
+/* ── 2. CRED & FinTech Inspired Components ── */
+.gf-fintech-card {
+  transition: transform var(--m3-duration-long) var(--fintech-spring-soft),
+              box-shadow var(--m3-duration-medium) var(--m3-easing-standard);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.gf-fintech-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
+              0 0 40px rgba(37, 99, 235, 0.2);
+}
+
+/* FinTech Swipe / Unlock Button */
+.gf-unlock-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--m3-duration-short) var(--m3-easing-emphasized-decelerate),
+              filter var(--m3-duration-short) ease-in-out;
+  transform: scale(1);
+}
+
+.gf-unlock-btn::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s var(--m3-easing-standard);
+  z-index: 1;
+}
+
+.gf-unlock-btn:hover::before {
+  left: 100%;
+}
+
+.gf-unlock-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.8);
+}
+
+.gf-unlock-btn.is-unlocked {
+  transform: rotateX(360deg);
+  transition: transform 0.8s var(--fintech-spring-soft);
+  background: linear-gradient(135deg, var(--gf-accent-emerald), var(--gf-accent-cyan)) !important;
+}
+
+
+/* ── 3. Oleg Frolov Spatial Circular Menu ── */
+.spatial-menu-container {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 9999;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.spatial-fab {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gf-accent-blue), var(--gf-accent-violet));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.4);
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--m3-duration-medium) var(--fintech-spring-soft),
+              box-shadow var(--m3-duration-medium) var(--m3-easing-standard);
+  position: relative;
+  z-index: 10;
+}
+
+.spatial-fab:hover {
+  transform: scale(1.1) translateZ(20px);
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.6);
+}
+
+.spatial-fab .fab-icon {
+  transition: transform 0.4s var(--fintech-spring-bouncy);
+}
+
+.spatial-menu-container.is-open .spatial-fab .fab-icon {
+  transform: rotate(135deg);
+}
+
+.spatial-items {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.spatial-menu-container.is-open .spatial-items {
+  pointer-events: auto;
+}
+
+.spatial-item {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(20, 25, 40, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--gf-border-default);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 20px;
+  cursor: pointer;
+  
+  /* Initial State (Hidden behind FAB) */
+  transform: translate(-50%, -50%) scale(0) rotateX(0deg) rotateY(0deg) translateZ(-50px);
+  opacity: 0;
+  transition: all var(--m3-duration-medium) var(--fintech-spring-bouncy);
+}
+
+.spatial-item:hover {
+  background: rgba(30, 40, 60, 0.95);
+  border-color: var(--gf-accent-cyan);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+}
+
+/* Open State (Spread out in 3D circle) */
+/* The JS will calculate the exact X/Y based on angle, but we define the base expanded state transition here */
+.spatial-menu-container.is-open .spatial-item {
+  opacity: 1;
+  /* Specific translations are handled via inline styles in JS to create the radial effect, 
+     but we ensure the scale and Z-depth look nice */
+}
+
+/* Staggered entry */
+.spatial-menu-container.is-open .spatial-item:nth-child(1) { transition-delay: 0.05s; }
+.spatial-menu-container.is-open .spatial-item:nth-child(2) { transition-delay: 0.1s; }
+.spatial-menu-container.is-open .spatial-item:nth-child(3) { transition-delay: 0.15s; }
+.spatial-menu-container.is-open .spatial-item:nth-child(4) { transition-delay: 0.2s; }
+
+/* Apply M3 easing to existing flow modals for consistency */
+.flow-modal {
+  transition: opacity var(--m3-duration-medium) var(--m3-easing-emphasized);
+}
+.flow-modal__content {
+  transition: transform var(--m3-duration-long) var(--fintech-spring-soft);
+}
+
+
+/* ── 4. Unlock Ring Progress Indicator (CRED hold-to-confirm) ── */
+.unlock-ring {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gf-accent-cyan, #06B6D4), var(--gf-accent-emerald, #10B981));
+  border-radius: 0 0 var(--gf-radius-pill, 999px) var(--gf-radius-pill, 999px);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.gf-unlock-btn.is-pressing {
+  transform: scale(0.96) !important;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    inset 0 0 20px rgba(6, 182, 212, 0.15) !important;
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out !important;
+}
+
+.gf-unlock-btn.is-unlocked {
+  transform: scale(1.06) !important;
+  transition: transform 0.6s var(--fintech-spring-bouncy), background 0.3s ease !important;
+  background: linear-gradient(135deg, var(--gf-accent-emerald, #10B981), var(--gf-accent-cyan, #06B6D4)) !important;
+  box-shadow:
+    0 0 0 4px rgba(16, 185, 129, 0.3),
+    0 8px 30px rgba(16, 185, 129, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+
+/* ── 5. M3 Expressive Section Heading Entrance ── */
+.section-heading {
+  opacity: 0;
+  transform: translateY(20px) scale(0.98);
+  transition: opacity var(--m3-duration-extra-long) var(--m3-easing-emphasized-decelerate),
+              transform var(--m3-duration-extra-long) var(--m3-easing-emphasized-decelerate);
+}
+
+.section-heading.m3-entered {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Staggered child reveal inside section headings */
+.section-heading.m3-entered .eyebrow {
+  animation: m3-slide-up 0.5s var(--m3-easing-emphasized-decelerate) 0.1s both;
+}
+.section-heading.m3-entered h2 {
+  animation: m3-slide-up 0.6s var(--m3-easing-emphasized-decelerate) 0.2s both;
+}
+.section-heading.m3-entered p,
+.section-heading.m3-entered .lead {
+  animation: m3-slide-up 0.7s var(--m3-easing-emphasized-decelerate) 0.35s both;
+}
+
+@keyframes m3-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ── 6. Spatial Item Tooltips ── */
+.spatial-item::after {
+  content: attr(title);
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(5px);
+  opacity: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(10, 15, 30, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.spatial-item:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Spatial FAB pulsing ring */
+.spatial-fab::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  animation: spatial-pulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.spatial-menu-container.is-open .spatial-fab::before {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes spatial-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 0; }
+}
+
+
+/* ── 7. FinTech Card Shine Effect ── */
+.gf-fintech-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 60%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.gf-fintech-card:hover::before {
+  transform: translateX(100%);
+}
+
+
+/* ── 8. Mobile Adjustments ── */
+@media (max-width: 767px) {
+  .spatial-menu-container {
+    bottom: 90px; /* Above mobile dock */
+    right: 20px;
+  }
+
+  .spatial-fab {
+    width: 54px;
+    height: 54px;
+    font-size: 20px;
+  }
+
+  .spatial-item {
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+  }
+
+  .spatial-item::after {
+    display: none; /* Hide tooltips on mobile */
+  }
+}
+
+
+/* ── 9. Reduced Motion Safety ── */
+@media (prefers-reduced-motion: reduce) {
+  .gf-fintech-card,
+  .gf-unlock-btn,
+  .spatial-fab,
+  .spatial-item,
+  .section-heading,
+  .unlock-ring,
+  .spatial-menu-container {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .section-heading {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .gf-fintech-card::before,
+  .gf-unlock-btn::before,
+  .spatial-fab::before {
+    display: none !important;
+  }
+}

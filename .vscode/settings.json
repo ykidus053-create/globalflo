@@ -2,7 +2,6 @@
   "workbench.startupEditor": "none",
   "workbench.colorTheme": "Default Dark+",
   "workbench.iconTheme": "vscode-icons",
-  "workbench.activityBar.visible": true,
   "workbench.editor.enablePreview": false,
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 0,
@@ -21,7 +20,7 @@
   "editor.inlayHints.enabled": "on",
   "editor.smoothScrolling": true,
   "editor.cursorBlinking": "smooth",
-  "editor.cursorSmoothCaretAnimation": true,
+  "editor.cursorSmoothCaretAnimation": "on",
   "editor.snippetSuggestions": "top",
   "editor.suggestSelection": "first",
   "editor.suggest.showIcons": true,
@@ -34,7 +33,7 @@
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    "source.organizeImports": "explicit"
   },
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 750,
@@ -135,7 +134,7 @@
     "editor.defaultFormatter": "ms-python.python",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
   },
   "[json]": {
