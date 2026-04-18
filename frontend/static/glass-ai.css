@@ -828,3 +828,215 @@ body.paper-site .comparison-table th {
   color: var(--gf-text-primary);
   font-weight: 700;
 }
+
+body.paper-site {
+  --gf-motion-duration-micro: 180ms;
+  --gf-motion-duration-panel: 480ms;
+  --gf-motion-duration-scene: 820ms;
+  --gf-motion-depth-y: 18px;
+  --gf-motion-depth-z: 24px;
+  --gf-motion-scale: 1.015;
+  --gf-motion-tilt: 8deg;
+  --gf-motion-scroll-shift: 0px;
+  --gf-motion-opacity-dim: 0.7;
+}
+
+body.paper-site[data-motion-profile="power"] {
+  --gf-motion-duration-micro: 120ms;
+  --gf-motion-duration-panel: 320ms;
+  --gf-motion-duration-scene: 620ms;
+  --gf-motion-depth-y: 12px;
+  --gf-motion-depth-z: 18px;
+}
+
+body.paper-site[data-motion-profile="guided"] {
+  --gf-motion-duration-micro: 220ms;
+  --gf-motion-duration-panel: 560ms;
+  --gf-motion-duration-scene: 940ms;
+  --gf-motion-depth-y: 24px;
+  --gf-motion-depth-z: 30px;
+}
+
+body.paper-site[data-motion-performance="low"] {
+  --gf-motion-duration-panel: 280ms;
+  --gf-motion-duration-scene: 440ms;
+  --gf-motion-depth-z: 10px;
+  --gf-motion-tilt: 4deg;
+}
+
+body.paper-site main > section,
+body.paper-site .wf-section,
+body.paper-site .checkout-hero,
+body.paper-site .checkout-offset,
+body.paper-site .payment-hero,
+body.paper-site .payment-form-section {
+  transform: translate3d(0, var(--gf-motion-scroll-shift), 0);
+  transition:
+    transform var(--gf-motion-duration-scene) var(--gf-ease-out),
+    opacity var(--gf-motion-duration-panel) var(--gf-ease-out),
+    filter var(--gf-motion-duration-panel) var(--gf-ease-out);
+  will-change: transform, opacity, filter;
+}
+
+body.paper-site .motion-section {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+body.paper-site .motion-section.is-before {
+  opacity: 0.84;
+  filter: saturate(0.92);
+}
+
+body.paper-site .motion-section.is-active {
+  opacity: 1;
+  filter: saturate(1.04);
+}
+
+body.paper-site .motion-section.is-after {
+  opacity: var(--gf-motion-opacity-dim);
+  filter: saturate(0.86);
+}
+
+body.paper-site .motion-depth-card {
+  transform:
+    perspective(1200px)
+    translate3d(0, 0, 0)
+    rotateX(0deg)
+    rotateY(0deg)
+    scale(1);
+  transition:
+    transform var(--gf-motion-duration-panel) var(--gf-ease-spring),
+    box-shadow var(--gf-motion-duration-panel) var(--gf-ease-out),
+    border-color var(--gf-motion-duration-micro) var(--gf-ease-out);
+  transform-style: preserve-3d;
+  will-change: transform, box-shadow;
+}
+
+body.paper-site .motion-depth-card.is-guided-hover {
+  transform:
+    perspective(1200px)
+    translate3d(0, calc(var(--gf-motion-depth-y) * -0.35), var(--gf-motion-depth-z))
+    rotateX(calc(var(--card-tilt-y, 0deg) * 0.7))
+    rotateY(calc(var(--card-tilt-x, 0deg) * 0.9))
+    scale(var(--gf-motion-scale));
+}
+
+body.paper-site .primary,
+body.paper-site .ghost,
+body.paper-site .wf-toggle,
+body.paper-site .wf-density {
+  position: relative;
+  overflow: hidden;
+}
+
+body.paper-site .primary.is-busy,
+body.paper-site .ghost.is-busy {
+  min-width: 148px;
+  border-radius: 22px !important;
+  letter-spacing: 0.05em;
+  transform: scale(0.98) !important;
+}
+
+body.paper-site .primary.is-busy::after,
+body.paper-site .ghost.is-busy::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: rgba(255, 255, 255, 0.95);
+  position: absolute;
+  right: 14px;
+  top: calc(50% - 7px);
+  animation: gf-spin 0.7s linear infinite;
+}
+
+body.paper-site .primary.is-guided-focus,
+body.paper-site .ghost.is-guided-focus,
+body.paper-site .wf-density.is-guided-focus,
+body.paper-site .wf-toggle.is-guided-focus {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.22),
+    0 0 28px rgba(37, 99, 235, 0.22),
+    0 14px 32px rgba(0, 0, 0, 0.28) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+body.paper-site .hero-actions .primary,
+body.paper-site .workflow-actions .primary,
+body.paper-site .connector-actions .primary {
+  transition:
+    transform var(--gf-motion-duration-micro) var(--gf-ease-spring),
+    box-shadow var(--gf-motion-duration-panel) var(--gf-ease-out),
+    border-radius var(--gf-motion-duration-panel) var(--gf-ease-out),
+    min-width var(--gf-motion-duration-panel) var(--gf-ease-out);
+}
+
+body.paper-site .hero-actions .ghost,
+body.paper-site .workflow-actions .ghost,
+body.paper-site .connector-actions .ghost {
+  transition:
+    transform var(--gf-motion-duration-micro) var(--gf-ease-spring),
+    box-shadow var(--gf-motion-duration-panel) var(--gf-ease-out),
+    background var(--gf-motion-duration-panel) var(--gf-ease-out);
+}
+
+body.paper-site .hero,
+body.paper-site .wf-hero,
+body.paper-site .checkout-hero,
+body.paper-site .payment-hero {
+  perspective: 1600px;
+}
+
+body.paper-site .hero-copy,
+body.paper-site .hero-stage,
+body.paper-site .wf-hero-copy,
+body.paper-site .wf-hero-side {
+  transform: translate3d(0, 0, 0);
+  transition: transform var(--gf-motion-duration-scene) var(--gf-ease-out);
+}
+
+body.paper-site[data-motion-story="intake"] .hero-copy,
+body.paper-site[data-motion-story="capture"] .hero-copy {
+  transform: translate3d(0, 0, 18px);
+}
+
+body.paper-site[data-motion-story="decision"] .hero-stage,
+body.paper-site[data-motion-story="execute"] .hero-stage {
+  transform: translate3d(0, -6px, 24px);
+}
+
+body.paper-site .vfx-cursor {
+  transition:
+    transform 80ms linear,
+    opacity var(--gf-motion-duration-micro) var(--gf-ease-out),
+    width var(--gf-motion-duration-panel) var(--gf-ease-out),
+    height var(--gf-motion-duration-panel) var(--gf-ease-out);
+}
+
+body.paper-site[data-motion-intent="rapid"] .vfx-cursor {
+  width: 18px;
+  height: 18px;
+  opacity: 0.45;
+}
+
+body.paper-site[data-motion-intent="guided"] .vfx-cursor {
+  width: 28px;
+  height: 28px;
+  opacity: 0.7;
+}
+
+body.paper-site .render-layer {
+  opacity: 0;
+  transition: opacity var(--gf-motion-duration-scene) var(--gf-ease-out);
+}
+
+body.paper-site .render-layer.render-layer--ready {
+  opacity: 0.9;
+}
+
+@keyframes gf-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

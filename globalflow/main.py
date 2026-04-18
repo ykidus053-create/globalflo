@@ -2186,18 +2186,9 @@ async def account_center(request: Request):
     )
 
 
-@app.get("/automation", response_class=HTMLResponse)
-async def automation_workspace(request: Request):
-    return _render_html(
-        "automation.html",
-        {
-            "request": request,
-            "autopilot": autopilot.status(),
-            "connectors": CONNECTORS,
-            "ai_ops_blueprint": AI_OPS_BLUEPRINT,
-            "theme": _active_theme(),
-        },
-    )
+@app.get("/automation", include_in_schema=False)
+async def automation_workspace():
+    return RedirectResponse(url="/workflow-elite", status_code=307)
 
 
 @app.get("/workflow", response_class=HTMLResponse)

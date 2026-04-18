@@ -90,9 +90,57 @@ let autopilotState = {
 const inFlightTasks = new Map();
 const pollers = [];
 let shortcutShown = false;
+const motionState = {
+  profile: "balanced",
+  performance: "high",
+  intent: "guided",
+};
 
 function normalizeText(value) {
   return String(value || "").toLowerCase().trim();
+}
+
+function applyMotionProfile(nextProfile, nextPerformance) {
+  motionState.profile = nextProfile || motionState.profile;
+  motionState.performance = nextPerformance || motionState.performance;
+  document.body.dataset.motionProfile = motionState.profile;
+  document.body.dataset.motionPerformance = motionState.performance;
+}
+
+function resolveMotionProfile() {
+  const profile = readVisitProfile();
+  const visits = Number(profile.visits || 0);
+  const interactions = Number(profile.interactions || 0);
+  const lowPower =
+    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const performance = prefersReducedMotion || lowPower ? "low" : "high";
+  let mode = "balanced";
+  if (interactions >= 12 || visits >= 4) mode = "power";
+  else if (visits <= 1) mode = "guided";
+  applyMotionProfile(mode, performance);
+}
+
+function setMotionIntent(intent) {
+  motionState.intent = intent;
+  document.body.dataset.motionIntent = intent;
+}
+
+function markButtonBusy(button, busy, pendingLabel) {
+  if (!(button instanceof HTMLElement)) return;
+  if (!button.dataset.defaultLabel) {
+    button.dataset.defaultLabel = button.textContent || "";
+  }
+  button.classList.toggle("is-busy", busy);
+  if (busy) {
+    if (pendingLabel) button.textContent = pendingLabel;
+    button.setAttribute("aria-busy", "true");
+    button.disabled = true;
+  } else {
+    button.textContent = button.dataset.defaultLabel;
+    button.removeAttribute("aria-busy");
+    button.disabled = false;
+  }
 }
 
 function renderSkeleton(target, count = 3) {
@@ -678,12 +726,96 @@ function initAmbientVfx() {
       card.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
       card.classList.add("is-hovered");
     });
+      card.addEventListener("pointerleave", () => {
+        card.style.removeProperty("--rx");
+        card.style.removeProperty("--ry");
+        card.classList.remove("is-hovered");
+      });
+    });
+}
+
+function initDepthCards() {
+  if (prefersReducedMotion) return;
+  const cards = document.querySelectorAll(".gf-card, .workflow-card, .connector-card, .pricing-card, .payment-chip");
+  cards.forEach((card) => {
+    card.classList.add("motion-depth-card");
+    card.addEventListener("pointermove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5;
+      const py = (event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5;
+      card.style.setProperty("--card-tilt-x", `${(px * Number.parseFloat(getComputedStyle(document.body).getPropertyValue("--gf-motion-tilt") || "8")).toFixed(2)}deg`);
+      card.style.setProperty("--card-tilt-y", `${(py * -1 * Number.parseFloat(getComputedStyle(document.body).getPropertyValue("--gf-motion-tilt") || "8")).toFixed(2)}deg`);
+      card.classList.add("is-guided-hover");
+    });
     card.addEventListener("pointerleave", () => {
-      card.style.removeProperty("--rx");
-      card.style.removeProperty("--ry");
-      card.classList.remove("is-hovered");
+      card.classList.remove("is-guided-hover");
+      card.style.removeProperty("--card-tilt-x");
+      card.style.removeProperty("--card-tilt-y");
     });
   });
+}
+
+function initGuidedFocus() {
+  const buttons = document.querySelectorAll(".hero-actions .primary, .workflow-actions .primary, .connector-actions .primary, .hero-actions .ghost, .workflow-actions .ghost");
+  buttons.forEach((button) => {
+    button.addEventListener("pointerenter", () => {
+      setMotionIntent("guided");
+      button.classList.add("is-guided-focus");
+    });
+    button.addEventListener("pointerleave", () => {
+      button.classList.remove("is-guided-focus");
+    });
+  });
+}
+
+function initCinematicSections() {
+  const sections = Array.from(document.querySelectorAll("main > section, .wf-section, .checkout-hero, .checkout-offset, .payment-hero, .payment-form-section"));
+  if (!sections.length) return;
+  sections.forEach((section) => section.classList.add("motion-section"));
+  if (typeof IntersectionObserver === "undefined") return;
+
+  const storyMap = {
+    hero: "intake",
+    overview: "analysis",
+    demo: "decision",
+    "use-cases": "execute",
+    flowboard: "execute",
+    integrations: "learn",
+    pricing: "learn",
+    workspace: "capture",
+    signals: "analysis",
+    immersive: "decision",
+    board: "execute",
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const section = entry.target;
+        section.classList.remove("is-before", "is-active", "is-after");
+        if (entry.isIntersecting) {
+          section.classList.add("is-active");
+          const story = storyMap[section.id];
+          if (story) document.body.dataset.motionStory = story;
+        } else if (entry.boundingClientRect.top > 0) {
+          section.classList.add("is-before");
+        } else {
+          section.classList.add("is-after");
+        }
+      });
+    },
+    { threshold: [0.2, 0.55, 0.8] }
+  );
+  sections.forEach((section) => observer.observe(section));
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      const progress = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 12);
+      document.documentElement.style.setProperty("--gf-motion-scroll-shift", `${Math.min(progress * -1.2, 10)}px`);
+    },
+    { passive: true }
+  );
 }
 
 function initMagneticButtons() {
@@ -1303,6 +1435,7 @@ document.querySelectorAll("[data-modal]").forEach((button) => {
 
 if (watchDemoBtn) {
   watchDemoBtn.addEventListener("click", () => {
+    setMotionIntent("guided");
     if (demoSection) scrollToSelector("#demo");
     if (demoVideo && typeof demoVideo.play === "function") {
       demoVideo.play().catch(() => {
@@ -1314,8 +1447,9 @@ if (watchDemoBtn) {
 
 if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", async () => {
-    launchOrchestrationBtn.disabled = true;
+    markButtonBusy(launchOrchestrationBtn, true, "Launching");
     try {
+      setMotionIntent("rapid");
       showToast("Launching automation flow...");
       await fetchTasks();
       scrollToSelector("#flowboard");
@@ -1324,7 +1458,7 @@ if (launchOrchestrationBtn) {
       setReliabilityState("warning", "Launch delayed");
       showToast(error.message || "Could not launch orchestration");
     } finally {
-      launchOrchestrationBtn.disabled = false;
+      markButtonBusy(launchOrchestrationBtn, false);
     }
   });
 }
@@ -1419,9 +1553,12 @@ connectorForms.forEach((form) => {
       showToast("Connector unavailable");
       return;
     }
+    const submitButton = form.querySelector("button[type='submit']");
+    markButtonBusy(submitButton, true, "Routing");
     if (statusEl) statusEl.textContent = "Dispatching connector...";
     const payload = Object.fromEntries(new FormData(form));
     try {
+      setMotionIntent("rapid");
       const data = await fetchJson(`/api/connectors/${connectorId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1435,6 +1572,8 @@ connectorForms.forEach((form) => {
       if (statusEl) statusEl.textContent = error.message || "Connector failed.";
       setReliabilityState("warning", "Connector retry needed");
       showToast(error.message || "Connector offline");
+    } finally {
+      markButtonBusy(submitButton, false);
     }
   });
 });
@@ -1487,6 +1626,8 @@ function scheduleSafe(task, interval) {
 
 async function bootstrap() {
   trackVisitProfile();
+  resolveMotionProfile();
+  setMotionIntent("guided");
   const segment = applyAnticipatoryDesign();
   applySegmentCopy(segment);
   applyPrimaryActionFocus();
@@ -1496,6 +1637,9 @@ async function bootstrap() {
   initRevealObserver();
   initActiveNav();
   initAmbientVfx();
+  initDepthCards();
+  initGuidedFocus();
+  initCinematicSections();
   initMagneticButtons();
   initKineticType();
   initStorytellingRail();

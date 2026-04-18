@@ -4,6 +4,7 @@ const densityButtons = Array.from(document.querySelectorAll(".wf-density"));
 const operatorGrid = document.getElementById("operator-grid");
 const activityFeed = document.getElementById("activity-feed");
 const workflowBoard = document.getElementById("wf-board");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const moreSignals = [
   { tone: "trust", label: "SLA on track", value: "96%", detail: "Run latency under threshold." },
@@ -19,6 +20,64 @@ const toneRules = [
   { tone: "success", badge: "Stable", pattern: /complete|ready|healthy|resolved|live/i },
   { tone: "insight", badge: "Insight", pattern: /coverage|telemetry|analysis|signal|ops/i },
 ];
+
+function resolveWorkflowMotionProfile() {
+  const lowPower =
+    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  document.body.dataset.motionProfile = prefersReducedMotion ? "balanced" : "guided";
+  document.body.dataset.motionPerformance = prefersReducedMotion || lowPower ? "low" : "high";
+  document.body.dataset.motionIntent = "guided";
+}
+
+function initWorkflowMotion() {
+  const sections = document.querySelectorAll(".wf-section");
+  sections.forEach((section) => section.classList.add("motion-section"));
+  if (!prefersReducedMotion && typeof IntersectionObserver !== "undefined") {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.remove("is-before", "is-active", "is-after");
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-active");
+            const story = {
+              signals: "analysis",
+              immersive: "decision",
+              operators: "decision",
+              board: "execute",
+            }[entry.target.id];
+            if (story) document.body.dataset.motionStory = story;
+          } else if (entry.boundingClientRect.top > 0) {
+            entry.target.classList.add("is-before");
+          } else {
+            entry.target.classList.add("is-after");
+          }
+        });
+      },
+      { threshold: [0.25, 0.55, 0.8] }
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+
+  const cards = document.querySelectorAll(".wf-signal-cell, .wf-operator-card, .wf-lane-card, .wf-ai-card, .activity-entry");
+  cards.forEach((card) => {
+    card.classList.add("motion-depth-card");
+    if (prefersReducedMotion) return;
+    card.addEventListener("pointermove", (event) => {
+      const rect = card.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5;
+      const py = (event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5;
+      card.style.setProperty("--card-tilt-x", `${(px * 7).toFixed(2)}deg`);
+      card.style.setProperty("--card-tilt-y", `${(py * -7).toFixed(2)}deg`);
+      card.classList.add("is-guided-hover");
+    });
+    card.addEventListener("pointerleave", () => {
+      card.classList.remove("is-guided-hover");
+      card.style.removeProperty("--card-tilt-x");
+      card.style.removeProperty("--card-tilt-y");
+    });
+  });
+}
 
 function createRipple(host, x, y) {
   const rect = host.getBoundingClientRect();
@@ -55,9 +114,11 @@ function installSignalRipples() {
 function applyDensity(density) {
   const cozy = density !== "compact";
   document.body.classList.toggle("wf-compact", !cozy);
+  document.body.dataset.motionIntent = cozy ? "guided" : "rapid";
   densityButtons.forEach((button) => {
     const active = button.dataset.density === (cozy ? "cozy" : "compact");
     button.classList.toggle("is-active", active);
+    button.classList.toggle("is-guided-focus", active);
   });
 }
 
@@ -289,6 +350,8 @@ function syncOperatorBadgesFromActivity() {
 }
 
 installSignalRipples();
+resolveWorkflowMotionProfile();
+initWorkflowMotion();
 installDensityControls();
 installInfiniteSignalScroll();
 installOperatorCards();

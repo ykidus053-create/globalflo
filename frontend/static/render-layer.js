@@ -6,6 +6,8 @@ if (canvas) {
 
 function initRenderLayer(target) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const motionProfile = document.body?.dataset?.motionProfile || "balanced";
+  const motionPerformance = document.body?.dataset?.motionPerformance || "high";
   const gl = target.getContext("webgl", {
     alpha: true,
     antialias: true,
@@ -92,7 +94,15 @@ function initRenderLayer(target) {
   const program = createProgram(gl, vertexSource, fragmentSource);
   if (!program) return;
 
-  const particleCount = prefersReducedMotion ? 480 : 1100;
+  const particleCount = prefersReducedMotion
+    ? 420
+    : motionPerformance === "low"
+    ? 680
+    : motionProfile === "power"
+    ? 1280
+    : motionProfile === "guided"
+    ? 980
+    : 1100;
   const { positions, scales } = createParticles(particleCount);
 
   const positionBuffer = gl.createBuffer();
@@ -161,9 +171,11 @@ function initRenderLayer(target) {
   target.classList.add("render-layer--ready");
 
   function frame(now) {
-    pointer.x += (pointer.tx - pointer.x) * 0.08;
-    pointer.y += (pointer.ty - pointer.y) * 0.08;
-    scroll.value += (scroll.target - scroll.value) * 0.08;
+    const pointerDamping = prefersReducedMotion ? 0.05 : motionProfile === "power" ? 0.16 : motionProfile === "guided" ? 0.07 : 0.1;
+    const scrollDamping = prefersReducedMotion ? 0.05 : motionProfile === "power" ? 0.14 : motionProfile === "guided" ? 0.075 : 0.1;
+    pointer.x += (pointer.tx - pointer.x) * pointerDamping;
+    pointer.y += (pointer.ty - pointer.y) * pointerDamping;
+    scroll.value += (scroll.target - scroll.value) * scrollDamping;
 
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniform1f(uTime, now * 0.001);
