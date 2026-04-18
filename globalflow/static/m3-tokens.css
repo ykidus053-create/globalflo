@@ -1,0 +1,390 @@
+/* ==========================================================================
+   GlobalFlow — Material Design 3 Design Token System
+   Complete M3 token implementation per m3.material.io
+   Seed color: #2563EB (GlobalFlow Blue)
+   Generated using HCT (Hue/Chroma/Tone) color space
+   ========================================================================== */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. COLOR SYSTEM — Dark Theme (Default)
+   All 29 M3 color roles derived from blue seed via HCT algorithm
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="dark"] {
+  /* ── Primary ── */
+  --md-sys-color-primary: #A8C7FA;
+  --md-sys-color-on-primary: #062E6F;
+  --md-sys-color-primary-container: #0842A0;
+  --md-sys-color-on-primary-container: #D3E3FD;
+
+  /* ── Secondary ── */
+  --md-sys-color-secondary: #BEC6DC;
+  --md-sys-color-on-secondary: #283141;
+  --md-sys-color-secondary-container: #3E4758;
+  --md-sys-color-on-secondary-container: #DAE2F9;
+
+  /* ── Tertiary ── */
+  --md-sys-color-tertiary: #DEBCDF;
+  --md-sys-color-on-tertiary: #3F2844;
+  --md-sys-color-tertiary-container: #57405B;
+  --md-sys-color-on-tertiary-container: #FBD7FC;
+
+  /* ── Error ── */
+  --md-sys-color-error: #F2B8B5;
+  --md-sys-color-on-error: #601410;
+  --md-sys-color-error-container: #8C1D18;
+  --md-sys-color-on-error-container: #F9DEDC;
+
+  /* ── Surface ── */
+  --md-sys-color-surface: #111318;
+  --md-sys-color-on-surface: #E2E2E9;
+  --md-sys-color-surface-variant: #44474E;
+  --md-sys-color-on-surface-variant: #C4C6CF;
+
+  /* ── Surface Containers ── */
+  --md-sys-color-surface-dim: #111318;
+  --md-sys-color-surface-bright: #37393E;
+  --md-sys-color-surface-container-lowest: #0C0E13;
+  --md-sys-color-surface-container-low: #191C20;
+  --md-sys-color-surface-container: #1D2024;
+  --md-sys-color-surface-container-high: #282A2F;
+  --md-sys-color-surface-container-highest: #33353A;
+
+  /* ── Outline ── */
+  --md-sys-color-outline: #8E9099;
+  --md-sys-color-outline-variant: #44474E;
+
+  /* ── Inverse ── */
+  --md-sys-color-inverse-surface: #E2E2E9;
+  --md-sys-color-inverse-on-surface: #2E3036;
+  --md-sys-color-inverse-primary: #2563EB;
+
+  /* ── Fixed ── */
+  --md-sys-color-primary-fixed: #D3E3FD;
+  --md-sys-color-primary-fixed-dim: #A8C7FA;
+  --md-sys-color-on-primary-fixed: #001A41;
+  --md-sys-color-on-primary-fixed-variant: #0842A0;
+  --md-sys-color-secondary-fixed: #DAE2F9;
+  --md-sys-color-secondary-fixed-dim: #BEC6DC;
+  --md-sys-color-on-secondary-fixed: #121C2B;
+  --md-sys-color-on-secondary-fixed-variant: #3E4758;
+  --md-sys-color-tertiary-fixed: #FBD7FC;
+  --md-sys-color-tertiary-fixed-dim: #DEBCDF;
+  --md-sys-color-on-tertiary-fixed: #27132F;
+  --md-sys-color-on-tertiary-fixed-variant: #57405B;
+
+  /* ── Utility ── */
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-surface-tint: #A8C7FA;
+
+  /* ── Extended: Success (custom role per M3 guidelines) ── */
+  --md-ext-color-success: #7DD67E;
+  --md-ext-color-on-success: #003A02;
+  --md-ext-color-success-container: #005304;
+  --md-ext-color-on-success-container: #98F297;
+
+  /* ── Extended: Warning ── */
+  --md-ext-color-warning: #FABD00;
+  --md-ext-color-on-warning: #3D2E00;
+  --md-ext-color-warning-container: #584400;
+  --md-ext-color-on-warning-container: #FFDF71;
+
+  /* ── Theme indicator ── */
+  --md-sys-color-scheme: dark;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. COLOR SYSTEM — Light Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] {
+  /* ── Primary ── */
+  --md-sys-color-primary: #0B57D0;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #D3E3FD;
+  --md-sys-color-on-primary-container: #001A41;
+
+  /* ── Secondary ── */
+  --md-sys-color-secondary: #555F71;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-secondary-container: #DAE2F9;
+  --md-sys-color-on-secondary-container: #121C2B;
+
+  /* ── Tertiary ── */
+  --md-sys-color-tertiary: #6E5676;
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #F8D8FE;
+  --md-sys-color-on-tertiary-container: #27132F;
+
+  /* ── Error ── */
+  --md-sys-color-error: #BA1A1A;
+  --md-sys-color-on-error: #FFFFFF;
+  --md-sys-color-error-container: #FFDAD6;
+  --md-sys-color-on-error-container: #410002;
+
+  /* ── Surface ── */
+  --md-sys-color-surface: #FBF8FF;
+  --md-sys-color-on-surface: #191C20;
+  --md-sys-color-surface-variant: #E0E2EC;
+  --md-sys-color-on-surface-variant: #44474E;
+
+  /* ── Surface Containers ── */
+  --md-sys-color-surface-dim: #DAD9E0;
+  --md-sys-color-surface-bright: #FBF8FF;
+  --md-sys-color-surface-container-lowest: #FFFFFF;
+  --md-sys-color-surface-container-low: #F5F3FA;
+  --md-sys-color-surface-container: #EFEDF4;
+  --md-sys-color-surface-container-high: #E9E7EE;
+  --md-sys-color-surface-container-highest: #E3E2E9;
+
+  /* ── Outline ── */
+  --md-sys-color-outline: #74777F;
+  --md-sys-color-outline-variant: #C4C6CF;
+
+  /* ── Inverse ── */
+  --md-sys-color-inverse-surface: #2E3036;
+  --md-sys-color-inverse-on-surface: #F0F0F7;
+  --md-sys-color-inverse-primary: #A8C7FA;
+
+  /* ── Fixed ── */
+  --md-sys-color-primary-fixed: #D3E3FD;
+  --md-sys-color-primary-fixed-dim: #A8C7FA;
+  --md-sys-color-on-primary-fixed: #001A41;
+  --md-sys-color-on-primary-fixed-variant: #0842A0;
+  --md-sys-color-secondary-fixed: #DAE2F9;
+  --md-sys-color-secondary-fixed-dim: #BEC6DC;
+  --md-sys-color-on-secondary-fixed: #121C2B;
+  --md-sys-color-on-secondary-fixed-variant: #3E4758;
+  --md-sys-color-tertiary-fixed: #FBD7FC;
+  --md-sys-color-tertiary-fixed-dim: #DEBCDF;
+  --md-sys-color-on-tertiary-fixed: #27132F;
+  --md-sys-color-on-tertiary-fixed-variant: #57405B;
+
+  /* ── Utility ── */
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-surface-tint: #0B57D0;
+
+  /* ── Extended ── */
+  --md-ext-color-success: #006E10;
+  --md-ext-color-on-success: #FFFFFF;
+  --md-ext-color-success-container: #98F297;
+  --md-ext-color-on-success-container: #002204;
+
+  --md-ext-color-warning: #755C00;
+  --md-ext-color-on-warning: #FFFFFF;
+  --md-ext-color-warning-container: #FFDF71;
+  --md-ext-color-on-warning-container: #241A00;
+
+  /* ── Theme indicator ── */
+  --md-sys-color-scheme: light;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. TYPOGRAPHY — M3 Type Scale (15 roles)
+   Font: Roboto per M3 web recommendation
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --md-sys-typescale-brand-font: 'Roboto', 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --md-sys-typescale-plain-font: 'Roboto', 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  /* ── Display ── */
+  --md-sys-typescale-display-large-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-display-large-size: 57px;
+  --md-sys-typescale-display-large-line-height: 64px;
+  --md-sys-typescale-display-large-weight: 400;
+  --md-sys-typescale-display-large-tracking: -0.25px;
+
+  --md-sys-typescale-display-medium-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-display-medium-size: 45px;
+  --md-sys-typescale-display-medium-line-height: 52px;
+  --md-sys-typescale-display-medium-weight: 400;
+  --md-sys-typescale-display-medium-tracking: 0;
+
+  --md-sys-typescale-display-small-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-display-small-size: 36px;
+  --md-sys-typescale-display-small-line-height: 44px;
+  --md-sys-typescale-display-small-weight: 400;
+  --md-sys-typescale-display-small-tracking: 0;
+
+  /* ── Headline ── */
+  --md-sys-typescale-headline-large-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-headline-large-size: 32px;
+  --md-sys-typescale-headline-large-line-height: 40px;
+  --md-sys-typescale-headline-large-weight: 400;
+  --md-sys-typescale-headline-large-tracking: 0;
+
+  --md-sys-typescale-headline-medium-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-headline-medium-size: 28px;
+  --md-sys-typescale-headline-medium-line-height: 36px;
+  --md-sys-typescale-headline-medium-weight: 400;
+  --md-sys-typescale-headline-medium-tracking: 0;
+
+  --md-sys-typescale-headline-small-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-headline-small-size: 24px;
+  --md-sys-typescale-headline-small-line-height: 32px;
+  --md-sys-typescale-headline-small-weight: 400;
+  --md-sys-typescale-headline-small-tracking: 0;
+
+  /* ── Title ── */
+  --md-sys-typescale-title-large-font: var(--md-sys-typescale-brand-font);
+  --md-sys-typescale-title-large-size: 22px;
+  --md-sys-typescale-title-large-line-height: 28px;
+  --md-sys-typescale-title-large-weight: 400;
+  --md-sys-typescale-title-large-tracking: 0;
+
+  --md-sys-typescale-title-medium-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-title-medium-size: 16px;
+  --md-sys-typescale-title-medium-line-height: 24px;
+  --md-sys-typescale-title-medium-weight: 500;
+  --md-sys-typescale-title-medium-tracking: 0.15px;
+
+  --md-sys-typescale-title-small-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-title-small-size: 14px;
+  --md-sys-typescale-title-small-line-height: 20px;
+  --md-sys-typescale-title-small-weight: 500;
+  --md-sys-typescale-title-small-tracking: 0.1px;
+
+  /* ── Body ── */
+  --md-sys-typescale-body-large-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-body-large-size: 16px;
+  --md-sys-typescale-body-large-line-height: 24px;
+  --md-sys-typescale-body-large-weight: 400;
+  --md-sys-typescale-body-large-tracking: 0.5px;
+
+  --md-sys-typescale-body-medium-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-body-medium-size: 14px;
+  --md-sys-typescale-body-medium-line-height: 20px;
+  --md-sys-typescale-body-medium-weight: 400;
+  --md-sys-typescale-body-medium-tracking: 0.25px;
+
+  --md-sys-typescale-body-small-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-body-small-size: 12px;
+  --md-sys-typescale-body-small-line-height: 16px;
+  --md-sys-typescale-body-small-weight: 400;
+  --md-sys-typescale-body-small-tracking: 0.4px;
+
+  /* ── Label ── */
+  --md-sys-typescale-label-large-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-label-large-size: 14px;
+  --md-sys-typescale-label-large-line-height: 20px;
+  --md-sys-typescale-label-large-weight: 500;
+  --md-sys-typescale-label-large-tracking: 0.1px;
+
+  --md-sys-typescale-label-medium-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-label-medium-size: 12px;
+  --md-sys-typescale-label-medium-line-height: 16px;
+  --md-sys-typescale-label-medium-weight: 500;
+  --md-sys-typescale-label-medium-tracking: 0.5px;
+
+  --md-sys-typescale-label-small-font: var(--md-sys-typescale-plain-font);
+  --md-sys-typescale-label-small-size: 11px;
+  --md-sys-typescale-label-small-line-height: 16px;
+  --md-sys-typescale-label-small-weight: 500;
+  --md-sys-typescale-label-small-tracking: 0.5px;
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     4. ELEVATION — M3 Elevation System (6 levels: 0-5)
+     Shadow values from M3 specification
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --md-sys-elevation-0: none;
+  --md-sys-elevation-1: 0px 1px 2px 0px rgba(0,0,0,0.30), 0px 1px 3px 1px rgba(0,0,0,0.15);
+  --md-sys-elevation-2: 0px 1px 2px 0px rgba(0,0,0,0.30), 0px 2px 6px 2px rgba(0,0,0,0.15);
+  --md-sys-elevation-3: 0px 1px 3px 0px rgba(0,0,0,0.30), 0px 4px 8px 3px rgba(0,0,0,0.15);
+  --md-sys-elevation-4: 0px 2px 3px 0px rgba(0,0,0,0.30), 0px 6px 10px 4px rgba(0,0,0,0.15);
+  --md-sys-elevation-5: 0px 4px 4px 0px rgba(0,0,0,0.30), 0px 8px 12px 6px rgba(0,0,0,0.15);
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     5. SHAPE — M3 Shape Scale (7 levels)
+     Corner radius from M3 specification
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     6. MOTION — M3 Easing Curves & Duration Scale
+     Official M3 motion specification
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  /* ── Easing Curves ── */
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-linear: cubic-bezier(0, 0, 1, 1);
+
+  /* ── Duration Scale ── */
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short3: 150ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+  --md-sys-motion-duration-long3: 550ms;
+  --md-sys-motion-duration-long4: 600ms;
+  --md-sys-motion-duration-extra-long1: 700ms;
+  --md-sys-motion-duration-extra-long2: 800ms;
+  --md-sys-motion-duration-extra-long3: 900ms;
+  --md-sys-motion-duration-extra-long4: 1000ms;
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     7. STATE LAYERS — M3 Interaction State Opacities
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --md-sys-state-hover-state-layer-opacity: 0.08;
+  --md-sys-state-focus-state-layer-opacity: 0.10;
+  --md-sys-state-pressed-state-layer-opacity: 0.10;
+  --md-sys-state-dragged-state-layer-opacity: 0.16;
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     8. SPACING — M3 4dp Grid System
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --md-sys-spacing-0: 0px;
+  --md-sys-spacing-1: 4px;
+  --md-sys-spacing-2: 8px;
+  --md-sys-spacing-3: 12px;
+  --md-sys-spacing-4: 16px;
+  --md-sys-spacing-5: 20px;
+  --md-sys-spacing-6: 24px;
+  --md-sys-spacing-8: 32px;
+  --md-sys-spacing-10: 40px;
+  --md-sys-spacing-12: 48px;
+  --md-sys-spacing-16: 64px;
+  --md-sys-spacing-20: 80px;
+  --md-sys-spacing-24: 96px;
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+     9. LAYOUT — M3 Content Max-Width & Grid
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  --md-sys-layout-max-width: 1440px;
+  --md-sys-layout-margin-compact: 16px;
+  --md-sys-layout-margin-medium: 24px;
+  --md-sys-layout-margin-expanded: 24px;
+  --md-sys-layout-gutter: 24px;
+}

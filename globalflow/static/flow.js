@@ -53,6 +53,10 @@ const navLinks = document.querySelectorAll(".nav a[href^='#']");
 const priceCells = document.querySelectorAll(".price[data-monthly][data-annual]");
 const monthlyToggle = document.getElementById("billing-monthly");
 const annualToggle = document.getElementById("billing-annual");
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
+const topAppBar = document.getElementById("top-app-bar");
+const fabCommandBtn = document.getElementById("fab-command-btn");
 
 const SESSION_KEY = "globalflow_session";
 const numberFormatter = new Intl.NumberFormat("en-US");
@@ -700,45 +704,18 @@ function initKineticType() {
   headings.forEach((heading) => heading.classList.add("kinetic-heading"));
 }
 
-// ── Oleg Frolov Spatial Circular Menu ──
+// ── M3 FAB Menu (simplified CSS-driven layout) ──
 function initSpatialMenu() {
   const container = document.getElementById("spatial-menu");
   const fab = document.getElementById("spatial-fab-toggle");
-  const itemsWrap = document.getElementById("spatial-items");
-  if (!container || !fab || !itemsWrap) return;
+  if (!container || !fab) return;
 
-  const items = itemsWrap.querySelectorAll(".spatial-item");
-  const RADIUS = 90; // px from center
-  const START_ANGLE = 180; // degrees – items fan upward-left from FAB
-  const SPREAD = 90; // total arc spread
   let isOpen = false;
-
-  function positionItems(open) {
-    const count = items.length;
-    items.forEach((item, i) => {
-      if (open) {
-        const angleDeg = START_ANGLE + (SPREAD / Math.max(count - 1, 1)) * i;
-        const angleRad = (angleDeg * Math.PI) / 180;
-        const x = Math.cos(angleRad) * RADIUS;
-        const y = Math.sin(angleRad) * RADIUS;
-        // Frolov-style: each item gets a unique 3D rotation for spatial depth
-        const rotX = (i - 1) * 8;
-        const rotY = (i - 1) * -12;
-        const z = 15 + i * 10;
-        item.style.transform = `translate(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px)) scale(1) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(${z}px)`;
-        item.style.opacity = "1";
-      } else {
-        item.style.transform = "translate(-50%, -50%) scale(0) rotateX(0deg) rotateY(0deg) translateZ(-50px)";
-        item.style.opacity = "0";
-      }
-    });
-  }
 
   fab.addEventListener("click", () => {
     isOpen = !isOpen;
     container.classList.toggle("is-open", isOpen);
     fab.setAttribute("aria-expanded", String(isOpen));
-    positionItems(isOpen);
   });
 
   // Close on outside click
@@ -747,26 +724,8 @@ function initSpatialMenu() {
       isOpen = false;
       container.classList.remove("is-open");
       fab.setAttribute("aria-expanded", "false");
-      positionItems(false);
     }
   });
-
-  // Spatial 3D tilt on pointer proximity (Frolov-style depth response)
-  if (!prefersReducedMotion) {
-    document.addEventListener("pointermove", (e) => {
-      if (!isOpen) return;
-      const rect = container.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) / window.innerWidth;
-      const dy = (e.clientY - cy) / window.innerHeight;
-      container.style.transform = `perspective(1200px) rotateX(${dy * -15}deg) rotateY(${dx * 15}deg)`;
-    }, { passive: true });
-
-    container.addEventListener("pointerleave", () => {
-      container.style.transform = "perspective(1200px) rotateX(0deg) rotateY(0deg)";
-    });
-  }
 
   // Close on Escape
   document.addEventListener("keydown", (e) => {
@@ -774,10 +733,19 @@ function initSpatialMenu() {
       isOpen = false;
       container.classList.remove("is-open");
       fab.setAttribute("aria-expanded", "false");
-      positionItems(false);
       fab.focus();
     }
   });
+
+  // FAB command button opens command palette
+  if (fabCommandBtn) {
+    fabCommandBtn.addEventListener("click", () => {
+      isOpen = false;
+      container.classList.remove("is-open");
+      fab.setAttribute("aria-expanded", "false");
+      openCommandPalette();
+    });
+  }
 }
 
 // ── CRED / FinTech Unlock Button Interaction ──
@@ -1212,19 +1180,23 @@ function setBillingMode(mode) {
   if (annualToggle) annualToggle.classList.toggle("is-active", mode === "annual");
 }
 
+// ── M3 Snackbar (toast replacement) ──
+let snackbarTimer = null;
 function showToast(text) {
   const toast = document.getElementById("toast");
   if (!toast) return;
+  // Clear previous timer
+  if (snackbarTimer) clearTimeout(snackbarTimer);
+  toast.classList.remove("is-visible");
+  // Force reflow for re-animation
+  void toast.offsetHeight;
   toast.textContent = text;
-  toast.setAttribute("role", "status");
-  toast.setAttribute("aria-live", "polite");
-  toast.style.display = "block";
-  if (!prefersReducedMotion) {
-    toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
-  }
-  window.setTimeout(() => {
-    toast.style.display = "none";
-  }, 2200);
+  toast.classList.add("is-visible");
+  // M3 spec: snackbar auto-dismisses after 4 seconds
+  snackbarTimer = setTimeout(() => {
+    toast.classList.remove("is-visible");
+    snackbarTimer = null;
+  }, 4000);
 }
 
 function integrationTone(status) {
@@ -1465,6 +1437,154 @@ function scheduleSafe(task, interval) {
   return controller;
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// M3 RIPPLE EFFECT — Per M3 interaction spec
+// ═══════════════════════════════════════════════════════════════════
+function initM3Ripple() {
+  const rippleTargets = document.querySelectorAll(
+    "button, .btn, .primary, .ghost, .btn-filled, .btn-tonal, .btn-outlined, .btn-text, .btn-elevated, .fab, .spatial-fab, .spatial-item, .chip, .nav a"
+  );
+
+  rippleTargets.forEach((el) => {
+    el.addEventListener("pointerdown", (e) => {
+      if (prefersReducedMotion) return;
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const size = Math.max(rect.width, rect.height) * 2;
+
+      const ripple = document.createElement("span");
+      ripple.className = "md-ripple";
+      ripple.style.width = `${size}px`;
+      ripple.style.height = `${size}px`;
+      ripple.style.left = `${x - size / 2}px`;
+      ripple.style.top = `${y - size / 2}px`;
+      el.appendChild(ripple);
+
+      ripple.addEventListener("animationend", () => ripple.remove());
+    });
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// M3 THEME TOGGLE — Dark/Light with localStorage
+// ═══════════════════════════════════════════════════════════════════
+function initM3ThemeToggle() {
+  if (!themeToggle) return;
+
+  // Restore saved theme
+  const saved = localStorage.getItem("globalflow_theme");
+  if (saved) {
+    document.documentElement.setAttribute("data-theme", saved);
+    document.body.setAttribute("data-theme", saved);
+    updateThemeIcon(saved);
+  }
+
+  themeToggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme") || "dark";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    document.body.setAttribute("data-theme", next);
+    localStorage.setItem("globalflow_theme", next);
+    updateThemeIcon(next);
+    // Update meta theme-color for mobile browsers
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.content = next === "dark" ? "#111318" : "#FBF8FF";
+  });
+}
+
+function updateThemeIcon(theme) {
+  if (!themeIcon) return;
+  themeIcon.textContent = theme === "dark" ? "light_mode" : "dark_mode";
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// M3 TOP APP BAR — Scroll-aware elevation
+// ═══════════════════════════════════════════════════════════════════
+function initM3TopAppBar() {
+  if (!topAppBar) return;
+  window.addEventListener("scroll", () => {
+    topAppBar.classList.toggle("is-scrolled", window.scrollY > 8);
+  }, { passive: true });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// M3 FAB SCROLL — Hide on scroll down, show on scroll up
+// ═══════════════════════════════════════════════════════════════════
+function initM3FabScroll() {
+  const fabContainer = document.getElementById("spatial-menu");
+  if (!fabContainer) return;
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY && currentScrollY > 200) {
+      fabContainer.classList.add("is-fab-hidden");
+    } else {
+      fabContainer.classList.remove("is-fab-hidden");
+    }
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// M3 SECTION HEADING OBSERVER — Animate on scroll into view
+// ═══════════════════════════════════════════════════════════════════
+function initM3SectionHeadings() {
+  if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
+    document.querySelectorAll(".section-heading").forEach((h) => h.classList.add("m3-entered"));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("m3-entered");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll(".section-heading").forEach((h) => observer.observe(h));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// M3 SCROLL PROGRESS — Linear progress indicator
+// ═══════════════════════════════════════════════════════════════════
+function initM3ScrollProgress() {
+  const progressBar = document.getElementById("scroll-progress");
+  if (!progressBar) return;
+
+  window.addEventListener("scroll", () => {
+    const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    const pct = Math.min(window.scrollY / maxScroll, 1);
+    progressBar.style.setProperty("--scroll-pct", pct.toFixed(4));
+  }, { passive: true });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// M3 MOBILE NAV — Active state indicator
+// ═══════════════════════════════════════════════════════════════════
+function initM3MobileNav() {
+  const dockLinks = document.querySelectorAll(".mobile-dock a[href^='#']");
+  if (!dockLinks.length || typeof IntersectionObserver === "undefined") return;
+
+  const sections = [...dockLinks]
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      dockLinks.forEach((link) => {
+        link.classList.toggle("is-active", link.getAttribute("href") === `#${entry.target.id}`);
+      });
+    });
+  }, { threshold: 0.35 });
+
+  sections.forEach((s) => observer.observe(s));
+}
+
 async function bootstrap() {
   trackVisitProfile();
   const segment = applyAnticipatoryDesign();
@@ -1482,6 +1602,14 @@ async function bootstrap() {
   initSpatialMenu();
   initFintechUnlockButtons();
   initM3MotionSystem();
+  // M3 behavior initializers
+  initM3Ripple();
+  initM3ThemeToggle();
+  initM3TopAppBar();
+  initM3FabScroll();
+  initM3SectionHeadings();
+  initM3ScrollProgress();
+  initM3MobileNav();
   if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
   filterIntegrations();
   setBillingMode(billingMode);
