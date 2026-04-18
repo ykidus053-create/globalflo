@@ -39,6 +39,10 @@ const vfxCursor = document.getElementById("vfx-cursor");
 const journeyShortcut = document.getElementById("journey-shortcut");
 const journeyShortcutCopy = document.getElementById("journey-shortcut-copy");
 const journeyShortcutAction = document.getElementById("journey-shortcut-action");
+const storyRail = document.getElementById("strategy-story-rail");
+const storyTitle = document.getElementById("story-title");
+const storyCopy = document.getElementById("story-copy");
+const strategyButtons = document.querySelectorAll("[data-ai-lab]");
 
 const connectorForms = document.querySelectorAll(".connector-form");
 const integrationCheckButtons = document.querySelectorAll("[data-integration-check]");
@@ -724,6 +728,113 @@ function initActiveNav() {
   sections.forEach((section) => observer.observe(section));
 }
 
+function initStorytellingRail() {
+  if (!storyRail || !storyTitle || !storyCopy) return;
+  const stages = {
+    ingest: {
+      title: "Ingest signals from every system.",
+      copy: "GlobalFlow starts by collecting events from billing, support, files, and calls into one normalized stream so operators see one truth instead of fragmented dashboards.",
+    },
+    analyze: {
+      title: "Analyze context and risk in one pass.",
+      copy: "Cross-system correlation, confidence scoring, and anomaly checks transform raw events into prioritized insight that can be acted on safely.",
+    },
+    decide: {
+      title: "Decide with policy and human control.",
+      copy: "Guardrails determine whether the system can proceed automatically or needs human approval before execution.",
+    },
+    execute: {
+      title: "Execute controlled actions with traceability.",
+      copy: "Approved actions trigger connectors and workflow updates while every step is logged for compliance and debugging.",
+    },
+    learn: {
+      title: "Learn from outcomes and continuously improve.",
+      copy: "Feedback loops compare predictions vs outcomes to improve routing, reduce false positives, and sharpen recommendations.",
+    },
+  };
+
+  const buttons = Array.from(storyRail.querySelectorAll(".story-node"));
+  if (!buttons.length) return;
+
+  const setStage = (stage) => {
+    const next = stages[stage] || stages.ingest;
+    storyTitle.textContent = next.title;
+    storyCopy.textContent = next.copy;
+    buttons.forEach((button) => {
+      const isActive = button.dataset.storyNode === stage;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => setStage(button.dataset.storyNode));
+  });
+
+  const order = ["ingest", "analyze", "decide", "execute", "learn"];
+  if (typeof IntersectionObserver === "undefined") {
+    setStage(order[0]);
+    return;
+  }
+
+  const observedSections = ["hero", "overview", "demo", "flowboard", "integrations"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries
+        .filter((entry) => entry.isIntersecting)
+        .forEach((entry) => {
+          const map = {
+            hero: "ingest",
+            overview: "analyze",
+            demo: "decide",
+            flowboard: "execute",
+            integrations: "learn",
+          };
+          const stage = map[entry.target.id];
+          if (stage) setStage(stage);
+        });
+    },
+    { threshold: 0.45 }
+  );
+  observedSections.forEach((section) => observer.observe(section));
+}
+
+function initStrategyLabActions() {
+  if (!strategyButtons.length) return;
+  const outputs = {
+    generate: document.getElementById("strategy-output-generate"),
+    predict: document.getElementById("strategy-output-predict"),
+    audit: document.getElementById("strategy-output-audit"),
+    handoff: document.getElementById("strategy-output-handoff"),
+  };
+
+  const lines = {
+    generate:
+      "Variant A: High-trust layout with one primary CTA.\nVariant B: Operations-first bento with denser telemetry.\nVariant C: Mobile-priority stacked flow with reduced cognitive load.",
+    predict:
+      "Predicted next best action:\n1) Open workflow board\n2) Trigger billing recovery\n3) Escalate churn-risk account for manual review",
+    audit:
+      "Automated UX+accessibility score: 91/100\n- Contrast alerts: 0 critical\n- Keyboard path coverage: complete\n- Motion safety: reduced-motion supported",
+    handoff:
+      "Handoff package generated:\n- Components: strategy-bento, story-rail, disclosure-cards\n- Tokens: spacing, contrast, motion timings\n- QA gates: WCAG checks + approval policy",
+  };
+
+  strategyButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.aiLab;
+      const output = outputs[mode];
+      if (!output) return;
+      output.textContent = "Processing...";
+      window.setTimeout(() => {
+        output.textContent = lines[mode] || "No data available.";
+      }, 280);
+    });
+  });
+}
+
 async function inspectFlow() {
   try {
     const data = await fetchSummary();
@@ -1235,6 +1346,8 @@ async function bootstrap() {
   initAmbientVfx();
   initMagneticButtons();
   initKineticType();
+  initStorytellingRail();
+  initStrategyLabActions();
   initCommandPalette();
   if (integrationSearch) integrationSearch.addEventListener("input", filterIntegrations);
   filterIntegrations();

@@ -6059,3 +6059,151 @@ body.paper-site .ops-safety {
     grid-template-columns: 1fr;
   }
 }
+
+/* Strategy lab: storytelling-first immersive + AI methods */
+body.paper-site .strategy-lab {
+  display: grid;
+  gap: 16px;
+}
+
+body.paper-site .strategy-story {
+  display: grid;
+  gap: 16px;
+  padding: clamp(14px, 2.2vw, 24px);
+  border-radius: 16px;
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+body.paper-site .strategy-story__rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+body.paper-site .story-node {
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-strong) !important;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform var(--motion-fast), background var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast);
+}
+
+body.paper-site .story-node:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+body.paper-site .story-node.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--text-inverse) !important;
+}
+
+body.paper-site .strategy-story__panel {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+body.paper-site .strategy-story__panel h3 {
+  margin: 0 0 8px;
+  font-size: clamp(1.2rem, 2.1vw, 1.6rem);
+  line-height: 1.2;
+  color: var(--text-strong) !important;
+}
+
+body.paper-site .strategy-story__panel p {
+  margin: 0;
+  color: var(--text-body) !important;
+  line-height: 1.6;
+}
+
+body.paper-site .strategy-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+body.paper-site .strategy-tile {
+  grid-column: span 6;
+}
+
+body.paper-site .strategy-tile--wide {
+  grid-column: span 12;
+}
+
+body.paper-site .strategy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+body.paper-site .strategy-output {
+  margin: 10px 0 0;
+  min-height: 72px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--surface-border);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text-strong) !important;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+body.paper-site .strategy-disclosure {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.paper-site .strategy-detail {
+  grid-column: span 4;
+  border-radius: 14px;
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0;
+  transition: border-color var(--motion-fast), transform var(--motion-fast);
+}
+
+body.paper-site .strategy-detail:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+  transform: translateY(-2px);
+}
+
+body.paper-site .strategy-detail summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 14px;
+  font-weight: 700;
+  color: var(--text-strong) !important;
+}
+
+body.paper-site .strategy-detail summary::-webkit-details-marker {
+  display: none;
+}
+
+body.paper-site .strategy-detail p {
+  margin: 0;
+  padding: 0 14px 14px;
+  color: var(--text-body) !important;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  body.paper-site .strategy-tile,
+  body.paper-site .strategy-tile--wide,
+  body.paper-site .strategy-detail {
+    grid-column: span 12;
+  }
+}
