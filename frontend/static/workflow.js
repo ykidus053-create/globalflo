@@ -24,20 +24,26 @@ const toneRules = [
 function resolveWorkflowMotionProfile() {
   const lowPower =
     (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+    navigator.connection?.saveData === true;
   document.body.dataset.motionProfile = prefersReducedMotion ? "balanced" : "guided";
   document.body.dataset.motionPerformance = prefersReducedMotion || lowPower ? "low" : "high";
   document.body.dataset.motionIntent = "guided";
+  document.body.dataset.motionStory = "analysis";
 }
 
 function initWorkflowMotion() {
   const sections = document.querySelectorAll(".wf-section");
-  sections.forEach((section) => section.classList.add("motion-section"));
+  sections.forEach((section, index) => {
+    section.classList.add("motion-section");
+    section.style.setProperty("--motion-order", String(index));
+  });
   if (!prefersReducedMotion && typeof IntersectionObserver !== "undefined") {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           entry.target.classList.remove("is-before", "is-active", "is-after");
+          entry.target.style.setProperty("--motion-visibility", entry.intersectionRatio.toFixed(3));
           if (entry.isIntersecting) {
             entry.target.classList.add("is-active");
             const story = {
@@ -47,6 +53,7 @@ function initWorkflowMotion() {
               board: "execute",
             }[entry.target.id];
             if (story) document.body.dataset.motionStory = story;
+            document.documentElement.style.setProperty("--gf-scene-progress", entry.intersectionRatio.toFixed(3));
           } else if (entry.boundingClientRect.top > 0) {
             entry.target.classList.add("is-before");
           } else {
@@ -77,6 +84,19 @@ function initWorkflowMotion() {
       card.style.removeProperty("--card-tilt-y");
     });
   });
+
+  if (!prefersReducedMotion) {
+    let lastScrollY = window.scrollY;
+    window.addEventListener(
+      "scroll",
+      () => {
+        const velocity = Math.min(1.4, Math.abs(window.scrollY - lastScrollY) / Math.max(window.innerHeight, 1));
+        document.documentElement.style.setProperty("--gf-scroll-velocity", velocity.toFixed(3));
+        lastScrollY = window.scrollY;
+      },
+      { passive: true }
+    );
+  }
 }
 
 function createRipple(host, x, y) {
@@ -115,6 +135,7 @@ function applyDensity(density) {
   const cozy = density !== "compact";
   document.body.classList.toggle("wf-compact", !cozy);
   document.body.dataset.motionIntent = cozy ? "guided" : "rapid";
+  document.body.dataset.motionProfile = cozy ? "guided" : "power";
   densityButtons.forEach((button) => {
     const active = button.dataset.density === (cozy ? "cozy" : "compact");
     button.classList.toggle("is-active", active);

@@ -94,7 +94,18 @@ const motionState = {
   profile: "balanced",
   performance: "high",
   intent: "guided",
+  story: "intake",
+  velocity: 0,
 };
+
+function detectMotionPerformance() {
+  const lowPower =
+    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const saveData = navigator.connection?.saveData === true;
+  const constrainedNetwork = /2g/.test(String(navigator.connection?.effectiveType || "").toLowerCase());
+  return prefersReducedMotion || lowPower || saveData || constrainedNetwork ? "low" : "high";
+}
 
 function normalizeText(value) {
   return String(value || "").toLowerCase().trim();
@@ -111,10 +122,7 @@ function resolveMotionProfile() {
   const profile = readVisitProfile();
   const visits = Number(profile.visits || 0);
   const interactions = Number(profile.interactions || 0);
-  const lowPower =
-    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
-  const performance = prefersReducedMotion || lowPower ? "low" : "high";
+  const performance = detectMotionPerformance();
   let mode = "balanced";
   if (interactions >= 12 || visits >= 4) mode = "power";
   else if (visits <= 1) mode = "guided";
@@ -124,6 +132,24 @@ function resolveMotionProfile() {
 function setMotionIntent(intent) {
   motionState.intent = intent;
   document.body.dataset.motionIntent = intent;
+}
+
+function setMotionStory(story) {
+  motionState.story = story || motionState.story;
+  document.body.dataset.motionStory = motionState.story;
+}
+
+function registerMotionInteraction(weight = 1, intent = "guided") {
+  const profile = readVisitProfile();
+  profile.interactions = Number(profile.interactions || 0) + weight;
+  writeVisitProfile(profile);
+  if (intent) setMotionIntent(intent);
+
+  const interactionCount = Number(profile.interactions || 0);
+  const nextProfile = interactionCount >= 16 ? "power" : interactionCount <= 3 ? "guided" : "balanced";
+  if (nextProfile !== motionState.profile) {
+    applyMotionProfile(nextProfile, detectMotionPerformance());
+  }
 }
 
 function markButtonBusy(button, busy, pendingLabel) {
@@ -361,9 +387,7 @@ function initFrictionShortcuts() {
       const trigger = event.target instanceof Element ? event.target.closest("button, a, summary") : null;
       if (!trigger) return;
       interactions += 1;
-      const nextProfile = readVisitProfile();
-      nextProfile.interactions = Number(nextProfile.interactions || 0) + 1;
-      writeVisitProfile(nextProfile);
+      registerMotionInteraction(trigger.matches(".primary, .ghost") ? 2 : 1, "guided");
 
       if (interactions < 3 || shortcutShown) return;
       const segment = document.body?.dataset?.userSegment || "general";
@@ -676,6 +700,8 @@ function initAmbientVfx() {
   const aurora = document.querySelector(".aurora");
   const cards = document.querySelectorAll(".gf-card");
   const parallaxSections = document.querySelectorAll("main > section");
+  let lastScrollY = window.scrollY;
+  let scrollFrame = null;
 
   window.addEventListener(
     "pointermove",
@@ -690,6 +716,8 @@ function initAmbientVfx() {
       if (vfxCursor) {
         vfxCursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
       }
+      motionState.velocity = Math.max(motionState.velocity * 0.88, Math.abs(x - 0.5) + Math.abs(y - 0.5));
+      root.style.setProperty("--gf-pointer-energy", Math.min(motionState.velocity, 1.2).toFixed(3));
     },
     { passive: true }
   );
@@ -697,6 +725,15 @@ function initAmbientVfx() {
   window.addEventListener(
     "scroll",
     () => {
+      if (!scrollFrame) {
+        scrollFrame = window.requestAnimationFrame(() => {
+          const delta = Math.abs(window.scrollY - lastScrollY);
+          lastScrollY = window.scrollY;
+          motionState.velocity = Math.min(1.4, delta / Math.max(window.innerHeight, 1) + motionState.velocity * 0.55);
+          root.style.setProperty("--gf-scroll-velocity", motionState.velocity.toFixed(3));
+          scrollFrame = null;
+        });
+      }
       const doc = document.documentElement;
       const maxScroll = Math.max(doc.scrollHeight - window.innerHeight, 1);
       const progress = window.scrollY / maxScroll;
@@ -705,8 +742,8 @@ function initAmbientVfx() {
         scrollProgress.style.transform = `scaleX(${Math.max(progress, 0.02)})`;
       }
       parallaxSections.forEach((section, index) => {
-        const rate = ((index % 3) + 1) * 0.012;
-        const offset = Math.min(window.scrollY * rate, 18);
+        const rate = ((index % 3) + 1) * (motionState.profile === "power" ? 0.01 : 0.014);
+        const offset = Math.min(window.scrollY * rate, motionState.performance === "low" ? 12 : 26);
         section.style.setProperty("--section-shift", `${offset.toFixed(2)}px`);
       });
     },
@@ -771,7 +808,10 @@ function initGuidedFocus() {
 function initCinematicSections() {
   const sections = Array.from(document.querySelectorAll("main > section, .wf-section, .checkout-hero, .checkout-offset, .payment-hero, .payment-form-section"));
   if (!sections.length) return;
-  sections.forEach((section) => section.classList.add("motion-section"));
+  sections.forEach((section, index) => {
+    section.classList.add("motion-section");
+    section.style.setProperty("--motion-order", String(index));
+  });
   if (typeof IntersectionObserver === "undefined") return;
 
   const storyMap = {
@@ -783,25 +823,28 @@ function initCinematicSections() {
     integrations: "learn",
     pricing: "learn",
     workspace: "capture",
+    operators: "decision",
     signals: "analysis",
     immersive: "decision",
     board: "execute",
   };
 
   const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        const section = entry.target;
-        section.classList.remove("is-before", "is-active", "is-after");
-        if (entry.isIntersecting) {
-          section.classList.add("is-active");
-          const story = storyMap[section.id];
-          if (story) document.body.dataset.motionStory = story;
-        } else if (entry.boundingClientRect.top > 0) {
-          section.classList.add("is-before");
-        } else {
-          section.classList.add("is-after");
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          const section = entry.target;
+          section.classList.remove("is-before", "is-active", "is-after");
+          section.style.setProperty("--motion-visibility", entry.intersectionRatio.toFixed(3));
+          if (entry.isIntersecting) {
+            section.classList.add("is-active");
+            const story = storyMap[section.id];
+            if (story) setMotionStory(story);
+            document.documentElement.style.setProperty("--gf-scene-progress", entry.intersectionRatio.toFixed(3));
+          } else if (entry.boundingClientRect.top > 0) {
+            section.classList.add("is-before");
+          } else {
+            section.classList.add("is-after");
+          }
       });
     },
     { threshold: [0.2, 0.55, 0.8] }
@@ -829,6 +872,7 @@ function initMagneticButtons() {
       button.style.setProperty("--bx", `${dx.toFixed(2)}px`);
       button.style.setProperty("--by", `${dy.toFixed(2)}px`);
       button.classList.add("is-magnetic");
+      registerMotionInteraction(0.1, "guided");
     });
     button.addEventListener("pointerleave", () => {
       button.style.removeProperty("--bx");
@@ -841,6 +885,28 @@ function initMagneticButtons() {
 function initKineticType() {
   const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3");
   headings.forEach((heading) => heading.classList.add("kinetic-heading"));
+}
+
+function initPredictiveMotionEngine() {
+  const root = document.documentElement;
+  const watchedActions = document.querySelectorAll(".primary, .ghost, .nav a, .feature-link, summary");
+  watchedActions.forEach((action) => {
+    action.addEventListener("pointerdown", () => registerMotionInteraction(1, "rapid"));
+    action.addEventListener("focus", () => setMotionIntent("guided"));
+  });
+
+  let idleTimer = null;
+  const settle = () => {
+    window.clearTimeout(idleTimer);
+    idleTimer = window.setTimeout(() => {
+      motionState.velocity = motionState.velocity * 0.6;
+      root.style.setProperty("--gf-scroll-velocity", motionState.velocity.toFixed(3));
+      if (motionState.profile !== "power") setMotionIntent("guided");
+    }, 700);
+  };
+
+  window.addEventListener("scroll", settle, { passive: true });
+  window.addEventListener("pointermove", settle, { passive: true });
 }
 
 function initActiveNav() {
@@ -1435,7 +1501,9 @@ document.querySelectorAll("[data-modal]").forEach((button) => {
 
 if (watchDemoBtn) {
   watchDemoBtn.addEventListener("click", () => {
+    registerMotionInteraction(2, "guided");
     setMotionIntent("guided");
+    setMotionStory("decision");
     if (demoSection) scrollToSelector("#demo");
     if (demoVideo && typeof demoVideo.play === "function") {
       demoVideo.play().catch(() => {
@@ -1449,7 +1517,9 @@ if (launchOrchestrationBtn) {
   launchOrchestrationBtn.addEventListener("click", async () => {
     markButtonBusy(launchOrchestrationBtn, true, "Launching");
     try {
+      registerMotionInteraction(3, "rapid");
       setMotionIntent("rapid");
+      setMotionStory("execute");
       showToast("Launching automation flow...");
       await fetchTasks();
       scrollToSelector("#flowboard");
@@ -1532,6 +1602,7 @@ if (loginForm) {
 
 paymentButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    registerMotionInteraction(2, "rapid");
     const method = button.dataset.paymentMethod;
     if (!method) return;
     showToast(`Opening ${method} portal...`);
@@ -1540,7 +1611,10 @@ paymentButtons.forEach((button) => {
 });
 
 subscriptionButtons.forEach((button) => {
-  button.addEventListener("click", () => openCheckoutForTier(button.dataset.checkoutTier));
+  button.addEventListener("click", () => {
+    registerMotionInteraction(2, "rapid");
+    openCheckoutForTier(button.dataset.checkoutTier);
+  });
 });
 
 connectorForms.forEach((form) => {
@@ -1640,6 +1714,7 @@ async function bootstrap() {
   initDepthCards();
   initGuidedFocus();
   initCinematicSections();
+  initPredictiveMotionEngine();
   initMagneticButtons();
   initKineticType();
   initStorytellingRail();

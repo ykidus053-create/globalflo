@@ -6,8 +6,6 @@ if (canvas) {
 
 function initRenderLayer(target) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const motionProfile = document.body?.dataset?.motionProfile || "balanced";
-  const motionPerformance = document.body?.dataset?.motionPerformance || "high";
   const gl = target.getContext("webgl", {
     alpha: true,
     antialias: true,
@@ -94,13 +92,21 @@ function initRenderLayer(target) {
   const program = createProgram(gl, vertexSource, fragmentSource);
   if (!program) return;
 
+  const getMotionContext = () => ({
+    profile: document.body?.dataset?.motionProfile || "balanced",
+    performance: document.body?.dataset?.motionPerformance || "high",
+    intent: document.body?.dataset?.motionIntent || "guided",
+    story: document.body?.dataset?.motionStory || "intake",
+  });
+
+  const initialContext = getMotionContext();
   const particleCount = prefersReducedMotion
     ? 420
-    : motionPerformance === "low"
+    : initialContext.performance === "low"
     ? 680
-    : motionProfile === "power"
+    : initialContext.profile === "power"
     ? 1280
-    : motionProfile === "guided"
+    : initialContext.profile === "guided"
     ? 980
     : 1100;
   const { positions, scales } = createParticles(particleCount);
@@ -171,17 +177,36 @@ function initRenderLayer(target) {
   target.classList.add("render-layer--ready");
 
   function frame(now) {
-    const pointerDamping = prefersReducedMotion ? 0.05 : motionProfile === "power" ? 0.16 : motionProfile === "guided" ? 0.07 : 0.1;
-    const scrollDamping = prefersReducedMotion ? 0.05 : motionProfile === "power" ? 0.14 : motionProfile === "guided" ? 0.075 : 0.1;
+    const motionContext = getMotionContext();
+    const storyMultiplier =
+      motionContext.story === "execute" ? 1.25 : motionContext.story === "decision" ? 1.1 : motionContext.story === "learn" ? 0.92 : 1;
+    const pointerDamping = prefersReducedMotion
+      ? 0.05
+      : motionContext.profile === "power"
+      ? 0.16
+      : motionContext.profile === "guided"
+      ? 0.07
+      : 0.1;
+    const scrollDamping = prefersReducedMotion
+      ? 0.05
+      : motionContext.profile === "power"
+      ? 0.14
+      : motionContext.profile === "guided"
+      ? 0.075
+      : 0.1;
     pointer.x += (pointer.tx - pointer.x) * pointerDamping;
     pointer.y += (pointer.ty - pointer.y) * pointerDamping;
     scroll.value += (scroll.target - scroll.value) * scrollDamping;
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform1f(uTime, now * 0.001);
+    gl.uniform1f(uTime, now * 0.001 * storyMultiplier);
     gl.uniform1f(uAspect, Math.max(target.width / target.height, 0.001));
-    gl.uniform2f(uPointer, pointer.x * 2.0, pointer.y * 2.0);
-    gl.uniform1f(uScroll, scroll.value);
+    gl.uniform2f(
+      uPointer,
+      pointer.x * 2.0 * (motionContext.intent === "rapid" ? 1.15 : 0.92),
+      pointer.y * 2.0 * (motionContext.intent === "rapid" ? 1.15 : 0.92)
+    );
+    gl.uniform1f(uScroll, scroll.value * storyMultiplier);
     gl.uniform1f(uReduced, prefersReducedMotion ? 1.0 : 0.0);
     gl.drawArrays(gl.POINTS, 0, particleCount);
 
