@@ -3,30 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-        <script>
-      (function () {
-        try {
-          document.documentElement.setAttribute("data-theme", "light");
-          localStorage.setItem("globalflow_theme", "light");
-        } catch (error) {}
-      })();
-    </script>
+    <meta name="theme-color" content="#000000" />
     <title>GlobalFlow | Automation Workspace</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/glass-ai.css" />
   </head>
-  <body class="paper-site">
+  <body class="paper-site automation-page" data-user-segment="automation" data-theme="dark">
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <canvas class="render-layer" id="render-layer" aria-hidden="true"></canvas>
+    <div class="vfx-progress" id="scroll-progress" aria-hidden="true"></div>
+    <div class="vfx-cursor" id="vfx-cursor" aria-hidden="true"></div>
     <div class="aurora"></div>
     <div class="grid-overlay"></div>
 
-    <header class="top">
+    <header class="top top--airbnb">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span>
@@ -40,16 +37,18 @@
       </div>
       <nav class="nav" aria-label="Automation navigation">
         <a href="/#hero">Home</a>
+        <a href="/#flowboard">Workflow</a>
         <a href="#workspace">Workspace</a>
         <a href="#connectors">Connectors</a>
         <a href="#activity">Activity</a>
+        <a href="/automation" aria-current="page">Automation</a>
         <a href="/account">Account</a>
       </nav>
     </header>
 
-    <main id="workspace">
-      <section class="hero hero--landing">
-        <div class="hero-copy">
+    <main id="workspace" class="landing-main gf-container gf-dark">
+      <section class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
+        <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
               <span class="signal-dot" id="signal-dot"></span>
@@ -57,10 +56,10 @@
             </div>
             <span class="signal-meta" id="last-sync">Waiting for first sync</span>
           </div>
-          <p class="eyebrow">Paid workspace</p>
-          <h1>Automation only control room</h1>
+          <p class="eyebrow">Automation workspace</p>
+          <h1>Run, inspect, and govern automations from the same control surface.</h1>
           <p class="lead">
-            This page is focused on running workflows, inspecting telemetry, and managing connector automation without checkout distractions.
+            This workspace keeps execution, telemetry, autopilot, and connector actions in the same visual system as the rest of GlobalFlow so operations stay consistent across pages.
           </p>
           <div class="workflow-actions">
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
@@ -68,8 +67,8 @@
             <button class="ghost small" id="run-all-flows" type="button">Run all flows</button>
           </div>
         </div>
-        <div class="hero-stage">
-          <article class="hero-status-card">
+        <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24">
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
             <div>
               <span>Operator confidence</span>
               <strong id="system-confidence">99.2%</strong>
@@ -83,7 +82,7 @@
               <strong id="activity-total">0 events</strong>
             </div>
           </article>
-          <article class="hero-status-card">
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
             <div>
               <span>Autopilot state</span>
               <strong id="autopilot-status" aria-live="polite">Checking...</strong>
@@ -97,11 +96,17 @@
               <strong id="autopilot-cycle-count">{{ autopilot.cycles }}</strong>
             </div>
           </article>
-          <div class="workflow-actions">
-            <button class="primary small" id="autopilot-toggle" type="button">Toggle autopilot</button>
-            <button class="ghost small" id="run-manual-cycle" type="button">Run one cycle</button>
-          </div>
-        </div>
+          <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
+            <div class="content-body">
+              <p class="eyebrow">Control surface</p>
+              <h2>Autopilot, manual overrides, and live execution stay on one plane.</h2>
+              <div class="workflow-actions">
+                <button class="primary small" id="autopilot-toggle" type="button">Toggle autopilot</button>
+                <button class="ghost small" id="run-manual-cycle" type="button">Run one cycle</button>
+              </div>
+            </div>
+          </article>
+        </aside>
       </section>
 
       <div
@@ -112,19 +117,21 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <section class="workflow workflow--split">
-        <div class="workflow-main">
-          <div class="section-heading">
+      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split">
+        <div class="workflow-main workflow-main--airbnb text">
+          <div class="section-heading section-heading--split">
+            <div>
             <h2>Workflow engine</h2>
             <p>Run and monitor your live automations.</p>
+            </div>
           </div>
           <div id="workflow-grid" class="workflow-grid"></div>
-          <div class="summary">
+          <div class="summary summary--airbnb gf-card gf-fade">
             <h3>Next steps</h3>
             <ul id="flow-next-steps"></ul>
           </div>
         </div>
-        <div class="workflow-side" id="activity">
+        <div class="workflow-side workflow-side--airbnb visual" id="activity">
           <div class="section-heading">
             <h2>Activity</h2>
             <p>Real-time execution visibility.</p>
@@ -133,18 +140,20 @@
         </div>
       </section>
 
-      <section id="connectors" class="integrations">
-        <div class="section-heading">
+      <section id="connectors" class="integrations integrations--airbnb gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
           <h2>Connector actions</h2>
           <p>Trigger external systems directly from the automation workspace.</p>
+          </div>
         </div>
-        <div class="connectors-grid">
+        <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for connector in connectors %}
-          <details class="connector-card" {% if loop.first %}open{% endif %}>
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" {% if loop.first %}open{% endif %}>
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--{{ connector.icon }}" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>{{ connector.name }}</h3>
                   <p>{{ connector.description }}</p>
                 </div>
@@ -172,27 +181,31 @@
         </div>
       </section>
 
-      <section class="integrations ops-blueprint" id="ops-intelligence">
-        <div class="section-heading">
+      <section class="integrations integrations--airbnb ops-blueprint gf-section" id="ops-intelligence">
+        <div class="section-heading section-heading--split">
+          <div>
           <h2>{{ ai_ops_blueprint.headline }}</h2>
           <p>{{ ai_ops_blueprint.overview }}</p>
+          </div>
         </div>
         <div class="ops-architecture">
           {% for node in ai_ops_blueprint.architecture %}
           <span>{{ loop.index }}. {{ node }}</span>
           {% endfor %}
         </div>
-        <div class="connectors-grid">
+        <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for step in ai_ops_blueprint.steps %}
-          <article class="connector-card">
-            <h3>{{ loop.index }}. {{ step.title }}</h3>
-            <p>{{ step.detail }}</p>
-            <p class="modal-note"><strong>Outcome:</strong> {{ step.outcome }}</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>{{ loop.index }}. {{ step.title }}</h3>
+              <p>{{ step.detail }}</p>
+              <p class="modal-note"><strong>Outcome:</strong> {{ step.outcome }}</p>
+            </div>
           </article>
           {% endfor %}
         </div>
         <div class="ops-safety">
-          <article class="summary">
+          <article class="summary summary--airbnb gf-card gf-fade">
             <h3>Built-in guardrails</h3>
             <ul>
               {% for rule in ai_ops_blueprint.guardrails %}
@@ -200,7 +213,7 @@
               {% endfor %}
             </ul>
           </article>
-          <article class="summary">
+          <article class="summary summary--airbnb gf-card gf-fade">
             <h3>Phase 2 roadmap</h3>
             <ul>
               {% for item in ai_ops_blueprint.phase2 %}

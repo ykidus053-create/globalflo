@@ -3,31 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-        <script>
-      (function () {
-        try {
-          document.documentElement.setAttribute("data-theme", "light");
-          localStorage.setItem("globalflow_theme", "light");
-        } catch (error) {}
-      })();
-    </script>
+    <meta name="theme-color" content="#000000" />
     <title>GlobalFlow | Automation Workspace</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/flow.css" />
+    <link rel="stylesheet" href="/static/glass-ai.css" />
       <script>window.GLOBALFLOW_API_BASE = "https://globalflow.onrender.com";window.GLOBALFLOW_STATIC_MODE = true;</script>
   </head>
-  <body class="paper-site">
+  <body class="paper-site automation-page" data-user-segment="automation" data-theme="dark">
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <canvas class="render-layer" id="render-layer" aria-hidden="true"></canvas>
+    <div class="vfx-progress" id="scroll-progress" aria-hidden="true"></div>
+    <div class="vfx-cursor" id="vfx-cursor" aria-hidden="true"></div>
     <div class="aurora"></div>
     <div class="grid-overlay"></div>
 
-    <header class="top">
+    <header class="top top--airbnb">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span>
@@ -41,16 +38,18 @@
       </div>
       <nav class="nav" aria-label="Automation navigation">
         <a href="/#hero">Home</a>
+        <a href="/#flowboard">Workflow</a>
         <a href="#workspace">Workspace</a>
         <a href="#connectors">Connectors</a>
         <a href="#activity">Activity</a>
+        <a href="/automation" aria-current="page">Automation</a>
         <a href="/account">Account</a>
       </nav>
     </header>
 
-    <main id="workspace">
-      <section class="hero hero--landing">
-        <div class="hero-copy">
+    <main id="workspace" class="landing-main gf-container gf-dark">
+      <section class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
+        <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
               <span class="signal-dot" id="signal-dot"></span>
@@ -58,10 +57,10 @@
             </div>
             <span class="signal-meta" id="last-sync">Waiting for first sync</span>
           </div>
-          <p class="eyebrow">Paid workspace</p>
-          <h1>Automation only control room</h1>
+          <p class="eyebrow">Automation workspace</p>
+          <h1>Run, inspect, and govern automations from the same control surface.</h1>
           <p class="lead">
-            This page is focused on running workflows, inspecting telemetry, and managing connector automation without checkout distractions.
+            This workspace keeps execution, telemetry, autopilot, and connector actions in the same visual system as the rest of GlobalFlow so operations stay consistent across pages.
           </p>
           <div class="workflow-actions">
             <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
@@ -69,8 +68,8 @@
             <button class="ghost small" id="run-all-flows" type="button">Run all flows</button>
           </div>
         </div>
-        <div class="hero-stage">
-          <article class="hero-status-card">
+        <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24">
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
             <div>
               <span>Operator confidence</span>
               <strong id="system-confidence">99.2%</strong>
@@ -84,7 +83,7 @@
               <strong id="activity-total">0 events</strong>
             </div>
           </article>
-          <article class="hero-status-card">
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
             <div>
               <span>Autopilot state</span>
               <strong id="autopilot-status" aria-live="polite">Checking...</strong>
@@ -98,11 +97,17 @@
               <strong id="autopilot-cycle-count">0</strong>
             </div>
           </article>
-          <div class="workflow-actions">
-            <button class="primary small" id="autopilot-toggle" type="button">Toggle autopilot</button>
-            <button class="ghost small" id="run-manual-cycle" type="button">Run one cycle</button>
-          </div>
-        </div>
+          <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
+            <div class="content-body">
+              <p class="eyebrow">Control surface</p>
+              <h2>Autopilot, manual overrides, and live execution stay on one plane.</h2>
+              <div class="workflow-actions">
+                <button class="primary small" id="autopilot-toggle" type="button">Toggle autopilot</button>
+                <button class="ghost small" id="run-manual-cycle" type="button">Run one cycle</button>
+              </div>
+            </div>
+          </article>
+        </aside>
       </section>
 
       <div
@@ -113,19 +118,21 @@
         data-cycles="0"
       ></div>
 
-      <section class="workflow workflow--split">
-        <div class="workflow-main">
-          <div class="section-heading">
+      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split">
+        <div class="workflow-main workflow-main--airbnb text">
+          <div class="section-heading section-heading--split">
+            <div>
             <h2>Workflow engine</h2>
             <p>Run and monitor your live automations.</p>
+            </div>
           </div>
           <div id="workflow-grid" class="workflow-grid"></div>
-          <div class="summary">
+          <div class="summary summary--airbnb gf-card gf-fade">
             <h3>Next steps</h3>
             <ul id="flow-next-steps"></ul>
           </div>
         </div>
-        <div class="workflow-side" id="activity">
+        <div class="workflow-side workflow-side--airbnb visual" id="activity">
           <div class="section-heading">
             <h2>Activity</h2>
             <p>Real-time execution visibility.</p>
@@ -134,18 +141,20 @@
         </div>
       </section>
 
-      <section id="connectors" class="integrations">
-        <div class="section-heading">
+      <section id="connectors" class="integrations integrations--airbnb gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
           <h2>Connector actions</h2>
           <p>Trigger external systems directly from the automation workspace.</p>
+          </div>
         </div>
-        <div class="connectors-grid">
+        <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           
-          <details class="connector-card" open>
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" open>
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Zapier</h3>
                   <p>Plug GlobalFlow into 1,000+ apps instantly with trigger/action automation.</p>
                 </div>
@@ -170,11 +179,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Make (Integromat)</h3>
                   <p>Run multi-step low-code scenarios with branching and retries.</p>
                 </div>
@@ -199,11 +208,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Snowflake</h3>
                   <p>Send structured automation telemetry to enterprise data warehousing.</p>
                 </div>
@@ -228,11 +237,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>BigQuery</h3>
                   <p>Export workflow outcomes for advanced analytics and ML pipelines.</p>
                 </div>
@@ -257,11 +266,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>AWS CloudWatch</h3>
                   <p>Publish logs and metrics for operational monitoring and alerting.</p>
                 </div>
@@ -286,11 +295,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Datadog</h3>
                   <p>Stream service checks and events into centralized observability dashboards.</p>
                 </div>
@@ -315,11 +324,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Meta Ads</h3>
                   <p>Send conversion signals to improve campaign optimization and attribution.</p>
                 </div>
@@ -344,11 +353,11 @@
             </form>
           </details>
           
-          <details class="connector-card" >
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" >
             <summary>
               <div class="connector-heading">
                 <div class="feature-icon feature-icon--" aria-hidden="true"></div>
-                <div>
+                <div class="content-body">
                   <h3>Google Ads</h3>
                   <p>Sync conversion and spend signals to improve ROI visibility.</p>
                 </div>
@@ -376,10 +385,12 @@
         </div>
       </section>
 
-      <section class="integrations ops-blueprint" id="ops-intelligence">
-        <div class="section-heading">
+      <section class="integrations integrations--airbnb ops-blueprint gf-section" id="ops-intelligence">
+        <div class="section-heading section-heading--split">
+          <div>
           <h2>GlobalFlow — AI Ops Intelligence System</h2>
           <p>Data In -&gt; Intelligence -&gt; Risk Check -&gt; Human Approval -&gt; Controlled Action</p>
+          </div>
         </div>
         <div class="ops-architecture">
           
@@ -402,89 +413,115 @@
           <span>9. Audit + Feedback</span>
           
         </div>
-        <div class="connectors-grid">
+        <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           
-          <article class="connector-card">
-            <h3>1. Data Ingestion</h3>
-            <p>Collect Slack, Stripe, HubSpot, Analytics, and Support events via webhook/API.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Real-time + batch coverage</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>1. Data Ingestion</h3>
+              <p>Collect Slack, Stripe, HubSpot, Analytics, and Support events via webhook/API.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Real-time + batch coverage</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>2. Event Normalization</h3>
-            <p>Convert every event into one unified schema for scalable processing.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Consistent event object</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>2. Event Normalization</h3>
+              <p>Convert every event into one unified schema for scalable processing.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Consistent event object</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>3. Routing Engine</h3>
-            <p>Route events by domain to finance, churn, support, and compliance analyzers.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Correct processor selection</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>3. Routing Engine</h3>
+              <p>Route events by domain to finance, churn, support, and compliance analyzers.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Correct processor selection</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>4. AI Analysis</h3>
-            <p>Run cross-system pattern analysis to detect risk and opportunity context.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Context-aware conclusions</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>4. AI Analysis</h3>
+              <p>Run cross-system pattern analysis to detect risk and opportunity context.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Context-aware conclusions</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>5. Context Enrichment</h3>
-            <p>Pull CLV, recent activity, and historical issues before recommendations.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Lower false positives</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>5. Context Enrichment</h3>
+              <p>Pull CLV, recent activity, and historical issues before recommendations.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Lower false positives</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>6. Risk Scoring</h3>
-            <p>Score risk by impact, reversibility, confidence, and customer importance.</p>
-            <p class="modal-note"><strong>Outcome:</strong> 0-10 risk signal</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>6. Risk Scoring</h3>
+              <p>Score risk by impact, reversibility, confidence, and customer importance.</p>
+              <p class="modal-note"><strong>Outcome:</strong> 0-10 risk signal</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>7. Recommendation Generation</h3>
-            <p>Produce issue, cause, recommended actions, and confidence output.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Actionable response package</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>7. Recommendation Generation</h3>
+              <p>Produce issue, cause, recommended actions, and confidence output.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Actionable response package</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>8. Policy Guardrails</h3>
-            <p>Apply hard rules before execution based on risk and action class.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Unsafe actions blocked</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>8. Policy Guardrails</h3>
+              <p>Apply hard rules before execution based on risk and action class.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Unsafe actions blocked</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>9. Human Approval</h3>
-            <p>Deliver approve/reject/modify decision prompts in dashboard and Slack.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Operator-in-control workflow</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>9. Human Approval</h3>
+              <p>Deliver approve/reject/modify decision prompts in dashboard and Slack.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Operator-in-control workflow</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>10. Decision Handling</h3>
-            <p>Branch approved, rejected, or modified flows into controlled next steps.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Deterministic control paths</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>10. Decision Handling</h3>
+              <p>Branch approved, rejected, or modified flows into controlled next steps.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Deterministic control paths</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>11. Execution Engine</h3>
-            <p>Execute only approved actions across connectors and internal systems.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Controlled external actions</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>11. Execution Engine</h3>
+              <p>Execute only approved actions across connectors and internal systems.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Controlled external actions</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>12. Audit Trail</h3>
-            <p>Log actor, reason, timestamp, and payload for every state transition.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Compliance-ready traceability</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>12. Audit Trail</h3>
+              <p>Log actor, reason, timestamp, and payload for every state transition.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Compliance-ready traceability</p>
+            </div>
           </article>
           
-          <article class="connector-card">
-            <h3>13. Learning Loop</h3>
-            <p>Capture outcomes and feed recommendation tuning over time.</p>
-            <p class="modal-note"><strong>Outcome:</strong> Continuous system improvement</p>
+          <article class="connector-card connector-card--airbnb gf-card gf-fade">
+            <div class="content-body">
+              <h3>13. Learning Loop</h3>
+              <p>Capture outcomes and feed recommendation tuning over time.</p>
+              <p class="modal-note"><strong>Outcome:</strong> Continuous system improvement</p>
+            </div>
           </article>
           
         </div>
         <div class="ops-safety">
-          <article class="summary">
+          <article class="summary summary--airbnb gf-card gf-fade">
             <h3>Built-in guardrails</h3>
             <ul>
               
@@ -500,7 +537,7 @@
               
             </ul>
           </article>
-          <article class="summary">
+          <article class="summary summary--airbnb gf-card gf-fade">
             <h3>Phase 2 roadmap</h3>
             <ul>
               
