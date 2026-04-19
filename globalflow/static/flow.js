@@ -83,11 +83,133 @@ let autopilotState = {
 const inFlightTasks = new Map();
 const pollers = [];
 let shortcutShown = false;
+<<<<<<< HEAD
+=======
+const motionState = {
+  profile: "balanced",
+  performance: "high",
+  intent: "guided",
+  story: "intake",
+  scheme: "standard",
+  velocity: 0,
+};
+
+function rememberMotionTrigger(element) {
+  if (!(element instanceof HTMLElement)) return;
+  const rect = element.getBoundingClientRect();
+  lastMotionTrigger = {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  };
+}
+
+function detectMotionPerformance() {
+  const lowPower =
+    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const saveData = navigator.connection?.saveData === true;
+  const constrainedNetwork = /2g/.test(String(navigator.connection?.effectiveType || "").toLowerCase());
+  return prefersReducedMotion || lowPower || saveData || constrainedNetwork ? "low" : "high";
+}
+>>>>>>> b1bf8cf (Align motion system to Material 3)
 
 function normalizeText(value) {
   return String(value || "").toLowerCase().trim();
 }
 
+<<<<<<< HEAD
+=======
+function applyMotionProfile(nextProfile, nextPerformance) {
+  motionState.profile = nextProfile || motionState.profile;
+  motionState.performance = nextPerformance || motionState.performance;
+  document.body.dataset.motionProfile = motionState.profile;
+  document.body.dataset.motionPerformance = motionState.performance;
+  document.body.dataset.motionScheme = motionState.scheme;
+}
+
+function setMotionScheme(scheme) {
+  const nextScheme = scheme === "expressive" ? "expressive" : "standard";
+  motionState.scheme = nextScheme;
+  document.body.dataset.motionScheme = nextScheme;
+}
+
+function resolveMotionProfile() {
+  const profile = readVisitProfile();
+  const visits = Number(profile.visits || 0);
+  const interactions = Number(profile.interactions || 0);
+  const performance = detectMotionPerformance();
+  let mode = "balanced";
+  if (interactions >= 12 || visits >= 4) mode = "power";
+  else if (visits <= 1) mode = "guided";
+  setMotionScheme(mode === "guided" ? "expressive" : "standard");
+  applyMotionProfile(mode, performance);
+}
+
+function setMotionIntent(intent) {
+  motionState.intent = intent;
+  document.body.dataset.motionIntent = intent;
+}
+
+function setMotionStory(story) {
+  motionState.story = story || motionState.story;
+  document.body.dataset.motionStory = motionState.story;
+}
+
+function registerMotionInteraction(weight = 1, intent = "guided") {
+  const profile = readVisitProfile();
+  profile.interactions = Number(profile.interactions || 0) + weight;
+  writeVisitProfile(profile);
+  if (intent) setMotionIntent(intent);
+  setMotionScheme(intent === "guided" ? "expressive" : "standard");
+
+  const interactionCount = Number(profile.interactions || 0);
+  const nextProfile = interactionCount >= 16 ? "power" : interactionCount <= 3 ? "guided" : "balanced";
+  if (nextProfile !== motionState.profile) {
+    applyMotionProfile(nextProfile, detectMotionPerformance());
+  }
+}
+
+function pulseElement(element, className = "is-feedback-pulse") {
+  if (!(element instanceof HTMLElement)) return;
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+  window.setTimeout(() => element.classList.remove(className), 900);
+}
+
+function createRipple(host, clientX, clientY) {
+  if (!(host instanceof HTMLElement)) return;
+  const rect = host.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 1.1;
+  const ripple = document.createElement("span");
+  ripple.className = "motion-ripple";
+  ripple.style.width = `${size}px`;
+  ripple.style.height = `${size}px`;
+  ripple.style.left = `${clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${clientY - rect.top - size / 2}px`;
+  host.querySelectorAll(".motion-ripple").forEach((node) => node.remove());
+  host.appendChild(ripple);
+  window.setTimeout(() => ripple.remove(), 760);
+}
+
+function markButtonBusy(button, busy, pendingLabel) {
+  if (!(button instanceof HTMLElement)) return;
+  if (!button.dataset.defaultLabel) {
+    button.dataset.defaultLabel = button.textContent || "";
+  }
+  button.classList.toggle("is-busy", busy);
+  if (busy) {
+    if (pendingLabel) button.textContent = pendingLabel;
+    button.setAttribute("aria-busy", "true");
+    button.disabled = true;
+  } else {
+    button.textContent = button.dataset.defaultLabel;
+    button.removeAttribute("aria-busy");
+    button.disabled = false;
+  }
+}
+
+>>>>>>> b1bf8cf (Align motion system to Material 3)
 function renderSkeleton(target, count = 3) {
   if (!target) return;
   target.innerHTML = "";
@@ -679,6 +801,81 @@ function initAmbientVfx() {
   });
 }
 
+<<<<<<< HEAD
+=======
+function initGuidedFocus() {
+  const buttons = document.querySelectorAll(".hero-actions .primary, .workflow-actions .primary, .connector-actions .primary, .hero-actions .ghost, .workflow-actions .ghost");
+  buttons.forEach((button) => {
+    button.addEventListener("pointerenter", () => {
+      setMotionIntent("guided");
+      setMotionScheme("expressive");
+      button.classList.add("is-guided-focus");
+    });
+    button.addEventListener("pointerleave", () => {
+      button.classList.remove("is-guided-focus");
+    });
+  });
+}
+
+function initCinematicSections() {
+  const sections = Array.from(document.querySelectorAll("main > section, .wf-section, .checkout-hero, .checkout-offset, .payment-hero, .payment-form-section"));
+  if (!sections.length) return;
+  sections.forEach((section, index) => {
+    section.classList.add("motion-section");
+    section.style.setProperty("--motion-order", String(index));
+  });
+  if (typeof IntersectionObserver === "undefined") return;
+
+  const storyMap = {
+    hero: "intake",
+    overview: "analysis",
+    demo: "decision",
+    "use-cases": "execute",
+    flowboard: "execute",
+    integrations: "learn",
+    pricing: "learn",
+    workspace: "capture",
+    operators: "decision",
+    signals: "analysis",
+    immersive: "decision",
+    board: "execute",
+  };
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const section = entry.target;
+          section.classList.remove("is-before", "is-active", "is-after");
+          section.style.setProperty("--motion-visibility", entry.intersectionRatio.toFixed(3));
+            if (entry.isIntersecting) {
+              section.classList.add("is-active");
+              const story = storyMap[section.id];
+              if (story) setMotionStory(story);
+              const expressiveIds = new Set(["hero", "demo", "flowboard", "immersive", "board"]);
+              setMotionScheme(expressiveIds.has(section.id) ? "expressive" : "standard");
+              document.documentElement.style.setProperty("--gf-scene-progress", entry.intersectionRatio.toFixed(3));
+            } else if (entry.boundingClientRect.top > 0) {
+              section.classList.add("is-before");
+            } else {
+            section.classList.add("is-after");
+          }
+      });
+    },
+    { threshold: [0.2, 0.55, 0.8] }
+  );
+  sections.forEach((section) => observer.observe(section));
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      const progress = Math.min(window.scrollY / Math.max(window.innerHeight, 1), 12);
+      document.documentElement.style.setProperty("--gf-motion-scroll-shift", `${Math.min(progress * -1.2, 10)}px`);
+    },
+    { passive: true }
+  );
+}
+
+>>>>>>> b1bf8cf (Align motion system to Material 3)
 function initMagneticButtons() {
   if (prefersReducedMotion) return;
   const buttons = document.querySelectorAll("button.primary, button.ghost, .nav a, .feature-link");
@@ -704,6 +901,7 @@ function initKineticType() {
   headings.forEach((heading) => heading.classList.add("kinetic-heading"));
 }
 
+<<<<<<< HEAD
 // ── M3 FAB Menu (simplified CSS-driven layout) ──
 function initSpatialMenu() {
   const container = document.getElementById("spatial-menu");
@@ -716,6 +914,20 @@ function initSpatialMenu() {
     isOpen = !isOpen;
     container.classList.toggle("is-open", isOpen);
     fab.setAttribute("aria-expanded", String(isOpen));
+=======
+function initPredictiveMotionEngine() {
+  const root = document.documentElement;
+  const watchedActions = document.querySelectorAll(".primary, .ghost, .nav a, .feature-link, summary");
+  watchedActions.forEach((action) => {
+    action.addEventListener("pointerdown", () => registerMotionInteraction(1, "rapid"));
+    action.addEventListener("focus", () => {
+      setMotionIntent("guided");
+      setMotionScheme(action.matches(".primary, .hero-actions .ghost, .workflow-actions .primary") ? "expressive" : "standard");
+    });
+    action.addEventListener("pointerenter", () => {
+      setMotionScheme(action.matches(".primary, .hero-actions .ghost, .workflow-actions .primary") ? "expressive" : "standard");
+    });
+>>>>>>> b1bf8cf (Align motion system to Material 3)
   });
 
   // Close on outside click
@@ -810,6 +1022,7 @@ function initFintechUnlockButtons() {
 // ── M3 Expressive Physics Motion System ──
 function initM3MotionSystem() {
   if (prefersReducedMotion) return;
+<<<<<<< HEAD
 
   // 1. Shared element transitions for section headings
   const sectionHeadings = document.querySelectorAll(".section-heading");
@@ -909,6 +1122,16 @@ function initM3MotionSystem() {
     }, { threshold: 0.5 });
     statValues.forEach((v) => statObserver.observe(v));
   }
+=======
+  if (window.location.hash || window.scrollY > 12) return;
+  if (window.sessionStorage.getItem("globalflow_auto_reveal_done") === "1") return;
+  window.sessionStorage.setItem("globalflow_auto_reveal_done", "1");
+  window.setTimeout(() => {
+    setMotionScheme("expressive");
+    const targetY = Math.min(Math.round(window.innerHeight * 0.16), 120);
+    window.scrollTo({ top: targetY, behavior: "smooth" });
+  }, 900);
+>>>>>>> b1bf8cf (Align motion system to Material 3)
 }
 
 function initActiveNav() {
@@ -963,16 +1186,30 @@ function resetModalHistory() {
 
 function openModal(target, pushHistory = true) {
   if (!target) return;
+  setMotionScheme(target.id === "command-modal" ? "standard" : "expressive");
   document.querySelectorAll(".flow-modal--open").forEach((el) => el.classList.remove("flow-modal--open"));
   target.classList.add("flow-modal--open");
   activeModalId = target.id;
+<<<<<<< HEAD
+=======
+  pulseElement(target.querySelector(".flow-modal__content"));
+  window.setTimeout(() => target.classList.remove("is-opening"), 240);
+>>>>>>> b1bf8cf (Align motion system to Material 3)
   if (pushHistory) pushModalHistory(target.id);
 }
 
 function closeModal(target, skipHistory = false) {
   if (!target) return;
+<<<<<<< HEAD
   target.classList.remove("flow-modal--open");
   activeModalId = null;
+=======
+  setMotionScheme("standard");
+  target.classList.add("is-closing");
+  target.classList.remove("flow-modal--open");
+  activeModalId = null;
+  window.setTimeout(() => target.classList.remove("is-closing"), 200);
+>>>>>>> b1bf8cf (Align motion system to Material 3)
   if (!skipHistory) resetModalHistory();
 }
 
@@ -1185,18 +1422,41 @@ let snackbarTimer = null;
 function showToast(text) {
   const toast = document.getElementById("toast");
   if (!toast) return;
+<<<<<<< HEAD
   // Clear previous timer
   if (snackbarTimer) clearTimeout(snackbarTimer);
   toast.classList.remove("is-visible");
   // Force reflow for re-animation
   void toast.offsetHeight;
+=======
+  setMotionScheme("standard");
+>>>>>>> b1bf8cf (Align motion system to Material 3)
   toast.textContent = text;
   toast.classList.add("is-visible");
+<<<<<<< HEAD
   // M3 spec: snackbar auto-dismisses after 4 seconds
   snackbarTimer = setTimeout(() => {
     toast.classList.remove("is-visible");
     snackbarTimer = null;
   }, 4000);
+=======
+  pulseElement(toast);
+  if (!prefersReducedMotion) {
+    toast.animate(
+      [
+        { opacity: 0, transform: "translate3d(0, 8px, 0) scale(0.98)" },
+        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", offset: 0.18 },
+        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", offset: 0.72 },
+        { opacity: 0, transform: "translate3d(0, -6px, 0) scale(0.98)" }
+      ],
+      { duration: 1800, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
+    );
+  }
+  window.setTimeout(() => {
+    toast.style.display = "none";
+    toast.classList.remove("is-visible");
+  }, 1800);
+>>>>>>> b1bf8cf (Align motion system to Material 3)
 }
 
 function integrationTone(status) {

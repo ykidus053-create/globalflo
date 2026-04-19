@@ -30,6 +30,7 @@ function resolveWorkflowMotionProfile() {
   document.body.dataset.motionPerformance = prefersReducedMotion || lowPower ? "low" : "high";
   document.body.dataset.motionIntent = "guided";
   document.body.dataset.motionStory = "analysis";
+  document.body.dataset.motionScheme = "standard";
 }
 
 function initWorkflowMotion() {
@@ -53,6 +54,8 @@ function initWorkflowMotion() {
               board: "execute",
             }[entry.target.id];
             if (story) document.body.dataset.motionStory = story;
+            document.body.dataset.motionScheme =
+              entry.target.id === "immersive" || entry.target.id === "board" ? "expressive" : "standard";
             document.documentElement.style.setProperty("--gf-scene-progress", entry.intersectionRatio.toFixed(3));
           } else if (entry.boundingClientRect.top > 0) {
             entry.target.classList.add("is-before");
@@ -136,6 +139,7 @@ function applyDensity(density) {
   document.body.classList.toggle("wf-compact", !cozy);
   document.body.dataset.motionIntent = cozy ? "guided" : "rapid";
   document.body.dataset.motionProfile = cozy ? "guided" : "power";
+  document.body.dataset.motionScheme = cozy ? "expressive" : "standard";
   densityButtons.forEach((button) => {
     const active = button.dataset.density === (cozy ? "cozy" : "compact");
     button.classList.toggle("is-active", active);
