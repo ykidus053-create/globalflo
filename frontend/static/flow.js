@@ -96,7 +96,6 @@ const motionState = {
   performance: "high",
   intent: "guided",
   story: "intake",
-  scheme: "standard",
   velocity: 0,
 };
 
@@ -127,13 +126,6 @@ function applyMotionProfile(nextProfile, nextPerformance) {
   motionState.performance = nextPerformance || motionState.performance;
   document.body.dataset.motionProfile = motionState.profile;
   document.body.dataset.motionPerformance = motionState.performance;
-  document.body.dataset.motionScheme = motionState.scheme;
-}
-
-function setMotionScheme(scheme) {
-  const nextScheme = scheme === "expressive" ? "expressive" : "standard";
-  motionState.scheme = nextScheme;
-  document.body.dataset.motionScheme = nextScheme;
 }
 
 function resolveMotionProfile() {
@@ -144,7 +136,6 @@ function resolveMotionProfile() {
   let mode = "balanced";
   if (interactions >= 12 || visits >= 4) mode = "power";
   else if (visits <= 1) mode = "guided";
-  setMotionScheme(mode === "guided" ? "expressive" : "standard");
   applyMotionProfile(mode, performance);
 }
 
@@ -163,7 +154,6 @@ function registerMotionInteraction(weight = 1, intent = "guided") {
   profile.interactions = Number(profile.interactions || 0) + weight;
   writeVisitProfile(profile);
   if (intent) setMotionIntent(intent);
-  setMotionScheme(intent === "guided" ? "expressive" : "standard");
 
   const interactionCount = Number(profile.interactions || 0);
   const nextProfile = interactionCount >= 16 ? "power" : interactionCount <= 3 ? "guided" : "balanced";
@@ -846,7 +836,6 @@ function initGuidedFocus() {
   buttons.forEach((button) => {
     button.addEventListener("pointerenter", () => {
       setMotionIntent("guided");
-      setMotionScheme("expressive");
       button.classList.add("is-guided-focus");
     });
     button.addEventListener("pointerleave", () => {
@@ -879,22 +868,20 @@ function initCinematicSections() {
     board: "execute",
   };
 
-    const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const section = entry.target;
+  const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const section = entry.target;
           section.classList.remove("is-before", "is-active", "is-after");
           section.style.setProperty("--motion-visibility", entry.intersectionRatio.toFixed(3));
-            if (entry.isIntersecting) {
-              section.classList.add("is-active");
-              const story = storyMap[section.id];
-              if (story) setMotionStory(story);
-              const expressiveIds = new Set(["hero", "demo", "flowboard", "immersive", "board"]);
-              setMotionScheme(expressiveIds.has(section.id) ? "expressive" : "standard");
-              document.documentElement.style.setProperty("--gf-scene-progress", entry.intersectionRatio.toFixed(3));
-            } else if (entry.boundingClientRect.top > 0) {
-              section.classList.add("is-before");
-            } else {
+          if (entry.isIntersecting) {
+            section.classList.add("is-active");
+            const story = storyMap[section.id];
+            if (story) setMotionStory(story);
+            document.documentElement.style.setProperty("--gf-scene-progress", entry.intersectionRatio.toFixed(3));
+          } else if (entry.boundingClientRect.top > 0) {
+            section.classList.add("is-before");
+          } else {
             section.classList.add("is-after");
           }
       });
@@ -944,13 +931,7 @@ function initPredictiveMotionEngine() {
   const watchedActions = document.querySelectorAll(".primary, .ghost, .nav a, .feature-link, summary");
   watchedActions.forEach((action) => {
     action.addEventListener("pointerdown", () => registerMotionInteraction(1, "rapid"));
-    action.addEventListener("focus", () => {
-      setMotionIntent("guided");
-      setMotionScheme(action.matches(".primary, .hero-actions .ghost, .workflow-actions .primary") ? "expressive" : "standard");
-    });
-    action.addEventListener("pointerenter", () => {
-      setMotionScheme(action.matches(".primary, .hero-actions .ghost, .workflow-actions .primary") ? "expressive" : "standard");
-    });
+    action.addEventListener("focus", () => setMotionIntent("guided"));
   });
 
   let idleTimer = null;
@@ -1034,7 +1015,6 @@ function initAutoScrollReveal() {
   if (window.sessionStorage.getItem("globalflow_auto_reveal_done") === "1") return;
   window.sessionStorage.setItem("globalflow_auto_reveal_done", "1");
   window.setTimeout(() => {
-    setMotionScheme("expressive");
     const targetY = Math.min(Math.round(window.innerHeight * 0.16), 120);
     window.scrollTo({ top: targetY, behavior: "smooth" });
   }, 900);
@@ -1341,7 +1321,6 @@ function resetModalHistory() {
 
 function openModal(target, pushHistory = true) {
   if (!target) return;
-  setMotionScheme(target.id === "command-modal" ? "standard" : "expressive");
   document.querySelectorAll(".flow-modal--open").forEach((el) => el.classList.remove("flow-modal--open"));
   if (lastMotionTrigger) {
     target.style.setProperty("--modal-origin-x", `${lastMotionTrigger.x}px`);
@@ -1352,17 +1331,16 @@ function openModal(target, pushHistory = true) {
   target.classList.add("flow-modal--open");
   activeModalId = target.id;
   pulseElement(target.querySelector(".flow-modal__content"));
-  window.setTimeout(() => target.classList.remove("is-opening"), 240);
+  window.setTimeout(() => target.classList.remove("is-opening"), 420);
   if (pushHistory) pushModalHistory(target.id);
 }
 
 function closeModal(target, skipHistory = false) {
   if (!target) return;
-  setMotionScheme("standard");
   target.classList.add("is-closing");
   target.classList.remove("flow-modal--open");
   activeModalId = null;
-  window.setTimeout(() => target.classList.remove("is-closing"), 200);
+  window.setTimeout(() => target.classList.remove("is-closing"), 260);
   if (!skipHistory) resetModalHistory();
 }
 
@@ -1573,7 +1551,6 @@ function setBillingMode(mode) {
 function showToast(text) {
   const toast = document.getElementById("toast");
   if (!toast) return;
-  setMotionScheme("standard");
   toast.textContent = text;
   toast.setAttribute("role", "status");
   toast.setAttribute("aria-live", "polite");
@@ -1581,20 +1558,12 @@ function showToast(text) {
   toast.classList.add("is-visible");
   pulseElement(toast);
   if (!prefersReducedMotion) {
-    toast.animate(
-      [
-        { opacity: 0, transform: "translate3d(0, 8px, 0) scale(0.98)" },
-        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", offset: 0.18 },
-        { opacity: 1, transform: "translate3d(0, 0, 0) scale(1)", offset: 0.72 },
-        { opacity: 0, transform: "translate3d(0, -6px, 0) scale(0.98)" }
-      ],
-      { duration: 1800, easing: "cubic-bezier(0.4, 0, 0.2, 1)" }
-    );
+    toast.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], { duration: 2200, easing: "ease-in-out" });
   }
   window.setTimeout(() => {
     toast.style.display = "none";
     toast.classList.remove("is-visible");
-  }, 1800);
+  }, 2200);
 }
 
 function integrationTone(status) {

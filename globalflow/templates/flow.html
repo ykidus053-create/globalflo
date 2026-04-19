@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="{{ theme }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#111318" />
+    <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Automate billing, call follow-up, compliance tracking, and document routing from one calm control room."
@@ -23,34 +23,38 @@
     />
     <title>GlobalFlow | Premium AI Operations</title>
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
-
-    <!-- M3 Typography: Roboto from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <!-- M3 Icons: Material Symbols Outlined -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- M3 Design System -->
-    <link rel="stylesheet" href="/static/m3-tokens.css" />
     <link rel="stylesheet" href="/static/glass-ai.css" />
-    <link rel="stylesheet" href="/static/motion-system.css" />
   </head>
-  <body data-user-segment="general" data-theme="dark">
+  <body class="paper-site" data-user-segment="general" data-theme="dark">
+    <!-- Storytelling Motion Observer -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed');
+              entry.target.classList.add('is-visible');
+            }
+          });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        document.querySelectorAll('.story-reveal, .gf-fade').forEach(el => observer.observe(el));
+      });
+    </script>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <canvas class="render-layer" id="render-layer" aria-hidden="true"></canvas>
     <div class="vfx-progress" id="scroll-progress" aria-hidden="true"></div>
-    <div class="aurora" aria-hidden="true"></div>
-    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="vfx-cursor" id="vfx-cursor" aria-hidden="true"></div>
+    <div class="aurora"></div>
+    <div class="grid-overlay"></div>
 
-    <!-- ═══ M3 Top App Bar ═══ -->
-    <header class="top-app-bar" id="top-app-bar">
+    <header class="top top--airbnb">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true">
           <span></span>
@@ -71,14 +75,8 @@
         <a href="/account">Account</a>
         <button class="ghost small" id="open-login" type="button">Login</button>
         <button class="primary small" data-subscribe-open="true" data-tier="starter" type="button">Start My Trial</button>
-        <!-- M3 Theme Toggle -->
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light/dark theme">
-          <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-        </button>
       </nav>
     </header>
-
-    <!-- Journey Shortcut (AI Recommendation) -->
     <div class="journey-shortcut" id="journey-shortcut" aria-live="polite" hidden>
       <p id="journey-shortcut-copy">Need the fastest path?</p>
       <button class="primary small" id="journey-shortcut-action" type="button" aria-label="Jump to your primary action">
@@ -86,10 +84,9 @@
       </button>
     </div>
 
-    <main id="main-content" class="landing-main">
-      <!-- ═══ HERO SECTION ═══ -->
-      <section id="hero" class="hero gf-section gf-grid-12">
-        <div class="hero-copy gf-span-6 gf-fade">
+    <main id="main-content" class="landing-main gf-container gf-dark">
+      <section id="hero" class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
+        <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
               <span class="signal-dot" id="signal-dot"></span>
@@ -103,14 +100,8 @@
           <p class="lead">Automate billing, follow-up, files, and compliance. Most pilot teams recover 20+ hours each week.</p>
 
           <div class="hero-actions">
-            <button class="primary" data-subscribe-open="true" data-tier="starter" type="button">
-              <span class="material-symbols-outlined">rocket_launch</span>
-              Get Access
-            </button>
-            <button class="ghost" id="watch-demo" type="button">
-              <span class="material-symbols-outlined">play_circle</span>
-              Preview Demo
-            </button>
+            <button class="primary primary--hero" data-subscribe-open="true" data-tier="starter" type="button">Get Access</button>
+            <button class="ghost primary--hero" id="watch-demo" type="button">Preview Demo</button>
           </div>
 
           <div class="hero-quickfacts">
@@ -129,8 +120,8 @@
           </div>
         </div>
 
-        <aside class="hero-stage gf-span-6">
-          <article class="hero-proof-card gf-fade">
+        <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24">
+          <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
             <div class="content-body">
               <p class="eyebrow">What runs inside GlobalFlow</p>
               <h2>One system for intake, routing, follow-through, and verification.</h2>
@@ -140,62 +131,59 @@
                 <li>Verify every result</li>
               </ul>
               <div class="hero-chip-row" aria-label="Core workflows">
-                <span><span class="material-symbols-outlined">payments</span> Billing</span>
-                <span><span class="material-symbols-outlined">call</span> Calls</span>
-                <span><span class="material-symbols-outlined">folder</span> Files</span>
-                <span><span class="material-symbols-outlined">receipt_long</span> Taxes</span>
-                <span><span class="material-symbols-outlined">verified</span> Approvals</span>
+                <span>Billing</span>
+                <span>Calls</span>
+                <span>Files</span>
+                <span>Taxes</span>
+                <span>Approvals</span>
               </div>
             </div>
           </article>
 
-          <div class="gf-grid-12" style="margin-top: var(--md-sys-spacing-4);">
-            <article class="hero-status-card gf-span-6 gf-fade">
-              <div class="content-body">
-                <div>
-                  <span>Operator confidence</span>
-                  <strong id="system-confidence">99.2%</strong>
-                </div>
-                <div>
-                  <span>Workflow pressure</span>
-                  <strong id="queue-pressure">Stable</strong>
-                </div>
-                <div>
-                  <span>Activity logged</span>
-                  <strong id="activity-total">0 events</strong>
-                </div>
-              </div>
-            </article>
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
+            <div>
+              <span>Operator confidence</span>
+              <strong id="system-confidence">99.2%</strong>
+            </div>
+            <div>
+              <span>Workflow pressure</span>
+              <strong id="queue-pressure">Stable</strong>
+            </div>
+            <div>
+              <span>Activity logged</span>
+              <strong id="activity-total">0 events</strong>
+            </div>
+          </article>
 
-            <article class="hero-trust-card gf-span-6 gf-fade">
-              <div class="content-body">
-                <p class="eyebrow">Control and reliability</p>
-                <div class="hero-trust-list">
-                  {% for signal in trust_signals %}
-                  <div>
-                    <strong>{{ signal.title }}</strong>
-                    <p>{{ signal.detail }}</p>
-                  </div>
-                  {% endfor %}
+          <article class="hero-trust-card hero-trust-card--unified gf-card gf-span-6 gf-fade">
+            <div class="content-body">
+              <p class="eyebrow">Control and reliability</p>
+              <div class="hero-trust-list">
+                {% for signal in trust_signals %}
+                <div>
+                  <strong>{{ signal.title }}</strong>
+                  <p>{{ signal.detail }}</p>
                 </div>
+                {% endfor %}
               </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </aside>
       </section>
 
-      <!-- ═══ OVERVIEW SECTION ═══ -->
-      <section id="overview" class="gf-section">
-        <div class="section-heading">
-          <p class="eyebrow">Overview</p>
-          <h2>See how the system works end to end.</h2>
-          <p class="overview-statement">
-            <span class="overview-statement__lead">How we operate.</span>
-            <span class="overview-statement__main">GlobalFlow captures incoming work, routes the next action, runs the automation, and logs the outcome in one place.</span>
-          </p>
+      <section id="overview" class="demo-showcase gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h2>See how the system works end to end.</h2>
+            <p class="overview-statement">
+              <span class="overview-statement__lead">How we operate.</span>
+              <span class="overview-statement__main">GlobalFlow captures incoming work, routes the next action, runs the automation, and logs the outcome in one place.</span>
+            </p>
+          </div>
         </div>
-        <div class="demo-showcase-grid gf-grid-12">
-          <article class="hero-media-card gf-span-7 gf-fade">
+        <div class="demo-showcase-grid demo-showcase-grid--single gf-grid-12">
+          <article class="hero-media-card gf-card gf-span-7 gf-fade">
             <div class="content-body">
               <div class="video-card-top">
                 <p>Product walkthrough</p>
@@ -213,7 +201,7 @@
               </video>
             </div>
           </article>
-          <article class="overview-panel gf-span-5 gf-fade">
+          <article class="overview-panel gf-card gf-span-5 gf-fade">
             <div class="content-body">
               <h3>What happens inside the workflow</h3>
               <p>Inbound tasks from calls, billing, files, and compliance are turned into tracked runs with operator visibility.</p>
@@ -228,15 +216,16 @@
         </div>
       </section>
 
-      <!-- ═══ DEMO SECTION ═══ -->
-      <section id="demo" class="gf-section">
-        <div class="section-heading">
-          <p class="eyebrow">Demo</p>
-          <h2>See the workflow end to end.</h2>
-          <p class="lead">From inbound request to verified output, GlobalFlow runs one continuous operating sequence instead of disconnected tools and manual follow-up.</p>
+      <section id="demo" class="demo-showcase gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Demo</p>
+            <h2>See the workflow end to end.</h2>
+            <p class="lead">From inbound request to verified output, GlobalFlow runs one continuous operating sequence instead of disconnected tools and manual follow-up.</p>
+          </div>
         </div>
         <div class="endtoend-shell gf-grid-12">
-          <article class="endtoend-intro gf-span-4 gf-fade">
+          <article class="endtoend-intro gf-card gf-span-4 gf-fade">
             <div class="content-body">
               <div class="video-card-top">
                 <p>End-to-end operating system</p>
@@ -245,15 +234,15 @@
               <h3>One sequence. Six controlled stages.</h3>
               <p class="endtoend-copy">GlobalFlow captures the request, routes the work, runs the automation, validates the result, and records the next action without losing operator visibility.</p>
               <div class="hero-media-points">
-                <span><span class="material-symbols-outlined">input</span> Intake</span>
-                <span><span class="material-symbols-outlined">route</span> Routing</span>
-                <span><span class="material-symbols-outlined">bolt</span> Execution</span>
-                <span><span class="material-symbols-outlined">verified</span> Verification</span>
+                <span>Intake</span>
+                <span>Routing</span>
+                <span>Execution</span>
+                <span>Verification</span>
               </div>
             </div>
           </article>
           <div class="endtoend-rail gf-span-8">
-            <article class="endtoend-step gf-fade">
+            <article class="endtoend-step gf-card gf-fade">
               <div class="content-body">
                 <span class="endtoend-index">01</span>
                 <div class="endtoend-body">
@@ -262,7 +251,7 @@
                 </div>
               </div>
             </article>
-            <article class="endtoend-step gf-fade">
+            <article class="endtoend-step gf-card gf-fade">
               <div class="content-body">
                 <span class="endtoend-index">02</span>
                 <div class="endtoend-body">
@@ -271,7 +260,7 @@
                 </div>
               </div>
             </article>
-            <article class="endtoend-step gf-fade">
+            <article class="endtoend-step gf-card gf-fade">
               <div class="content-body">
                 <span class="endtoend-index">03</span>
                 <div class="endtoend-body">
@@ -280,7 +269,7 @@
                 </div>
               </div>
             </article>
-            <article class="endtoend-step gf-fade">
+            <article class="endtoend-step gf-card gf-fade">
               <div class="content-body">
                 <span class="endtoend-index">04</span>
                 <div class="endtoend-body">
@@ -289,7 +278,7 @@
                 </div>
               </div>
             </article>
-            <article class="endtoend-step gf-fade">
+            <article class="endtoend-step gf-card gf-fade">
               <div class="content-body">
                 <span class="endtoend-index">05</span>
                 <div class="endtoend-body">
@@ -298,7 +287,7 @@
                 </div>
               </div>
             </article>
-            <article class="endtoend-step gf-fade">
+            <article class="endtoend-step gf-card gf-fade">
               <div class="content-body">
                 <span class="endtoend-index">06</span>
                 <div class="endtoend-body">
@@ -311,7 +300,6 @@
         </div>
       </section>
 
-      <!-- Autopilot Data -->
       <div
         id="autopilot-data"
         data-enabled="{{ 'true' if autopilot.enabled else 'false' }}"
@@ -320,41 +308,40 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <!-- ═══ USE CASES SECTION ═══ -->
-      <section id="use-cases" class="gf-section">
-        <div class="section-heading">
-          <p class="eyebrow">Use cases</p>
-          <h2>Start with one workflow.</h2>
-          <p class="lead">Global Flow automates routine business work like call summaries, invoicing, and tax organization. After a client call, it can generate a summary, pull out action items, and update your workflow automatically. That reduces repetitive admin work so you can focus on growth, decisions, and client relationships.</p>
+      <section id="use-cases" class="explore-section gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Use cases</p>
+            <h2>Start with one workflow.</h2>
+            <p class="lead">Global Flow automates routine business work like call summaries, invoicing, and tax organization. After a client call, it can generate a summary, pull out action items, and update your workflow automatically. That reduces repetitive admin work so you can focus on growth, decisions, and client relationships.</p>
+          </div>
         </div>
         <div class="explore-grid gf-card-grid">
           {% for task in world_tasks %}
-          <article class="explore-card gf-fade">
+          <article class="explore-card explore-card--{{ task.icon }} gf-card gf-fade">
             <div class="explore-card__visual">
               <span class="explore-tag">{{ task.domain }}</span>
             </div>
             <div class="explore-card__body content-body">
               <h3>{{ task.headline }}</h3>
               <p class="explore-description">{{ task.description }}</p>
-              <a class="feature-link" href="#flowboard">
-                Open workflow
-                <span class="material-symbols-outlined">arrow_forward</span>
-              </a>
+              <a class="feature-link" href="#flowboard">Open workflow -></a>
             </div>
           </article>
           {% endfor %}
         </div>
       </section>
 
-      <!-- ═══ METRICS / PROOF SECTION ═══ -->
-      <section class="gf-section">
-        <div class="section-heading">
-          <p class="eyebrow">Proof</p>
-          <h2>Key signals.</h2>
+      <section class="metrics metrics--credibility gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Proof</p>
+            <h2>Key signals.</h2>
+          </div>
         </div>
-        <div class="stat-grid gf-metrics-row">
+        <div class="stat-grid stat-grid--airbnb gf-metrics-row">
           {% for stat in stats %}
-          <article class="stat-card gf-card gf-fade">
+          <article class="stat-card stat-card--airbnb gf-card gf-fade">
             <div class="content-body">
               <p class="value">{{ stat.value }}</p>
               <p class="label">{{ stat.label }}</p>
@@ -364,75 +351,65 @@
         </div>
       </section>
 
-      <!-- ═══ WORKFLOW SECTION ═══ -->
-      <section class="workflow gf-section gf-grid-12" id="flowboard">
-        <div class="workflow-main">
-          <div class="section-heading">
-            <p class="eyebrow">Live workflow</p>
-            <h2>Inspect before you run.</h2>
+      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard">
+        <div class="workflow-main workflow-main--airbnb text">
+          <div class="section-heading section-heading--split">
+            <div>
+              <p class="eyebrow">Live workflow</p>
+              <h2>Inspect before you run.</h2>
+            </div>
           </div>
           <div class="workflow-actions">
-            <button class="primary small" id="launch-orchestration" type="button">
-              <span class="material-symbols-outlined">play_arrow</span>
-              Launch orchestration
-            </button>
-            <button class="ghost small" id="inspect-flow" type="button">
-              <span class="material-symbols-outlined">monitoring</span>
-              Inspect telemetry
-            </button>
+            <button class="primary small" id="launch-orchestration" type="button">Launch orchestration</button>
+            <button class="ghost small" id="inspect-flow" type="button">Inspect telemetry</button>
           </div>
-          <div id="workflow-grid" class="workflow-grid"></div>
-          <div class="summary gf-fade">
+          <div id="workflow-grid" class="workflow-grid workflow-grid--airbnb gf-card-grid"></div>
+          <div class="summary summary--airbnb gf-card gf-fade">
             <h3>Next steps</h3>
             <ul id="flow-next-steps"></ul>
           </div>
         </div>
-        <aside class="workflow-side">
+        <aside class="workflow-side workflow-side--airbnb visual">
           <div class="section-heading">
             <p class="eyebrow">Live activity</p>
             <h2>System state.</h2>
           </div>
-          <div class="autopilot-panel gf-fade">
+          <div class="autopilot-panel autopilot-panel--airbnb gf-card gf-fade">
             <div class="autopilot-copy">
               <p class="eyebrow">Autonomous control</p>
               <h3 id="autopilot-status" aria-live="polite">Standing by</h3>
               <p class="autopilot-next" id="autopilot-next-run">Next run queued soon</p>
               <p class="autopilot-cycles" id="autopilot-cycle-count">Cycles completed: {{ autopilot.cycles }}</p>
             </div>
-            <button class="ghost small" id="autopilot-toggle" type="button">
-              <span class="material-symbols-outlined">autoplay</span>
-              Enable autonomous loops
-            </button>
+            <button class="ghost small" id="autopilot-toggle" type="button">Enable autonomous loops</button>
           </div>
-          <div id="activity-feed" class="activity-grid" aria-live="polite"></div>
+          <div id="activity-feed" class="activity-grid activity-grid--single" aria-live="polite"></div>
         </aside>
       </section>
 
-      <!-- ═══ INTEGRATIONS SECTION ═══ -->
-      <section id="integrations" class="gf-section">
-        <div class="section-heading">
-          <p class="eyebrow">Integrations</p>
-          <h2>Connect your stack.</h2>
+      <section id="integrations" class="integrations integrations--airbnb gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Integrations</p>
+            <h2>Connect your stack.</h2>
+          </div>
         </div>
         <div class="integration-search-row">
           <input id="integration-search" type="search" placeholder="Search integrations..." aria-label="Search integrations" />
           <span id="integration-search-meta" class="connector-toggle">0/0</span>
         </div>
-        <div class="connectors-grid gf-card-grid">
+        <div class="connectors-grid connectors-grid--airbnb gf-card-grid">
           {% for connector in connectors %}
-          <details class="connector-card gf-fade" data-connector-id="{{ connector.id }}" {% if loop.first %}open{% endif %}>
+          <details class="connector-card connector-card--airbnb gf-card gf-fade" data-connector-id="{{ connector.id }}" {% if loop.first %}open{% endif %}>
             <summary>
               <div class="connector-heading">
-                <div class="feature-icon" aria-hidden="true">
-                  <span class="material-symbols-outlined">
-                    {% if connector.icon == 'phone' %}call{% elif connector.icon == 'receipt' %}receipt_long{% elif connector.icon == 'shield' %}shield{% elif connector.icon == 'folder' %}folder{% elif connector.icon == 'spark' %}bolt{% else %}link{% endif %}
-                  </span>
-                </div>
+                <div class="feature-icon feature-icon--{{ connector.icon }}" aria-hidden="true"></div>
                 <div class="content-body">
                   <h3>{{ connector.name }}</h3>
                   <p>{{ connector.description }}</p>
                 </div>
               </div>
+              <span class="connector-toggle">Connect</span>
             </summary>
             <form class="connector-form" data-connector-id="{{ connector.id }}">
               <label>
@@ -448,14 +425,8 @@
                 <input name="context" placeholder="Published by GlobalFlow automation" />
               </label>
               <div class="connector-actions">
-                <button type="submit" class="primary small">
-                  <span class="material-symbols-outlined">send</span>
-                  Run {{ connector.name }}
-                </button>
-                <button type="button" class="ghost small" data-integration-check="{{ connector.id }}">
-                  <span class="material-symbols-outlined">check_circle</span>
-                  Check status
-                </button>
+              <button type="submit" class="primary small">Run {{ connector.name }}</button>
+                <button type="button" class="ghost small" data-integration-check="{{ connector.id }}">Check status</button>
               </div>
               <p class="modal-note connector-status" data-integration-health="{{ connector.id }}">
                 {% if connector.configured %}
@@ -470,15 +441,16 @@
         </div>
       </section>
 
-      <!-- ═══ PRICING SECTION ═══ -->
-      <section class="gf-section" id="pricing">
-        <div class="section-heading">
-          <p class="eyebrow">Pricing</p>
-          <h2>Start free. Scale later.</h2>
+      <section class="pricing pricing--airbnb gf-section" id="pricing">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Pricing</p>
+            <h2>Start free. Scale later.</h2>
+          </div>
         </div>
-        <div class="subscription-grid gf-card-grid">
+        <div class="subscription-grid subscription-grid--airbnb gf-card-grid">
           {% for tier in subscription_tiers %}
-          <article class="pricing-card gf-fade {% if loop.first %}pricing-card--lead{% endif %}">
+          <article class="pricing-card pricing-card--airbnb gf-card gf-fade {% if loop.first %}pricing-card--lead{% endif %}">
             <div class="content-body">
               <div class="pricing-top">
                 {% if tier.badge %}
@@ -493,9 +465,7 @@
                 {% endfor %}
               </ul>
               <div class="subscription-actions">
-                <button class="{% if loop.first %}primary{% else %}ghost{% endif %}" data-checkout-tier="{{ tier.id }}">
-                  {{ tier.cta }}
-                </button>
+                <button class="primary small" data-checkout-tier="{{ tier.id }}">{{ tier.cta }}</button>
               </div>
             </div>
           </article>
@@ -503,15 +473,16 @@
         </div>
       </section>
 
-      <!-- ═══ TRUST SECTION ═══ -->
-      <section id="why-globalflow" class="gf-section">
-        <div class="section-heading">
-          <p class="eyebrow">Trust</p>
-          <h2>Security and control.</h2>
+      <section id="why-globalflow" class="trust trust--airbnb gf-section">
+        <div class="section-heading section-heading--split">
+          <div>
+            <p class="eyebrow">Trust</p>
+            <h2>Security and control.</h2>
+          </div>
         </div>
-        <div class="trust-signal-grid">
+        <div class="trust-signal-grid trust-signal-grid--airbnb gf-card-grid">
           {% for signal in trust_signals %}
-          <article class="trust-card gf-fade">
+          <article class="trust-card trust-card--airbnb gf-card gf-fade">
             <div class="content-body">
               <h3>{{ signal.title }}</h3>
               <p>{{ signal.detail }}</p>
@@ -521,25 +492,17 @@
         </div>
       </section>
 
-      <!-- ═══ M3 DIALOGS ═══ -->
-
-      <!-- Flow Summary Dialog -->
       <div class="flow-modal" role="dialog" aria-modal="true" id="flow-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" id="flow-modal-close" type="button" aria-label="Close dialog">
-            <span class="material-symbols-outlined">close</span>
-          </button>
+          <button class="flow-modal__close" id="flow-modal-close" type="button">&times;</button>
           <h3>Live workflow summary</h3>
           <pre id="flow-modal-body">Fetching...</pre>
         </div>
       </div>
 
-      <!-- Subscribe Dialog -->
       <div class="flow-modal" role="dialog" aria-modal="true" id="subscribe-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="subscribe-modal" type="button" aria-label="Close dialog">
-            <span class="material-symbols-outlined">close</span>
-          </button>
+          <button class="flow-modal__close" data-modal="subscribe-modal" type="button">&times;</button>
           <h3>Get access to GlobalFlow</h3>
           <form id="subscribe-form">
             <label>
@@ -558,32 +521,20 @@
                 {% endfor %}
               </select>
             </label>
-            <button type="submit" class="primary">
-              <span class="material-symbols-outlined">check</span>
-              Get Access
-            </button>
+            <button type="submit" class="primary small">Get Access</button>
             <p class="modal-note" id="subscribe-status"></p>
           </form>
         </div>
       </div>
 
-      <!-- Login Dialog -->
       <div class="flow-modal" role="dialog" aria-modal="true" id="login-modal">
         <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="login-modal" type="button" aria-label="Close dialog">
-            <span class="material-symbols-outlined">close</span>
-          </button>
+          <button class="flow-modal__close" data-modal="login-modal" type="button">&times;</button>
           <h3>Welcome back</h3>
           <p class="modal-note">Use your Google or Apple account for one-click access, or keep a local session below.</p>
           <div class="oauth-grid">
-            <button class="ghost oauth-button" id="login-with-google" type="button">
-              <span class="material-symbols-outlined">login</span>
-              Continue with Google
-            </button>
-            <button class="ghost oauth-button" id="login-with-apple" type="button">
-              <span class="material-symbols-outlined">login</span>
-              Continue with Apple
-            </button>
+            <button class="ghost oauth-button" id="login-with-google" type="button">Continue with Google</button>
+            <button class="ghost oauth-button" id="login-with-apple" type="button">Continue with Apple</button>
           </div>
           <div class="modal-divider" aria-hidden="true">
             <span>Or use a saved local session</span>
@@ -601,25 +552,16 @@
               API key
               <input name="api_key" placeholder="x-abc123" />
             </label>
-            <button type="submit" class="primary">
-              <span class="material-symbols-outlined">save</span>
-              Save session
-            </button>
+            <button type="submit" class="primary small">Save session</button>
             <p class="modal-note" id="login-status"></p>
           </form>
         </div>
       </div>
 
-      <!-- Command Palette Dialog -->
       <div class="flow-modal command-modal" role="dialog" aria-modal="true" id="command-modal" aria-labelledby="command-title">
-        <div class="flow-modal__content">
-          <button class="flow-modal__close" data-modal="command-modal" type="button" aria-label="Close dialog">
-            <span class="material-symbols-outlined">close</span>
-          </button>
-          <h3 id="command-title">
-            <span class="material-symbols-outlined">terminal</span>
-            Command Palette
-          </h3>
+        <div class="flow-modal__content command-modal__content">
+          <button class="flow-modal__close" data-modal="command-modal" type="button">&times;</button>
+          <h3 id="command-title">Command Palette</h3>
           <p class="modal-note">Use keyboard shortcuts for faster control.</p>
           <label class="command-search">
             Search commands
@@ -630,37 +572,15 @@
       </div>
     </main>
 
-    <!-- ═══ M3 Navigation Bar (Mobile) ═══ -->
     <nav class="mobile-dock" aria-label="Mobile actions">
-      <a href="#use-cases">
-        <span class="nav-indicator">
-          <span class="material-symbols-outlined">category</span>
-        </span>
-        Use cases
-      </a>
-      <a href="#flowboard">
-        <span class="nav-indicator">
-          <span class="material-symbols-outlined">bolt</span>
-        </span>
-        Workflow
-      </a>
-      <a href="#pricing">
-        <span class="nav-indicator">
-          <span class="material-symbols-outlined">payments</span>
-        </span>
-        Pricing
-      </a>
-      <a href="/account">
-        <span class="nav-indicator">
-          <span class="material-symbols-outlined">person</span>
-        </span>
-        Account
-      </a>
+      <a href="#use-cases">Use cases</a>
+      <a href="#flowboard">Workflow</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/account">Account</a>
     </nav>
 
-    <!-- ═══ Footer ═══ -->
-    <footer class="site-footer gf-section">
-      <div class="footer-top">
+    <footer class="site-footer site-footer--airbnb gf-section">
+      <div class="footer-top gf-grid-12 gf-gap-24">
         <div>
           <h2>GlobalFlow</h2>
           <p>Billing, files, follow-up, compliance.</p>
@@ -678,28 +598,47 @@
       </div>
     </footer>
 
-    <!-- M3 Snackbar -->
-    <div class="toast" id="toast" role="status" aria-live="polite">Payment triggered. We are routing to finance.</div>
+    <div class="toast" id="toast" aria-live="polite">Payment triggered. We are routing to finance.</div>
+    
+    <!-- ── Deep UI Execution Engine ── -->
+    <script id="deep-ui-engine">
+      document.addEventListener('DOMContentLoaded', () => {
+        // Accessibility Validation (ARIA Semantics)
+        document.querySelectorAll('.gf-card').forEach(el => {
+          if (!el.getAttribute('role')) el.setAttribute('role', 'region');
+        });
+        document.querySelectorAll('button').forEach(btn => {
+          if (!btn.getAttribute('aria-pressed')) btn.setAttribute('aria-pressed', 'false');
+        });
 
-    <!-- ═══ M3 FAB Menu ═══ -->
-    <div class="spatial-menu-container" id="spatial-menu" aria-label="Quick Actions">
-      <div class="spatial-items" id="spatial-items">
-        <a href="#flowboard" class="spatial-item" aria-label="Workflow" title="Workflow">
-          <span class="material-symbols-outlined">bolt</span>
-        </a>
-        <a href="#integrations" class="spatial-item" aria-label="Integrations" title="Integrations">
-          <span class="material-symbols-outlined">link</span>
-        </a>
-        <button type="button" class="spatial-item" aria-label="Command Palette" title="Command Palette" id="fab-command-btn">
-          <span class="material-symbols-outlined">search</span>
-        </button>
-      </div>
-      <button class="spatial-fab" id="spatial-fab-toggle" aria-expanded="false" aria-controls="spatial-items">
-        <span class="fab-icon"><span class="material-symbols-outlined">add</span></span>
-      </button>
-    </div>
+        // Haptic Engine API (Wearable/Mobile Tactile UX)
+        document.querySelectorAll('.primary, .ghost').forEach(el => {
+          el.addEventListener('pointerdown', () => {
+            if (navigator.vibrate) navigator.vibrate([15, 30, 15]); // Sharp Disney haptic pulse
+          });
+        });
 
-    <!-- ═══ Scripts ═══ -->
+        // AI Predictive Analytics Simulation (Session Tracking)
+        let dwellTime = 0;
+        setInterval(() => {
+          dwellTime++;
+          if (dwellTime > 12) { // Reveal AI suggestion after 12 seconds of dwell
+            const shortcut = document.getElementById('journey-shortcut');
+            if (shortcut && shortcut.hidden) {
+              shortcut.hidden = false;
+              shortcut.classList.add('gf-card', 'story-reveal', 'is-revealed', 'is-personalized-focus');
+              shortcut.style.margin = '2rem auto';
+              shortcut.innerHTML = '<p class="eyebrow" style="color:var(--gf-accent-blue)">AI Analytics</p><h3>Optimized Path Detected</h3><button class="primary" style="margin-top:1rem" onclick="this.parentElement.hidden=true">Engage Workflow Automation ✦</button>';
+            }
+          }
+        }, 1000);
+        
+        ['mousemove', 'scroll', 'keypress', 'touchstart'].forEach(evt => 
+          document.addEventListener(evt, () => dwellTime = 0, {passive: true})
+        );
+      });
+    </script>
+
     <script type="module" src="/static/render-layer.js?v={{ asset_version }}"></script>
     <script type="module" src="/static/flow.js?v={{ asset_version }}"></script>
   </body>

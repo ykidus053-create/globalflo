@@ -97,7 +97,6 @@ function initRenderLayer(target) {
     performance: document.body?.dataset?.motionPerformance || "high",
     intent: document.body?.dataset?.motionIntent || "guided",
     story: document.body?.dataset?.motionStory || "intake",
-    scheme: document.body?.dataset?.motionScheme || "standard",
   });
 
   const initialContext = getMotionContext();
@@ -179,7 +178,6 @@ function initRenderLayer(target) {
 
   function frame(now) {
     const motionContext = getMotionContext();
-    const expressiveMultiplier = motionContext.scheme === "expressive" ? 1.08 : 1;
     const storyMultiplier =
       motionContext.story === "execute" ? 1.25 : motionContext.story === "decision" ? 1.1 : motionContext.story === "learn" ? 0.92 : 1;
     const pointerDamping = prefersReducedMotion
@@ -201,14 +199,14 @@ function initRenderLayer(target) {
     scroll.value += (scroll.target - scroll.value) * scrollDamping;
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform1f(uTime, now * 0.001 * storyMultiplier * expressiveMultiplier);
+    gl.uniform1f(uTime, now * 0.001 * storyMultiplier);
     gl.uniform1f(uAspect, Math.max(target.width / target.height, 0.001));
     gl.uniform2f(
       uPointer,
-      pointer.x * 2.0 * (motionContext.intent === "rapid" ? 1.15 : motionContext.scheme === "expressive" ? 1 : 0.92),
-      pointer.y * 2.0 * (motionContext.intent === "rapid" ? 1.15 : motionContext.scheme === "expressive" ? 1 : 0.92)
+      pointer.x * 2.0 * (motionContext.intent === "rapid" ? 1.15 : 0.92),
+      pointer.y * 2.0 * (motionContext.intent === "rapid" ? 1.15 : 0.92)
     );
-    gl.uniform1f(uScroll, scroll.value * storyMultiplier * expressiveMultiplier);
+    gl.uniform1f(uScroll, scroll.value * storyMultiplier);
     gl.uniform1f(uReduced, prefersReducedMotion ? 1.0 : 0.0);
     gl.drawArrays(gl.POINTS, 0, particleCount);
 
