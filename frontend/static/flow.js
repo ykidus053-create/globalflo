@@ -98,6 +98,15 @@ const motionState = {
   story: "intake",
   velocity: 0,
 };
+const immersiveState = {
+  activeScene: "hero",
+  fpsTier: "high",
+  behavior: {
+    scrollDepth: 0,
+    scenesVisited: new Set(),
+    intentSignals: [],
+  },
+};
 
 function rememberMotionTrigger(element) {
   if (!(element instanceof HTMLElement)) return;
@@ -924,6 +933,135 @@ function initMagneticButtons() {
 function initKineticType() {
   const headings = document.querySelectorAll("h1, .section-heading h2, .pricing-top h3, .overview-panel h3");
   headings.forEach((heading) => heading.classList.add("kinetic-heading"));
+}
+
+function initImmersiveLayers() {
+  document.querySelectorAll("[data-depth]").forEach((layer) => {
+    const factor = Number.parseFloat(layer.getAttribute("data-depth") || "1");
+    layer.style.setProperty("--depth-factor", Number.isFinite(factor) ? String(factor) : "1");
+  });
+}
+
+function initSceneCameraSystem() {
+  const scenes = Array.from(document.querySelectorAll("main > section[data-scene], main > section[id]"));
+  if (!scenes.length) return;
+  const profile = {
+    hero: { panX: 0, panY: 0, zoom: 1, rotate: 0 },
+    overview: { panX: 10, panY: -6, zoom: 1.015, rotate: -0.25 },
+    demo: { panX: -12, panY: -8, zoom: 1.02, rotate: 0.35 },
+    "use-cases": { panX: 8, panY: 4, zoom: 1.01, rotate: -0.2 },
+    flowboard: { panX: -14, panY: 2, zoom: 1.03, rotate: 0.3 },
+    integrations: { panX: 12, panY: -2, zoom: 1.012, rotate: -0.2 },
+    pricing: { panX: -6, panY: 0, zoom: 1.008, rotate: 0.1 },
+    "why-globalflow": { panX: 5, panY: 0, zoom: 1.005, rotate: -0.1 },
+  };
+  const root = document.documentElement;
+  const body = document.body;
+  let ticking = false;
+
+  const applyCamera = (sceneId, ratio = 0) => {
+    const base = profile[sceneId] || profile.hero;
+    const ease = Math.max(0, Math.min(1, ratio));
+    const panX = base.panX * (0.55 + ease * 0.45);
+    const panY = base.panY * (0.55 + ease * 0.45);
+    const zoom = 1 + (base.zoom - 1) * (0.45 + ease * 0.55);
+    const rotate = base.rotate * (0.45 + ease * 0.55);
+    root.style.setProperty("--gf-camera-pan-x", `${panX.toFixed(2)}px`);
+    root.style.setProperty("--gf-camera-pan-y", `${panY.toFixed(2)}px`);
+    root.style.setProperty("--gf-camera-zoom", zoom.toFixed(4));
+    root.style.setProperty("--gf-camera-rotate", `${rotate.toFixed(3)}deg`);
+    body.dataset.scene = sceneId;
+  };
+
+  const update = () => {
+    const viewportMid = window.innerHeight * 0.42;
+    let winner = scenes[0];
+    let winnerDistance = Number.POSITIVE_INFINITY;
+    scenes.forEach((scene) => {
+      const rect = scene.getBoundingClientRect();
+      const distance = Math.abs(rect.top - viewportMid);
+      if (distance < winnerDistance) {
+        winner = scene;
+        winnerDistance = distance;
+      }
+    });
+    const sceneId = winner.id || winner.dataset.scene || "hero";
+    const rect = winner.getBoundingClientRect();
+    const ratio = 1 - Math.min(1, Math.abs(rect.top) / Math.max(window.innerHeight, 1));
+    immersiveState.activeScene = sceneId;
+    immersiveState.behavior.scenesVisited.add(sceneId);
+    immersiveState.behavior.scrollDepth = Math.max(
+      immersiveState.behavior.scrollDepth,
+      (window.scrollY + window.innerHeight) / Math.max(document.documentElement.scrollHeight, 1)
+    );
+    applyCamera(sceneId, ratio);
+    ticking = false;
+  };
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+  window.addEventListener("resize", update, { passive: true });
+  update();
+}
+
+function initPerformanceBudgetMonitor() {
+  const body = document.body;
+  let frameCount = 0;
+  let last = performance.now();
+  const tick = (now) => {
+    frameCount += 1;
+    if (now - last >= 1000) {
+      const fps = (frameCount * 1000) / (now - last);
+      immersiveState.fpsTier = fps >= 56 ? "high" : fps >= 45 ? "mid" : "low";
+      body.dataset.fpsTier = immersiveState.fpsTier;
+      frameCount = 0;
+      last = now;
+    }
+    window.requestAnimationFrame(tick);
+  };
+  window.requestAnimationFrame(tick);
+}
+
+function initAIPersonalizationHooks() {
+  const body = document.body;
+  const variantKey = "globalflow_ui_variant";
+  const existing = window.localStorage.getItem(variantKey) || "A";
+  body.dataset.uiVariant = existing;
+  const api = {
+    getState() {
+      return {
+        scene: immersiveState.activeScene,
+        fpsTier: immersiveState.fpsTier,
+        segment: body.dataset.userSegment || "general",
+        variant: body.dataset.uiVariant || "A",
+        behavior: {
+          scrollDepth: immersiveState.behavior.scrollDepth,
+          scenesVisited: Array.from(immersiveState.behavior.scenesVisited),
+          intentSignals: [...immersiveState.behavior.intentSignals],
+        },
+      };
+    },
+    setVariant(next) {
+      const value = String(next || "A").toUpperCase() === "B" ? "B" : "A";
+      body.dataset.uiVariant = value;
+      window.localStorage.setItem(variantKey, value);
+    },
+    trackIntent(intent) {
+      if (!intent) return;
+      immersiveState.behavior.intentSignals.push(String(intent));
+      if (immersiveState.behavior.intentSignals.length > 40) {
+        immersiveState.behavior.intentSignals = immersiveState.behavior.intentSignals.slice(-40);
+      }
+    },
+  };
+  window.GlobalFlowImmersive = api;
 }
 
 function initPredictiveMotionEngine() {
@@ -1846,9 +1984,13 @@ async function bootstrap() {
   initDirectionalMotion();
   initDetailTransitions();
   initScrollCue();
-  initMagneticButtons();
-  initKineticType();
-  initStorytellingRail();
+    initMagneticButtons();
+    initKineticType();
+    initImmersiveLayers();
+    initSceneCameraSystem();
+    initPerformanceBudgetMonitor();
+    initAIPersonalizationHooks();
+    initStorytellingRail();
   initStrategyLabActions();
   initDesignThinkingEngine();
   initCommandPalette();

@@ -26,12 +26,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300..700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/glass-ai.css" />
   </head>
-  <body class="paper-site" data-user-segment="general" data-theme="dark">
+  <body class="paper-site" data-user-segment="general" data-theme="dark" data-ui-protocol="immersive-story">
     <!-- Storytelling Motion Observer -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
@@ -85,7 +85,7 @@
     </div>
 
     <main id="main-content" class="landing-main gf-container gf-dark">
-      <section id="hero" class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero">
+      <section id="hero" class="hero hero--airbnb hero--unified gf-section gf-grid-12 gf-hero" data-scene="hero">
         <div class="hero-copy hero-copy--airbnb hero-copy--unified copy gf-card gf-fade">
           <div class="signal-bar" aria-live="polite">
             <div class="signal-pill">
@@ -120,8 +120,8 @@
           </div>
         </div>
 
-        <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24">
-          <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade">
+        <aside class="hero-stage hero-stage--airbnb hero-stage--unified media gf-grid-12 gf-gap-24" data-depth="0.72">
+          <article class="hero-proof-card hero-proof-card--unified gf-card gf-span-12 gf-fade" data-depth="1.1">
             <div class="content-body">
               <p class="eyebrow">What runs inside GlobalFlow</p>
               <h2>One system for intake, routing, follow-through, and verification.</h2>
@@ -140,7 +140,7 @@
             </div>
           </article>
 
-          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade">
+          <article class="hero-status-card hero-status-card--airbnb gf-card gf-span-6 gf-fade" data-depth="1.25">
             <div>
               <span>Operator confidence</span>
               <strong id="system-confidence">99.2%</strong>
@@ -155,7 +155,7 @@
             </div>
           </article>
 
-          <article class="hero-trust-card hero-trust-card--unified gf-card gf-span-6 gf-fade">
+          <article class="hero-trust-card hero-trust-card--unified gf-card gf-span-6 gf-fade" data-depth="0.95">
             <div class="content-body">
               <p class="eyebrow">Control and reliability</p>
               <div class="hero-trust-list">
@@ -171,7 +171,7 @@
         </aside>
       </section>
 
-      <section id="overview" class="demo-showcase gf-section">
+      <section id="overview" class="demo-showcase gf-section" data-scene="overview">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Overview</p>
@@ -216,7 +216,7 @@
         </div>
       </section>
 
-      <section id="demo" class="demo-showcase gf-section">
+      <section id="demo" class="demo-showcase gf-section" data-scene="demo">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Demo</p>
@@ -308,7 +308,7 @@
         data-cycles="{{ autopilot.cycles }}"
       ></div>
 
-      <section id="use-cases" class="explore-section gf-section">
+      <section id="use-cases" class="explore-section gf-section" data-scene="use-cases">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Use cases</p>
@@ -351,7 +351,7 @@
         </div>
       </section>
 
-      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard">
+      <section class="workflow workflow--split workflow--airbnb gf-section gf-grid-12 gf-split" id="flowboard" data-scene="flowboard">
         <div class="workflow-main workflow-main--airbnb text">
           <div class="section-heading section-heading--split">
             <div>
@@ -387,7 +387,7 @@
         </aside>
       </section>
 
-      <section id="integrations" class="integrations integrations--airbnb gf-section">
+      <section id="integrations" class="integrations integrations--airbnb gf-section" data-scene="integrations">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Integrations</p>
@@ -441,7 +441,7 @@
         </div>
       </section>
 
-      <section class="pricing pricing--airbnb gf-section" id="pricing">
+      <section class="pricing pricing--airbnb gf-section" id="pricing" data-scene="pricing">
         <div class="section-heading section-heading--split">
           <div>
             <p class="eyebrow">Pricing</p>
