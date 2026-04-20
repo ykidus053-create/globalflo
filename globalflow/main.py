@@ -2289,3 +2289,24 @@ async def update_account(payload: Dict[str, str]):
 @app.get("/api/account", response_class=JSONResponse)
 async def account_state():
     return {"profile": USER_PROFILE, "settings": USER_SETTINGS}
+
+
+@app.post("/api/telemetry/ui", response_class=JSONResponse)
+async def ui_telemetry(payload: Dict[str, Any]):
+    """
+    Lightweight UI telemetry sink for immersive variant, fps, and scene analytics.
+    This keeps instrumentation server-side without coupling to external vendors.
+    """
+    event = str(payload.get("event", "unknown")).strip() or "unknown"
+    scene = str(payload.get("scene", "unknown")).strip() or "unknown"
+    fps_tier = str(payload.get("fpsTier", "unknown")).strip() or "unknown"
+    segment = str(payload.get("segment", "general")).strip() or "general"
+    logger.info(
+        "ui.telemetry event=%s scene=%s fps=%s segment=%s payload=%s",
+        event,
+        scene,
+        fps_tier,
+        segment,
+        json.dumps(payload, separators=(",", ":"), ensure_ascii=False)[:1200],
+    )
+    return {"status": "accepted"}

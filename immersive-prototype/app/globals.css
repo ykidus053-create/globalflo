@@ -1,0 +1,30 @@
+:root {
+  --bg-0: #05070d;
+  --bg-1: #0c1220;
+  --ink-0: #f3f7ff;
+  --ink-1: #c7d3ea;
+  --accent-0: #8ce7ff;
+  --accent-1: #ffd38f;
+  --glass: rgba(15, 23, 42, 0.46);
+  --glass-border: rgba(255, 255, 255, 0.14);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--ink-0); }
+body { font-family: "Sora", system-ui, sans-serif; }
+
+.shell {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(1200px 600px at 15% 0%, rgba(89, 160, 255, 0.24), transparent 60%),
+    radial-gradient(900px 500px at 90% 10%, rgba(255, 171, 93, 0.16), transparent 58%),
+    linear-gradient(180deg, var(--bg-0), var(--bg-1));
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px) saturate(145%);
+  border-radius: 20px;
+}

@@ -20,6 +20,7 @@ const launchOrchestrationBtn = document.getElementById("launch-orchestration");
 const watchDemoBtn = document.getElementById("watch-demo");
 const demoVideo = document.getElementById("demo-video");
 const demoSection = document.getElementById("demo");
+const audioSyncToggle = document.getElementById("audio-sync-toggle");
 
 const autopilotToggle = document.getElementById("autopilot-toggle");
 const autopilotStatusEl = document.getElementById("autopilot-status");
@@ -1064,6 +1065,122 @@ function initAIPersonalizationHooks() {
   window.GlobalFlowImmersive = api;
 }
 
+function initABExperimentHooks() {
+  const body = document.body;
+  const key = "globalflow_immersive_variant";
+  let variant = window.localStorage.getItem(key);
+  if (!variant) {
+    variant = Math.random() < 0.5 ? "A" : "B";
+    window.localStorage.setItem(key, variant);
+  }
+  body.dataset.immersiveVariant = variant;
+  window.dispatchEvent(
+    new CustomEvent("globalflow:variant", {
+      detail: { variant },
+    })
+  );
+}
+
+function initObservabilityHooks() {
+  const send = (event, payload = {}) => {
+    const body = {
+      event,
+      ts: Date.now(),
+      scene: immersiveState.activeScene,
+      fpsTier: immersiveState.fpsTier,
+      segment: document.body.dataset.userSegment || "general",
+      ...payload,
+    };
+    if (navigator.sendBeacon) {
+      const blob = new Blob([JSON.stringify(body)], { type: "application/json" });
+      navigator.sendBeacon("/api/telemetry/ui", blob);
+      return;
+    }
+    fetch("/api/telemetry/ui", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      keepalive: true,
+    }).catch(() => {});
+  };
+
+  window.addEventListener("globalflow:variant", (e) => send("variant.assigned", e.detail || {}));
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) send("session.hidden");
+    else send("session.visible");
+  });
+  window.addEventListener("beforeunload", () =>
+    send("session.close", {
+      scenesVisited: Array.from(immersiveState.behavior.scenesVisited).length,
+      scrollDepth: Number(immersiveState.behavior.scrollDepth.toFixed(3)),
+    })
+  );
+  window.GlobalFlowTelemetry = { track: send };
+}
+
+function initAudioSync() {
+  if (!audioSyncToggle) return;
+  const AudioContextRef = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextRef) {
+    audioSyncToggle.hidden = true;
+    return;
+  }
+
+  let context = null;
+  let oscillator = null;
+  let gainNode = null;
+  let enabled = false;
+
+  const stopTone = () => {
+    if (!oscillator) return;
+    try {
+      oscillator.stop();
+    } catch (_) {}
+    oscillator.disconnect();
+    oscillator = null;
+  };
+
+  const setEnabled = async (next) => {
+    enabled = Boolean(next);
+    audioSyncToggle.setAttribute("aria-pressed", enabled ? "true" : "false");
+    audioSyncToggle.textContent = enabled ? "Audio Sync On" : "Audio Sync";
+    if (!enabled) {
+      stopTone();
+      if (gainNode) gainNode.gain.setTargetAtTime(0.0001, context.currentTime, 0.1);
+      return;
+    }
+
+    if (!context) {
+      context = new AudioContextRef();
+      gainNode = context.createGain();
+      gainNode.gain.value = 0.0001;
+      gainNode.connect(context.destination);
+    }
+    if (context.state === "suspended") await context.resume();
+    if (!oscillator) {
+      oscillator = context.createOscillator();
+      oscillator.type = "sine";
+      oscillator.frequency.value = 110;
+      oscillator.connect(gainNode);
+      oscillator.start();
+    }
+    gainNode.gain.setTargetAtTime(0.018, context.currentTime, 0.18);
+  };
+
+  audioSyncToggle.addEventListener("click", async () => {
+    await setEnabled(!enabled);
+    if (window.GlobalFlowTelemetry?.track) {
+      window.GlobalFlowTelemetry.track("audio.sync.toggle", { enabled });
+    }
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!enabled || !context || !gainNode) return;
+    const target = document.hidden ? 0.0001 : 0.018;
+    gainNode.gain.setTargetAtTime(target, context.currentTime, 0.2);
+  });
+}
+
 function initPredictiveMotionEngine() {
   const root = document.documentElement;
   const watchedActions = document.querySelectorAll(".primary, .ghost, .nav a, .feature-link, summary");
@@ -1990,6 +2107,9 @@ async function bootstrap() {
     initSceneCameraSystem();
     initPerformanceBudgetMonitor();
     initAIPersonalizationHooks();
+    initABExperimentHooks();
+    initObservabilityHooks();
+    initAudioSync();
     initStorytellingRail();
   initStrategyLabActions();
   initDesignThinkingEngine();

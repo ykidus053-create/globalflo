@@ -1,0 +1,43 @@
+{
+  "color": {
+    "base": {
+      "bgDeep": "#030509",
+      "bgBase": "#060B14",
+      "bgElevated": "#0B1220",
+      "inkPrimary": "#FFFFFF",
+      "inkSecondary": "#CBD5E1"
+    },
+    "accent": {
+      "cyanMetal": "#8CE7FF",
+      "amberMetal": "#FFD38F",
+      "electricBlue": "#2563EB",
+      "violet": "#8B5CF6"
+    }
+  },
+  "type": {
+    "display": "Syne",
+    "body": "Sora",
+    "support": "Outfit",
+    "scale": {
+      "xs": "0.85rem",
+      "sm": "0.95rem",
+      "base": "1.1rem",
+      "lg": "1.3rem",
+      "xl": "1.6rem",
+      "xxl": "2.5rem"
+    }
+  },
+  "motion": {
+    "easing": {
+      "organicOut": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "smooth": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      "springLike": "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+    },
+    "duration": {
+      "fast": 200,
+      "base": 400,
+      "slow": 600,
+      "reveal": 800
+    }
+  }
+}

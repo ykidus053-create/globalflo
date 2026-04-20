@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "scenes": [
+    { "id": "hero", "camera": { "panX": 0, "panY": 0, "zoom": 1, "rotate": 0 }, "story": "intake" },
+    { "id": "overview", "camera": { "panX": 10, "panY": -6, "zoom": 1.015, "rotate": -0.25 }, "story": "analysis" },
+    { "id": "demo", "camera": { "panX": -12, "panY": -8, "zoom": 1.02, "rotate": 0.35 }, "story": "decision" },
+    { "id": "flowboard", "camera": { "panX": -14, "panY": 2, "zoom": 1.03, "rotate": 0.3 }, "story": "execute" },
+    { "id": "integrations", "camera": { "panX": 12, "panY": -2, "zoom": 1.012, "rotate": -0.2 }, "story": "learn" }
+  ],
+  "fpsBudget": {
+    "target": 60,
+    "tierHigh": 56,
+    "tierMid": 45
+  },
+  "variants": ["A", "B"],
+  "personalization": {
+    "signals": ["scrollDepth", "sceneVisitOrder", "intentSignals"],
+    "ethicalGuardrails": ["no dark patterns", "respect reduced motion", "allow user override"]
+  }
+}
