@@ -959,18 +959,59 @@ function initSceneCameraSystem() {
   const root = document.documentElement;
   const body = document.body;
   let ticking = false;
+  let rafId = null;
+  const epsilon = 0.02;
+  const motionLerp = prefersReducedMotion ? 0.35 : 0.14;
+  const cameraCurrent = { panX: 0, panY: 0, zoom: 1, rotate: 0 };
+  const cameraTarget = { panX: 0, panY: 0, zoom: 1, rotate: 0 };
+
+  const lerp = (from, to, amt) => from + (to - from) * amt;
+
+  const applyCameraCss = () => {
+    root.style.setProperty("--gf-camera-pan-x", `${cameraCurrent.panX.toFixed(2)}px`);
+    root.style.setProperty("--gf-camera-pan-y", `${cameraCurrent.panY.toFixed(2)}px`);
+    root.style.setProperty("--gf-camera-zoom", cameraCurrent.zoom.toFixed(4));
+    root.style.setProperty("--gf-camera-rotate", `${cameraCurrent.rotate.toFixed(3)}deg`);
+  };
+
+  const animateCamera = () => {
+    cameraCurrent.panX = lerp(cameraCurrent.panX, cameraTarget.panX, motionLerp);
+    cameraCurrent.panY = lerp(cameraCurrent.panY, cameraTarget.panY, motionLerp);
+    cameraCurrent.zoom = lerp(cameraCurrent.zoom, cameraTarget.zoom, motionLerp);
+    cameraCurrent.rotate = lerp(cameraCurrent.rotate, cameraTarget.rotate, motionLerp);
+    applyCameraCss();
+
+    const distance =
+      Math.abs(cameraCurrent.panX - cameraTarget.panX) +
+      Math.abs(cameraCurrent.panY - cameraTarget.panY) +
+      Math.abs(cameraCurrent.zoom - cameraTarget.zoom) * 140 +
+      Math.abs(cameraCurrent.rotate - cameraTarget.rotate) * 60;
+
+    if (distance > epsilon) {
+      rafId = window.requestAnimationFrame(animateCamera);
+    } else {
+      cameraCurrent.panX = cameraTarget.panX;
+      cameraCurrent.panY = cameraTarget.panY;
+      cameraCurrent.zoom = cameraTarget.zoom;
+      cameraCurrent.rotate = cameraTarget.rotate;
+      applyCameraCss();
+      rafId = null;
+    }
+  };
+
+  const queueCamera = () => {
+    if (rafId != null) return;
+    rafId = window.requestAnimationFrame(animateCamera);
+  };
 
   const applyCamera = (sceneId, ratio = 0) => {
     const base = profile[sceneId] || profile.hero;
     const ease = Math.max(0, Math.min(1, ratio));
-    const panX = base.panX * (0.55 + ease * 0.45);
-    const panY = base.panY * (0.55 + ease * 0.45);
-    const zoom = 1 + (base.zoom - 1) * (0.45 + ease * 0.55);
-    const rotate = base.rotate * (0.45 + ease * 0.55);
-    root.style.setProperty("--gf-camera-pan-x", `${panX.toFixed(2)}px`);
-    root.style.setProperty("--gf-camera-pan-y", `${panY.toFixed(2)}px`);
-    root.style.setProperty("--gf-camera-zoom", zoom.toFixed(4));
-    root.style.setProperty("--gf-camera-rotate", `${rotate.toFixed(3)}deg`);
+    cameraTarget.panX = base.panX * (0.55 + ease * 0.45);
+    cameraTarget.panY = base.panY * (0.55 + ease * 0.45);
+    cameraTarget.zoom = 1 + (base.zoom - 1) * (0.45 + ease * 0.55);
+    cameraTarget.rotate = base.rotate * (0.45 + ease * 0.55);
+    queueCamera();
     body.dataset.scene = sceneId;
   };
 
