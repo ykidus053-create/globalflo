@@ -26,7 +26,15 @@ app = FastAPI(title="Global Flow Automation")
 # Starlette/Jinja2 expect plain filesystem paths; passing a Path can be treated as an iterable
 # and produce hard-to-diagnose template loader/cache issues in some environments.
 templates = Jinja2Templates(directory=str(root / "templates"))
+# Render is using a newer Jinja2; in some deployments we observed template cache key issues.
+# Disabling caching avoids crashing on first request.
+templates.env.cache = None
 app.mount("/static", StaticFiles(directory=str(root / "static")), name="static")
+
+
+@app.get("/health", response_class=JSONResponse)
+async def health_check():
+    return {"ok": True}
 
 
 @app.on_event("startup")
