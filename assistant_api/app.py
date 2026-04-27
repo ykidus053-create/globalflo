@@ -17,7 +17,12 @@ API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
 
 APP_TITLE = os.getenv("APP_TITLE", "GlobalFlo Assistant")
-APP_BUILD = os.getenv("RENDER_GIT_COMMIT") or os.getenv("RENDER_COMMIT") or os.getenv("GIT_COMMIT") or "local"
+APP_BUILD = (
+    os.getenv("RENDER_GIT_COMMIT")
+    or os.getenv("RENDER_COMMIT")
+    or os.getenv("GIT_COMMIT")
+    or "unknown"
+)
 
 app = FastAPI()
 
@@ -202,7 +207,13 @@ def root():
 
 @app.get("/health")
 def health() -> Dict[str, Any]:
-    return {"ok": True, "model": MODEL_ID, "ts": int(time.time()), "build": APP_BUILD}
+    return {
+        "ok": True,
+        "model": MODEL_ID,
+        "ts": int(time.time()),
+        "build": APP_BUILD,
+        "token_present": bool(HF_TOKEN),
+    }
 
 
 @app.post("/generate")
@@ -215,9 +226,11 @@ def generate(req: GenReq) -> Dict[str, Any]:
                 "temperature": float(req.temperature),
                 "return_full_text": False,
             },
+            # HF Serverless Inference API: wait for cold model to load instead of failing fast.
+            "options": {"wait_for_model": True},
         }
         try:
-            r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=120)
+            r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=180)
         except requests.RequestException as e:
             # Render -> HF network errors should not become a generic 500 with no detail.
             return JSONResponse(
@@ -241,6 +254,8 @@ def generate(req: GenReq) -> Dict[str, Any]:
             hint = None
             if r.status_code in (401, 403) and not HF_TOKEN:
                 hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
+            if r.status_code == 503:
+                hint = hint or "HF serverless may be loading the model or refusing due to size/hardware."
             return JSONResponse(
                 status_code=502,
                 content={
