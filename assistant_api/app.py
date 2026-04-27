@@ -13,8 +13,23 @@ from pydantic import BaseModel
 MODEL_ID = os.getenv("MODEL_ID", "kidusllm/EliteOmniReasoner")
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 
-API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
+#
+# Hugging Face has been migrating serverless inference traffic from the legacy
+# `api-inference.huggingface.co/models/{MODEL_ID}` endpoint to the router-based
+# endpoint. The router endpoint is currently the most reliable for new setups.
+#
+# You can override with HF_API_URL if you want a custom endpoint.
+HF_API_URL = os.getenv("HF_API_URL", "").strip()
+API_URL_PRIMARY = (
+    HF_API_URL
+    or f"https://router.huggingface.co/hf-inference/models/{MODEL_ID}"
+)
+# Fallback for older org setups / docs that still reference the legacy endpoint.
+API_URL_FALLBACK = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
+
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
+# Help HF support debug requests + avoid some proxy edge cases.
+HEADERS.setdefault("User-Agent", "eliteomni-api/1.0 (render; fastapi)")
 
 APP_TITLE = os.getenv("APP_TITLE", "GlobalFlo Assistant")
 APP_BUILD = (
@@ -210,6 +225,8 @@ def health() -> Dict[str, Any]:
     return {
         "ok": True,
         "model": MODEL_ID,
+        "api_url_primary": API_URL_PRIMARY,
+        "api_url_fallback": API_URL_FALLBACK,
         "ts": int(time.time()),
         "build": APP_BUILD,
         "token_present": bool(HF_TOKEN),
@@ -229,60 +246,99 @@ def generate(req: GenReq) -> Dict[str, Any]:
             # HF Serverless Inference API: wait for cold model to load instead of failing fast.
             "options": {"wait_for_model": True},
         }
-        try:
-            r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=180)
-        except requests.RequestException as e:
-            # Render -> HF network errors should not become a generic 500 with no detail.
+        last_exc: Exception | None = None
+        last_resp: requests.Response | None = None
+
+        def call(url: str) -> requests.Response:
+            return requests.post(url, headers=HEADERS, json=payload, timeout=180)
+
+        for url in (API_URL_PRIMARY, API_URL_FALLBACK):
+            try:
+                r = call(url)
+                last_resp = r
+                # The legacy endpoint often returns an HTML "Cannot POST /models/..." page when
+                # it's routed to the wrong backend. Treat that as a hard failure and fallback.
+                if r.status_code == 404 and ("Cannot POST" in (r.text or "")):
+                    continue
+                return _handle_hf_response(r, url)
+            except requests.RequestException as e:
+                last_exc = e
+                continue
+
+        # If both attempts failed at the transport level (DNS, TLS, timeout, etc).
+        if last_exc and last_resp is None:
             return JSONResponse(
                 status_code=502,
                 content={
                     "error": "upstream_request_failed",
-                    "detail": str(e),
-                    "upstream": API_URL,
+                    "detail": str(last_exc),
+                    "upstream_primary": API_URL_PRIMARY,
+                    "upstream_fallback": API_URL_FALLBACK,
                 },
             )
 
-        # Pass upstream errors through with context so the UI can show the real cause
-        # (missing HF_TOKEN, model loading, rate limit, etc).
-        if r.status_code != 200:
-            text = (r.text or "").strip()
-            # HF often returns JSON error bodies; keep raw text too.
-            try:
-                body = r.json()
-            except Exception:
-                body = None
-            hint = None
-            if r.status_code in (401, 403) and not HF_TOKEN:
-                hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
-            if r.status_code == 503:
-                hint = hint or "HF serverless may be loading the model or refusing due to size/hardware."
+        # If we got a response but couldn't parse/handle it for some reason.
+        if last_resp is not None:
             return JSONResponse(
                 status_code=502,
                 content={
-                    "error": "upstream_error",
-                    "upstream_status": r.status_code,
-                    "upstream_body": body,
-                    "upstream_text": text[:4000],
-                    "hint": hint,
-                    "model": MODEL_ID,
+                    "error": "upstream_unhandled",
+                    "upstream_status": last_resp.status_code,
+                    "upstream_text": (last_resp.text or "")[:4000],
+                    "upstream_primary": API_URL_PRIMARY,
+                    "upstream_fallback": API_URL_FALLBACK,
                 },
             )
-
-        try:
-            data = r.json()
-        except Exception:
-            return JSONResponse(
-                status_code=502,
-                content={"error": "bad_upstream_json", "upstream_text": (r.text or "")[:4000]},
-            )
-
-        if isinstance(data, list) and data and isinstance(data[0], dict):
-            return {"text": data[0].get("generated_text", str(data))}
-        if isinstance(data, dict) and "generated_text" in data:
-            return {"text": data["generated_text"]}
-        return {"text": str(data)}
+        raise RuntimeError("upstream_request_failed_no_detail")
     except Exception as e:
         return JSONResponse(
             status_code=500,
             content={"error": "internal_error", "detail": repr(e), "model": MODEL_ID},
         )
+
+
+def _handle_hf_response(r: requests.Response, upstream_url: str) -> Any:
+    # Pass upstream errors through with context so the UI can show the real cause
+    # (missing HF_TOKEN, model loading, rate limit, etc).
+    if r.status_code != 200:
+        text = (r.text or "").strip()
+        # HF often returns JSON error bodies; keep raw text too.
+        try:
+            body = r.json()
+        except Exception:
+            body = None
+        hint = None
+        if r.status_code in (401, 403) and not HF_TOKEN:
+            hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
+        if r.status_code == 503:
+            hint = hint or "HF serverless may be loading the model or refusing due to size/hardware."
+        return JSONResponse(
+            status_code=502,
+            content={
+                "error": "upstream_error",
+                "upstream": upstream_url,
+                "upstream_status": r.status_code,
+                "upstream_body": body,
+                "upstream_text": text[:4000],
+                "hint": hint,
+                "model": MODEL_ID,
+            },
+        )
+
+    try:
+        data = r.json()
+    except Exception:
+        return JSONResponse(
+            status_code=502,
+            content={
+                "error": "bad_upstream_json",
+                "upstream": upstream_url,
+                "upstream_text": (r.text or "")[:4000],
+            },
+        )
+
+    if isinstance(data, list) and data and isinstance(data[0], dict):
+        return {"text": data[0].get("generated_text", str(data))}
+    if isinstance(data, dict) and "generated_text" in data:
+        return {"text": data["generated_text"]}
+    return {"text": str(data)}
