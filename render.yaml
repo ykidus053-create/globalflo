@@ -22,6 +22,6 @@ services:
     autoDeploy: true
     envVars:
       - key: MODEL_ID
-        value: kidusllm/EliteOmniReasonerV3
+        value: kidusllm/EliteOmniReasoner
       - key: HF_TOKEN
         sync: false

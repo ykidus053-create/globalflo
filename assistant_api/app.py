@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 
-MODEL_ID = os.getenv("MODEL_ID", "kidusllm/EliteOmniReasonerV3")
+MODEL_ID = os.getenv("MODEL_ID", "kidusllm/EliteOmniReasoner")
 HF_TOKEN = os.getenv("HF_TOKEN", "")
 
 API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
