@@ -17,6 +17,7 @@ API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
 
 APP_TITLE = os.getenv("APP_TITLE", "GlobalFlo Assistant")
+APP_BUILD = os.getenv("RENDER_GIT_COMMIT") or os.getenv("RENDER_COMMIT") or os.getenv("GIT_COMMIT") or "local"
 
 app = FastAPI()
 
@@ -201,66 +202,72 @@ def root():
 
 @app.get("/health")
 def health() -> Dict[str, Any]:
-    return {"ok": True, "model": MODEL_ID, "ts": int(time.time())}
+    return {"ok": True, "model": MODEL_ID, "ts": int(time.time()), "build": APP_BUILD}
 
 
 @app.post("/generate")
 def generate(req: GenReq) -> Dict[str, Any]:
-    payload = {
-        "inputs": req.prompt,
-        "parameters": {
-            "max_new_tokens": int(req.max_new_tokens),
-            "temperature": float(req.temperature),
-            "return_full_text": False,
-        },
-    }
     try:
-        r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=120)
-    except requests.RequestException as e:
-        # Render -> HF network errors should not become a generic 500 with no detail.
-        return JSONResponse(
-            status_code=502,
-            content={
-                "error": "upstream_request_failed",
-                "detail": str(e),
-                "upstream": API_URL,
+        payload = {
+            "inputs": req.prompt,
+            "parameters": {
+                "max_new_tokens": int(req.max_new_tokens),
+                "temperature": float(req.temperature),
+                "return_full_text": False,
             },
-        )
-
-    # Pass upstream errors through with context so the UI can show the real cause
-    # (missing HF_TOKEN, model loading, rate limit, etc).
-    if r.status_code != 200:
-        text = (r.text or "").strip()
-        # HF often returns JSON error bodies; keep raw text too.
+        }
         try:
-            body = r.json()
+            r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=120)
+        except requests.RequestException as e:
+            # Render -> HF network errors should not become a generic 500 with no detail.
+            return JSONResponse(
+                status_code=502,
+                content={
+                    "error": "upstream_request_failed",
+                    "detail": str(e),
+                    "upstream": API_URL,
+                },
+            )
+
+        # Pass upstream errors through with context so the UI can show the real cause
+        # (missing HF_TOKEN, model loading, rate limit, etc).
+        if r.status_code != 200:
+            text = (r.text or "").strip()
+            # HF often returns JSON error bodies; keep raw text too.
+            try:
+                body = r.json()
+            except Exception:
+                body = None
+            hint = None
+            if r.status_code in (401, 403) and not HF_TOKEN:
+                hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
+            return JSONResponse(
+                status_code=502,
+                content={
+                    "error": "upstream_error",
+                    "upstream_status": r.status_code,
+                    "upstream_body": body,
+                    "upstream_text": text[:4000],
+                    "hint": hint,
+                    "model": MODEL_ID,
+                },
+            )
+
+        try:
+            data = r.json()
         except Exception:
-            body = None
-        hint = None
-        if r.status_code in (401, 403) and not HF_TOKEN:
-            hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
-        return JSONResponse(
-            status_code=502,
-            content={
-                "error": "upstream_error",
-                "upstream_status": r.status_code,
-                "upstream_body": body,
-                "upstream_text": text[:4000],
-                "hint": hint,
-                "model": MODEL_ID,
-            },
-        )
+            return JSONResponse(
+                status_code=502,
+                content={"error": "bad_upstream_json", "upstream_text": (r.text or "")[:4000]},
+            )
 
-    try:
-        data = r.json()
-    except Exception:
+        if isinstance(data, list) and data and isinstance(data[0], dict):
+            return {"text": data[0].get("generated_text", str(data))}
+        if isinstance(data, dict) and "generated_text" in data:
+            return {"text": data["generated_text"]}
+        return {"text": str(data)}
+    except Exception as e:
         return JSONResponse(
-            status_code=502,
-            content={"error": "bad_upstream_json", "upstream_text": (r.text or "")[:4000]},
+            status_code=500,
+            content={"error": "internal_error", "detail": repr(e), "model": MODEL_ID},
         )
-
-    if isinstance(data, list) and data and isinstance(data[0], dict):
-        return {"text": data[0].get("generated_text", str(data))}
-    if isinstance(data, dict) and "generated_text" in data:
-        return {"text": data["generated_text"]}
-    return {"text": str(data)}
