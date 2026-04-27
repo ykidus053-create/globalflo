@@ -310,6 +310,18 @@ def _handle_hf_response(r: requests.Response, upstream_url: str) -> Any:
         hint = None
         if r.status_code in (401, 403) and not HF_TOKEN:
             hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
+        if (
+            r.status_code == 400
+            and isinstance(body, dict)
+            and isinstance(body.get("error"), str)
+            and "not supported by provider hf-inference" in body["error"]
+        ):
+            hint = (
+                "HF 'hf-inference' serverless does not support this model repo. "
+                "Fix options: (1) set MODEL_ID to a supported Hub model (e.g. 'gpt2'), "
+                "or (2) create a Hugging Face Inference Endpoint for your model and set "
+                "HF_API_URL to that endpoint URL."
+            )
         if r.status_code == 503:
             hint = hint or "HF serverless may be loading the model or refusing due to size/hardware."
         return JSONResponse(
