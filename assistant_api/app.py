@@ -1,10 +1,12 @@
 import os
 import time
+from pathlib import Path
 from typing import Any, Dict
 
 import requests
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 
@@ -14,7 +16,14 @@ HF_TOKEN = os.getenv("HF_TOKEN", "")
 API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
 HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
 
+APP_TITLE = os.getenv("APP_TITLE", "GlobalFlo Assistant")
+
 app = FastAPI()
+
+# Serve design assets (copied from your GlobalFlo web UI) for a consistent look.
+STATIC_DIR = Path(__file__).parent / "static"
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
 class GenReq(BaseModel):
@@ -25,18 +34,169 @@ class GenReq(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 def root():
-    # Lightweight landing page so users don't see FastAPI 404 at /
-    return f"""
-    <html><body style="font-family:system-ui,Segoe UI,Roboto,Arial;margin:24px;max-width:860px">
-      <h1>EliteOmni API</h1>
-      <p>Model: <code>{MODEL_ID}</code></p>
-      <ul>
-        <li><a href="/docs">/docs</a></li>
-        <li><a href="/health">/health</a></li>
-      </ul>
-      <p>POST <code>/generate</code> with JSON: <code>{{"prompt":"...","max_new_tokens":200,"temperature":0.7}}</code></p>
-    </body></html>
-    """
+    # "Design-only" GlobalFlo look + assistant chat hub (no automation page content).
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{APP_TITLE}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    /* Chat hub additions on top of GlobalFlo design tokens */
+    .chat-shell {{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-4);
+    }}
+    .chat-card {{
+      background: rgba(20, 26, 41, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-5);
+    }}
+    .chat-log {{
+      height: 420px;
+      overflow: auto;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: rgba(11, 15, 25, 0.55);
+      padding: var(--spacing-3);
+    }}
+    .chat-msg {{ margin-bottom: var(--spacing-3); }}
+    .chat-role {{
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--spacing-1);
+    }}
+    .chat-bubble {{
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      padding: var(--spacing-3);
+      white-space: pre-wrap;
+    }}
+    .chat-row {{
+      margin-top: var(--spacing-3);
+      display: flex;
+      gap: var(--spacing-2);
+    }}
+    .chat-input {{
+      flex: 1;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      padding: var(--spacing-3) var(--spacing-4);
+      background: rgba(11, 15, 25, 0.55);
+      color: var(--color-text-primary);
+      outline: none;
+    }}
+    .chat-input:focus {{
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: var(--shadow-glass);
+    }}
+    .chat-send {{
+      border-radius: var(--radius-full);
+      padding: var(--spacing-3) var(--spacing-5);
+      background: var(--color-accent-main);
+      color: var(--color-bg-base);
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 14px 0 rgba(56, 189, 248, 0.25);
+    }}
+    .chat-send:hover {{ transform: translateY(-1px); box-shadow: var(--shadow-glow); }}
+    .mini {{
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      margin-top: var(--spacing-2);
+      line-height: 1.45;
+    }}
+    code {{
+      background: rgba(255,255,255,0.06);
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--color-border);
+    }}
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero" aria-labelledby="hero-title">
+      <span class="eyebrow" aria-label="Mode">Assistant Mode</span>
+      <h1 id="hero-title">GlobalFlo Chat Hub</h1>
+      <p class="lead">Design matches your GlobalFlo main UI. This page contains only the assistant chat hub.</p>
+      <div class="mini">API health: <code>/health</code> | API docs: <code>/docs</code> | Generate: <code>POST /generate</code></div>
+    </header>
+
+    <section class="chat-shell" aria-label="Chat Hub">
+      <article class="chat-card">
+        <div class="chat-log" id="chatLog" aria-label="Conversation log"></div>
+        <div class="chat-row">
+          <input id="chatInput" class="chat-input" placeholder="Type a message..." />
+          <button id="chatSend" class="chat-send">Send</button>
+        </div>
+        <div class="mini">Model backend: <code>{MODEL_ID}</code> (HF Serverless Inference API).</div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const log = document.getElementById("chatLog");
+    const inp = document.getElementById("chatInput");
+    const btn = document.getElementById("chatSend");
+
+    function add(role, text) {{
+      const wrap = document.createElement("div");
+      wrap.className = "chat-msg";
+      wrap.innerHTML = `<div class="chat-role"></div><div class="chat-bubble"></div>`;
+      wrap.querySelector(".chat-role").textContent = role;
+      wrap.querySelector(".chat-bubble").textContent = text;
+      log.appendChild(wrap);
+      log.scrollTop = log.scrollHeight;
+      return wrap.querySelector(".chat-bubble");
+    }}
+
+    async function callGenerate(prompt) {{
+      const res = await fetch("/generate", {{
+        method: "POST",
+        headers: {{ "Content-Type": "application/json" }},
+        body: JSON.stringify({{ prompt, max_new_tokens: 200, temperature: 0.7 }})
+      }});
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      return data.text ?? JSON.stringify(data);
+    }}
+
+    async function send() {{
+      const msg = (inp.value || "").trim();
+      if (!msg) return;
+      inp.value = "";
+      add("User", msg);
+      const bubble = add("Assistant", "Thinking...");
+      try {{
+        bubble.textContent = await callGenerate(msg);
+      }} catch (e) {{
+        bubble.textContent = "ERROR: " + e.message;
+      }}
+    }}
+
+    btn.addEventListener("click", send);
+    inp.addEventListener("keydown", (e) => {{
+      if (e.key === "Enter") send();
+    }});
+    add("System", "Ready.");
+  </script>
+</body>
+</html>
+"""
 
 
 @app.get("/health")
@@ -63,4 +223,3 @@ def generate(req: GenReq) -> Dict[str, Any]:
     if isinstance(data, dict) and "generated_text" in data:
         return {"text": data["generated_text"]}
     return {"text": str(data)}
-
