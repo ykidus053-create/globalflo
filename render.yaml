@@ -16,12 +16,14 @@ services:
     env: python
     plan: free
     rootDir: assistant_api
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
-    healthCheckPath: /health
-    autoDeploy: true
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
       - key: MODEL_ID
         value: kidusllm/EliteOmniReasoner
       - key: HF_TOKEN
         sync: false
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
