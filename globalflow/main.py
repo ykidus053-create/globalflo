@@ -23,8 +23,10 @@ if not logger.handlers:
 logger.setLevel(logging.INFO)
 
 app = FastAPI(title="Global Flow Automation")
-templates = Jinja2Templates(directory=root / "templates")
-app.mount("/static", StaticFiles(directory=root / "static"), name="static")
+# Starlette/Jinja2 expect plain filesystem paths; passing a Path can be treated as an iterable
+# and produce hard-to-diagnose template loader/cache issues in some environments.
+templates = Jinja2Templates(directory=str(root / "templates"))
+app.mount("/static", StaticFiles(directory=str(root / "static")), name="static")
 
 
 @app.on_event("startup")
