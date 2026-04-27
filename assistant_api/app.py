@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 import requests
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -214,9 +214,50 @@ def generate(req: GenReq) -> Dict[str, Any]:
             "return_full_text": False,
         },
     }
-    r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=120)
-    r.raise_for_status()
-    data = r.json()
+    try:
+        r = requests.post(API_URL, headers=HEADERS, json=payload, timeout=120)
+    except requests.RequestException as e:
+        # Render -> HF network errors should not become a generic 500 with no detail.
+        return JSONResponse(
+            status_code=502,
+            content={
+                "error": "upstream_request_failed",
+                "detail": str(e),
+                "upstream": API_URL,
+            },
+        )
+
+    # Pass upstream errors through with context so the UI can show the real cause
+    # (missing HF_TOKEN, model loading, rate limit, etc).
+    if r.status_code != 200:
+        text = (r.text or "").strip()
+        # HF often returns JSON error bodies; keep raw text too.
+        try:
+            body = r.json()
+        except Exception:
+            body = None
+        hint = None
+        if r.status_code in (401, 403) and not HF_TOKEN:
+            hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
+        return JSONResponse(
+            status_code=502,
+            content={
+                "error": "upstream_error",
+                "upstream_status": r.status_code,
+                "upstream_body": body,
+                "upstream_text": text[:4000],
+                "hint": hint,
+                "model": MODEL_ID,
+            },
+        )
+
+    try:
+        data = r.json()
+    except Exception:
+        return JSONResponse(
+            status_code=502,
+            content={"error": "bad_upstream_json", "upstream_text": (r.text or "")[:4000]},
+        )
 
     if isinstance(data, list) and data and isinstance(data[0], dict):
         return {"text": data[0].get("generated_text", str(data))}
