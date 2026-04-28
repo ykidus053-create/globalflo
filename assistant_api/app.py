@@ -12,6 +12,7 @@ from pydantic import BaseModel
 
 MODEL_ID = os.getenv("MODEL_ID", "kidusllm/EliteOmniReasoner")
 HF_TOKEN = os.getenv("HF_TOKEN", "")
+UPSTREAM_CHAT_URL = (os.getenv("UPSTREAM_CHAT_URL", "") or "").strip().rstrip("/")
 
 #
 # Hugging Face has been migrating serverless inference traffic from the legacy
@@ -51,6 +52,13 @@ class GenReq(BaseModel):
     prompt: str
     max_new_tokens: int = 200
     temperature: float = 0.7
+
+
+class ChatReq(BaseModel):
+    session_id: str | None = None
+    message: str
+    max_new_tokens: int = 200
+    temperature: float = 0.2
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -154,7 +162,7 @@ def root():
       <span class="eyebrow" aria-label="Mode">Assistant Mode</span>
       <h1 id="hero-title">GlobalFlo Chat Hub</h1>
       <p class="lead">Design matches your GlobalFlo main UI. This page contains only the assistant chat hub.</p>
-      <div class="mini">API health: <code>/health</code> | API docs: <code>/docs</code> | Generate: <code>POST /generate</code></div>
+      <div class="mini">API health: <code>/health</code> | API docs: <code>/docs</code> | Chat: <code>POST /chat</code></div>
     </header>
 
     <section class="chat-shell" aria-label="Chat Hub">
@@ -164,7 +172,7 @@ def root():
           <input id="chatInput" class="chat-input" placeholder="Type a message..." />
           <button id="chatSend" class="chat-send">Send</button>
         </div>
-        <div class="mini">Model backend: <code>{MODEL_ID}</code> (HF Serverless Inference API).</div>
+        <div class="mini">Backend: <code>UPSTREAM_CHAT_URL</code> if set, otherwise HF serverless (may not support this model).</div>
       </article>
     </section>
   </main>
@@ -173,6 +181,7 @@ def root():
     const log = document.getElementById("chatLog");
     const inp = document.getElementById("chatInput");
     const btn = document.getElementById("chatSend");
+    let sessionId = null;
 
     function add(role, text) {{
       const wrap = document.createElement("div");
@@ -185,14 +194,15 @@ def root():
       return wrap.querySelector(".chat-bubble");
     }}
 
-    async function callGenerate(prompt) {{
-      const res = await fetch("/generate", {{
+    async function callChat(message) {{
+      const res = await fetch("/chat", {{
         method: "POST",
         headers: {{ "Content-Type": "application/json" }},
-        body: JSON.stringify({{ prompt, max_new_tokens: 200, temperature: 0.7 }})
+        body: JSON.stringify({{ session_id: sessionId, message, max_new_tokens: 200, temperature: 0.2 }})
       }});
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
+      sessionId = data.session_id ?? sessionId;
       return data.text ?? JSON.stringify(data);
     }}
 
@@ -203,7 +213,7 @@ def root():
       add("User", msg);
       const bubble = add("Assistant", "Thinking...");
       try {{
-        bubble.textContent = await callGenerate(msg);
+        bubble.textContent = await callChat(msg);
       }} catch (e) {{
         bubble.textContent = "ERROR: " + e.message;
       }}
@@ -225,12 +235,47 @@ def health() -> Dict[str, Any]:
     return {
         "ok": True,
         "model": MODEL_ID,
+        "upstream_chat_url_set": bool(UPSTREAM_CHAT_URL),
         "api_url_primary": API_URL_PRIMARY,
         "api_url_fallback": API_URL_FALLBACK,
         "ts": int(time.time()),
         "build": APP_BUILD,
         "token_present": bool(HF_TOKEN),
     }
+
+
+@app.post("/chat")
+def chat(req: ChatReq) -> Any:
+    # Preferred path: proxy to your self-hosted model via tunnel.
+    if UPSTREAM_CHAT_URL:
+        try:
+            r = requests.post(
+                f"{UPSTREAM_CHAT_URL}/chat",
+                json=req.model_dump(),
+                timeout=180,
+            )
+            try:
+                body = r.json()
+            except Exception:
+                body = {"text": (r.text or "")[:4000]}
+            return JSONResponse(status_code=r.status_code, content=body)
+        except Exception as e:
+            return JSONResponse(
+                status_code=502,
+                content={
+                    "error": "upstream_chat_failed",
+                    "detail": str(e),
+                    "upstream": UPSTREAM_CHAT_URL,
+                },
+            )
+
+    # Fallback path: use HF serverless /generate (prompt-only).
+    gen = GenReq(
+        prompt=req.message,
+        max_new_tokens=req.max_new_tokens,
+        temperature=req.temperature,
+    )
+    return generate(gen)
 
 
 @app.post("/generate")
