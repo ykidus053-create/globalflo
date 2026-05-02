@@ -346,6 +346,8 @@ inp.addEventListener('input',()=>{
   inp.style.height=Math.min(inp.scrollHeight,130)+'px';
 });
 
+function unlock(){sb.disabled=false;inp.disabled=false;inp.focus();}
+
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const msg=inp.value.trim();
@@ -356,24 +358,34 @@ form.addEventListener('submit',async e=>{
   sb.disabled=true;inp.disabled=true;
   const t=addTyping();
 
+  // Hard 90s timeout — always unlocks the button
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>{ctrl.abort();},90000);
+
   try{
     const r=await fetch('/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:msg,history})
+      body:JSON.stringify({message:msg,history}),
+      signal:ctrl.signal
     });
-    const data=await r.json();
-    const reply=data.response||data.text||data.detail||'No response.';
+    clearTimeout(timer);
+    let data={};
+    try{data=await r.json();}catch(_){data={response:'Server returned an invalid response. Please try again.'};}
+    const reply=data.response||data.text||data.detail||'No response received.';
     t.remove();
-    if(reply.startsWith('Error')||reply.startsWith('Connection'))addBot(reply,true);
-    else addBot(reply);
+    addBot(reply, !r.ok || reply.includes('error')||reply.includes('Error'));
     history.push({role:'user',content:msg},{role:'assistant',content:reply});
     if(history.length>20)history=history.slice(-20);
   }catch(err){
+    clearTimeout(timer);
     t.remove();
-    addBot('Connection error: '+err.message+'. Please try again.',true);
+    const msg2=err.name==='AbortError'
+      ?'Request timed out after 90 seconds. The AI backend may be loading — please try again.'
+      :'Could not reach the AI backend: '+err.message;
+    addBot(msg2,true);
   }finally{
-    sb.disabled=false;inp.disabled=false;inp.focus();
+    unlock();
   }
 });
 </script>
