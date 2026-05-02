@@ -73,7 +73,7 @@ def call_mistral(message: str, history: List[Message], max_tokens: int, temperat
     }
 
     try:
-        r = requests.post(HF_CHAT_URL, headers=HEADERS, json=payload, timeout=120)
+        r = (await httpx.AsyncClient(timeout=120).post(HF_CHAT_URL, headers=HEADERS, json=payload, timeout=120)
     except requests.RequestException as e:
         return f"Network error: {e}"
 
@@ -206,3 +206,4 @@ UI_HTML = """<!DOCTYPE html>
 </script>
 </body>
 </html>"""
+
