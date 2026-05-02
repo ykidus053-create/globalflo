@@ -1,7 +1,7 @@
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 import requests
 from fastapi import FastAPI
@@ -9,393 +9,200 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+# ── Config ─────────────────────────────────────────────────────
+MODEL_ID   = os.getenv("MODEL_ID", "mistralai/Mistral-7B-Instruct-v0.3")
+HF_TOKEN   = os.getenv("HF_TOKEN", "")
+UPSTREAM   = (os.getenv("UPSTREAM_CHAT_URL", "") or "").strip().rstrip("/")
+APP_BUILD  = os.getenv("RENDER_GIT_COMMIT", "unknown")
 
-MODEL_ID = os.getenv("MODEL_ID", "kidusllm/EliteOmniReasoner")
-HF_TOKEN = os.getenv("HF_TOKEN", "")
-UPSTREAM_CHAT_URL = (os.getenv("UPSTREAM_CHAT_URL", "") or "").strip().rstrip("/")
+# ── Correct endpoint for Mistral (chat completions format) ──────
+HF_CHAT_URL = "https://api-inference.huggingface.co/v1/chat/completions"
 
-#
-# Hugging Face has been migrating serverless inference traffic from the legacy
-# `api-inference.huggingface.co/models/{MODEL_ID}` endpoint to the router-based
-# endpoint. The router endpoint is currently the most reliable for new setups.
-#
-# You can override with HF_API_URL if you want a custom endpoint.
-HF_API_URL = os.getenv("HF_API_URL", "").strip()
-API_URL_PRIMARY = (
-    HF_API_URL
-    or f"https://router.huggingface.co/hf-inference/models/{MODEL_ID}"
-)
-# Fallback for older org setups / docs that still reference the legacy endpoint.
-API_URL_FALLBACK = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
+SYSTEM_PROMPT = """You are EliteOmni, an intelligent and helpful AI assistant created by Kidus.
+Answer questions accurately and concisely.
+Rules:
+- Only say things you are confident about. If unsure, say: I am not certain, but...
+- Never fabricate commands or fictional dialogues.
+- Never use (A)(B)(C) enumeration unless the user asks for it.
+- Keep answers focused and relevant.
+- Be warm, direct, and genuinely helpful."""
 
-HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"} if HF_TOKEN else {}
-# Help HF support debug requests + avoid some proxy edge cases.
-HEADERS.setdefault("User-Agent", "eliteomni-api/1.0 (render; fastapi)")
+HEADERS = {
+    "Authorization": f"Bearer {HF_TOKEN}",
+    "Content-Type": "application/json",
+}
 
-APP_TITLE = os.getenv("APP_TITLE", "GlobalFlo Assistant")
-APP_BUILD = (
-    os.getenv("RENDER_GIT_COMMIT")
-    or os.getenv("RENDER_COMMIT")
-    or os.getenv("GIT_COMMIT")
-    or "unknown"
-)
+app = FastAPI(title="EliteOmni API", version="3.0.0")
 
-app = FastAPI()
-
-# Serve design assets (copied from your GlobalFlo web UI) for a consistent look.
 STATIC_DIR = Path(__file__).parent / "static"
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
-class GenReq(BaseModel):
-    prompt: str
-    max_new_tokens: int = 200
-    temperature: float = 0.7
-
+# ── Request models ──────────────────────────────────────────────
+class Message(BaseModel):
+    role: str
+    content: str
 
 class ChatReq(BaseModel):
-    session_id: str | None = None
+    session_id: Optional[str] = None
     message: str
-    max_new_tokens: int = 200
-    temperature: float = 0.2
+    history: Optional[List[Message]] = []
+    max_new_tokens: int = 300
+    temperature: float = 0.4
 
 
-@app.get("/", response_class=HTMLResponse)
-def root():
-    # "Design-only" GlobalFlo look + assistant chat hub (no automation page content).
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{APP_TITLE}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/style.css">
-  <style>
-    /* Chat hub additions on top of GlobalFlo design tokens */
-    .chat-shell {{
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--spacing-4);
-    }}
-    .chat-card {{
-      background: rgba(20, 26, 41, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-5);
-    }}
-    .chat-log {{
-      height: 420px;
-      overflow: auto;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      background: rgba(11, 15, 25, 0.55);
-      padding: var(--spacing-3);
-    }}
-    .chat-msg {{ margin-bottom: var(--spacing-3); }}
-    .chat-role {{
-      font-size: var(--text-xs);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--color-text-muted);
-      margin-bottom: var(--spacing-1);
-    }}
-    .chat-bubble {{
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      background: rgba(255, 255, 255, 0.03);
-      padding: var(--spacing-3);
-      white-space: pre-wrap;
-    }}
-    .chat-row {{
-      margin-top: var(--spacing-3);
-      display: flex;
-      gap: var(--spacing-2);
-    }}
-    .chat-input {{
-      flex: 1;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-full);
-      padding: var(--spacing-3) var(--spacing-4);
-      background: rgba(11, 15, 25, 0.55);
-      color: var(--color-text-primary);
-      outline: none;
-    }}
-    .chat-input:focus {{
-      border-color: rgba(56, 189, 248, 0.4);
-      box-shadow: var(--shadow-glass);
-    }}
-    .chat-send {{
-      border-radius: var(--radius-full);
-      padding: var(--spacing-3) var(--spacing-5);
-      background: var(--color-accent-main);
-      color: var(--color-bg-base);
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      box-shadow: 0 4px 14px 0 rgba(56, 189, 248, 0.25);
-    }}
-    .chat-send:hover {{ transform: translateY(-1px); box-shadow: var(--shadow-glow); }}
-    .mini {{
-      font-size: var(--text-sm);
-      color: var(--color-text-muted);
-      margin-top: var(--spacing-2);
-      line-height: 1.45;
-    }}
-    code {{
-      background: rgba(255,255,255,0.06);
-      padding: 0.1rem 0.35rem;
-      border-radius: 0.4rem;
-      border: 1px solid var(--color-border);
-    }}
-  </style>
-</head>
-<body>
-  <main>
-    <header class="hero" aria-labelledby="hero-title">
-      <span class="eyebrow" aria-label="Mode">Assistant Mode</span>
-      <h1 id="hero-title">GlobalFlo Chat Hub</h1>
-      <p class="lead">Design matches your GlobalFlo main UI. This page contains only the assistant chat hub.</p>
-      <div class="mini">API health: <code>/health</code> | API docs: <code>/docs</code> | Chat: <code>POST /chat</code></div>
-    </header>
+# ── HF Chat Completions call ────────────────────────────────────
+def call_mistral(message: str, history: List[Message], max_tokens: int, temperature: float) -> str:
+    if not HF_TOKEN:
+        return "ERROR: HF_TOKEN is not set. Add it in Render → Environment."
 
-    <section class="chat-shell" aria-label="Chat Hub">
-      <article class="chat-card">
-        <div class="chat-log" id="chatLog" aria-label="Conversation log"></div>
-        <div class="chat-row">
-          <input id="chatInput" class="chat-input" placeholder="Type a message..." />
-          <button id="chatSend" class="chat-send">Send</button>
-        </div>
-        <div class="mini">Backend: <code>UPSTREAM_CHAT_URL</code> if set, otherwise HF serverless (may not support this model).</div>
-      </article>
-    </section>
-  </main>
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    for m in (history or [])[-4:]:
+        messages.append({"role": m.role, "content": m.content})
+    messages.append({"role": "user", "content": message})
 
-  <script>
-    const log = document.getElementById("chatLog");
-    const inp = document.getElementById("chatInput");
-    const btn = document.getElementById("chatSend");
-    let sessionId = null;
+    payload = {
+        "model": MODEL_ID,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+        "top_p": 0.85,
+        "repetition_penalty": 1.3,
+        "stream": False,
+    }
 
-    function add(role, text) {{
-      const wrap = document.createElement("div");
-      wrap.className = "chat-msg";
-      wrap.innerHTML = `<div class="chat-role"></div><div class="chat-bubble"></div>`;
-      wrap.querySelector(".chat-role").textContent = role;
-      wrap.querySelector(".chat-bubble").textContent = text;
-      log.appendChild(wrap);
-      log.scrollTop = log.scrollHeight;
-      return wrap.querySelector(".chat-bubble");
-    }}
+    try:
+        r = requests.post(HF_CHAT_URL, headers=HEADERS, json=payload, timeout=120)
+    except requests.RequestException as e:
+        return f"Network error: {e}"
 
-    async function callChat(message) {{
-      const res = await fetch("/chat", {{
-        method: "POST",
-        headers: {{ "Content-Type": "application/json" }},
-        body: JSON.stringify({{ session_id: sessionId, message, max_new_tokens: 200, temperature: 0.2 }})
-      }});
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      sessionId = data.session_id ?? sessionId;
-      return data.text ?? JSON.stringify(data);
-    }}
+    if r.status_code == 401:
+        return "ERROR: Invalid HF_TOKEN. Check Render → Environment."
+    if r.status_code == 503:
+        return "Model is loading on HuggingFace. Please wait 30 seconds and try again."
+    if r.status_code != 200:
+        return f"HF API error {r.status_code}: {r.text[:500]}"
 
-    async function send() {{
-      const msg = (inp.value || "").trim();
-      if (!msg) return;
-      inp.value = "";
-      add("User", msg);
-      const bubble = add("Assistant", "Thinking...");
-      try {{
-        bubble.textContent = await callChat(msg);
-      }} catch (e) {{
-        bubble.textContent = "ERROR: " + e.message;
-      }}
-    }}
-
-    btn.addEventListener("click", send);
-    inp.addEventListener("keydown", (e) => {{
-      if (e.key === "Enter") send();
-    }});
-    add("System", "Ready.");
-  </script>
-</body>
-</html>
-"""
+    try:
+        data = r.json()
+        return data["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        return f"Failed to parse response: {e} — raw: {r.text[:300]}"
 
 
+# ── Routes ──────────────────────────────────────────────────────
 @app.get("/health")
 def health() -> Dict[str, Any]:
     return {
         "ok": True,
         "model": MODEL_ID,
-        "upstream_chat_url_set": bool(UPSTREAM_CHAT_URL),
-        "api_url_primary": API_URL_PRIMARY,
-        "api_url_fallback": API_URL_FALLBACK,
-        "ts": int(time.time()),
+        "hf_token_set": bool(HF_TOKEN),
+        "endpoint": HF_CHAT_URL,
         "build": APP_BUILD,
-        "token_present": bool(HF_TOKEN),
+        "ts": int(time.time()),
     }
 
 
 @app.post("/chat")
 def chat(req: ChatReq) -> Any:
-    # Preferred path: proxy to your self-hosted model via tunnel.
-    if UPSTREAM_CHAT_URL:
+    # If an upstream URL is set, proxy to it
+    if UPSTREAM:
         try:
-            r = requests.post(
-                f"{UPSTREAM_CHAT_URL}/chat",
-                json=req.model_dump(),
-                timeout=180,
-            )
+            r = requests.post(f"{UPSTREAM}/chat", json=req.model_dump(), timeout=180)
             try:
-                body = r.json()
+                return JSONResponse(status_code=r.status_code, content=r.json())
             except Exception:
-                body = {"text": (r.text or "")[:4000]}
-            return JSONResponse(status_code=r.status_code, content=body)
+                return JSONResponse(status_code=r.status_code, content={"text": r.text[:4000]})
         except Exception as e:
-            return JSONResponse(
-                status_code=502,
-                content={
-                    "error": "upstream_chat_failed",
-                    "detail": str(e),
-                    "upstream": UPSTREAM_CHAT_URL,
-                },
-            )
+            return JSONResponse(status_code=502, content={"error": str(e)})
 
-    # Fallback path: use HF serverless /generate (prompt-only).
-    gen = GenReq(
-        prompt=req.message,
-        max_new_tokens=req.max_new_tokens,
+    # Use Mistral via HF chat completions
+    reply = call_mistral(
+        message=req.message,
+        history=req.history or [],
+        max_tokens=req.max_new_tokens,
         temperature=req.temperature,
     )
-    return generate(gen)
+    return {"text": reply, "session_id": req.session_id, "model": MODEL_ID}
 
 
-@app.post("/generate")
-def generate(req: GenReq) -> Dict[str, Any]:
-    try:
-        payload = {
-            "inputs": req.prompt,
-            "parameters": {
-                "max_new_tokens": int(req.max_new_tokens),
-                "temperature": float(req.temperature),
-                "return_full_text": False,
-            },
-            # HF Serverless Inference API: wait for cold model to load instead of failing fast.
-            "options": {"wait_for_model": True},
-        }
-        last_exc: Exception | None = None
-        last_resp: requests.Response | None = None
-
-        def call(url: str) -> requests.Response:
-            return requests.post(url, headers=HEADERS, json=payload, timeout=180)
-
-        for url in (API_URL_PRIMARY, API_URL_FALLBACK):
-            try:
-                r = call(url)
-                last_resp = r
-                # The legacy endpoint often returns an HTML "Cannot POST /models/..." page when
-                # it's routed to the wrong backend. Treat that as a hard failure and fallback.
-                if r.status_code == 404 and ("Cannot POST" in (r.text or "")):
-                    continue
-                return _handle_hf_response(r, url)
-            except requests.RequestException as e:
-                last_exc = e
-                continue
-
-        # If both attempts failed at the transport level (DNS, TLS, timeout, etc).
-        if last_exc and last_resp is None:
-            return JSONResponse(
-                status_code=502,
-                content={
-                    "error": "upstream_request_failed",
-                    "detail": str(last_exc),
-                    "upstream_primary": API_URL_PRIMARY,
-                    "upstream_fallback": API_URL_FALLBACK,
-                },
-            )
-
-        # If we got a response but couldn't parse/handle it for some reason.
-        if last_resp is not None:
-            return JSONResponse(
-                status_code=502,
-                content={
-                    "error": "upstream_unhandled",
-                    "upstream_status": last_resp.status_code,
-                    "upstream_text": (last_resp.text or "")[:4000],
-                    "upstream_primary": API_URL_PRIMARY,
-                    "upstream_fallback": API_URL_FALLBACK,
-                },
-            )
-        raise RuntimeError("upstream_request_failed_no_detail")
-    except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={"error": "internal_error", "detail": repr(e), "model": MODEL_ID},
-        )
+@app.get("/", response_class=HTMLResponse)
+def root():
+    return HTMLResponse(content=UI_HTML)
 
 
-def _handle_hf_response(r: requests.Response, upstream_url: str) -> Any:
-    # Pass upstream errors through with context so the UI can show the real cause
-    # (missing HF_TOKEN, model loading, rate limit, etc).
-    if r.status_code != 200:
-        text = (r.text or "").strip()
-        # HF often returns JSON error bodies; keep raw text too.
-        try:
-            body = r.json()
-        except Exception:
-            body = None
-        hint = None
-        if r.status_code in (401, 403) and not HF_TOKEN:
-            hint = "HF_TOKEN is not set on the Render service. Add it as an env var/secret."
-        if (
-            r.status_code == 400
-            and isinstance(body, dict)
-            and isinstance(body.get("error"), str)
-            and "not supported by provider hf-inference" in body["error"]
-        ):
-            hint = (
-                "HF 'hf-inference' serverless does not support this model repo. "
-                "Fix options: (1) set MODEL_ID to a supported Hub model (e.g. 'gpt2'), "
-                "or (2) create a Hugging Face Inference Endpoint for your model and set "
-                "HF_API_URL to that endpoint URL."
-            )
-        if r.status_code == 503:
-            hint = hint or "HF serverless may be loading the model or refusing due to size/hardware."
-        return JSONResponse(
-            status_code=502,
-            content={
-                "error": "upstream_error",
-                "upstream": upstream_url,
-                "upstream_status": r.status_code,
-                "upstream_body": body,
-                "upstream_text": text[:4000],
-                "hint": hint,
-                "model": MODEL_ID,
-            },
-        )
-
-    try:
-        data = r.json()
-    except Exception:
-        return JSONResponse(
-            status_code=502,
-            content={
-                "error": "bad_upstream_json",
-                "upstream": upstream_url,
-                "upstream_text": (r.text or "")[:4000],
-            },
-        )
-
-    if isinstance(data, list) and data and isinstance(data[0], dict):
-        return {"text": data[0].get("generated_text", str(data))}
-    if isinstance(data, dict) and "generated_text" in data:
-        return {"text": data["generated_text"]}
-    return {"text": str(data)}
+# ── Embedded UI ─────────────────────────────────────────────────
+UI_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EliteOmni · Mistral-7B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--surface:#13131a;--border:#1e1e2e;--accent:#7c6aff;--accent2:#ff6a88;--text:#e8e8f0;--muted:#6b6b80;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background-image:radial-gradient(circle at 20% 30%,#7c6aff18,transparent 40%),radial-gradient(circle at 80% 70%,#ff6a8812,transparent 40%);}
+  .wrap{width:min(700px,96vw);height:92vh;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:var(--surface);}
+  header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:#0d0d16;}
+  .logo{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;flex-shrink:0;}
+  h1{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.06em;}
+  .tag{font-size:.6rem;color:var(--accent);background:#7c6aff12;padding:2px 8px;border-radius:20px;border:1px solid #7c6aff25;margin-left:auto;}
+  #log{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;}
+  #log::-webkit-scrollbar{width:3px;}#log::-webkit-scrollbar-thumb{background:var(--border);}
+  .msg{max-width:88%;padding:11px 15px;border-radius:12px;font-size:.82rem;line-height:1.65;}
+  .user{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#5a4adf);color:#fff;border-bottom-right-radius:3px;}
+  .bot{align-self:flex-start;background:#191925;border:1px solid var(--border);border-bottom-left-radius:3px;}
+  .bot .lbl{font-size:.6rem;color:var(--accent);margin-bottom:5px;font-weight:700;letter-spacing:.1em;}
+  .dot-wrap{display:flex;gap:4px;padding:3px 0;}
+  .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:hop 1.1s infinite;}
+  .dot:nth-child(2){animation-delay:.18s;}.dot:nth-child(3){animation-delay:.36s;}
+  @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  footer{padding:14px 16px;border-top:1px solid var(--border);display:flex;gap:10px;background:#0d0d16;}
+  #inp{flex:1;background:#0b0b14;border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Space Mono',monospace;font-size:.82rem;resize:none;height:46px;line-height:1.4;transition:border-color .2s;}
+  #inp:focus{outline:none;border-color:var(--accent);}
+  #btn{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;padding:0 18px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;transition:opacity .15s,transform .1s;}
+  #btn:hover{opacity:.88;}#btn:active{transform:scale(.97);}#btn:disabled{opacity:.35;cursor:not-allowed;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"></div>
+    <h1>ELITEOMNI</h1>
+    <span class="tag">Mistral-7B · v3.0</span>
+  </header>
+  <div id="log">
+    <div class="msg bot"><div class="lbl">ELITEOMNI</div>Hello! I am EliteOmni, powered by Mistral-7B. How can I help you?</div>
+  </div>
+  <footer>
+    <textarea id="inp" placeholder="Ask me anything..." rows="1"></textarea>
+    <button id="btn">Send</button>
+  </footer>
+</div>
+<script>
+  const log=document.getElementById('log'),inp=document.getElementById('inp'),btn=document.getElementById('btn');
+  let hist=[];
+  const addMsg=(role,html)=>{const d=document.createElement('div');d.className='msg '+(role==='bot'?'bot':'user');d.innerHTML=role==='bot'?'<div class="lbl">ELITEOMNI</div>'+html:html;log.appendChild(d);log.scrollTop=log.scrollHeight;return d;};
+  const thinking=()=>{const d=document.createElement('div');d.className='msg bot';d.innerHTML='<div class="lbl">ELITEOMNI</div><div class="dot-wrap"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';log.appendChild(d);log.scrollTop=log.scrollHeight;return d;};
+  const send=async()=>{
+    const txt=inp.value.trim();if(!txt)return;
+    inp.value='';btn.disabled=true;
+    addMsg('user',txt.replace(/</g,'&lt;'));
+    const t=thinking();
+    try{
+      const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt,history:hist,max_new_tokens:300,temperature:0.4})});
+      const d=await r.json();t.remove();
+      const reply=(d.text||d.response||JSON.stringify(d)).replace(/</g,'&lt;').replace(/\n/g,'<br>');
+      addMsg('bot',reply);
+      hist.push({role:'user',content:txt},{role:'assistant',content:d.text||d.response||''});
+      if(hist.length>10)hist=hist.slice(-10);
+    }catch(e){t.remove();addMsg('bot','Network error: '+e.message);}
+    btn.disabled=false;inp.focus();
+  };
+  btn.addEventListener('click',send);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+</script>
+</body>
+</html>"""
