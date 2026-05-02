@@ -3,7 +3,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import requests
+import httpx
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
