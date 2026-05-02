@@ -9,13 +9,11 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-# ── Config ─────────────────────────────────────────────────────
 MODEL_ID   = os.getenv("MODEL_ID", "mistralai/Mistral-7B-Instruct-v0.3")
 HF_TOKEN   = os.getenv("HF_TOKEN", "")
 UPSTREAM   = (os.getenv("UPSTREAM_CHAT_URL", "") or "").strip().rstrip("/")
 APP_BUILD  = os.getenv("RENDER_GIT_COMMIT", "unknown")
 
-# ── Correct endpoint for Mistral (chat completions format) ──────
 HF_CHAT_URL = "https://api-inference.huggingface.co/v1/chat/completions"
 
 SYSTEM_PROMPT = """You are EliteOmni, an intelligent and helpful AI assistant created by Kidus.
@@ -38,8 +36,6 @@ STATIC_DIR = Path(__file__).parent / "static"
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-
-# ── Request models ──────────────────────────────────────────────
 class Message(BaseModel):
     role: str
     content: str
@@ -51,9 +47,7 @@ class ChatReq(BaseModel):
     max_new_tokens: int = 300
     temperature: float = 0.4
 
-
-# ── HF Chat Completions call ────────────────────────────────────
-def call_mistral(message: str, history: List[Message], max_tokens: int, temperature: float) -> str:
+async def call_mistral(message: str, history: List[Message], max_tokens: int, temperature: float) -> str:
     if not HF_TOKEN:
         return "ERROR: HF_TOKEN is not set. Add it in Render → Environment."
 
@@ -73,8 +67,9 @@ def call_mistral(message: str, history: List[Message], max_tokens: int, temperat
     }
 
     try:
-        r = (await httpx.AsyncClient(timeout=120).post(HF_CHAT_URL, headers=HEADERS, json=payload, timeout=120)
-    except requests.RequestException as e:
+        async with httpx.AsyncClient(timeout=120) as client:
+            r = await client.post(HF_CHAT_URL, headers=HEADERS, json=payload)
+    except httpx.RequestError as e:
         return f"Network error: {e}"
 
     if r.status_code == 401:
@@ -90,8 +85,6 @@ def call_mistral(message: str, history: List[Message], max_tokens: int, temperat
     except Exception as e:
         return f"Failed to parse response: {e} — raw: {r.text[:300]}"
 
-
-# ── Routes ──────────────────────────────────────────────────────
 @app.get("/health")
 def health() -> Dict[str, Any]:
     return {
@@ -103,13 +96,12 @@ def health() -> Dict[str, Any]:
         "ts": int(time.time()),
     }
 
-
 @app.post("/chat")
-def chat(req: ChatReq) -> Any:
-    # If an upstream URL is set, proxy to it
+async def chat(req: ChatReq) -> Any:
     if UPSTREAM:
         try:
-            r = requests.post(f"{UPSTREAM}/chat", json=req.model_dump(), timeout=180)
+            async with httpx.AsyncClient(timeout=180) as client:
+                r = await client.post(f"{UPSTREAM}/chat", json=req.model_dump())
             try:
                 return JSONResponse(status_code=r.status_code, content=r.json())
             except Exception:
@@ -117,8 +109,7 @@ def chat(req: ChatReq) -> Any:
         except Exception as e:
             return JSONResponse(status_code=502, content={"error": str(e)})
 
-    # Use Mistral via HF chat completions
-    reply = call_mistral(
+    reply = await call_mistral(
         message=req.message,
         history=req.history or [],
         max_tokens=req.max_new_tokens,
@@ -126,13 +117,10 @@ def chat(req: ChatReq) -> Any:
     )
     return {"text": reply, "session_id": req.session_id, "model": MODEL_ID}
 
-
 @app.get("/", response_class=HTMLResponse)
 def root():
     return HTMLResponse(content=UI_HTML)
 
-
-# ── Embedded UI ─────────────────────────────────────────────────
 UI_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
